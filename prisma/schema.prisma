@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,16 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Bollot {
-  id          Int       @id @default(autoincrement())
-  token       String    @unique
-  vote_time   DateTime  @default(now())
-  Candidate   Candidate @relation(fields: [candidateId], references: [id])
-  candidateId Int
+model Candidate {
+  id     Int      @id @default(autoincrement())
+  name   String
+  ballot Ballot[]
 }
 
-model Candidate {
-  id    Int      @id @default(autoincrement())
-  name  String?
-  votes Bollot[]
+model Ballot {
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
+  time        DateTime  @default(now())
+  candidateId Int
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
 }
