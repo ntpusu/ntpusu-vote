@@ -8,10 +8,13 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@dargmuesli/nuxt-cookie-control": "^4.0.3",
+    "@element-plus/nuxt": "^1.0.3",
     "nuxt": "^3.0.0",
     "prisma": "^4.9.0"
   },
   "dependencies": {
-    "@prisma/client": "^4.9.0"
+    "@prisma/client": "^4.9.0",
+    "crypto-js": "^4.1.1"
   }
 }
