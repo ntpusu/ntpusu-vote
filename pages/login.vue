@@ -18,6 +18,7 @@
                     <el-button type="primary" class="margin" :loading="isLoad" @click="onSubmit(formRef)">登入</el-button>
                 </el-form-item>
             </el-form>
+            <el-alert v-if="loginFail" title="登入失敗" type="error" description="請確認學號密碼是否正確" show-icon />
         </div>
     </ClientOnly>
 </template>
@@ -71,6 +72,10 @@ const onSubmit = (formEl: FormInstance | undefined) => {
             }).then(res => {
                 if (res.login_state) {
                     useRouter().push('/')
+                }
+                else {
+                    loginFail.value = true
+                    isLoad.value = false
                 }
             })
         } else {
