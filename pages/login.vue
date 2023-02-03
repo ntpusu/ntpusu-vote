@@ -22,12 +22,6 @@
     </ClientOnly>
 </template>
 
-<!-- <script setup>
-definePageMeta({
-    middleware: 'router-auth',
-})
-</script> -->
-
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
 
