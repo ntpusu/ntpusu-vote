@@ -4,9 +4,8 @@
 
 <script lang="ts" setup>
 onMounted(() => {
-    $fetch('/api/logout').then(() => {
-        useRouter().push('/login')
-    })
+    $fetch('/api/logout')
+    useRouter().push('/login')
 })
 </script>
 

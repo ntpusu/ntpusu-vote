@@ -1,12 +1,5 @@
+export default defineEventHandler((_event) => {
+    const un = getCookie(_event, 'un')
 
-export default defineEventHandler(async (_event) => {
-    let un = null
-    try {
-        un = getCookie(_event, 'un')
-    }
-    catch (err) {
-        return null
-    }
-
-    return getCookie(_event, 'un')
+    return un === undefined ? '' : un
 })
