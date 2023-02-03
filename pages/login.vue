@@ -1,6 +1,6 @@
 <template>
     <ClientOnly>
-        <div class="content">
+        <div class="content col-s-7 col-m-5 col-b-4">
             <el-alert title="將連線至學生資訊系統進行驗證" description="請使用學生資訊系統的帳號密碼登入" show-icon close-text="了解～" />
             <div style="height: 20px;"></div>
             <el-form ref="formRef" :model="itemEl" :label-width="'auto'" :rules="rules" hide-required-asterisk>
@@ -88,7 +88,6 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 
 <style>
 .content {
-    width: 400px;
     margin: 5% auto;
 }
 </style>
