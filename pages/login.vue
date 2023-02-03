@@ -89,6 +89,6 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 <style>
 .content {
     width: 400px;
-    margin: 20px auto;
+    margin: 5% auto;
 }
 </style>

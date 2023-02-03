@@ -1,6 +1,6 @@
 <template>
   <div>
-    welcome {{ username }}
+    user: {{ username }}
   </div>
 </template>
 
@@ -19,10 +19,13 @@ export default {
   },
   async mounted() {
     const config = useRuntimeConfig()
+
     let un = await $fetch('/api/un')
-    console.log(un)
-    if (un != null && un != '')
+
+    if (un != undefined && un != '')
       this.username = AES.decrypt(un, config.public.CRYPTO_KEY).toString(encUtf8)
+    else
+      this.username = '未登入'
   }
 }
 
