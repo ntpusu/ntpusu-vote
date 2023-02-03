@@ -7,4 +7,7 @@ export default defineNuxtConfig({
     modules: [
         '@element-plus/nuxt',
     ],
+    css: [
+        '@/assets/css/main.css',
+    ],
 });

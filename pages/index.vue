@@ -1,8 +1,5 @@
 <template>
   <div>
-    <NuxtLink to="/login">login</NuxtLink>
-  </div>
-  <div>
     welcome {{ username }}
   </div>
 </template>

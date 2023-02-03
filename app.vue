@@ -1,32 +1,27 @@
 <template>
   <NuxtLoadingIndicator />
-  <div class="common-layout">
+  <div>
     <el-container>
       <el-header>
-        <ClientOnly fallback-tag="span" fallback="Loading comments...">
-          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-            <el-menu-item index="1">Processing Center</el-menu-item>
-            <el-sub-menu index="2">
-              <template #title>Workspace</template>
-              <el-menu-item index="2-1">item one</el-menu-item>
-              <el-menu-item index="2-2">item two</el-menu-item>
-              <el-menu-item index="2-3">item three</el-menu-item>
-              <el-sub-menu index="2-4">
-                <template #title>item four</template>
-                <el-menu-item index="2-4-1">item one</el-menu-item>
-                <el-menu-item index="2-4-2">item two</el-menu-item>
-                <el-menu-item index="2-4-3">item three</el-menu-item>
-              </el-sub-menu>
-            </el-sub-menu>
-            <el-menu-item index="3" disabled>Info</el-menu-item>
-            <el-menu-item index="4">Orders</el-menu-item>
+        <ClientOnly>
+          <template #fallback>
+            <div class="margin">
+              Loading menu......
+            </div>
+          </template>
+          <el-menu :default-active="$route.path" :unique-opened="true" mode="horizontal" :router="true"
+            :ellipsis="false" @select="handleSelect">
+            <h1 class="margin">投票系統</h1>
+            <div class="flex-grow" />
+            <el-menu-item index="/">首頁</el-menu-item>
+            <el-menu-item index="/login">登入</el-menu-item>
           </el-menu>
         </ClientOnly>
       </el-header>
       <el-main>
         <NuxtPage />
       </el-main>
-      <el-footer>Footer</el-footer>
+      <!-- <el-footer>Footer</el-footer> -->
     </el-container>
   </div>
   <el-backtop />
@@ -36,12 +31,12 @@
 export default {
   data() {
     return {
-      activeIndex: '1',
+      curIndex: '1',
     }
   },
   methods: {
     activeIndex() {
-      return this.activeIndex
+      return this.curIndex
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath)
@@ -49,3 +44,9 @@ export default {
   },
 }
 </script>
+
+<style>
+.flex-grow {
+  flex-grow: 1;
+}
+</style>
