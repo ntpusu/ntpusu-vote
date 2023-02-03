@@ -3,7 +3,8 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "types": [
-      "element-plus/global"
+      "element-plus/global",
+      "crypto-js"
     ]
   }
 }
