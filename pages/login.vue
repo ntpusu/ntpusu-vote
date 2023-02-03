@@ -69,7 +69,7 @@ const onSubmit = (formEl: FormInstance | undefined) => {
                     'password': itemEl.password
                 })
             }).then(res => {
-                if (res) {
+                if (res.login_state) {
                     useRouter().push('/')
                 }
             })
