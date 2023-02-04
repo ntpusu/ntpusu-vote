@@ -10,7 +10,7 @@ datasource db {
 model VoteSession {
   id         Int         @id @default(autoincrement())
   name       String
-  startTime  DateTime    @default(now())
+  startTime  DateTime
   endTime    DateTime
   candidates Candidate[]
 }
