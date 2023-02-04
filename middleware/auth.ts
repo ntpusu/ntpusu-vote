@@ -5,7 +5,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     let authStates = false
 
     const username = useCookie('un').value
-    console.log('username', username)
     if (username !== undefined && username !== null) {
         const un = AES.decrypt(username, config.public.CRYPTO_KEY).toString(encUtf8)
 
@@ -15,7 +14,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const loginState = useState('loginState')
     loginState.value = authStates
 
-    console.log('authStates', authStates)
     if (!authStates) {
         await $fetch('/api/logout')
 

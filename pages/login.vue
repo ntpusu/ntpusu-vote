@@ -91,7 +91,6 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 }
 
 onMounted(() => {
-    console.log(loginState.value)
     if (loginState.value) {
         useRouter().push('/')
     }
