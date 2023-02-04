@@ -10,7 +10,6 @@ setResponseStatus(404)
 
 const countdown = ref(10)
 const timer = () => {
-    console.log(countdown.value)
     setTimeout(() => {
         countdown.value -= 0.1
 
