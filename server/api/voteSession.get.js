@@ -1,6 +1,6 @@
-import prisma from '~/lib/prisma'
+import prisma from '~~/lib/prisma'
 
 export default defineEventHandler(async (_event) => {
-    const voteSession = await prisma.voteSession.findMany()
-    return voteSession
+    const vote = await prisma.voteSession.findMany()
+    return vote
 })
