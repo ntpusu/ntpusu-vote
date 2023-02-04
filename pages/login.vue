@@ -100,5 +100,8 @@ onMounted(() => {
 <style>
 .content {
     margin: 5% auto;
+    padding: 20px;
+    border: 3px solid #c9d7f8;
+    border-radius: 10px;
 }
 </style>

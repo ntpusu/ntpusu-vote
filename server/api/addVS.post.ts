@@ -16,11 +16,12 @@ export default defineEventHandler(async (_event) => {
         }
     }
 
-    const { voteName, endTime } = await readBody(_event)
+    const { voteName, startTime, endTime } = await readBody(_event)
 
     const VS = await prisma.voteSession.create({
         data: {
             name: voteName,
+            startTime: new Date(startTime),
             endTime: new Date(endTime),
         }
     })
