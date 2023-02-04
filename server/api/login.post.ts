@@ -1,4 +1,4 @@
-import AES from 'crypto-js/aes'
+import AES from 'crypto-js/aes.js'
 export default defineEventHandler(async _event => {
     const { username, password } = await readBody(_event)
 
