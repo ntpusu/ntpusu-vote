@@ -1,31 +1,27 @@
 <template>
   <div>
     user: {{ username }}
+    {{}}
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 import AES from 'crypto-js/aes'
 import encUtf8 from 'crypto-js/enc-utf8'
 
-export default {
-  data() {
-    return {
-      username: '',
-    }
-  },
-  methods: {
+definePageMeta({
+  middleware: ['auth'],
+})
 
-  },
-  async mounted() {
-    const config = useRuntimeConfig()
+const username = ref('')
 
-    let un = await $fetch('/api/un')
-    if (un != null && un != '')
-      this.username = AES.decrypt(un, config.public.CRYPTO_KEY).toString(encUtf8)
-    else
-      this.username = '未登入'
-  }
-}
+onMounted(async () => {
+  const config = useRuntimeConfig()
 
+  let un = await $fetch('/api/un')
+  if (un != null && un != '')
+    username.value = AES.decrypt(un, config.public.CRYPTO_KEY).toString(encUtf8)
+  else
+    username.value = '未登入'
+})
 </script>

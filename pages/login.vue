@@ -26,6 +26,10 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
 
+definePageMeta({
+    middleware: ['auth'],
+})
+
 const itemEl = reactive({
     username: '',
     password: '',
@@ -34,6 +38,7 @@ const itemEl = reactive({
 
 const isLoad = ref(false)
 const loginFail = ref(false)
+const loginState = useState('loginState')
 
 const formRef = ref<FormInstance>()
 const rules = reactive<FormRules>({
@@ -71,18 +76,24 @@ const onSubmit = (formEl: FormInstance | undefined) => {
                 })
             }).then(res => {
                 if (res.login_state) {
+                    loginState.value = true
                     useRouter().push('/')
                 }
                 else {
                     loginFail.value = true
-                    isLoad.value = false
                 }
             })
-        } else {
-            console.log('error submit!', fields)
+
+            isLoad.value = false
         }
     })
 }
+
+onMounted(async () => {
+    if (loginState.value) {
+        useRouter().push('/')
+    }
+})
 </script>
 
 <style>

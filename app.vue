@@ -14,8 +14,8 @@
             <h1 class="margin">投票系統</h1>
             <div class="flex-grow" />
             <el-menu-item index="/">首頁</el-menu-item>
-            <el-menu-item index="/login">登入</el-menu-item>
-            <el-menu-item index="/logout">登出</el-menu-item>
+            <el-menu-item v-if="!loginState" index="/login">登入</el-menu-item>
+            <el-menu-item v-else index="/logout">登出</el-menu-item>
           </el-menu>
         </ClientOnly>
       </el-header>
@@ -28,24 +28,16 @@
   <el-backtop />
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      curIndex: '1',
-    }
-  },
-  methods: {
-    activeIndex() {
-      return this.curIndex
-    },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath)
-    },
-  },
-  mounted() {
+<script lang="ts" setup>
+import { Ref } from "vue"
 
-  }
+const curIndex = ref('1')
+const loginState = useState('loginState') as Ref<boolean>
+
+const activeIndex = () => curIndex.value
+
+const handleSelect = (key: string, keyPath: string[]) => {
+  curIndex.value = key
 }
 </script>
 
