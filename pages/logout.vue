@@ -3,9 +3,8 @@
 </template>
 
 <script lang="ts" setup>
-onMounted(() => {
-    $fetch('/api/logout')
-    useState('loginState').value = false
+onMounted(async () => {
+    await $fetch('/api/logout')
     useRouter().push('/')
 })
 </script>
