@@ -75,8 +75,9 @@ const onSubmit = (formEl: FormInstance | undefined) => {
                     'password': itemEl.password
                 })
             }).then(res => {
-                if (res.login_state) {
-                    loginState.value = true
+                useState('loginState').value = res.login
+
+                if (res.login) {
                     useRouter().push('/')
                 }
                 else {
@@ -89,7 +90,8 @@ const onSubmit = (formEl: FormInstance | undefined) => {
     })
 }
 
-onMounted(async () => {
+onMounted(() => {
+    console.log(loginState.value)
     if (loginState.value) {
         useRouter().push('/')
     }

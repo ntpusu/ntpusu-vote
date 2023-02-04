@@ -20,6 +20,6 @@ export default defineEventHandler(async (event) => {
     }
 
     return {
-        login_state: login_state
+        login: login_state
     }
 })

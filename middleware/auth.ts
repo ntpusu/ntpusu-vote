@@ -12,10 +12,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     const loginState = useState('loginState')
-    if (!authStates && to.path !== '/' && to.path !== '/login') {
+    loginState.value = authStates
+
+    if (!authStates && to.path != '/' && to.path != '/login') {
+        console.log(to.path)
         return navigateTo('/')
-    }
-    else {
-        loginState.value = authStates
     }
 })

@@ -7,10 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model VoteSession {
+  id         Int         @id @default(autoincrement())
+  name       String
+  startTime  DateTime    @default(now())
+  endTime    DateTime
+  candidates Candidate[]
+}
+
 model Candidate {
-  id     Int      @id @default(autoincrement())
-  name   String
-  ballot Ballot[]
+  id            Int         @id @default(autoincrement())
+  name          String
+  ballot        Ballot[]
+  voteSessionId Int
+  VoteSession   VoteSession @relation(fields: [voteSessionId], references: [id])
 }
 
 model Ballot {
