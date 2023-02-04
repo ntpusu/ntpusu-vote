@@ -5,7 +5,7 @@
       <el-header>
         <ClientOnly>
           <template #fallback>
-            <div class="margin">
+            <div style="text-align: center;">
               Loading menu......
             </div>
           </template>
