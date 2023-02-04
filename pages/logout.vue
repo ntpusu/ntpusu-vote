@@ -6,13 +6,6 @@
 onMounted(() => {
     $fetch('/api/logout')
     useState('loginState').value = false
-    useRouter().push('/login')
+    useRouter().push('/')
 })
 </script>
-
-<style>
-.content {
-    width: 400px;
-    margin: 5% auto;
-}
-</style>

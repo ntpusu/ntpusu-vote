@@ -14,8 +14,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const loginState = useState('loginState')
     loginState.value = authStates
 
-    if (!authStates && to.path != '/' && to.path != '/login') {
-        console.log(to.path)
-        return navigateTo('/')
+    if (!authStates) {
+        await $fetch('/api/logout')
+
+        if (to.path != '/' && to.path != '/login') {
+            return navigateTo('/')
+        }
     }
 })

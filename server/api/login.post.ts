@@ -1,6 +1,6 @@
 import AES from 'crypto-js/aes.js'
-export default defineEventHandler(async (event) => {
-    const { username, password } = await readBody(event)
+export default defineEventHandler(async (_event) => {
+    const { username, password } = await readBody(_event)
 
     const payload = 'stud_num=' + username + '&passwd=' + password + '&x=0&y=0'
 
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     const login_state = res.startsWith('<body onload="window.open(\'../univer/query_all_course.login2?date1=')
 
     if (login_state) {
-        setCookie(event, 'un', AES.encrypt(username, process.env.CRYPTO_KEY as string).toString(), {
+        setCookie(_event, 'un', AES.encrypt(username, process.env.CRYPTO_KEY as string).toString(), {
             httpOnly: true,
             secure: true,
             maxAge: 600
