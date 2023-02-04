@@ -11,7 +11,7 @@
           </template>
           <el-menu :default-active="$route.path" :unique-opened="true" mode="horizontal" :router="true"
             :ellipsis="false" @select="handleSelect">
-            <h1 class="margin">投票系統</h1>
+            <h1 class="margin">&nbsp;投票系統</h1>
             <div class="flex-grow" />
             <el-menu-item index="/">首頁</el-menu-item>
             <el-menu-item v-if="loginState" index="/allVote">投票清單</el-menu-item>

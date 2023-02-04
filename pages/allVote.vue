@@ -1,21 +1,14 @@
 <template>
-    <el-space class="container" wrap>
-        <el-card v-for="i in VSCnt" :key="i" style="width: 250px">
+    <el-space v-if="!VSPending" class="container" wrap>
+        <el-card v-for="VSitem in VS" :key="VSitem.id" style="width: 300px;">
             <template #header>
                 <div>
-                    <span v-if="VS != null">{{ VS[i].name }}</span>
-                    <el-button class="button" text>Operation button</el-button>
+                    <span v-if="VS != null" class="title">{{ VSitem.name }}</span>
                 </div>
             </template>
-            <div v-for="o in 4" :key="o">
-                {{ 'List item ' + o }}
-            </div>
+            <div>截止時間：{{ newDate(VSitem.endTime).toLocaleString() }}</div>
         </el-card>
     </el-space>
-    {{ VS }}
-    {{ VSPending }}
-    {{ VSCnt }}
-    {{ VSCntPending }}
 </template>
 
 <script lang="ts" setup>
@@ -24,8 +17,14 @@ definePageMeta({
 })
 
 const { data: VS, pending: VSPending, refresh: VSRefresh } = useFetch('/api/voteSession')
-const { data: VSCnt, pending: VSCntPending, refresh: VSCntRefresh } = useFetch('/api/voteSessionCnt')
 
+const newDate = (time: Date) => {
+    return new Date(time)
+}
+
+const viewDate = (time: Date) => {
+    return new Date(time).toLocaleString()
+}
 </script>
 
 <style>
@@ -33,5 +32,10 @@ const { data: VSCnt, pending: VSCntPending, refresh: VSCntRefresh } = useFetch('
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 </style>
