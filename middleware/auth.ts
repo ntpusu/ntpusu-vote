@@ -23,7 +23,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
     }
 
-    if (to.path == '/admin' && username != config.ADMIN_USERNAME) {
+    if (to.path == '/admin' && username != config.public.ADMIN_USERNAME) {
         return navigateTo('/')
     }
 })
