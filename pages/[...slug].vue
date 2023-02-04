@@ -1,8 +1,9 @@
 <template>
-    <div class="content">
-        <h1>404 NOT FOUND!!!</h1>
-        <h5 v-if="countdown <= 5">{{ countdown.toFixed(1) }}秒後自動跳轉至首頁</h5>
-    </div>
+    <el-result icon="error" title="404 NOT FOUND🧐">
+        <template #extra>
+            <h5 v-if="countdown <= 5">{{ countdown.toFixed(1) }}秒後自動跳轉至首頁</h5>
+        </template>
+    </el-result>
 </template>
 
 <script lang="ts" setup>
