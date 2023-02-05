@@ -31,13 +31,17 @@
             </el-form>
         </div>
         <el-divider border-style="dashed" />
-        <el-table :data="tableData" border :table-layout="'auto'">
+        <el-table :data="tableData()" border :table-layout="'auto'">
             <el-table-column prop="title" label="Title" />
             <el-table-column prop="startTime" label="startTime" />
             <el-table-column prop="endTime" label="endTime" />
             <el-table-column label="Action" width="90px">
                 <template #default="{ row }">
-                    <el-button size="small" type="primary" @click="handleDelete(row)">Delete</el-button>
+                    <el-popconfirm title="確定要刪除嗎？" @confirm="handleDelete(row)">
+                        <template #reference>
+                            <el-button size="small" type="primary">Delete</el-button>
+                        </template>
+                    </el-popconfirm>
                 </template>
             </el-table-column>
         </el-table>
@@ -46,7 +50,6 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
-import { JsonObject } from 'type-fest'
 
 definePageMeta({
     middleware: ['auth'],
@@ -114,8 +117,11 @@ const submitForm = async (formRef: FormInstance | undefined) => {
                 body: JSON.stringify(data),
             })
 
+            formRef.resetFields()
+
             if (res.data) {
                 ElMessage('創建成功')
+                VSRefresh()
                 return
             }
 
@@ -130,11 +136,15 @@ const newDate = (time: Date) => {
     return new Date(time)
 }
 
-const tableData = VS.value?.map((item) => ({
-    title: item.name,
-    startTime: newDate(item.startTime).toLocaleString(),
-    endTime: newDate(item.endTime).toLocaleString(),
-}))
+const tableData = () => {
+    if (!VS) return []
+
+    return VS.value?.map((item) => ({
+        title: item.name,
+        startTime: newDate(item.startTime).toLocaleString(),
+        endTime: newDate(item.endTime).toLocaleString(),
+    }))
+}
 
 const handleDelete = async (row: any) => {
     await $fetch('/api/delVS?title=' + row.title, {
