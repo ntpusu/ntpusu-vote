@@ -19,11 +19,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         await $fetch('/api/logout')
 
         if (to.path != '/' && to.path != '/login') {
-            return navigateTo('/')
+            return await navigateTo('/')
         }
     }
 
     if (to.path == '/admin' && username != config.public.ADMIN_USERNAME) {
-        return navigateTo('/')
+        return await navigateTo('/')
     }
 })
