@@ -1,6 +1,6 @@
 import prisma from '~~/lib/prisma'
 import AES from 'crypto-js/aes.js'
-import encUtf8 from 'crypto-js/enc-utf8'
+import encUtf8 from 'crypto-js/enc-utf8.js'
 export default defineEventHandler(async (_event) => {
     const un = getCookie(_event, 'un')
     if (un === undefined || un === null) {
