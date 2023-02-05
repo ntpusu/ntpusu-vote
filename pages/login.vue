@@ -43,21 +43,14 @@ const loginState = useState('loginState')
 const formRef = ref<FormInstance>()
 const rules = reactive<FormRules>({
     username: [
-        { required: true, message: '學號為必填', trigger: 'change' },
+        { required: true, message: '學號為必填', trigger: 'blur' },
+        { pattern: /^\d+$/, message: '學號格式錯誤', trigger: 'change' },
     ],
     password: [
-        { required: true, message: '密碼為必填', trigger: 'change' },
+        { required: true, message: '密碼為必填', trigger: 'blur' },
     ],
     verify: [
-        {
-            validator: (rule, value, callback) => {
-                if (value) {
-                    callback()
-                } else {
-                    callback(new Error('請勾選同意使用學生資訊系統進行驗證'))
-                }
-            }, trigger: 'change'
-        },
+        { pattern: /true/, message: '需同意使用學生資訊系統進行驗證', trigger: 'change' },
     ],
 })
 
