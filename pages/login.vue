@@ -73,10 +73,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                 })
             })
 
-            useState('loginState').value = res.login
-
             if (res.login) {
-                useRouter().push('/')
+                await useRouter().push('/')
             }
             else {
                 loginFail.value = true
