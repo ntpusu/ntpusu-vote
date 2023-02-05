@@ -10,7 +10,6 @@
     justify-content: center;
 }
 
-/* For mobile phones: */
 [class*="col-"] {
     width: 100%;
 }
