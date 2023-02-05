@@ -30,6 +30,18 @@
                 </el-form-item>
             </el-form>
         </div>
+        <el-divider border-style="dashed" />
+        <el-table :data="tableData" border style="width: 100%">
+            <el-table-column prop="title" label="Title" width="180" />
+            <el-table-column prop="startTime" label="startTime" width="180" />
+            <el-table-column prop="endTime" label="endTime" />
+        </el-table>
+        <p v-for="(VSitem, index) in VS" :key="index" class="scrollbar-item">
+            <span>{{ VSitem.name }}</span>
+            <span>{{ VSitem.startTime }}</span>
+            <span>{{ VSitem.endTime }}</span>
+        </p>
+        <span>{{ tableData }}</span>
     </ClientOnly>
 </template>
 
@@ -111,6 +123,14 @@ const submitForm = (formRef: FormInstance | undefined) => {
         }
     })
 }
+
+const { data: VS, pending: VSPending, refresh: VSRefresh } = await useFetch('/api/voteSession')
+
+const tableData = VS.value?.map((item) => ({
+    title: item.name,
+    startTime: item.startTime.toLocaleString(),
+    endTime: item.endTime.toLocaleString(),
+}))
 </script>
 
 <style scoped>
@@ -119,5 +139,17 @@ const submitForm = (formRef: FormInstance | undefined) => {
     padding: 20px;
     border: 3px solid #c9d7f8;
     border-radius: 10px;
+}
+
+.scrollbar-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    margin: 10px;
+    text-align: center;
+    border-radius: 4px;
+    background: var(--el-color-primary-light-9);
+    color: var(--el-color-primary);
 }
 </style>

@@ -16,8 +16,6 @@ export default defineEventHandler(async (_event) => {
         }
     }
 
-    console.log('start')
-
     const { voteName, startTime, endTime, candidates } = await readBody(_event)
 
     console.log('voteName: ' + voteName)
@@ -33,10 +31,7 @@ export default defineEventHandler(async (_event) => {
         }
     })
 
-    console.log('VS created')
-
     for (let i = 0; i < candidates.length; i++) {
-        console.log('candidate created')
         await prisma.candidate.create({
             data: {
                 name: candidates[i],
