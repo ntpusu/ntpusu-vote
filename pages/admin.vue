@@ -31,20 +31,22 @@
             </el-form>
         </div>
         <el-divider border-style="dashed" />
-        <el-table :data="tableData()" border :table-layout="'auto'">
-            <el-table-column prop="title" label="Title" />
-            <el-table-column prop="startTime" label="startTime" />
-            <el-table-column prop="endTime" label="endTime" />
-            <el-table-column label="Action" width="90px">
-                <template #default="{ row }">
-                    <el-popconfirm title="確定要刪除嗎？" @confirm="handleDelete(row)">
-                        <template #reference>
-                            <el-button size="small" type="primary">Delete</el-button>
-                        </template>
-                    </el-popconfirm>
-                </template>
-            </el-table-column>
-        </el-table>
+        <div class="content col-s-11 col-m-9 col-b-7">
+            <el-table :data="tableData()" border :table-layout="'auto'">
+                <el-table-column prop="title" label="Title" />
+                <el-table-column prop="startTime" label="startTime" />
+                <el-table-column prop="endTime" label="endTime" />
+                <el-table-column label="Action" width="90px">
+                    <template #default="{ row }">
+                        <el-popconfirm title="確定要刪除嗎？" @confirm="handleDelete(row)">
+                            <template #reference>
+                                <el-button size="small" type="primary">Delete</el-button>
+                            </template>
+                        </el-popconfirm>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
     </ClientOnly>
 </template>
 
@@ -162,17 +164,5 @@ const handleDelete = async (row: any) => {
     padding: 20px;
     border: 3px solid #c9d7f8;
     border-radius: 10px;
-}
-
-.scrollbar-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    margin: 10px;
-    text-align: center;
-    border-radius: 4px;
-    background: var(--el-color-primary-light-9);
-    color: var(--el-color-primary);
 }
 </style>
