@@ -5,6 +5,6 @@
 <script lang="ts" setup>
 onMounted(async () => {
     await $fetch('/api/logout')
-    useRouter().push('/')
+    await useRouter().push('/login')
 })
 </script>

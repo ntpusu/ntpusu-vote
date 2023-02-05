@@ -54,38 +54,38 @@ const rules = reactive<FormRules>({
     ],
 })
 
-const onSubmit = (formEl: FormInstance | undefined) => {
+const onSubmit = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
 
-    formEl.validate((valid, fields) => {
+    await formEl.validate(async (valid, fields) => {
         if (valid) {
             isLoad.value = true
 
-            $fetch('/api/login', {
+            const res = await $fetch('/api/login', {
                 method: 'POST',
                 body: JSON.stringify({
                     'username': itemEl.username,
                     'password': itemEl.password
                 })
-            }).then(res => {
-                useState('loginState').value = res.login
-
-                if (res.login) {
-                    useRouter().push('/')
-                }
-                else {
-                    loginFail.value = true
-                }
             })
+
+            useState('loginState').value = res.login
+
+            if (res.login) {
+                useRouter().push('/')
+            }
+            else {
+                loginFail.value = true
+            }
 
             isLoad.value = false
         }
     })
 }
 
-onMounted(() => {
+onMounted(async () => {
     if (loginState.value) {
-        useRouter().push('/')
+        await useRouter().push('/')
     }
 })
 </script>
