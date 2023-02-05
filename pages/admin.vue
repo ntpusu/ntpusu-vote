@@ -1,20 +1,24 @@
 <template>
     <ClientOnly>
         <div class="content col-s-7 col-m-5 col-b-4">
-            <el-form :label-width="'auto'" ref="formRef" :model="addVote" hide-required-asterisk>
-                <el-form-item label="名稱:" required>
-                    <el-input v-model="addVote.title" placeholder="請輸入名稱" clearable />
+            <el-form :label-width="'auto'" ref="formRef" :model="addVote" :rules="rules" hide-required-asterisk>
+                <el-form-item label="名稱:" prop="voteName">
+                    <el-input v-model="addVote.voteName" placeholder="請輸入名稱" clearable />
                 </el-form-item>
-                <el-form-item label="開始時間:" required>
-                    <el-date-picker v-model="addVote.startTime" type="datetime" placeholder="Select date and time" />
+                <el-form-item label="開始時間:" prop="startTime">
+                    <el-date-picker v-model="addVote.startTime" type="datetime" placeholder="請選擇開始時間" />
                 </el-form-item>
-                <el-form-item label="截止時間:" required>
-                    <el-date-picker v-model="addVote.endTime" type="datetime" placeholder="Select date and time" />
+                <el-form-item label="結束時間:" prop="endTime">
+                    <el-date-picker v-model="addVote.endTime" type="datetime" placeholder="請選擇結束時間" />
                 </el-form-item>
                 <el-form-item v-for="(candidate, index) in addVote.candidates" :key="index"
-                    :label="(index + 1) + '號候選人:'" placeholder="請輸入候選人名稱">
+                    :prop="'candidates.' + index + '.name'" :label="(index + 1) + '號候選人:'" :rules="{
+                        required: true,
+                        message: '候選人為必填',
+                        trigger: 'blur'
+                    }">
                     <el-space>
-                        <el-input v-model="candidate.name" clearable />
+                        <el-input v-model="candidate.name" placeholder="請輸入候選人名稱" clearable />
                         <el-button v-if="index > 1" @click.prevent="removeDomain(candidate)">X</el-button>
                     </el-space>
                 </el-form-item>
@@ -27,11 +31,10 @@
             </el-form>
         </div>
     </ClientOnly>
-    {{ addVote }}
 </template>
 
 <script lang="ts" setup>
-import type { FormInstance } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 
 definePageMeta({
     middleware: ['auth'],
@@ -43,12 +46,12 @@ interface Candidate {
 }
 
 const addVote = reactive<{
-    title: string
+    voteName: string
     startTime: string
     endTime: string
     candidates: Candidate[]
 }>({
-    title: '',
+    voteName: '',
     startTime: '',
     endTime: '',
     candidates: [
@@ -68,12 +71,43 @@ const addDomain = () => {
     addVote.candidates.push({ name: '' })
 }
 
+const rules = reactive<FormRules>({
+    voteName: [
+        { required: true, message: '名稱為必填', trigger: 'blur' },
+    ],
+    startTime: [
+        { required: true, message: '開始時間為必填', trigger: 'change' },
+    ],
+    endTime: [
+        { required: true, message: '結束時間為必填', trigger: 'change' },
+    ],
+})
+
 const submitForm = (formRef: FormInstance | undefined) => {
     if (!formRef) return
 
     formRef.validate((valid, fields) => {
         if (valid) {
+            const { voteName, startTime, endTime, candidates } = addVote
 
+            const data = {
+                voteName,
+                startTime,
+                endTime,
+                candidates: candidates.map((candidate) => candidate.name),
+            }
+
+            $fetch('/api/addVS', {
+                method: 'POST',
+                body: JSON.stringify(data),
+            }).then((res) => {
+                if (res.data) {
+                    ElMessage('創建成功')
+                    return
+                }
+            })
+
+            ElMessage('創建失敗')
         }
     })
 }
