@@ -16,9 +16,20 @@ export default defineEventHandler(async (_event) => {
         }
     }
 
-    const { VSid } = getQuery(_event)
-    console.log('VSid: ' + VSid)
+    const query = getQuery(_event)
+    const VSTitle = query.title
 
+    const VS = await prisma.voteSession.findUnique({
+        where: { name: VSTitle as string },
+    })
+
+    await prisma.candidate.deleteMany({
+        where: { voteSessionId: VS?.id },
+    })
+
+    await prisma.voteSession.delete({
+        where: { name: VSTitle as string },
+    })
 
     return { data: true }
 })
