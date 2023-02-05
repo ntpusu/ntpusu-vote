@@ -6,7 +6,7 @@
             <el-form ref="formRef" :model="itemEl" :label-width="'auto'" :rules="rules" hide-required-asterisk
                 @keyup.enter.capture="submitForm(formRef)">
                 <el-form-item label="學號:" prop="username">
-                    <el-input v-model.trim.number="itemEl.username" placeholder="請輸入學號" clearable />
+                    <el-input v-model.trim="itemEl.username" placeholder="請輸入學號" clearable />
                 </el-form-item>
                 <el-form-item label="密碼:" prop="password">
                     <el-input v-model.trim="itemEl.password" type="password" placeholder="請輸入密碼" show-password
