@@ -3,9 +3,10 @@
         <div class="content col-s-7 col-m-5 col-b-4">
             <el-alert title="將連線至學生資訊系統進行驗證" description="請使用學生資訊系統的帳號密碼登入" show-icon close-text="了解～" />
             <div style="height: 20px;"></div>
-            <el-form ref="formRef" :model="itemEl" :label-width="'auto'" :rules="rules" hide-required-asterisk>
+            <el-form ref="formRef" :model="itemEl" :label-width="'auto'" :rules="rules" hide-required-asterisk
+                @keyup.enter.capture="submitForm(formRef)">
                 <el-form-item label="學號:" prop="username">
-                    <el-input v-model.trim="itemEl.username" placeholder="請輸入學號" clearable />
+                    <el-input v-model.trim.number="itemEl.username" placeholder="請輸入學號" clearable />
                 </el-form-item>
                 <el-form-item label="密碼:" prop="password">
                     <el-input v-model.trim="itemEl.password" type="password" placeholder="請輸入密碼" show-password
@@ -16,7 +17,8 @@
                 </el-form-item>
                 <div style="height: 20px;"></div>
                 <el-form-item>
-                    <el-button type="primary" class="margin" :loading="isLoad" @click="onSubmit(formRef)">登入</el-button>
+                    <el-button type="primary" class="margin" :loading="isLoad"
+                        @click="submitForm(formRef)">登入</el-button>
                 </el-form-item>
             </el-form>
             <el-alert v-if="loginFail" title="登入失敗" type="error" description="請確認學號密碼是否正確" show-icon />
@@ -46,6 +48,7 @@ const rules = reactive<FormRules>({
     username: [
         { required: true, message: '學號為必填', trigger: 'blur' },
         { pattern: /^\d+$/, message: '學號格式錯誤', trigger: 'change' },
+        { pattern: /^\d+$/, message: '學號格式錯誤', trigger: 'blur' },
     ],
     password: [
         { required: true, message: '密碼為必填', trigger: 'blur' },
@@ -55,7 +58,7 @@ const rules = reactive<FormRules>({
     ],
 })
 
-const onSubmit = async (formEl: FormInstance | undefined) => {
+const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
 
     await formEl.validate(async (valid, fields) => {

@@ -1,7 +1,8 @@
 <template>
     <ClientOnly>
         <div class="content col-s-7 col-m-5 col-b-4">
-            <el-form :label-width="'auto'" ref="formRef" :model="addVote" :rules="rules" hide-required-asterisk>
+            <el-form :label-width="'auto'" ref="formRef" :model="addVote" :rules="rules" hide-required-asterisk
+                @keyup.enter.capture="submitForm(formRef)">
                 <el-form-item label="名稱:" prop="voteName">
                     <el-input v-model.trim="addVote.voteName" placeholder="請輸入名稱" clearable />
                 </el-form-item>
@@ -18,11 +19,11 @@
                         trigger: 'blur'
                     }">
                     <el-space>
-                        <el-input v-model.lazy="candidate.name" placeholder="請輸入候選人名稱" clearable />
+                        <el-input v-model.trim="candidate.name" placeholder="請輸入候選人名稱" clearable />
                         <el-button v-if="index > 1" @click.prevent="removeDomain(candidate)">X</el-button>
                     </el-space>
                 </el-form-item>
-                <el-form-item @keyup.enter.="">
+                <el-form-item>
                     <el-space class="margin">
                         <el-button @click="addDomain">新增候選人</el-button>
                         <el-button type="primary" @click="submitForm(formRef)">創建</el-button>
