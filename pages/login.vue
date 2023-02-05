@@ -5,10 +5,11 @@
             <div style="height: 20px;"></div>
             <el-form ref="formRef" :model="itemEl" :label-width="'auto'" :rules="rules" hide-required-asterisk>
                 <el-form-item label="學號:" prop="username">
-                    <el-input v-model="itemEl.username" placeholder="請輸入學號" clearable />
+                    <el-input v-model.trim="itemEl.username" placeholder="請輸入學號" clearable />
                 </el-form-item>
                 <el-form-item label="密碼:" prop="password">
-                    <el-input v-model="itemEl.password" type="password" placeholder="請輸入密碼" show-password clearable />
+                    <el-input v-model.trim="itemEl.password" type="password" placeholder="請輸入密碼" show-password
+                        clearable />
                 </el-form-item>
                 <el-form-item label="&nbsp;" prop="verify">
                     <el-checkbox v-model="itemEl.verify" label="同意使用學生資訊系統進行驗證" border />

@@ -3,7 +3,7 @@
         <div class="content col-s-7 col-m-5 col-b-4">
             <el-form :label-width="'auto'" ref="formRef" :model="addVote" :rules="rules" hide-required-asterisk>
                 <el-form-item label="名稱:" prop="voteName">
-                    <el-input v-model="addVote.voteName" placeholder="請輸入名稱" clearable />
+                    <el-input v-model.trim="addVote.voteName" placeholder="請輸入名稱" clearable />
                 </el-form-item>
                 <el-form-item label="開始時間:" prop="startTime">
                     <el-date-picker v-model="addVote.startTime" type="datetime" placeholder="請選擇開始時間" />
@@ -18,11 +18,11 @@
                         trigger: 'blur'
                     }">
                     <el-space>
-                        <el-input v-model="candidate.name" placeholder="請輸入候選人名稱" clearable />
+                        <el-input v-model.lazy="candidate.name" placeholder="請輸入候選人名稱" clearable />
                         <el-button v-if="index > 1" @click.prevent="removeDomain(candidate)">X</el-button>
                     </el-space>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item @keyup.enter.="">
                     <el-space class="margin">
                         <el-button @click="addDomain">新增候選人</el-button>
                         <el-button type="primary" @click="submitForm(formRef)">創建</el-button>
@@ -51,6 +51,7 @@
 </template>
 
 <script lang="ts" setup>
+import { onKeyUp } from '@vueuse/core';
 import type { FormInstance, FormRules } from 'element-plus'
 
 definePageMeta({
