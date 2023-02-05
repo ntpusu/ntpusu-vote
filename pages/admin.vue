@@ -31,22 +31,22 @@
             </el-form>
         </div>
         <el-divider border-style="dashed" />
-        <el-table :data="tableData" border style="width: 100%">
-            <el-table-column prop="title" label="Title" width="180" />
-            <el-table-column prop="startTime" label="startTime" width="180" />
+        <el-table :data="tableData" border :table-layout="'auto'">
+            <el-table-column prop="title" label="Title" />
+            <el-table-column prop="startTime" label="startTime" />
             <el-table-column prop="endTime" label="endTime" />
+            <el-table-column label="Action" width="90px">
+                <template #default="{ row }">
+                    <el-button size="small" type="primary" @click="handleDelete(row)">Delete</el-button>
+                </template>
+            </el-table-column>
         </el-table>
-        <p v-for="(VSitem, index) in VS" :key="index" class="scrollbar-item">
-            <span>{{ VSitem.name }}</span>
-            <span>{{ VSitem.startTime }}</span>
-            <span>{{ VSitem.endTime }}</span>
-        </p>
-        <span>{{ tableData }}</span>
     </ClientOnly>
 </template>
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
+import { JsonObject } from 'type-fest'
 
 definePageMeta({
     middleware: ['auth'],
@@ -95,10 +95,10 @@ const rules = reactive<FormRules>({
     ],
 })
 
-const submitForm = (formRef: FormInstance | undefined) => {
+const submitForm = async (formRef: FormInstance | undefined) => {
     if (!formRef) return
 
-    formRef.validate((valid, fields) => {
+    await formRef.validate(async (valid, fields) => {
         if (valid) {
             const { voteName, startTime, endTime, candidates } = addVote
 
@@ -109,15 +109,15 @@ const submitForm = (formRef: FormInstance | undefined) => {
                 candidates: candidates.map((candidate) => candidate.name),
             }
 
-            $fetch('/api/addVS', {
+            const res = await $fetch('/api/addVS', {
                 method: 'POST',
                 body: JSON.stringify(data),
-            }).then((res) => {
-                if (res.data) {
-                    ElMessage('創建成功')
-                    return
-                }
             })
+
+            if (res.data) {
+                ElMessage('創建成功')
+                return
+            }
 
             ElMessage('創建失敗')
         }
@@ -126,11 +126,24 @@ const submitForm = (formRef: FormInstance | undefined) => {
 
 const { data: VS, pending: VSPending, refresh: VSRefresh } = await useFetch('/api/voteSession')
 
+const newDate = (time: Date) => {
+    return new Date(time)
+}
+
 const tableData = VS.value?.map((item) => ({
     title: item.name,
-    startTime: item.startTime.toLocaleString(),
-    endTime: item.endTime.toLocaleString(),
+    startTime: newDate(item.startTime).toLocaleString(),
+    endTime: newDate(item.endTime).toLocaleString(),
 }))
+
+const handleDelete = async (row: any) => {
+    await $fetch('/api/delVS?title=' + row.title, {
+        method: 'DELETE',
+    })
+
+    ElMessage('刪除成功')
+    VSRefresh()
+}
 </script>
 
 <style scoped>
