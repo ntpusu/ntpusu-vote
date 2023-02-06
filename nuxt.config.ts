@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     },
     modules: [
         '@element-plus/nuxt',
+        '@nuxtjs/tailwindcss',
     ],
     css: [
         '@/assets/css/main.css',
