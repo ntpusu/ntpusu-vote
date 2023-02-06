@@ -1,7 +1,9 @@
 <template>
     <el-result icon="error" title="404 NOT FOUND🧐">
         <template #extra>
-            <h5 v-if="countdown <= 5">{{ countdown.toFixed(1) }}秒後自動跳轉至首頁</h5>
+            <h5 v-if="countdown <= 5">
+                {{ countdown.toFixed(1) }}秒後自動跳轉至首頁
+            </h5>
         </template>
     </el-result>
 </template>
@@ -16,8 +18,7 @@ const timer = () => {
 
         if (countdown.value > 0.1) {
             timer()
-        }
-        else {
+        } else {
             useRouter().push('/')
         }
     }, 100)

@@ -1,27 +1,64 @@
 <template>
     <ClientOnly>
-        <div class="content col-s-7 col-m-5 col-b-4">
-            <el-alert title="將連線至學生資訊系統進行驗證" description="請使用學生資訊系統的帳號密碼登入" show-icon close-text="了解～" />
-            <div style="height: 20px;"></div>
-            <el-form ref="formRef" :model="itemEl" :label-width="'auto'" :rules="rules" hide-required-asterisk
-                @keyup.enter.capture="submitForm(formRef)">
+        <div
+            class="m-auto w-full sm:w-7/12 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
+        >
+            <el-alert
+                title="將連線至學生資訊系統進行驗證"
+                description="請使用學生資訊系統的帳號密碼登入"
+                show-icon
+                close-text="了解～"
+            />
+            <div style="height: 20px"></div>
+            <el-form
+                ref="formRef"
+                :model="itemEl"
+                :label-width="'auto'"
+                :rules="rules"
+                hide-required-asterisk
+                @keyup.enter.capture="submitForm(formRef)"
+            >
                 <el-form-item label="學號:" prop="username">
-                    <el-input v-model.trim="itemEl.username" placeholder="請輸入學號" clearable />
+                    <el-input
+                        v-model.trim="itemEl.username"
+                        placeholder="請輸入學號"
+                        clearable
+                    />
                 </el-form-item>
                 <el-form-item label="密碼:" prop="password">
-                    <el-input v-model.trim="itemEl.password" type="password" placeholder="請輸入密碼" show-password
-                        clearable />
+                    <el-input
+                        v-model.trim="itemEl.password"
+                        type="password"
+                        placeholder="請輸入密碼"
+                        show-password
+                        clearable
+                    />
                 </el-form-item>
                 <el-form-item label="&nbsp;" prop="verify">
-                    <el-checkbox v-model="itemEl.verify" label="同意使用學生資訊系統進行驗證" border />
+                    <el-checkbox
+                        v-model="itemEl.verify"
+                        label="同意使用學生資訊系統進行驗證"
+                        border
+                    />
                 </el-form-item>
-                <div style="height: 20px;"></div>
+                <div style="height: 20px"></div>
                 <el-form-item>
-                    <el-button type="primary" class="margin" :loading="isLoad"
-                        @click="submitForm(formRef)">登入</el-button>
+                    <el-button
+                        type="primary"
+                        class="margin"
+                        :loading="isLoad"
+                        @click="submitForm(formRef)"
+                        >登入</el-button
+                    >
                 </el-form-item>
             </el-form>
-            <el-alert v-if="loginFail" title="登入失敗" type="error" description="請確認學號密碼是否正確" show-icon />
+            <el-alert
+                v-if="loginFail"
+                title="登入失敗"
+                type="error"
+                description="請確認學號密碼是否正確"
+                show-icon
+            />
         </div>
     </ClientOnly>
 </template>
@@ -50,11 +87,13 @@ const rules = reactive<FormRules>({
         { pattern: /^\d+$/, message: '學號格式錯誤', trigger: 'change' },
         { pattern: /^\d+$/, message: '學號格式錯誤', trigger: 'blur' },
     ],
-    password: [
-        { required: true, message: '密碼為必填', trigger: 'blur' },
-    ],
+    password: [{ required: true, message: '密碼為必填', trigger: 'blur' }],
     verify: [
-        { pattern: /true/, message: '需同意使用學生資訊系統進行驗證', trigger: 'change' },
+        {
+            pattern: /true/,
+            message: '需同意使用學生資訊系統進行驗證',
+            trigger: 'change',
+        },
     ],
 })
 
@@ -68,15 +107,14 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             const res = await $fetch('/api/login', {
                 method: 'POST',
                 body: JSON.stringify({
-                    'username': itemEl.username,
-                    'password': itemEl.password
-                })
+                    username: itemEl.username,
+                    password: itemEl.password,
+                }),
             })
 
             if (res.login) {
                 await useRouter().push('/')
-            }
-            else {
+            } else {
                 loginFail.value = true
             }
 
