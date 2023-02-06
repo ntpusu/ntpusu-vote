@@ -9,7 +9,4 @@ export default defineNuxtConfig({
         '@element-plus/nuxt',
         '@nuxtjs/tailwindcss',
     ],
-    css: [
-        '@/assets/css/main.css',
-    ],
 });
