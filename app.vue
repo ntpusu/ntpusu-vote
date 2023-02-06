@@ -15,16 +15,26 @@
                         :ellipsis="false"
                         @select="handleSelect"
                     >
-                        <h1 class="margin">&nbsp;投票系統</h1>
+                        <h1 class="m-auto pl-2 text-2xl font-bold">投票系統</h1>
                         <div class="flex-grow" />
-                        <el-menu-item index="/">首頁</el-menu-item>
-                        <el-menu-item v-if="loginState" index="/allVote"
+                        <el-menu-item class="font-bold" index="/"
+                            >首頁</el-menu-item
+                        >
+                        <el-menu-item
+                            v-if="loginState"
+                            class="font-bold"
+                            index="/allVote"
                             >投票清單</el-menu-item
                         >
-                        <el-menu-item v-if="!loginState" index="/login"
+                        <el-menu-item
+                            v-if="!loginState"
+                            class="font-bold"
+                            index="/login"
                             >登入</el-menu-item
                         >
-                        <el-menu-item v-else index="/logout">登出</el-menu-item>
+                        <el-menu-item v-else class="font-bold" index="/logout"
+                            >登出</el-menu-item
+                        >
                     </el-menu>
                 </ClientOnly>
             </el-header>
@@ -49,9 +59,3 @@ const handleSelect = (key: string, keyPath: string[]) => {
     curIndex.value = key
 }
 </script>
-
-<style>
-.flex-grow {
-    flex-grow: 1;
-}
-</style>
