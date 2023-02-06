@@ -1,22 +1,28 @@
 <template>
     <ClientOnly>
-        <div class="content col-s-7 col-m-5 col-b-4">
+        <div
+            class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 sm:w-7/12 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
+        >
             <el-form
                 :label-width="'auto'"
                 ref="formRef"
                 :model="addVote"
                 :rules="rules"
                 hide-required-asterisk
+                class="min-w-max"
                 @keyup.enter.capture="submitForm(formRef)"
             >
-                <el-form-item label="名稱:" prop="voteName">
-                    <el-input
-                        v-model.trim="addVote.voteName"
-                        placeholder="請輸入名稱"
-                        clearable
-                    />
+                <el-form-item label="名稱:" prop="voteName" class="m-auto">
+                    <el-space>
+                        <el-input
+                            v-model.trim="addVote.voteName"
+                            placeholder="請輸入名稱"
+                            clearable
+                        />
+                        <el-button class="!hidden"></el-button>
+                    </el-space>
                 </el-form-item>
-                <el-form-item label="開始時間:" prop="startTime">
+                <el-form-item label="開始時間:" prop="startTime" class="m-auto">
                     <el-date-picker
                         v-model="addVote.startTime"
                         type="datetime"
@@ -55,7 +61,7 @@
                     </el-space>
                 </el-form-item>
                 <el-form-item>
-                    <el-space class="margin">
+                    <el-space class="m-auto">
                         <el-button @click="addDomain">新增候選人</el-button>
                         <el-button type="primary" @click="submitForm(formRef)"
                             >創建</el-button
@@ -65,7 +71,9 @@
             </el-form>
         </div>
         <el-divider border-style="dashed" />
-        <div class="content col-s-11 col-m-9 col-b-7">
+        <div
+            class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-3/4 xl:w-7/12 2xl:w-1/3"
+        >
             <el-table :data="tableData()" border :table-layout="'auto'">
                 <el-table-column prop="title" label="Title" />
                 <el-table-column prop="startTime" label="startTime" />

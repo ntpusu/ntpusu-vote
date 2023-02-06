@@ -1,7 +1,7 @@
 <template>
     <ClientOnly>
         <div
-            class="m-auto w-full sm:w-7/12 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
+            class="my-4 mx-auto w-full rounded-2xl border-dashed border-blue-200 p-5 sm:w-7/12 sm:border-4 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
         >
             <el-alert
                 title="將連線至學生資訊系統進行驗證"
@@ -9,7 +9,7 @@
                 show-icon
                 close-text="了解～"
             />
-            <div style="height: 20px"></div>
+            <div class="h-4"></div>
             <el-form
                 ref="formRef"
                 :model="itemEl"
@@ -38,14 +38,13 @@
                     <el-checkbox
                         v-model="itemEl.verify"
                         label="同意使用學生資訊系統進行驗證"
-                        border
                     />
                 </el-form-item>
                 <div style="height: 20px"></div>
                 <el-form-item>
                     <el-button
                         type="primary"
-                        class="margin"
+                        class="m-auto"
                         :loading="isLoad"
                         @click="submitForm(formRef)"
                         >登入</el-button

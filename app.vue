@@ -5,7 +5,7 @@
             <el-header>
                 <ClientOnly>
                     <template #fallback>
-                        <div style="text-align: center">Loading menu......</div>
+                        <div class="pt-4 text-center">Loading menu......</div>
                     </template>
                     <el-menu
                         :default-active="$route.path"
