@@ -12,7 +12,6 @@
     "@element-plus/nuxt": "^1.0.3",
     "@nuxtjs/tailwindcss": "^6.3.1",
     "nuxt": "^3.0.0",
-    "prettier": "2.8.3",
     "prettier-plugin-tailwindcss": "^0.2.2",
     "prisma": "^4.9.0"
   },
