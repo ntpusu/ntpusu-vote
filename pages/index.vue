@@ -1,8 +1,5 @@
 <template>
-    <div>
-        user: {{ username }}
-        {{}}
-    </div>
+    <div>user: {{ username }}</div>
 </template>
 
 <script lang="ts" setup>

@@ -1,11 +1,10 @@
 <template>
-    <el-result icon="error" title="404 NOT FOUND🧐">
-        <template #extra>
-            <h5 v-if="countdown <= 5">
-                {{ countdown.toFixed(1) }}秒後自動跳轉至首頁
-            </h5>
-        </template>
-    </el-result>
+    <div class="pt-16">
+        <el-result icon="error" title="404 NOT FOUND🧐"></el-result>
+        <nuxt-link to="/" class="grid text-center text-sm"
+            >{{ countdown.toFixed(1) }} 秒後自動跳轉至首頁</nuxt-link
+        >
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -25,13 +24,6 @@ const timer = () => {
 }
 
 onMounted(() => {
-    timer()
+    // timer()
 })
 </script>
-
-<style scoped>
-.content {
-    text-align: center;
-    margin: auto;
-}
-</style>

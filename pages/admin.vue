@@ -101,7 +101,6 @@
 </template>
 
 <script lang="ts" setup>
-import { onKeyUp } from '@vueuse/core'
 import type { FormInstance, FormRules } from 'element-plus'
 
 definePageMeta({

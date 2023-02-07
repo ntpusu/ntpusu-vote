@@ -1,14 +1,12 @@
 <template>
-    <el-space v-if="!VSPending" class="container" wrap>
+    <el-space v-if="!VSPending" class="justify-center" wrap>
         <el-card v-for="VSitem in VS" :key="VSitem.id" style="width: 300px">
             <template #header>
                 <div>
-                    <span v-if="VS != null" class="title">{{
-                        VSitem.name
-                    }}</span>
+                    <span v-if="VS != null" class="">{{ VSitem.name }}</span>
                 </div>
             </template>
-            <div>截止時間：{{ newDate(VSitem.endTime).toLocaleString() }}</div>
+            <div>截止時間：{{ viewDate(VSitem.endTime) }}</div>
         </el-card>
     </el-space>
 </template>
@@ -29,19 +27,6 @@ const newDate = (time: Date) => {
 }
 
 const viewDate = (time: Date) => {
-    return new Date(time).toLocaleString()
+    return newDate(time).toLocaleString()
 }
 </script>
-
-<style>
-.container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.title {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-</style>
