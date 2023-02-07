@@ -8,7 +8,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     let authStates = false
     if (un !== undefined && un !== null) {
         username = AES.decrypt(un, config.public.CRYPTO_KEY).toString(encUtf8)
-
         authStates = !isNaN(parseInt(username))
     }
 
@@ -24,7 +23,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     if (to.path == '/admin') {
-        const admin = await $fetch('/api/checkAdmin')
+        const admin = await $fetch('/api/checkAdmin', {
+            method: 'POST',
+            body: JSON.stringify({ un: un })
+        })
+
         if (admin.result == false) {
             return await navigateTo('/')
         }
