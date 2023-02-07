@@ -1,7 +1,5 @@
 import AES from 'crypto-js/aes'
 import encUtf8 from 'crypto-js/enc-utf8'
-import prisma from '~/lib/prisma'
-
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const config = useRuntimeConfig()
     const un = useCookie('un').value
@@ -26,11 +24,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     if (to.path == '/admin') {
-        const admin = await prisma.admin.findUnique({
-            where: { id: parseInt(username) }
-        })
-
-        if (admin === null) {
+        const admin = await $fetch('/api/checkAdmin')
+        if (admin.result == false) {
             return await navigateTo('/')
         }
     }
