@@ -79,7 +79,7 @@
                 <el-table-column prop="title" label="名稱" />
                 <el-table-column prop="startTime" label="開始時間" />
                 <el-table-column prop="endTime" label="結束時間" />
-                <el-table-column label="操作" width="90px">
+                <el-table-column label="操作" width="80px">
                     <template #default="{ row }">
                         <el-popconfirm
                             title="確定要刪除嗎？"
@@ -89,7 +89,7 @@
                         >
                             <template #reference>
                                 <el-button size="small" type="primary"
-                                    >Delete</el-button
+                                    >刪除</el-button
                                 >
                             </template>
                         </el-popconfirm>

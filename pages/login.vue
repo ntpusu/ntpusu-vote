@@ -35,13 +35,14 @@
                         clearable
                     />
                 </el-form-item>
-                <el-form-item label="&nbsp;" prop="verify">
-                    <el-checkbox
-                        v-model="itemEl.verify"
-                        label="同意使用學生資訊系統進行驗證"
-                    />
-                </el-form-item>
-                <div style="height: 20px"></div>
+                <div class="flex justify-center">
+                    <el-form-item prop="verify">
+                        <el-checkbox
+                            v-model="itemEl.verify"
+                            label="同意使用學生資訊系統進行驗證"
+                        />
+                    </el-form-item>
+                </div>
                 <el-form-item>
                     <el-button
                         type="primary"
