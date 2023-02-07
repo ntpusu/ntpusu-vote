@@ -1,14 +1,31 @@
 <template>
-    <el-space v-if="!VSPending" class="justify-center" wrap>
-        <el-card v-for="VSitem in VS" :key="VSitem.id" style="width: 300px">
+    <el-space v-if="!VSingPending" class="justify-center" wrap>
+        <el-card
+            v-for="VSingitem in VSing"
+            :key="VSingitem.id"
+            style="width: 350px"
+        >
             <template #header>
-                <div>
-                    <span v-if="VS != null" class="">{{ VSitem.name }}</span>
-                </div>
+                <el-space class="!flex justify-between">
+                    <div class="">
+                        {{ VSingitem.name }}
+                    </div>
+                    <div>
+                        <div class="text-xs">
+                            開始：{{ viewDate(VSingitem.startTime) }}
+                        </div>
+                        <div class="text-xs">
+                            截止：{{ viewDate(VSingitem.endTime) }}
+                        </div>
+                    </div>
+                </el-space>
             </template>
-            <div>截止時間：{{ viewDate(VSitem.endTime) }}</div>
+            <div v-for="candidate in VSingitem.candidates" :key="candidate.id">
+                {{ candidate.name }}
+            </div>
         </el-card>
     </el-space>
+    <el-empty v-else description="loading......" />
 </template>
 
 <script lang="ts" setup>
@@ -17,10 +34,10 @@ definePageMeta({
 })
 
 const {
-    data: VS,
-    pending: VSPending,
-    refresh: VSRefresh,
-} = useFetch('/api/voteSession')
+    data: VSing,
+    pending: VSingPending,
+    refresh: VSingRefresh,
+} = useFetch('/api/VsCa')
 
 const newDate = (time: Date) => {
     return new Date(time)
