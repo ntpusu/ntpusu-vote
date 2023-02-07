@@ -76,13 +76,15 @@
             class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-3/4 xl:w-7/12 2xl:w-1/3"
         >
             <el-table :data="tableData()" border :table-layout="'auto'">
-                <el-table-column prop="title" label="Title" />
-                <el-table-column prop="startTime" label="startTime" />
-                <el-table-column prop="endTime" label="endTime" />
-                <el-table-column label="Action" width="90px">
+                <el-table-column prop="title" label="名稱" />
+                <el-table-column prop="startTime" label="開始時間" />
+                <el-table-column prop="endTime" label="結束時間" />
+                <el-table-column label="操作" width="90px">
                     <template #default="{ row }">
                         <el-popconfirm
                             title="確定要刪除嗎？"
+                            cancel-button-text="取消"
+                            confirm-button-text="確定"
                             @confirm="handleDelete(row)"
                         >
                             <template #reference>
