@@ -1,7 +1,7 @@
 <template>
     <ClientOnly>
         <div
-            class="my-4 mx-auto w-full rounded-2xl border-dashed border-blue-200 p-5 sm:w-7/12 sm:border-4 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
+            class="my-4 mx-auto w-full p-5 sm:w-7/12 sm:rounded-2xl sm:border-4 sm:border-dashed sm:border-blue-200 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
         >
             <el-alert
                 title="將連線至學生資訊系統進行驗證"
@@ -14,18 +14,19 @@
                 ref="formRef"
                 :model="itemEl"
                 :label-width="'auto'"
+                label-suffix=":"
                 :rules="rules"
                 hide-required-asterisk
                 @keyup.enter.capture="submitForm(formRef)"
             >
-                <el-form-item label="學號:" prop="username">
+                <el-form-item label="學號" prop="username">
                     <el-input
                         v-model.trim="itemEl.username"
                         placeholder="請輸入學號"
                         clearable
                     />
                 </el-form-item>
-                <el-form-item label="密碼:" prop="password">
+                <el-form-item label="密碼" prop="password">
                     <el-input
                         v-model.trim="itemEl.password"
                         type="password"
@@ -128,12 +129,3 @@ onMounted(async () => {
     }
 })
 </script>
-
-<style>
-.content {
-    margin: 5% auto;
-    padding: 20px;
-    border: 3px solid #c9d7f8;
-    border-radius: 10px;
-}
-</style>

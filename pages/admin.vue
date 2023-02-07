@@ -5,6 +5,7 @@
         >
             <el-form
                 :label-width="'auto'"
+                label-suffix=":"
                 ref="formRef"
                 :model="addVote"
                 :rules="rules"
@@ -12,7 +13,7 @@
                 class="min-w-max"
                 @keyup.enter.capture="submitForm(formRef)"
             >
-                <el-form-item label="名稱:" prop="voteName" class="m-auto">
+                <el-form-item label="名稱" prop="voteName" class="m-auto">
                     <el-space>
                         <el-input
                             v-model.trim="addVote.voteName"
@@ -22,14 +23,14 @@
                         <el-button class="!hidden"></el-button>
                     </el-space>
                 </el-form-item>
-                <el-form-item label="開始時間:" prop="startTime" class="m-auto">
+                <el-form-item label="開始時間" prop="startTime" class="m-auto">
                     <el-date-picker
                         v-model="addVote.startTime"
                         type="datetime"
                         placeholder="請選擇開始時間"
                     />
                 </el-form-item>
-                <el-form-item label="結束時間:" prop="endTime">
+                <el-form-item label="結束時間" prop="endTime">
                     <el-date-picker
                         v-model="addVote.endTime"
                         type="datetime"
@@ -40,7 +41,7 @@
                     v-for="(candidate, index) in addVote.candidates"
                     :key="index"
                     :prop="'candidates.' + index + '.name'"
-                    :label="index + 1 + '號候選人:'"
+                    :label="index + 1 + '號候選人'"
                     :rules="{
                         required: true,
                         message: '候選人為必填',
@@ -202,12 +203,3 @@ const handleDelete = async (row: any) => {
     VSRefresh()
 }
 </script>
-
-<style scoped>
-.content {
-    margin: 0 auto;
-    padding: 20px;
-    border: 3px solid #c9d7f8;
-    border-radius: 10px;
-}
-</style>
