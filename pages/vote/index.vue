@@ -1,9 +1,9 @@
 <template>
     <el-space v-if="!VSPending" class="justify-center" wrap>
-        <el-card v-for="VSitem in VS" :key="VSitem.id" style="width: 350px">
+        <el-card v-for="VSitem in VS" :key="VSitem.id" style="width: 400px">
             <template #header>
                 <el-space class="!flex justify-between">
-                    <div class="">
+                    <div class="text-xl font-bold">
                         {{ VSitem.name }}
                     </div>
                     <div>
@@ -16,18 +16,29 @@
                     </div>
                 </el-space>
             </template>
-            <dix>候選人：</dix>
-            <div v-for="(candidate, index) in VSitem.candidates" :key="index">
-                {{ index + 1 }}. {{ candidate.name }}
-            </div>
-            <el-divider />
-            <div class="px-28">
-                <el-button
-                    type="primary"
-                    class="w-full"
-                    @click="useRouter().push('/vote/' + VSitem.id)"
-                    >投票</el-button
+            <dix>
+                <div
+                    v-for="(candidate, index) in VSitem.candidates"
+                    :key="index"
                 >
+                    {{ index + 1 }}. {{ candidate.name }}
+                </div>
+            </dix>
+            <el-divider border-style="dotted" />
+            <div class="text px-32">
+                <el-button
+                    v-if="timeCnt(VSitem.endTime) < Date.now()"
+                    type="primary"
+                    class="w-full tracking-widest"
+                    @click="useRouter().push('/vote/' + VSitem.id)"
+                    >結果
+                </el-button>
+                <el-button
+                    v-else-if="timeCnt(VSitem.startTime) < Date.now()"
+                    type="primary"
+                    class="w-full tracking-widest"
+                    >投票
+                </el-button>
             </div>
         </el-card>
     </el-space>
@@ -35,6 +46,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance, FormRules } from 'element-plus'
+
 definePageMeta({
     middleware: ['auth'],
 })
@@ -56,4 +69,12 @@ const viewDate = (time: Date) => {
 const timeCnt = (time: Date) => {
     return newDate(time).getTime()
 }
+
+const formRef = ref<FormInstance>()
+
+const voteData = reactive<{
+    selected: number
+}>({
+    selected: 0,
+})
 </script>
