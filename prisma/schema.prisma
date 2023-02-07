@@ -12,20 +12,22 @@ model VoteSession {
   name       String      @unique
   startTime  DateTime
   endTime    DateTime
-  candidates Candidate[]
+  electionId Int?        @unique
+  election   Candidate?  @relation("election", fields: [electionId], references: [id])
+  candidates Candidate[] @relation("allCandidates")
 }
 
 model Candidate {
-  id            Int         @id @default(autoincrement())
+  id            Int          @id @default(autoincrement())
   name          String
   ballot        Ballot[]
+  VSelection    VoteSession? @relation("election")
   voteSessionId Int
-  VoteSession   VoteSession @relation(fields: [voteSessionId], references: [id])
+  voteSession   VoteSession  @relation("allCandidates", fields: [voteSessionId], references: [id])
 }
 
 model Ballot {
-  id          Int       @id @default(autoincrement())
-  token       String    @unique
+  token       String    @id
   time        DateTime  @default(now())
   candidateId Int
   candidate   Candidate @relation(fields: [candidateId], references: [id])
