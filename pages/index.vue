@@ -1,5 +1,5 @@
 <template>
-    <div>user: {{ username }}</div>
+    <div v-if="username != ''">user: {{ username }}</div>
 </template>
 
 <script lang="ts" setup>
@@ -16,10 +16,10 @@ onMounted(async () => {
     const config = useRuntimeConfig()
 
     let un = await $fetch('/api/un')
-    if (un != '')
+    if (un != '') {
         username.value = AES.decrypt(un, config.public.CRYPTO_KEY).toString(
             encUtf8
         )
-    else username.value = '未登入'
+    } else username.value = '未登入'
 })
 </script>
