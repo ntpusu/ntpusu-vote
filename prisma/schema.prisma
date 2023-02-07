@@ -32,3 +32,7 @@ model Ballot {
   candidateId Int
   candidate   Candidate @relation(fields: [candidateId], references: [id])
 }
+
+model Admin {
+  id Int @id
+}

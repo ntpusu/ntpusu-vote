@@ -10,7 +10,11 @@ export default defineEventHandler(async (_event) => {
     }
 
     const username = AES.decrypt(un, process.env.CRYPTO_KEY as string).toString(encUtf8)
-    if (username != process.env.ADMIN_USERNAME as string) {
+    const admin = await prisma.admin.findUnique({
+        where: { id: parseInt(username) }
+    })
+
+    if (admin === null) {
         return {
             data: false
         }
