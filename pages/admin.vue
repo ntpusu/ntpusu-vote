@@ -16,7 +16,7 @@
                 <el-form-item label="名稱" prop="voteName" class="m-auto">
                     <el-space>
                         <el-input
-                            v-model.trim="addVote.voteName"
+                            v-model="addVote.voteName"
                             placeholder="請輸入名稱"
                             clearable
                         />
@@ -50,7 +50,7 @@
                 >
                     <el-space>
                         <el-input
-                            v-model.trim="candidate.name"
+                            v-model="candidate.name"
                             placeholder="請輸入候選人名稱"
                             clearable
                         />
