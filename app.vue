@@ -23,7 +23,7 @@
                         <el-menu-item
                             v-if="loginState"
                             class="font-bold"
-                            index="/allVote"
+                            index="/vote"
                             >投票清單</el-menu-item
                         >
                         <el-menu-item
