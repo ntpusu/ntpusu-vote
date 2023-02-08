@@ -1,7 +1,7 @@
 import prisma from '~/lib/prisma'
-import AES from 'crypto-js/aes'
-import SHA256 from 'crypto-js/sha256'
-import encUtf8 from 'crypto-js/enc-utf8'
+import AES from 'crypto-js/aes.js'
+import SHA256 from 'crypto-js/sha256.js'
+import encUtf8 from 'crypto-js/enc-utf8.js'
 export default defineEventHandler(async (_event) => {
     const un = getCookie(_event, 'un')
     const query = getQuery(_event)

@@ -1,6 +1,6 @@
+import prisma from '~/lib/prisma'
 import AES from 'crypto-js/aes.js'
 import encUtf8 from 'crypto-js/enc-utf8.js'
-import prisma from '~/lib/prisma'
 export default defineEventHandler(async (_event) => {
     const { un } = await readBody(_event)
 
