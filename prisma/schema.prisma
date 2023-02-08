@@ -20,7 +20,7 @@ model VoteSession {
 model Candidate {
   id            Int          @id @default(autoincrement())
   name          String
-  ballot        Ballot[]
+  ballots       Ballot[]
   VSelection    VoteSession? @relation("election")
   voteSessionId Int
   voteSession   VoteSession  @relation("allCandidates", fields: [voteSessionId], references: [id])
