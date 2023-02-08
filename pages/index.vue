@@ -15,11 +15,10 @@ const username = ref('')
 onMounted(async () => {
     const config = useRuntimeConfig()
 
-    // const un = await $fetch('/api/un')
     const un = useCookie('un')
-    if (un.value != '') {
+    if (un.value != null) {
         username.value = AES.decrypt(
-            un.value!,
+            un.value,
             config.public.CRYPTO_KEY
         ).toString(encUtf8)
     } else username.value = '未登入'
