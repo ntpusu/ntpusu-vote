@@ -34,7 +34,10 @@
                     <el-radio-group
                         class="!grid justify-start"
                         v-model="voteData.selected[index]"
-                        :disabled="timeCnt(VSitem.endTime) < Date.now()"
+                        :disabled="
+                            checkVote(VSitem.name, index) ||
+                            timeCnt(VSitem.endTime) < Date.now()
+                        "
                     >
                         <el-radio
                             v-for="(candidate, itemIndex) in VSitem.candidates"
@@ -55,11 +58,18 @@
                             結果
                         </NuxtLink>
                         <el-button
-                            v-else
+                            v-else-if="!voteData.disable[index]"
                             type="primary"
                             class="w-full !rounded-md tracking-widest"
                             @click="voteConfirm(index)"
                             >投票
+                        </el-button>
+                        <el-button
+                            v-else
+                            type="primary"
+                            class="w-full !rounded-md tracking-widest"
+                            @click="seeToken(index)"
+                            >已投票
                         </el-button>
                     </div>
                 </el-form>
@@ -94,7 +104,25 @@ const timeCnt = (time: Date) => {
     return newDate(time).getTime()
 }
 
-const voteData = reactive<{ selected: number[] }>({ selected: [] })
+const checkVote = (title: string, index: number) => {
+    $fetch('/api/uniBa?' + new URLSearchParams({ title })).then((res: any) => {
+        if (res.respond) {
+            voteData.selected[index] = res.candidateId
+            voteData.disable[index] = true
+            voteData.token[index] = res.ballot.token
+        } else {
+            voteData.disable[index] = false
+        }
+    })
+
+    return voteData.disable[index]
+}
+
+const voteData = reactive<{
+    selected: number[]
+    disable: boolean[]
+    token: string[]
+}>({ selected: [], disable: [], token: [] })
 
 const voteConfirm = async (index: number) => {
     if (
@@ -116,17 +144,57 @@ const voteConfirm = async (index: number) => {
             }
         )
             .then(() => {
-                ElMessage({
-                    type: 'success',
-                    message: 'Delete completed',
+                $fetch('/api/vote', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        candidateId: voteData.selected[index],
+                    }),
+                }).then((res: any) => {
+                    if (res.respond) {
+                        voteData.disable[index] = true
+                        voteData.token[index] = res.token
+                        ElMessageBox.alert('憑證：' + res.token, '投票成功', {
+                            confirmButtonText: '複製憑證',
+                            type: 'success',
+                        }).then(() => {
+                            navigator.clipboard.writeText(res.token)
+                            ElMessage({
+                                type: 'success',
+                                message: '已複製',
+                            })
+                        })
+                    } else {
+                        ElMessageBox.alert(
+                            '投票憑證：' + res.token,
+                            '不可重複投票',
+                            {
+                                confirmButtonText: '確定',
+                                type: 'error',
+                            }
+                        )
+                    }
                 })
             })
             .catch(() => {
                 ElMessage({
                     type: 'info',
-                    message: 'Delete canceled',
+                    message: '已取消投票',
                 })
             })
     }
+}
+
+const seeToken = (index: number) => {
+    ElMessageBox.alert(voteData.token[index], '投票憑證', {
+        confirmButtonText: '複製',
+        type: 'success',
+        roundButton: true,
+    }).then(() => {
+        navigator.clipboard.writeText(voteData.token[index])
+        ElMessage({
+            type: 'success',
+            message: '已複製',
+        })
+    })
 }
 </script>
