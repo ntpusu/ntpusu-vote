@@ -102,8 +102,7 @@ const voteConfirm = async (index: number) => {
         voteData.selected[index] !== null
     ) {
         const candidate = (await $fetch(
-            '/api/uniCa' +
-                '?' +
+            '/api/uniCa?' +
                 new URLSearchParams({ id: voteData.selected[index].toString() })
         )) as Candidate | null
 
