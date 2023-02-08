@@ -163,6 +163,9 @@ const submitForm = async (formRef: FormInstance | undefined) => {
             })
 
             formRef.resetFields()
+            while (addVote.candidates.length > 2) {
+                addVote.candidates.pop()
+            }
 
             if (res.data) {
                 ElMessage('創建成功')
@@ -196,10 +199,20 @@ const tableData = () => {
 }
 
 const handleDelete = async (row: any) => {
-    await $fetch('/api/delVS?title=' + row.title, {
-        method: 'DELETE',
-    })
+    const res = (await $fetch(
+        '/api/delVS?' +
+            new URLSearchParams({
+                title: row.title,
+            }),
+        {
+            method: 'DELETE',
+        }
+    )) as any
 
+    if (!res.data) {
+        ElMessage('刪除失敗')
+        return
+    }
     ElMessage('刪除成功')
     VSRefresh()
 }
