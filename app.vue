@@ -27,6 +27,12 @@
                             >投票清單</el-menu-item
                         >
                         <el-menu-item
+                            v-if="loginState"
+                            class="font-bold"
+                            index="/vote/create"
+                            >管理</el-menu-item
+                        >
+                        <el-menu-item
                             v-if="!loginState"
                             class="font-bold"
                             index="/login"
