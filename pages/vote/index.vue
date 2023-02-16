@@ -107,7 +107,7 @@ const timeCnt = (time: Date) => {
 const checkVote = (title: string, index: number) => {
     $fetch('/api/uniBa?' + new URLSearchParams({ title })).then((res: any) => {
         if (res.respond) {
-            voteData.selected[index] = res.candidateId
+            voteData.selected[index] = res.ballot.candidateId
             voteData.disable[index] = true
             voteData.token[index] = res.ballot.token
         } else {

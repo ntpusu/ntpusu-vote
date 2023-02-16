@@ -29,7 +29,7 @@
                         <el-menu-item
                             v-if="loginState"
                             class="font-bold"
-                            index="/vote/create"
+                            index="/admin"
                             >管理</el-menu-item
                         >
                         <el-menu-item
