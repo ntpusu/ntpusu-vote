@@ -6,13 +6,13 @@ export default defineEventHandler(async (_event) => {
     const un = getCookie(_event, 'un')
 
     if (un === undefined || un === null) {
-        return { respond: false }
+        return undefined
     }
 
     const username = AES.decrypt(un, process.env.CRYPTO_KEY as string).toString(encUtf8)
 
     if (isNaN(parseInt(username))) {
-        return { respond: false }
+        return undefined
     }
 
     const { candidateId } = await readBody(_event)
