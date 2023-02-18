@@ -129,13 +129,13 @@ const voteConfirm = async (index: number) => {
         voteData.selected[index] !== undefined &&
         voteData.selected[index] !== null
     ) {
-        const candidate = (await $fetch(
+        const candidate = await $fetch(
             '/api/uniCa?' +
                 new URLSearchParams({ id: voteData.selected[index].toString() })
-        )) as Candidate | null
+        )
 
         ElMessageBox.confirm(
-            '確定要投給「' + candidate?.name + '」嗎？',
+            '確定要投給「' + (candidate as Candidate | null)?.name + '」嗎？',
             '再次確認',
             {
                 confirmButtonText: '確定',
