@@ -9,9 +9,16 @@ export default defineEventHandler(async (_event) => {
         return undefined
     }
 
-    const vote = await prisma.voteSession.findMany({
-        cacheStrategy: { ttl: 15, swr: 3600 },
-        include: { candidates: true },
-    })
-    return vote
+    const admin = await $fetch('/api/checkAdmin', { method: 'POST', body: JSON.stringify({ un: un }) }) as any
+
+    if (admin.result) {
+        return await prisma.voteSession.findMany({
+            include: { candidates: true },
+        })
+    } else {
+        return await prisma.voteSession.findMany({
+            cacheStrategy: { swr: 3600 },
+            include: { candidates: true },
+        })
+    }
 })

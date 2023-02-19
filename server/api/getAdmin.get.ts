@@ -8,7 +8,5 @@ export default defineEventHandler(async (_event) => {
         return undefined
     }
 
-    const admin = await prisma.admin.findMany()
-
-    return admin
+    return await prisma.admin.findMany()
 })
