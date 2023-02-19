@@ -24,6 +24,6 @@ const timer = () => {
 }
 
 onMounted(() => {
-    // timer()
+    timer()
 })
 </script>
