@@ -10,7 +10,7 @@ export default defineEventHandler(async (_event) => {
 
     const { id } = await readBody(_event)
 
-    await prisma.admin.delete({ where: { id: id } })
+    await prisma.admin.delete({ where: { id: parseInt(id) } })
 
     return {}
 })

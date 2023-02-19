@@ -1,15 +1,23 @@
 <template>
-    <div v-for="(adminItem, index) in admin" :key="index">
-        {{ adminItem.id }}
+    <div v-if="!adminPending">
+        <div v-for="(adminItem, index) in admin" :key="index">
+            {{ adminItem.id }}
+        </div>
     </div>
+    <el-empty v-else description="loading......" />
+    <el-button @click="adminRefresh()">刷新</el-button>
     <el-input v-model="addId" placeholder="請輸入ID" clearable />
-    <el-button @click="addAdmin">新增</el-button>
+    <el-button v-if="!adminPending" @click="addAdmin">新增</el-button>
     <el-input v-model="delId" placeholder="請輸入ID" clearable />
-    <el-button @click="delAdmin">刪除</el-button>
+    <el-button v-if="!adminPending" @click="delAdmin">刪除</el-button>
 </template>
 
 <script lang="ts" setup>
-const { data: admin, refresh: adminRefresh } = useFetch('/api/getAdmin')
+const {
+    data: admin,
+    pending: adminPending,
+    refresh: adminRefresh,
+} = useFetch('/api/getAdmin')
 
 const addId = ref('')
 const delId = ref('')
@@ -21,7 +29,7 @@ const addAdmin = async () => {
     })
 
     addId.value = ''
-    adminRefresh()
+    await adminRefresh()
 }
 
 const delAdmin = async () => {
@@ -31,6 +39,6 @@ const delAdmin = async () => {
     })
 
     delId.value = ''
-    adminRefresh()
+    await adminRefresh()
 }
 </script>
