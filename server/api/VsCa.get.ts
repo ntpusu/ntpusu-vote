@@ -17,7 +17,7 @@ export default defineEventHandler(async (_event) => {
         })
     } else {
         return await prisma.voteSession.findMany({
-            cacheStrategy: { swr: 3600 },
+            cacheStrategy: { swr: 60 * 60 * 24 },
             include: { candidates: true },
         })
     }
