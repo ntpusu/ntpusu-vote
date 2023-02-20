@@ -49,10 +49,12 @@
                         </el-radio>
                     </el-radio-group>
                     <el-divider border-style="dashed" />
-                    <div class="text px-32">
+                    <div class="px-32">
+                        <div class="flex"></div>
                         <NuxtLink
                             v-if="timeCnt(VSitem.endTime) < Date.now()"
                             class="inline-flex w-full justify-center rounded-md bg-green-600 px-6 py-1.5 text-sm tracking-widest text-white hover:bg-green-500"
+                            @click="showToken(index)"
                             :to="'/vote/' + VSitem.id"
                         >
                             結果
@@ -90,7 +92,7 @@ const {
     data: VS,
     pending: VSPending,
     refresh: VSRefresh,
-} = useFetch('/api/VsCa')
+} = await useLazyFetch('/api/VsCa')
 
 const newDate = (time: Date) => {
     return new Date(time)
@@ -156,6 +158,7 @@ const voteConfirm = async (index: number) => {
                         ElMessageBox.alert('憑證：' + res.token, '投票成功', {
                             confirmButtonText: '複製憑證',
                             type: 'success',
+                            roundButton: true,
                         }).then(() => {
                             navigator.clipboard.writeText(res.token)
                             ElMessage({
@@ -196,5 +199,27 @@ const seeToken = (index: number) => {
             message: '已複製',
         })
     })
+}
+
+const showToken = (index: number) => {
+    if (voteData.disable[index] === true) {
+        ElMessageBox.alert(voteData.token[index], '投票憑證', {
+            confirmButtonText: '複製',
+            type: 'success',
+            roundButton: true,
+        }).then(() => {
+            navigator.clipboard.writeText(voteData.token[index])
+            ElMessage({
+                type: 'success',
+                message: '已複製',
+            })
+        })
+    } else {
+        ElMessageBox.alert('未投票，故無投票憑證', '投票憑證', {
+            confirmButtonText: '確定',
+            type: 'error',
+            roundButton: true,
+        })
+    }
 }
 </script>
