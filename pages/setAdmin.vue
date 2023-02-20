@@ -1,15 +1,29 @@
 <template>
     <div v-if="!adminPending">
-        <div v-for="(adminItem, index) in admin" :key="index">
+        <div
+            v-for="(adminItem, index) in admin"
+            :key="index"
+            class="flex justify-center"
+        >
             {{ adminItem.id }}
         </div>
     </div>
     <el-empty v-else description="loading......" />
     <el-button @click="adminRefresh()">刷新</el-button>
-    <el-input v-model="addId" placeholder="請輸入ID" clearable />
-    <el-button v-if="!adminPending" @click="addAdmin">新增</el-button>
-    <el-input v-model="delId" placeholder="請輸入ID" clearable />
-    <el-button v-if="!adminPending" @click="delAdmin">刪除</el-button>
+    <el-divider />
+    <div class="flex">
+        <el-input v-model="addId" placeholder="請輸入ID" clearable />
+        <el-button v-if="!adminPending" type="primary" @click="addAdmin"
+            >新增</el-button
+        >
+    </div>
+    <el-divider />
+    <div class="flex">
+        <el-input v-model="delId" placeholder="請輸入ID" clearable />
+        <el-button v-if="!adminPending" type="primary" @click="delAdmin"
+            >刪除</el-button
+        >
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -17,7 +31,7 @@ const {
     data: admin,
     pending: adminPending,
     refresh: adminRefresh,
-} = useFetch('/api/getAdmin')
+} = useLazyFetch('/api/getAdmin')
 
 const addId = ref('')
 const delId = ref('')

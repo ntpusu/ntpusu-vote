@@ -182,7 +182,7 @@ const {
     data: VS,
     pending: VSPending,
     refresh: VSRefresh,
-} = await useFetch('/api/VsCa')
+} = await useLazyFetch('/api/VsCa')
 
 const newDate = (time: Date) => {
     return new Date(time)

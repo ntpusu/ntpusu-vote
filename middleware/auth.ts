@@ -35,4 +35,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             return await navigateTo('/')
         }
     }
+
+    if (to.path == '/setAdmin') {
+        const admin = await $fetch('/api/checkAdministrator', {
+            method: 'POST',
+            body: JSON.stringify({ un: un })
+        })
+
+        if (admin.result == false) {
+            return await navigateTo('/')
+        }
+    }
 })
