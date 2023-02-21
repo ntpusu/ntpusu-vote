@@ -15,7 +15,7 @@
                         :ellipsis="false"
                         @select="handleSelect"
                     >
-                        <span class="m-auto pl-2 text-2xl font-bold"
+                        <span class="m-auto pl-2 text-lg font-bold sm:text-2xl"
                             >投票系統</span
                         >
                         <div class="flex-grow" />
