@@ -1,11 +1,11 @@
 <template>
     <div v-if="!VSPending">
         <el-space
-            v-if="timeCnt(VS.endTime) < Date.now()"
+            v-if="timeCnt(VS!.endTime) < Date.now()"
             class="justify-center"
         >
             <el-card
-                v-for="(Candidate, index) in VS.candidates"
+                v-for="(Candidate, index) in VS!.candidates"
                 :key="index"
                 shadow="hover"
                 class="w-96"
@@ -30,8 +30,10 @@
 </template>
 
 <script lang="ts" setup>
+import { Ref } from 'vue'
+
 definePageMeta({
-    middleware: ['auth'],
+    middleware: ['auth', 'checkend'],
 })
 
 const { id } = useRoute().params as { id: string }
@@ -54,7 +56,7 @@ const {
                 token: string
             }[]
         }[]
-    }
+    } | null
     pending: boolean
     refresh: () => void
 }
@@ -70,4 +72,12 @@ const viewDate = (time: Date) => {
 const timeCnt = (time: Date) => {
     return newDate(time).getTime()
 }
+
+onMounted(async () => {
+    setTimeout(() => {
+        if (VS === null) {
+            VSRefresh()
+        }
+    }, 1000)
+})
 </script>

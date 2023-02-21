@@ -222,4 +222,12 @@ const showToken = (index: number) => {
         })
     }
 }
+
+onMounted(async () => {
+    setTimeout(() => {
+        if (VS.value === null) {
+            VSRefresh()
+        }
+    }, 1000)
+})
 </script>
