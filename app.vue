@@ -12,10 +12,12 @@
                         :unique-opened="true"
                         mode="horizontal"
                         :router="true"
-                        :ellipsis="true"
+                        :ellipsis="false"
                         @select="handleSelect"
                     >
-                        <h1 class="m-auto pl-2 text-2xl font-bold">投票系統</h1>
+                        <span class="m-auto pl-2 text-2xl font-bold"
+                            >投票系統</span
+                        >
                         <div class="flex-grow" />
                         <el-menu-item class="font-bold" index="/"
                             >首頁</el-menu-item
