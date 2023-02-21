@@ -40,7 +40,9 @@ const {
     data: VS,
     pending: VSPending,
     refresh: VSRefresh,
-} = useFetch('/api/uniVsCaBa?' + new URLSearchParams({ id })) as unknown as {
+} = (await useLazyFetch(
+    '/api/uniVsCaBa?' + new URLSearchParams({ id })
+)) as unknown as {
     data: {
         id: string
         name: string
