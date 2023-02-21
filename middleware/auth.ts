@@ -1,7 +1,4 @@
-import { stringify } from "crypto-js/enc-utf8"
-
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    const config = useRuntimeConfig()
     const un = useCookie('un').value
 
     let authStates = false
@@ -25,8 +22,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
     }
 
-    if (to.path == '/admin'
-        || to.path == '/setAdmin') {
+    if (to.path == '/admin' || to.path == '/setAdmin') {
         const res = await $fetch('/api/checkAdmin', {
             method: 'POST',
             body: JSON.stringify({ un: un })
