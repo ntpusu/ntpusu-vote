@@ -20,31 +20,31 @@
                         >
                         <div class="flex-grow" />
                         <el-menu-item
-                            class="font-bold sm:!text-[1rem]"
+                            class="!text-[0.8rem] font-bold sm:!text-[1rem]"
                             index="/"
                             >首頁</el-menu-item
                         >
                         <el-menu-item
                             v-if="loginState"
-                            class="font-bold sm:!text-[1rem]"
+                            class="!text-[0.8rem] font-bold sm:!text-[1rem]"
                             index="/vote"
                             >投票清單</el-menu-item
                         >
                         <el-menu-item
                             v-if="loginState"
-                            class="font-bold sm:!text-[1rem]"
+                            class="!text-[0.8rem] font-bold sm:!text-[1rem]"
                             index="/admin"
                             >管理</el-menu-item
                         >
                         <el-menu-item
                             v-if="!loginState"
-                            class="font-bold sm:!text-[1rem]"
+                            class="!text-[0.8rem] font-bold sm:!text-[1rem]"
                             index="/login"
                             >登入</el-menu-item
                         >
                         <el-menu-item
                             v-else
-                            class="font-bold sm:!text-[1rem]"
+                            class="!text-[0.8rem] font-bold sm:!text-[1rem]"
                             index="/logout"
                             >登出</el-menu-item
                         >
