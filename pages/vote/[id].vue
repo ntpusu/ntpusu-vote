@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!VSPending">
+    <div v-if="!VSPending" class="overflow-x-scroll sm:overflow-x-auto">
         <el-space
             v-if="timeCnt(VS!.endTime) < Date.now()"
             class="justify-center"
@@ -30,10 +30,8 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref } from 'vue'
-
 definePageMeta({
-    middleware: ['auth', 'checkend'],
+    middleware: ['auth', 'back-to-vote'],
 })
 
 const { id } = useRoute().params as { id: string }
