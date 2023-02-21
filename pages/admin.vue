@@ -75,7 +75,12 @@
         <div
             class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-3/4 xl:w-7/12 2xl:w-1/3"
         >
-            <el-table :data="tableData()" border :table-layout="'auto'">
+            <el-table
+                :data="tableData()"
+                border
+                :table-layout="'auto'"
+                empty-text="Loading......"
+            >
                 <el-table-column prop="title" label="名稱" />
                 <el-table-column prop="startTime" label="開始時間" />
                 <el-table-column prop="endTime" label="結束時間" />
