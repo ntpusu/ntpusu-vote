@@ -12,7 +12,7 @@
                         :unique-opened="true"
                         mode="horizontal"
                         :router="true"
-                        :ellipsis="false"
+                        :ellipsis="true"
                         @select="handleSelect"
                     >
                         <h1 class="m-auto pl-2 text-2xl font-bold">投票系統</h1>
@@ -56,7 +56,7 @@
 <script lang="ts" setup>
 import { Ref } from 'vue'
 
-const curIndex = ref('1')
+const curIndex = ref('/')
 const loginState = useState('loginState') as Ref<boolean>
 
 const activeIndex = () => curIndex.value
