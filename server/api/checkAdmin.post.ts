@@ -5,7 +5,7 @@ export default defineEventHandler(async (_event) => {
     const { un } = await readBody(_event)
 
     if (un === undefined || un === null) {
-        return { result: false }
+        return { admin: false, superadmin: false }
     }
 
     const username = AES.decrypt(un, process.env.CRYPTO_KEY as string).toString(encUtf8)
@@ -13,5 +13,5 @@ export default defineEventHandler(async (_event) => {
         where: { id: parseInt(username) }
     })
 
-    return { result: admin !== null }
+    return { admin: admin != null, superadmin: username == process.env.ADMIN }
 })

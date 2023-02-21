@@ -19,7 +19,7 @@ export default defineEventHandler(async (_event) => {
 
     const candidate = await prisma.candidate.findUnique({ where: { id: parseInt(candidateId) } })
 
-    const voteSession = await prisma.voteSession.findUnique({ where: { id: candidate?.voteSessionId } })
+    const voteSession = await prisma.voteSession.findUnique({ where: { id: candidate!.voteSessionId } })
 
     const token = SHA256(username + voteSession?.name + process.env.CRYPTO_KEY as string).toString()
 

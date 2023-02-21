@@ -8,13 +8,14 @@ export default defineEventHandler(async (_event) => {
         return undefined
     }
 
-    const login = await $fetch('/api/checkLogin', { method: 'POST', body: JSON.stringify({ un: un }) }) as any
+    const login = await $fetch('/api/checkLogin', { method: 'POST', body: JSON.stringify({ un: un }) })
 
     if (!login.result) {
         return undefined
     }
 
     const candidate = await prisma.candidate.findUnique({
+        cacheStrategy: { ttl: 60 * 60, swr: 60 * 60 * 23 },
         where: { id: parseInt(id as string) },
     })
 

@@ -1,12 +1,12 @@
 import prisma from '~/lib/prisma'
 export default defineEventHandler(async (_event) => {
     const un = getCookie(_event, 'un')
-    const admin = await $fetch('/api/checkAdmin', {
+    const res = await $fetch('/api/checkAdmin', {
         method: 'POST',
         body: JSON.stringify({ un: un })
     })
 
-    if (admin.result == false) {
+    if (!res.admin) {
         return { data: false }
     }
 

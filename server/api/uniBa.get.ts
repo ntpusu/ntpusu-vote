@@ -12,7 +12,7 @@ export default defineEventHandler(async (_event) => {
         return { respond: false }
     }
 
-    const login = await $fetch('/api/checkLogin', { method: 'POST', body: JSON.stringify({ un: un }) }) as any
+    const login = await $fetch('/api/checkLogin', { method: 'POST', body: JSON.stringify({ un: un }) })
 
     if (!login.result) {
         return { respond: false }
@@ -22,6 +22,7 @@ export default defineEventHandler(async (_event) => {
 
     try {
         const ballot = await prisma.ballot.findUniqueOrThrow({
+            cacheStrategy: { ttl: 60 * 60, swr: 60 * 60 * 23 },
             where: { token: SHA256(username + title + process.env.CRYPTO_KEY as string).toString() },
         })
 
