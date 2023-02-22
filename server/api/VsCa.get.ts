@@ -1,5 +1,4 @@
 import prisma from '~/lib/prisma'
-
 export default defineEventHandler(async (_event) => {
     const un = getCookie(_event, 'un')
 
@@ -9,16 +8,38 @@ export default defineEventHandler(async (_event) => {
         return undefined
     }
 
-    const res = await $fetch('/api/checkAdmin', { method: 'POST', body: JSON.stringify({ un: un }) })
+    const VS = await prisma.voteSession.findMany({
+        include: { candidates: true },
+    })
 
-    if (res.admin) {
-        return await prisma.voteSession.findMany({
-            include: { candidates: true },
-        })
-    } else {
-        return await prisma.voteSession.findMany({
-            cacheStrategy: { ttl: 60 * 60, swr: 60 * 60 * 23 },
-            include: { candidates: true },
-        })
+    for (const VSitem of VS) {
+        if (VSitem.electionId.length == 0 && new Date(VSitem.endTime).getTime() < Date.now()) {
+            const candidates = await prisma.candidate.findMany({
+                where: { voteSessionId: VSitem.id },
+                include: { ballots: true },
+            })
+
+            let winners: number[] = []
+            let max = 0
+            for (const candidate of candidates) {
+                if (candidate.ballots.length > max) {
+                    winners = [candidate.id]
+                    max = candidate.ballots.length
+                } else if (candidate.ballots.length == max) {
+                    winners.push(candidate.id)
+                }
+            }
+
+            await prisma.voteSession.update({
+                where: { id: VSitem.id },
+                data: {
+                    electionId: winners,
+                },
+            })
+        }
     }
+
+    return await prisma.voteSession.findMany({
+        include: { candidates: true },
+    })
 })

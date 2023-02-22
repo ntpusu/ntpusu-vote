@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import useAccelerate from '@prisma/extension-accelerate';
 
-const prisma = new PrismaClient().$extends(useAccelerate)
+const prisma = new PrismaClient()
 
 export default prisma

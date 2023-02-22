@@ -694,7 +694,7 @@
   resolved "https://registry.npmjs.org/@sxzz/popperjs-es/-/popperjs-es-2.11.7.tgz"
   integrity sha512-Ccy0NlLkzr0Ex2FKvh2X+OyERHXJ88XJ1MXtsI9y9fGexlaXaVTPzBCRBwIxFkORuOb+uBqeu+RqnpgYTEZRUQ==
 
-"@prisma/client@^4.10.1", "@prisma/client@>=4.10.0":
+"@prisma/client@^4.10.1":
   version "4.10.1"
   resolved "https://registry.npmjs.org/@prisma/client/-/client-4.10.1.tgz"
   integrity sha512-VonXLJZybdt8e5XZH5vnIGCRNnIh6OMX1FS3H/yzMGLT3STj5TJ/OkMcednrvELgk8PK89Vo3aSh51MWNO0axA==
@@ -710,11 +710,6 @@
   version "4.10.1"
   resolved "https://registry.npmjs.org/@prisma/engines/-/engines-4.10.1.tgz"
   integrity sha512-B3tcTxjx196nuAu1GOTKO9cGPUgTFHYRdkPkTS4m5ptb2cejyBlH9X7GOfSt3xlI7p4zAJDshJP4JJivCg9ouA==
-
-"@prisma/extension-accelerate@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.npmjs.org/@prisma/extension-accelerate/-/extension-accelerate-0.1.1.tgz"
-  integrity sha512-8FXVDQhsuB+59uCqQgjQE2AwhsrdLc+/N5jbR0vdstqI6AQLe6qdI53iipiXrb6b+Yoqpu2Y4lu9A6F/fyhkCg==
 
 "@rollup/plugin-alias@^4.0.2":
   version "4.0.2"

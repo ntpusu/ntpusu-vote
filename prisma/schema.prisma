@@ -1,12 +1,10 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["clientExtensions"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model VoteSession {
@@ -14,18 +12,16 @@ model VoteSession {
   name       String      @unique
   startTime  DateTime
   endTime    DateTime
-  electionId Int?        @unique
-  election   Candidate?  @relation("election", fields: [electionId], references: [id])
+  electionId Int[]
   candidates Candidate[] @relation("allCandidates")
 }
 
 model Candidate {
-  id            Int          @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   name          String
   ballots       Ballot[]
-  VSelection    VoteSession? @relation("election")
   voteSessionId Int
-  voteSession   VoteSession  @relation("allCandidates", fields: [voteSessionId], references: [id])
+  voteSession   VoteSession @relation("allCandidates", fields: [voteSessionId], references: [id])
 }
 
 model Ballot {
