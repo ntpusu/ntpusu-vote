@@ -20,10 +20,10 @@ export default defineEventHandler(async (_event) => {
         }
     })
 
-    for (let i = 0; i < candidates.length; i++) {
+    for (const candidate_name of candidates) {
         await prisma.candidate.create({
             data: {
-                name: candidates[i],
+                name: candidate_name,
                 voteSessionId: VS.id
             }
         })

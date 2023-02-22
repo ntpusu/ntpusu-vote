@@ -1,14 +1,13 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const un = useCookie('un').value
 
-    let authStates = false
     if (un !== undefined && un !== null) {
         const res = await $fetch('/api/checkLogin', {
             method: 'POST',
             body: JSON.stringify({ un: un })
         }) as any
 
-        authStates = res.result
+        var authStates = res.result
     }
 
     const loginState = useState('loginState')

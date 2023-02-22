@@ -21,9 +21,9 @@ export default defineEventHandler(async (_event) => {
         where: { voteSessionId: VS!.id },
     })
 
-    for (let i = 0; i < candidates.length; i++) {
+    for (const candidate of candidates) {
         await prisma.ballot.deleteMany({
-            where: { candidateId: candidates[i].id },
+            where: { candidateId: candidate.id },
         })
     }
 
