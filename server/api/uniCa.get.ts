@@ -15,7 +15,6 @@ export default defineEventHandler(async (_event) => {
     }
 
     const candidate = await prisma.candidate.findUnique({
-        cacheStrategy: { ttl: 60 * 60, swr: 60 * 60 * 23 },
         where: { id: parseInt(id as string) },
     })
 
