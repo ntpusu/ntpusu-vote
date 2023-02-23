@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { VoteSession, Candidate } from '@prisma/client'
+import type { Candidate } from '@prisma/client'
 
 definePageMeta({
     middleware: ['auth'],

@@ -1,10 +1,6 @@
 <template>
-    <div v-if="!VSPending" class="overflow-x-scroll sm:overflow-x-auto">
-        <el-space
-            v-if="timeCnt(VS!.endTime) < Date.now()"
-            class="justify-center"
-        >
-            <el-card
+    <div v-if="!VSPending">
+        <!-- <el-card
                 v-for="(Candidate, index) in VS!.candidates"
                 :key="index"
                 shadow="hover"
@@ -23,8 +19,49 @@
                     <div>{{ index + 1 }}.&nbsp;</div>
                     <div>{{ Ballot.token }}</div>
                 </div>
-            </el-card>
-        </el-space>
+            </el-card> -->
+        <el-carousel
+            v-if="timeCnt(VS!.endTime) < Date.now()"
+            :autoplay="false"
+            height="80vh"
+            indicator-position="none"
+            arrow="always"
+            class="sm:rounded-2xl sm:border-4 sm:border-dashed sm:border-blue-200 sm:px-[2vw] sm:py-[3vm]"
+        >
+            <el-carousel-item
+                v-for="(Candidate, index) in VS!.candidates"
+                :key="index"
+            >
+                <div class="flex">
+                    <div class="pl-[2vw] text-xl font-bold">
+                        {{ Candidate.name }}
+                    </div>
+                    <div class="flex-grow" />
+                    <div class="pr-[2vw]">
+                        共&nbsp;{{ Candidate.ballots.length }}&nbsp;票
+                    </div>
+                </div>
+                <el-divider />
+                <!-- <div
+                    v-for="(Ballot, index) in Candidate.ballots"
+                    :key="index"
+                    class="flex justify-center px-[4vw]"
+                >
+                    <div>{{ index + 1 }}.&nbsp;</div>
+                    <div class="break-all">{{ Ballot.token }}</div>
+                </div> -->
+                <div class="h-[65vh] overflow-y-scroll">
+                    <div
+                        v-for="(Ballot, index) in 100"
+                        :key="index"
+                        class="flex justify-center px-[4vw]"
+                    >
+                        <div>{{ index + 1 }}.&nbsp;</div>
+                        <div class="break-all">{{ Ballot }}</div>
+                    </div>
+                </div>
+            </el-carousel-item>
+        </el-carousel>
     </div>
     <el-empty v-else description="loading......" />
 </template>
