@@ -221,4 +221,12 @@ const handleDelete = async (row: any) => {
     ElMessage('刪除成功')
     VSRefresh()
 }
+
+onMounted(async () => {
+    setTimeout(() => {
+        if (VS.value === null) {
+            VSRefresh()
+        }
+    }, 500)
+})
 </script>
