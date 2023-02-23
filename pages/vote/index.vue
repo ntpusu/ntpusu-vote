@@ -30,12 +30,12 @@
                 </div>
             </div>
             <div v-else>
-                <el-form :model="voteData">
+                <el-form v-if="checkVote(VSitem.name, index)" :model="voteData">
                     <el-radio-group
                         class="!grid justify-start"
                         v-model="voteData.selected[index]"
                         :disabled="
-                            checkVote(VSitem.name, index) ||
+                            voteData.disable[index] ||
                             timeCnt(VSitem.endTime) < Date.now()
                         "
                     >
@@ -122,7 +122,7 @@ const checkVote = (title: string, index: number) => {
         }
     })
 
-    return voteData.disable[index]
+    return true
 }
 
 const voteConfirm = async (index: number) => {
