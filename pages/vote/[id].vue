@@ -13,15 +13,15 @@
                 :key="index"
             >
                 <div class="flex">
-                    <div class="pl-[1vw] text-base font-bold sm:text-lg">
-                        項目名稱：{{ VS!.name }}
+                    <div class="pl-[1vw] text-sm font-bold sm:text-lg">
+                        項目：{{ VS!.name }}
                     </div>
                     <div class="flex-grow" />
-                    <div class="text-base font-bold sm:text-lg">
+                    <div class="text-sm font-bold sm:text-lg">
                         候選人：{{ Candidate.name }}
                     </div>
                     <div class="flex-grow" />
-                    <div class="pr-[3vw]">
+                    <div class="pr-[3vw] text-xs sm:text-base">
                         共&nbsp;{{ Candidate.ballots.length }}&nbsp;票
                     </div>
                 </div>
