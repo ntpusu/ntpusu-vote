@@ -26,38 +26,34 @@
             height="80vh"
             indicator-position="none"
             arrow="always"
-            class="sm:rounded-2xl sm:border-4 sm:border-dashed sm:border-blue-200 sm:px-[2vw] sm:py-[3vm]"
+            class="py-[3vm]"
         >
             <el-carousel-item
                 v-for="(Candidate, index) in VS!.candidates"
                 :key="index"
             >
                 <div class="flex">
-                    <div class="pl-[2vw] text-xl font-bold">
-                        {{ Candidate.name }}
+                    <div class="pl-[1vw] text-lg font-bold">
+                        項目名稱：{{ VS!.name }}
                     </div>
                     <div class="flex-grow" />
-                    <div class="pr-[2vw]">
+                    <div class="text-lg font-bold">
+                        候選人：{{ Candidate.name }}
+                    </div>
+                    <div class="flex-grow" />
+                    <div class="pr-[3vw]">
                         共&nbsp;{{ Candidate.ballots.length }}&nbsp;票
                     </div>
                 </div>
                 <el-divider />
-                <!-- <div
-                    v-for="(Ballot, index) in Candidate.ballots"
-                    :key="index"
-                    class="flex justify-center px-[4vw]"
-                >
-                    <div>{{ index + 1 }}.&nbsp;</div>
-                    <div class="break-all">{{ Ballot.token }}</div>
-                </div> -->
                 <div class="h-[65vh] overflow-y-scroll">
                     <div
-                        v-for="(Ballot, index) in 100"
+                        v-for="(Ballot, index) in Candidate.ballots"
                         :key="index"
                         class="flex justify-center px-[4vw]"
                     >
                         <div>{{ index + 1 }}.&nbsp;</div>
-                        <div class="break-all">{{ Ballot }}</div>
+                        <div class="break-all">{{ Ballot.token }}</div>
                     </div>
                 </div>
             </el-carousel-item>
