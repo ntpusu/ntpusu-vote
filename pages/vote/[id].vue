@@ -13,11 +13,11 @@
                 :key="index"
             >
                 <div class="flex">
-                    <div class="pl-[1vw] text-lg font-bold">
+                    <div class="pl-[1vw] text-base font-bold sm:text-lg">
                         項目名稱：{{ VS!.name }}
                     </div>
                     <div class="flex-grow" />
-                    <div class="text-lg font-bold">
+                    <div class="text-base font-bold sm:text-lg">
                         候選人：{{ Candidate.name }}
                     </div>
                     <div class="flex-grow" />
