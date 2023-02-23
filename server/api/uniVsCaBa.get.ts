@@ -8,9 +8,9 @@ export default defineEventHandler(async (_event) => {
         return undefined
     }
 
-    const login = await $fetch('/api/checkLogin', { method: 'POST', body: JSON.stringify({ un: un }) })
+    const res = await $fetch('/api/checkLogin', { method: 'POST', body: JSON.stringify({ un: un }) })
 
-    if (!login.result) {
+    if (!res.login) {
         return undefined
     }
 

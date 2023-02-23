@@ -5,15 +5,13 @@ import encUtf8 from 'crypto-js/enc-utf8.js'
 export default defineEventHandler(async (_event) => {
     const un = getCookie(_event, 'un')
 
-    if (un === undefined || un === null) {
+    const login = await $fetch('/api/checkLogin', { method: 'POST', body: JSON.stringify({ un: un }) })
+
+    if (!login.login) {
         return undefined
     }
 
-    const username = AES.decrypt(un, process.env.CRYPTO_KEY as string).toString(encUtf8)
-
-    if (isNaN(parseInt(username))) {
-        return undefined
-    }
+    const username = AES.decrypt(un!, process.env.CRYPTO_KEY as string).toString(encUtf8)
 
     const { candidateId } = await readBody(_event)
 
@@ -21,7 +19,7 @@ export default defineEventHandler(async (_event) => {
 
     const voteSession = await prisma.voteSession.findUnique({ where: { id: candidate!.voteSessionId } })
 
-    const token = SHA256(username + voteSession?.name + process.env.CRYPTO_KEY as string).toString()
+    const token = SHA256(username + voteSession!.name + process.env.CRYPTO_KEY as string).toString()
 
     try {
         await prisma.ballot.create({

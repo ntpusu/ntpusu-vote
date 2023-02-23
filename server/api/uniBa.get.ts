@@ -7,17 +7,13 @@ export default defineEventHandler(async (_event) => {
     const query = getQuery(_event)
     const title = query.title
 
-    if (un === undefined || un === null) {
-        return { respond: false }
-    }
-
     const login = await $fetch('/api/checkLogin', { method: 'POST', body: JSON.stringify({ un: un }) })
 
-    if (!login.result) {
+    if (!login.login) {
         return { respond: false }
     }
 
-    const username = AES.decrypt(un, process.env.CRYPTO_KEY as string).toString(encUtf8)
+    const username = AES.decrypt(un!, process.env.CRYPTO_KEY as string).toString(encUtf8)
 
     try {
         const ballot = await prisma.ballot.findUniqueOrThrow({

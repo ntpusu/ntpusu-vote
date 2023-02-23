@@ -4,13 +4,9 @@ export default defineEventHandler(async (_event) => {
     const query = getQuery(_event)
     const id = query.id
 
-    if (un === undefined || un === null) {
-        return undefined
-    }
-
     const login = await $fetch('/api/checkLogin', { method: 'POST', body: JSON.stringify({ un: un }) })
 
-    if (!login.result) {
+    if (!login.login) {
         return undefined
     }
 

@@ -1,9 +1,14 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const un = useCookie('un').value
 
-    let loginState = false
-    let adminState = false
-    let superState = false
+    const loginState = useState('loginState')
+    const adminState = useState('adminState')
+    const superState = useState('auperState')
+
+    let _loginState = false
+    let _adminState = false
+    let _superState = false
+
     if (un !== undefined && un !== null) {
         const loginRes = await $fetch('/api/checkLogin', {
             method: 'POST',
@@ -15,15 +20,16 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             body: JSON.stringify({ un: un })
         })
 
-        useState('loginState').value = loginRes.result
-        loginState = loginRes.result
-
-        useState('adminState').value = adminRes.admin
-        adminState = adminRes.admin
-        superState = adminRes.superadmin
+        _loginState = loginRes.login
+        _adminState = adminRes.admin
+        _superState = adminRes.superadmin
     }
 
-    if (!loginState) {
+    loginState.value = _loginState
+    adminState.value = _adminState
+    superState.value = _superState
+
+    if (!_loginState) {
         await $fetch('/api/logout')
 
         if (to.path != '/' && to.path != '/login') {
@@ -31,11 +37,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
     }
 
-    if (to.path == '/admin' && !adminState) {
+    if (to.path == '/admin' && !_adminState) {
         return await navigateTo('/')
     }
 
-    if (to.path == '/setAdmin' && !superState) {
+    if (to.path == '/setAdmin' && !_superState) {
         return await navigateTo('/')
     }
 })

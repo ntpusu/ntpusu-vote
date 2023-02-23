@@ -5,7 +5,7 @@ export default defineEventHandler(async (_event) => {
     const { un } = await readBody(_event)
 
     if (un === undefined || un === null) {
-        return { result: false }
+        return { login: false }
     }
 
     try {
@@ -13,9 +13,9 @@ export default defineEventHandler(async (_event) => {
 
         const login = !isNaN(parseInt(username))
 
-        return { result: login }
+        return { login: login }
     }
     catch (err) {
-        return { result: false }
+        return { login: false }
     }
 })
