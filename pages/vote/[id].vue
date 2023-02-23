@@ -1,25 +1,5 @@
 <template>
     <div v-if="!VSPending">
-        <!-- <el-card
-                v-for="(Candidate, index) in VS!.candidates"
-                :key="index"
-                shadow="hover"
-                class="w-96"
-            >
-                <template #header>
-                    <div class="flex-wrap text-xl font-bold">
-                        {{ Candidate.name }}
-                    </div>
-                </template>
-                <div
-                    v-for="(Ballot, index) in Candidate.ballots"
-                    :key="index"
-                    class="flex break-all"
-                >
-                    <div>{{ index + 1 }}.&nbsp;</div>
-                    <div>{{ Ballot.token }}</div>
-                </div>
-            </el-card> -->
         <el-carousel
             v-if="timeCnt(VS!.endTime) < Date.now()"
             :autoplay="false"
@@ -46,7 +26,7 @@
                     </div>
                 </div>
                 <el-divider />
-                <div class="h-[65vh] overflow-y-scroll">
+                <div class="h-[65vh] overflow-y-auto">
                     <div
                         v-for="(Ballot, index) in Candidate.ballots"
                         :key="index"
