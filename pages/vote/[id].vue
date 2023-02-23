@@ -89,6 +89,6 @@ onMounted(async () => {
         if (VS === null) {
             VSRefresh()
         }
-    }, 1000)
+    }, 500)
 })
 </script>
