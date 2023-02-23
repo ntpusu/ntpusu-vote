@@ -8,9 +8,7 @@ export default defineEventHandler(async (_event) => {
         return undefined
     }
 
-    const VS = await prisma.voteSession.findMany({
-        include: { candidates: true },
-    })
+    const VS = await prisma.voteSession.findMany()
 
     for (const VSitem of VS) {
         if (VSitem.electionId.length == 0 && new Date(VSitem.endTime).getTime() < Date.now()) {

@@ -50,7 +50,6 @@
                     </el-radio-group>
                     <el-divider border-style="dashed" />
                     <div class="px-32">
-                        <div class="flex"></div>
                         <NuxtLink
                             v-if="timeCnt(VSitem.endTime) < Date.now()"
                             class="inline-flex w-full justify-center rounded-md bg-green-600 px-6 py-1.5 text-sm tracking-widest text-white hover:bg-green-500"
@@ -82,7 +81,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Candidate } from '@prisma/client'
+import type { VoteSession, Candidate } from '@prisma/client'
 
 definePageMeta({
     middleware: ['auth'],
@@ -106,6 +105,12 @@ const timeCnt = (time: Date) => {
     return newDate(time).getTime()
 }
 
+const voteData = reactive<{
+    selected: number[]
+    disable: boolean[]
+    token: string[]
+}>({ selected: [], disable: [], token: [] })
+
 const checkVote = (title: string, index: number) => {
     $fetch('/api/uniBa?' + new URLSearchParams({ title })).then((res: any) => {
         if (res.respond) {
@@ -119,12 +124,6 @@ const checkVote = (title: string, index: number) => {
 
     return voteData.disable[index]
 }
-
-const voteData = reactive<{
-    selected: number[]
-    disable: boolean[]
-    token: string[]
-}>({ selected: [], disable: [], token: [] })
 
 const voteConfirm = async (index: number) => {
     if (
