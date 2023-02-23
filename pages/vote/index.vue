@@ -227,6 +227,6 @@ onMounted(async () => {
         if (VS.value === null) {
             VSRefresh()
         }
-    }, 1000)
+    }, 500)
 })
 </script>
