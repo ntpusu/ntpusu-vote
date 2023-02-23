@@ -8,10 +8,15 @@ export default defineEventHandler(async (_event) => {
         return { admin: false, superadmin: false }
     }
 
-    const username = AES.decrypt(un, process.env.CRYPTO_KEY as string).toString(encUtf8)
-    const admin = await prisma.admin.findUnique({
-        where: { id: parseInt(username) }
-    })
+    try {
+        const username = AES.decrypt(un, process.env.CRYPTO_KEY as string).toString(encUtf8)
+        const admin = await prisma.admin.findUnique({
+            where: { id: parseInt(username) }
+        })
 
-    return { admin: admin != null, superadmin: username == process.env.ADMIN }
+        return { admin: admin !== null, superadmin: username == process.env.ADMIN }
+    }
+    catch (err) {
+        return { admin: false, superadmin: false }
+    }
 })

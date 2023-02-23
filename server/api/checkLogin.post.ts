@@ -1,3 +1,4 @@
+import { tryOnScopeDispose } from '@vueuse/shared'
 import AES from 'crypto-js/aes.js'
 import encUtf8 from 'crypto-js/enc-utf8.js'
 export default defineEventHandler(async (_event) => {
@@ -7,9 +8,14 @@ export default defineEventHandler(async (_event) => {
         return { result: false }
     }
 
-    const username = AES.decrypt(un, process.env.CRYPTO_KEY as string).toString(encUtf8)
+    try {
+        const username = AES.decrypt(un, process.env.CRYPTO_KEY as string).toString(encUtf8)
 
-    const login = !isNaN(parseInt(username))
+        const login = !isNaN(parseInt(username))
 
-    return { result: login }
+        return { result: login }
+    }
+    catch (err) {
+        return { result: false }
+    }
 })
