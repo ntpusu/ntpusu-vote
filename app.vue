@@ -31,7 +31,7 @@
                             >投票清單</el-menu-item
                         >
                         <el-menu-item
-                            v-if="loginState"
+                            v-if="adminState"
                             class="ms:!px-5 !px-3 !text-[0.8rem] font-bold sm:!text-[1rem]"
                             index="/admin"
                             >管理</el-menu-item
@@ -65,6 +65,7 @@ import { Ref } from 'vue'
 
 const curIndex = ref('/')
 const loginState = useState('loginState') as Ref<boolean>
+const adminState = useState('adminState') as Ref<boolean>
 
 const activeIndex = () => curIndex.value
 
