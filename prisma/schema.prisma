@@ -8,12 +8,12 @@ datasource db {
 }
 
 model VoteSession {
-  id         Int         @id @default(autoincrement())
-  name       String      @unique
-  startTime  DateTime
-  endTime    DateTime
-  electionId Int[]
-  candidates Candidate[] @relation("allCandidates")
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  startTime    DateTime
+  endTime      DateTime
+  candidates   Candidate[]
+  GroupCanVote GroupCanVote[]
 }
 
 model Candidate {
@@ -21,7 +21,7 @@ model Candidate {
   name          String
   ballots       Ballot[]
   voteSessionId Int
-  voteSession   VoteSession @relation("allCandidates", fields: [voteSessionId], references: [id])
+  voteSession   VoteSession @relation(fields: [voteSessionId], references: [id])
 }
 
 model Ballot {
@@ -29,6 +29,38 @@ model Ballot {
   time        DateTime  @default(now())
   candidateId Int
   candidate   Candidate @relation(fields: [candidateId], references: [id])
+}
+
+model Voter {
+  id           Int            @id
+  VoterInGroup VoterInGroup[]
+}
+
+model Group {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  GroupCanVote GroupCanVote[]
+  VoterInGroup VoterInGroup[]
+}
+
+model VoterInGroup {
+  voterId Int
+  voter   Voter @relation(fields: [voterId], references: [id])
+
+  groupId Int
+  group   Group @relation(fields: [groupId], references: [id])
+
+  @@id([voterId, groupId])
+}
+
+model GroupCanVote {
+  groupId Int
+  group   Group @relation(fields: [groupId], references: [id])
+
+  voteSessionId Int
+  voteSession   VoteSession @relation(fields: [voteSessionId], references: [id])
+
+  @@id([groupId, voteSessionId])
 }
 
 model Admin {
