@@ -1,8 +1,8 @@
 <template>
     <el-space v-if="!VSPending" class="justify-center" wrap>
         <el-card
-            v-for="(VSitem, index) in VS"
-            :key="index"
+            v-for="VSitem in VS"
+            :key="VSitem.id"
             shadow="hover"
             class="w-[25rem]"
         >
@@ -21,7 +21,7 @@
                     </div>
                 </el-space>
             </template>
-            <div v-if="timeCnt(VSitem.startTime) > Date.now()">
+            <div v-if="Date.now() < timeCnt(VSitem.startTime)">
                 <div
                     v-for="(candidate, itemIndex) in VSitem.candidates"
                     :key="itemIndex"
@@ -30,14 +30,11 @@
                 </div>
             </div>
             <div v-else>
-                <el-form v-if="checkVote(VSitem.name, index)" :model="voteData">
+                <el-form :model="voteData">
                     <el-radio-group
                         class="!grid justify-start"
-                        v-model="voteData.selected[index]"
-                        :disabled="
-                            voteData.disable[index] ||
-                            timeCnt(VSitem.endTime) < Date.now()
-                        "
+                        v-model="voteData[VSitem.id]"
+                        :disabled="Date.now() > timeCnt(VSitem.endTime)"
                     >
                         <el-radio
                             v-for="(candidate, itemIndex) in VSitem.candidates"
@@ -49,28 +46,30 @@
                         </el-radio>
                     </el-radio-group>
                     <el-divider border-style="dashed" />
-                    <div class="px-32">
+                    <div
+                        v-if="Date.now() > timeCnt(VSitem.endTime)"
+                        class="px-32"
+                    >
                         <NuxtLink
-                            v-if="timeCnt(VSitem.endTime) < Date.now()"
                             class="inline-flex w-full justify-center rounded-md bg-green-600 px-6 py-1.5 text-sm tracking-widest text-white hover:bg-green-500"
-                            @click="showToken(index)"
+                            @click="seeToken(VSitem.id)"
                             :to="'/vote/' + VSitem.id"
                         >
                             結果
                         </NuxtLink>
+                    </div>
+                    <div v-else class="flex px-16">
                         <el-button
-                            v-else-if="!voteData.disable[index]"
                             type="primary"
                             class="w-full !rounded-md tracking-widest"
-                            @click="voteConfirm(index)"
+                            @click="voteConfirm(VSitem)"
                             >投票
                         </el-button>
                         <el-button
-                            v-else
-                            type="primary"
+                            type="success"
                             class="w-full !rounded-md tracking-widest"
-                            @click="seeToken(index)"
-                            >已投票
+                            @click="seeToken(VSitem.id)"
+                            >查看憑證
                         </el-button>
                     </div>
                 </el-form>
@@ -81,7 +80,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { Candidate } from '@prisma/client'
+import type { Ballot, Candidate, VoteSession } from '@prisma/client'
+import { Ref } from 'vue'
 const {
     data: VS,
     pending: VSPending,
@@ -100,127 +100,122 @@ const timeCnt = (time: Date) => {
     return newDate(time).getTime()
 }
 
-const voteData = reactive<{
-    selected: number[]
-    disable: boolean[]
-    token: string[]
-}>({ selected: [], disable: [], token: [] })
+const voteData: Ref<number[]> = ref([])
+const voteToken: Ref<string[]> = ref([])
 
-const checkVote = (title: string, index: number) => {
-    $fetch('/api/uniBa?' + new URLSearchParams({ title })).then((res: any) => {
-        if (res.respond) {
-            voteData.selected[index] = res.ballot.candidateId
-            voteData.disable[index] = true
-            voteData.token[index] = res.ballot.token
-        } else {
-            voteData.disable[index] = false
+const voteConfirm = async (VS: VoteSession & { candidates: Candidate[] }) => {
+    if (!voteData.value[VS.id]) {
+        ElMessage({
+            type: 'warning',
+            message: '請選擇候選人',
+        })
+        return
+    }
+
+    const candidate = VS.candidates.find(
+        (item) => item.id === voteData.value[VS.id]
+    )?.name
+
+    await ElMessageBox.confirm(
+        '確定要投給「' + candidate + '」嗎？',
+        '再次確認',
+        {
+            confirmButtonText: '確定',
+            cancelButtonText: '取消',
+            type: 'warning',
         }
-    })
-
-    return true
-}
-
-const voteConfirm = async (index: number) => {
-    if (
-        voteData.selected[index] !== undefined &&
-        voteData.selected[index] !== null
-    ) {
-        const candidate = await $fetch(
-            '/api/uniCa?' +
-                new URLSearchParams({ id: voteData.selected[index].toString() })
-        )
-
-        ElMessageBox.confirm(
-            '確定要投給「' + (candidate as Candidate | null)?.name + '」嗎？',
-            '再次確認',
-            {
-                confirmButtonText: '確定',
-                cancelButtonText: '取消',
-                type: 'warning',
-            }
-        )
-            .then(() => {
-                $fetch('/api/vote', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        candidateId: voteData.selected[index],
-                    }),
-                }).then((res: any) => {
-                    if (res.respond) {
-                        voteData.disable[index] = true
-                        voteData.token[index] = res.token
-                        ElMessageBox.alert('憑證：' + res.token, '投票成功', {
-                            confirmButtonText: '複製憑證',
-                            type: 'success',
-                            roundButton: true,
-                        }).then(() => {
-                            navigator.clipboard.writeText(res.token)
+    )
+        .then(async () => {
+            await $fetch('/api/vote', {
+                method: 'POST',
+                body: JSON.stringify({
+                    candidateId: voteData.value[VS.id],
+                }),
+            }).then(async (res) => {
+                if (res.result) {
+                    if (res.vote!) {
+                        voteToken.value[VS.id] = res.token!
+                        await ElMessageBox.alert(
+                            '憑證：' + res.token!,
+                            '投票成功',
+                            {
+                                confirmButtonText: '複製憑證',
+                                type: 'success',
+                                roundButton: true,
+                            }
+                        ).then(async () => {
+                            await navigator.clipboard.writeText(res.token!)
                             ElMessage({
                                 type: 'success',
                                 message: '已複製',
                             })
                         })
                     } else {
-                        ElMessageBox.alert(
-                            '投票憑證：' + res.token,
+                        voteToken.value[VS.id] = res.token!
+                        await ElMessageBox.alert(
+                            '憑證：' + res.token!,
                             '不可重複投票',
                             {
-                                confirmButtonText: '確定',
-                                type: 'error',
+                                confirmButtonText: '複製憑證',
+                                type: 'warning',
+                                roundButton: true,
                             }
-                        )
+                        ).then(async () => {
+                            await navigator.clipboard.writeText(res.token!)
+                            ElMessage({
+                                type: 'success',
+                                message: '已複製',
+                            })
+                        })
                     }
-                })
+                } else {
+                    await ElMessageBox.alert('投票失敗', '錯誤', {
+                        confirmButtonText: '確定',
+                        type: 'error',
+                    })
+                }
             })
-            .catch(() => {
-                ElMessage({
-                    type: 'info',
-                    message: '已取消投票',
-                })
+        })
+        .catch(() => {})
+}
+
+const seeToken = async (index: number) => {
+    if (!voteToken.value[index]) {
+        const res = (await $fetch(
+            '/api/getToken?' + new URLSearchParams({ id: index.toString() })
+        )) as Ballot | null
+
+        if (!res) {
+            await ElMessageBox.alert('故沒有投票憑證', '未投票', {
+                confirmButtonText: '確定',
+                type: 'error',
             })
+        } else {
+            voteToken.value[index] = res.token
+        }
     }
-}
 
-const seeToken = (index: number) => {
-    ElMessageBox.alert(voteData.token[index], '投票憑證', {
-        confirmButtonText: '複製',
-        type: 'success',
-        roundButton: true,
-    }).then(() => {
-        navigator.clipboard.writeText(voteData.token[index])
-        ElMessage({
-            type: 'success',
-            message: '已複製',
-        })
-    })
-}
-
-const showToken = (index: number) => {
-    if (voteData.disable[index] === true) {
-        ElMessageBox.alert(voteData.token[index], '投票憑證', {
-            confirmButtonText: '複製',
+    if (voteToken.value[index]) {
+        await ElMessageBox.alert(voteToken.value[index], '投票憑證', {
+            confirmButtonText: '複製憑證',
             type: 'success',
             roundButton: true,
-        }).then(() => {
-            navigator.clipboard.writeText(voteData.token[index])
-            ElMessage({
-                type: 'success',
-                message: '已複製',
+        })
+            .then(async () => {
+                await navigator.clipboard.writeText(voteToken.value[index])
+                ElMessage({
+                    type: 'success',
+                    message: '已複製',
+                })
             })
-        })
-    } else {
-        ElMessageBox.alert('未投票，故無投票憑證', '投票憑證', {
-            confirmButtonText: '確定',
-            type: 'error',
-            roundButton: true,
-        })
+            .catch(() => {})
     }
 }
 
 onMounted(async () => {
-    setTimeout(() => {
+    setTimeout(async () => {
         if (VS.value === null) {
-            VSRefresh()
+            await VSRefresh()
         }
     }, 500)
 })

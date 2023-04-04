@@ -58,10 +58,7 @@
         <el-main>
             <NuxtPage />
         </el-main>
-        <el-footer>
-            {{ status }}
-            {{ data }}
-        </el-footer>
+        <!-- <el-footer></el-footer> -->
     </el-container>
     <el-backtop />
 </template>
