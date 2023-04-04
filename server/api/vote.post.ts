@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {
-        return { result: false }
+        return { result: false, vote: null, token: null }
     }
 
     const email = session['user']['email']
@@ -16,25 +16,25 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!voter) {
-        return { result: false }
+        return { result: false, vote: null, token: null }
     }
 
     const { candidateId } = await readBody(event)
 
     if (!candidateId) {
-        return { result: false }
+        return { result: false, vote: null, token: null }
     }
 
     const candidate = await prisma.candidate.findUnique({ where: { id: parseInt(candidateId) } })
 
     if (!candidate) {
-        return { result: false }
+        return { result: false, vote: null, token: null }
     }
 
     const voteSession = await prisma.voteSession.findUnique({ where: { id: candidate.voteSessionId } })
 
     if (!voteSession) {
-        return { result: false }
+        return { result: false, vote: null, token: null }
     }
 
     const token = SHA256(studentId + voteSession!.name + process.env.AUTH_SECRET).toString()

@@ -80,7 +80,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Ballot, Candidate, VoteSession } from '@prisma/client'
+import type { Ballot } from '@prisma/client'
 import { Ref } from 'vue'
 const {
     data: VS,
@@ -88,22 +88,22 @@ const {
     refresh: VSRefresh,
 } = await useLazyFetch('/api/voterSession')
 
-const newDate = (time: Date) => {
+const newDate = (time: string | number | Date) => {
     return new Date(time)
 }
 
-const viewDate = (time: Date) => {
+const viewDate = (time: any) => {
     return newDate(time).toLocaleString()
 }
 
-const timeCnt = (time: Date) => {
+const timeCnt = (time: any) => {
     return newDate(time).getTime()
 }
 
 const voteData: Ref<number[]> = ref([])
 const voteToken: Ref<string[]> = ref([])
 
-const voteConfirm = async (VS: VoteSession & { candidates: Candidate[] }) => {
+const voteConfirm = async (VS: { id: number; candidates: any[] }) => {
     if (!voteData.value[VS.id]) {
         ElMessage({
             type: 'warning',
@@ -113,7 +113,7 @@ const voteConfirm = async (VS: VoteSession & { candidates: Candidate[] }) => {
     }
 
     const candidate = VS.candidates.find(
-        (item) => item.id === voteData.value[VS.id]
+        (item: { id: number }) => item.id === voteData.value[VS.id]
     )?.name
 
     await ElMessageBox.confirm(
