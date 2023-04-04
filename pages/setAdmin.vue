@@ -27,6 +27,10 @@
 </template>
 
 <script lang="ts" setup>
+definePageMeta({
+    middleware: ['super-admin'],
+})
+
 const {
     data: admin,
     pending: adminPending,
@@ -37,9 +41,8 @@ const addId = ref('')
 const delId = ref('')
 
 const addAdmin = async () => {
-    await $fetch('/api/addAdmin', {
-        method: 'POST',
-        body: JSON.stringify({ id: addId.value }),
+    await $fetch('/api/addAdmin?' + new URLSearchParams({ id: addId.value }), {
+        method: 'PUT',
     })
 
     addId.value = ''
@@ -47,9 +50,8 @@ const addAdmin = async () => {
 }
 
 const delAdmin = async () => {
-    await $fetch('/api/delAdmin', {
-        method: 'POST',
-        body: JSON.stringify({ id: delId.value }),
+    await $fetch('/api/delAdmin?' + new URLSearchParams({ id: delId.value }), {
+        method: 'DELETE',
     })
 
     delId.value = ''

@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 definePageMeta({
-    middleware: ['auth', 'back-to-vote'],
+    middleware: ['back-to-vote'],
 })
 
 const { id } = useRoute().params as { id: string }

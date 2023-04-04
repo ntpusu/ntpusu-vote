@@ -1,16 +1,24 @@
 import prisma from '~/lib/prisma'
-export default defineEventHandler(async (_event) => {
-    const un = getCookie(_event, 'un')
-    const res = await $fetch('/api/checkAdmin', {
-        method: 'POST',
-        body: JSON.stringify({ un: un })
+import { getServerSession } from '#auth'
+export default defineEventHandler(async (event) => {
+    const session = await getServerSession(event) as { user: { email: string } } | null
+
+    if (!session) {
+        return null
+    }
+
+    const email = session['user']['email']
+    const studentId = email.substring(1, 10)
+
+    const admin = await prisma.admin.findUnique({
+        where: { id: parseInt(studentId) },
     })
 
-    if (res.admin == false) {
+    if (!admin) {
         return { data: false }
     }
 
-    const query = getQuery(_event)
+    const query = getQuery(event)
     const VSTitle = query.title
 
     const VS = await prisma.voteSession.findUnique({

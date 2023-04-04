@@ -14,5 +14,9 @@ export default defineEventHandler(async (event) => {
         return null
     }
 
-    return await prisma.admin.findMany()
+    const { id: id } = getQuery(event) as { id: string }
+
+    await prisma.admin.create({ data: { id: parseInt(id) } })
+
+    return {}
 })

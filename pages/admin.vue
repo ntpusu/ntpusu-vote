@@ -23,6 +23,20 @@
                         <el-button class="!hidden"></el-button>
                     </el-space>
                 </el-form-item>
+                <el-form-item label="範圍" prop="voteGroup" class="m-auto">
+                    <el-select
+                        v-model="addVote.voteGroup"
+                        placeholder="請選擇投票範圍"
+                        clearable
+                    >
+                        <el-option
+                            v-for="item in groupOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        />
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="開始時間" prop="startTime" class="m-auto">
                     <el-date-picker
                         v-model="addVote.startTime"
@@ -82,6 +96,7 @@
                 empty-text="Loading......"
             >
                 <el-table-column prop="title" label="名稱" />
+                <el-table-column prop="group" label="投票範圍" />
                 <el-table-column prop="startTime" label="開始時間" />
                 <el-table-column prop="endTime" label="結束時間" />
                 <el-table-column label="操作" width="80px">
@@ -109,7 +124,7 @@
 import type { FormInstance, FormRules } from 'element-plus'
 
 definePageMeta({
-    middleware: ['auth'],
+    middleware: ['admin'],
 })
 
 const formRef = ref<FormInstance>()
@@ -119,11 +134,13 @@ interface Candidate {
 
 const addVote = reactive<{
     voteName: string
+    voteGroup: number
     startTime: string
     endTime: string
     candidates: Candidate[]
 }>({
     voteName: '',
+    voteGroup: undefined as unknown as number,
     startTime: '',
     endTime: '',
     candidates: [{ name: '' }, { name: '' }],
@@ -142,6 +159,7 @@ const addDomain = () => {
 
 const rules = reactive<FormRules>({
     voteName: [{ required: true, message: '名稱為必填', trigger: 'blur' }],
+    voteGroup: [{ required: true, message: '組別為必填', trigger: 'change' }],
     startTime: [
         { required: true, message: '開始時間為必填', trigger: 'change' },
     ],
@@ -153,10 +171,12 @@ const submitForm = async (formRef: FormInstance | undefined) => {
 
     await formRef.validate(async (valid, fields) => {
         if (valid) {
-            const { voteName, startTime, endTime, candidates } = addVote
+            const { voteName, voteGroup, startTime, endTime, candidates } =
+                addVote
 
             const data = {
                 voteName,
+                voteGroup,
                 startTime,
                 endTime,
                 candidates: candidates.map((candidate) => candidate.name),
@@ -172,7 +192,7 @@ const submitForm = async (formRef: FormInstance | undefined) => {
                 addVote.candidates.pop()
             }
 
-            if (res.data) {
+            if (res) {
                 ElMessage('創建成功')
                 VSRefresh()
                 return
@@ -183,21 +203,31 @@ const submitForm = async (formRef: FormInstance | undefined) => {
     })
 }
 
-const {
-    data: VS,
-    pending: VSPending,
-    refresh: VSRefresh,
-} = await useLazyFetch('/api/VsCa')
+const { data: VS, refresh: VSRefresh } = await useLazyFetch('/api/getVS')
+
+const { data: Group, refresh: GroupRefresh } = await useLazyFetch(
+    '/api/getGroup'
+)
+
+const groupOptions = computed(() => {
+    if (!Group.value) return []
+
+    return Group.value.map((item) => ({
+        label: item.name,
+        value: item.id,
+    }))
+})
 
 const newDate = (time: Date) => {
     return new Date(time)
 }
 
 const tableData = () => {
-    if (!VS) return []
+    if (!VS.value) return []
 
-    return VS.value?.map((item) => ({
+    return VS.value.map((item) => ({
         title: item.name,
+        group: item.group.name,
         startTime: newDate(item.startTime).toLocaleString(),
         endTime: newDate(item.endTime).toLocaleString(),
     }))
@@ -223,10 +253,24 @@ const handleDelete = async (row: any) => {
 }
 
 onMounted(async () => {
-    setTimeout(() => {
-        if (VS.value === null) {
-            VSRefresh()
-        }
-    }, 500)
+    const task = []
+
+    task.push(
+        setTimeout(async () => {
+            if (VS.value === null) {
+                await VSRefresh()
+            }
+        }, 500)
+    )
+
+    task.push(
+        setTimeout(async () => {
+            if (Group.value === null) {
+                await GroupRefresh()
+            }
+        }, 500)
+    )
+
+    await Promise.all(task)
 })
 </script>

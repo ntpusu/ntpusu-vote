@@ -1,25 +1,27 @@
 import prisma from '~/lib/prisma'
-import AES from 'crypto-js/aes.js'
 import SHA256 from 'crypto-js/sha256.js'
-import encUtf8 from 'crypto-js/enc-utf8.js'
-export default defineEventHandler(async (_event) => {
-    const un = getCookie(_event, 'un')
+import { getServerSession } from '#auth'
+export default defineEventHandler(async (event) => {
+    const session = await getServerSession(event) as { user: { email: string } } | null
 
-    const login = await $fetch('/api/checkLogin', { method: 'POST', body: JSON.stringify({ un: un }) })
-
-    if (!login.login) {
-        return undefined
+    if (!session) {
+        return null
     }
 
-    const username = AES.decrypt(un!, process.env.CRYPTO_KEY as string).toString(encUtf8)
+    const email = session['user']['email']
+    const studentId = email.substring(1, 10)
 
-    const { candidateId } = await readBody(_event)
+    if (studentId != process.env.ADMIN) {
+        return null
+    }
+
+    const { candidateId } = await readBody(event)
 
     const candidate = await prisma.candidate.findUnique({ where: { id: parseInt(candidateId) } })
 
     const voteSession = await prisma.voteSession.findUnique({ where: { id: candidate!.voteSessionId } })
 
-    const token = SHA256(username + voteSession!.name + process.env.CRYPTO_KEY as string).toString()
+    const token = SHA256(studentId + voteSession!.name + process.env.CRYPTO_KEY as string).toString()
 
     try {
         await prisma.ballot.create({

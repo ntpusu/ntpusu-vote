@@ -10,9 +10,17 @@ export default defineEventHandler(async (event) => {
     const email = session['user']['email']
     const studentId = email.substring(1, 10)
 
-    if (studentId != process.env.ADMIN) {
+    const admin = await prisma.admin.findUnique({
+        where: { id: parseInt(studentId) },
+    })
+
+    if (!admin) {
         return null
     }
 
-    return await prisma.admin.findMany()
+    return await prisma.voteSession.findMany({
+        include: {
+            group: true,
+        }
+    })
 })

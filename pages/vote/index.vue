@@ -82,16 +82,11 @@
 
 <script lang="ts" setup>
 import type { Candidate } from '@prisma/client'
-
-definePageMeta({
-    middleware: ['auth'],
-})
-
 const {
     data: VS,
     pending: VSPending,
     refresh: VSRefresh,
-} = await useLazyFetch('/api/VsCa')
+} = await useLazyFetch('/api/voterSession')
 
 const newDate = (time: Date) => {
     return new Date(time)

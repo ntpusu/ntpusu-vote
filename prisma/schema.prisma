@@ -8,12 +8,13 @@ datasource db {
 }
 
 model VoteSession {
-  id           Int            @id @default(autoincrement())
-  name         String         @unique
-  startTime    DateTime
-  endTime      DateTime
-  candidates   Candidate[]
-  GroupCanVote GroupCanVote[]
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  startTime  DateTime
+  endTime    DateTime
+  candidates Candidate[]
+  groupId    Int
+  group      Group       @relation(fields: [groupId], references: [id])
 }
 
 model Candidate {
@@ -39,8 +40,8 @@ model Voter {
 model Group {
   id           Int            @id @default(autoincrement())
   name         String         @unique
-  GroupCanVote GroupCanVote[]
   VoterInGroup VoterInGroup[]
+  VoteSession  VoteSession[]
 }
 
 model VoterInGroup {
@@ -51,16 +52,6 @@ model VoterInGroup {
   group   Group @relation(fields: [groupId], references: [id])
 
   @@id([voterId, groupId])
-}
-
-model GroupCanVote {
-  groupId Int
-  group   Group @relation(fields: [groupId], references: [id])
-
-  voteSessionId Int
-  voteSession   VoteSession @relation(fields: [voteSessionId], references: [id])
-
-  @@id([groupId, voteSessionId])
 }
 
 model Admin {
