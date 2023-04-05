@@ -1,5 +1,4 @@
 <template>
-    {{ VS }}
     <div v-if="!VSPending && VS !== null">
         <div class="flex justify-center">
             <ElCard
