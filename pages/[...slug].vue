@@ -8,7 +8,13 @@
 </template>
 
 <script lang="ts" setup>
-setResponseStatus(404)
+definePageMeta({
+    title: '404 NOT FOUND',
+    description: '404 NOT FOUND',
+    keywords: '404 NOT FOUND',
+    layout: 'error',
+    auth: false,
+})
 
 const countdown = ref(10)
 const timer = () => {
