@@ -1,5 +1,5 @@
 <template>
-    <ElSpace v-if="!VSPending" class="justify-center" wrap>
+    <ElSpace v-if="!VSPending && VS !== null" class="justify-center" wrap>
         <ElCard
             v-for="VSitem in VS"
             :key="VSitem.id"
@@ -16,7 +16,7 @@
                             開始：{{ viewDate(VSitem.startTime) }}
                         </div>
                         <div class="w-44 text-[0.7rem] leading-4">
-                            截止：{{ viewDate(VSitem.endTime) }}
+                            結束：{{ viewDate(VSitem.endTime) }}
                         </div>
                     </div>
                 </ElSpace>
@@ -137,43 +137,50 @@ const voteConfirm = async (VS: { id: number; candidates: any[] }) => {
                 body: JSON.stringify({
                     candidateId: voteData.value[VS.id],
                 }),
-            }).then(async (res) => {
-                if (res.vote!) {
-                    voteToken.value[VS.id] = res.token!
-                    await ElMessageBox.alert(
-                        '憑證：' + res.token!,
-                        '投票成功',
-                        {
-                            confirmButtonText: '複製憑證',
-                            type: 'success',
-                            roundButton: true,
-                        }
-                    ).then(async () => {
-                        await navigator.clipboard.writeText(res.token!)
-                        ElMessage({
-                            type: 'success',
-                            message: '已複製',
-                        })
-                    })
-                } else {
-                    voteToken.value[VS.id] = res.token!
-                    await ElMessageBox.alert(
-                        '憑證：' + res.token!,
-                        '不可重複投票',
-                        {
-                            confirmButtonText: '複製憑證',
-                            type: 'warning',
-                            roundButton: true,
-                        }
-                    ).then(async () => {
-                        await navigator.clipboard.writeText(res.token!)
-                        ElMessage({
-                            type: 'success',
-                            message: '已複製',
-                        })
-                    })
-                }
             })
+                .then(async (res) => {
+                    if (res.vote!) {
+                        voteToken.value[VS.id] = res.token!
+                        await ElMessageBox.alert(
+                            '憑證：' + res.token!,
+                            '投票成功',
+                            {
+                                confirmButtonText: '複製憑證',
+                                type: 'success',
+                                roundButton: true,
+                            }
+                        ).then(async () => {
+                            await navigator.clipboard.writeText(res.token!)
+                            ElMessage({
+                                type: 'success',
+                                message: '已複製',
+                            })
+                        })
+                    } else {
+                        voteToken.value[VS.id] = res.token!
+                        await ElMessageBox.alert(
+                            '憑證：' + res.token!,
+                            '不可重複投票',
+                            {
+                                confirmButtonText: '複製憑證',
+                                type: 'warning',
+                                roundButton: true,
+                            }
+                        ).then(async () => {
+                            await navigator.clipboard.writeText(res.token!)
+                            ElMessage({
+                                type: 'success',
+                                message: '已複製',
+                            })
+                        })
+                    }
+                })
+                .catch(() => {
+                    ElMessage({
+                        type: 'error',
+                        message: '投票失敗',
+                    })
+                })
         })
         .catch(() => {})
 }
