@@ -4,7 +4,10 @@ export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {
-        return null
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized'
+        })
     }
 
     const email = session['user']['email']
@@ -15,7 +18,10 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!admin) {
-        return null
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized'
+        })
     }
 
     return await prisma.group.findMany()

@@ -5,7 +5,10 @@ export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {
-        return { result: false, vote: null, token: null }
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized'
+        })
     }
 
     const email = session['user']['email']
@@ -16,28 +19,40 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!voter) {
-        return { result: false, vote: null, token: null }
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized'
+        })
     }
 
     const { candidateId } = await readBody(event)
 
     if (!candidateId) {
-        return { result: false, vote: null, token: null }
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request'
+        })
     }
 
     const candidate = await prisma.candidate.findUnique({ where: { id: parseInt(candidateId) } })
 
     if (!candidate) {
-        return { result: false, vote: null, token: null }
+        throw createError({
+            statusCode: 404,
+            statusMessage: 'Not Found'
+        })
     }
 
     const voteSession = await prisma.voteSession.findUnique({ where: { id: candidate.voteSessionId } })
 
     if (!voteSession) {
-        return { result: false, vote: null, token: null }
+        throw createError({
+            statusCode: 404,
+            statusMessage: 'Not Found'
+        })
     }
 
-    const token = SHA256(studentId + voteSession!.name + process.env.AUTH_SECRET).toString()
+    const token = SHA256(studentId + voteSession.name + process.env.AUTH_SECRET).toString()
 
     try {
         await prisma.ballot.create({
@@ -45,8 +60,8 @@ export default defineEventHandler(async (event) => {
         })
     }
     catch (e) {
-        return { result: true, vote: false, token }
+        return { vote: false, token }
     }
 
-    return { result: true, vote: true, token }
+    return { vote: true, token }
 })

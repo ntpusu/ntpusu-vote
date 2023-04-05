@@ -5,7 +5,10 @@ export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {
-        return { result: false }
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized'
+        })
     }
 
     const email = session['user']['email']
@@ -16,7 +19,10 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!voter) {
-        return { result: false }
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized'
+        })
     }
 
     const { id } = getQuery(event) as { id: string }
@@ -24,7 +30,10 @@ export default defineEventHandler(async (event) => {
     const voteSession = await prisma.voteSession.findUnique({ where: { id: parseInt(id) } })
 
     if (!voteSession) {
-        return { result: false }
+        throw createError({
+            statusCode: 404,
+            statusMessage: 'Not Found'
+        })
     }
 
     const token = SHA256(studentId + voteSession.name + process.env.AUTH_SECRET).toString()

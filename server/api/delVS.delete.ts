@@ -4,7 +4,10 @@ export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {
-        return null
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized'
+        })
     }
 
     const email = session['user']['email']
@@ -15,14 +18,20 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!admin) {
-        return null
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized'
+        })
     }
 
     const query = getQuery(event)
     const id = parseInt(query.id as string)
 
     if (!id) {
-        return null
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request'
+        })
     }
 
     const VS = await prisma.voteSession.findUnique({
@@ -30,7 +39,10 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!VS) {
-        return null
+        throw createError({
+            statusCode: 404,
+            statusMessage: 'Not Found'
+        })
     }
 
     const candidates = await prisma.candidate.findMany({

@@ -77,7 +77,7 @@
         </ElCard>
     </ElSpace>
     <ElSpace v-else class="justify-center" wrap>
-        <ElSkeleton v-for="index in 3" animated>
+        <ElSkeleton v-for="index in 4" animated>
             <template #template>
                 <ElSkeletonItem variant="rect" class="!h-72 !w-[25rem]" />
             </template>
@@ -138,46 +138,39 @@ const voteConfirm = async (VS: { id: number; candidates: any[] }) => {
                     candidateId: voteData.value[VS.id],
                 }),
             }).then(async (res) => {
-                if (res.result) {
-                    if (res.vote!) {
-                        voteToken.value[VS.id] = res.token!
-                        await ElMessageBox.alert(
-                            '憑證：' + res.token!,
-                            '投票成功',
-                            {
-                                confirmButtonText: '複製憑證',
-                                type: 'success',
-                                roundButton: true,
-                            }
-                        ).then(async () => {
-                            await navigator.clipboard.writeText(res.token!)
-                            ElMessage({
-                                type: 'success',
-                                message: '已複製',
-                            })
+                if (res.vote!) {
+                    voteToken.value[VS.id] = res.token!
+                    await ElMessageBox.alert(
+                        '憑證：' + res.token!,
+                        '投票成功',
+                        {
+                            confirmButtonText: '複製憑證',
+                            type: 'success',
+                            roundButton: true,
+                        }
+                    ).then(async () => {
+                        await navigator.clipboard.writeText(res.token!)
+                        ElMessage({
+                            type: 'success',
+                            message: '已複製',
                         })
-                    } else {
-                        voteToken.value[VS.id] = res.token!
-                        await ElMessageBox.alert(
-                            '憑證：' + res.token!,
-                            '不可重複投票',
-                            {
-                                confirmButtonText: '複製憑證',
-                                type: 'warning',
-                                roundButton: true,
-                            }
-                        ).then(async () => {
-                            await navigator.clipboard.writeText(res.token!)
-                            ElMessage({
-                                type: 'success',
-                                message: '已複製',
-                            })
-                        })
-                    }
+                    })
                 } else {
-                    await ElMessageBox.alert('投票失敗', '錯誤', {
-                        confirmButtonText: '確定',
-                        type: 'error',
+                    voteToken.value[VS.id] = res.token!
+                    await ElMessageBox.alert(
+                        '憑證：' + res.token!,
+                        '不可重複投票',
+                        {
+                            confirmButtonText: '複製憑證',
+                            type: 'warning',
+                            roundButton: true,
+                        }
+                    ).then(async () => {
+                        await navigator.clipboard.writeText(res.token!)
+                        ElMessage({
+                            type: 'success',
+                            message: '已複製',
+                        })
                     })
                 }
             })

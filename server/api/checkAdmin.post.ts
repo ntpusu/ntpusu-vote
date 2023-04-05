@@ -1,10 +1,12 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
     const { id } = await readBody(event)
 
     if (!id) {
-        return false
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request'
+        })
     }
 
     const admin = await prisma.admin.findUnique({

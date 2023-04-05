@@ -5,7 +5,10 @@ export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {
-        return null
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized'
+        })
     }
 
     const email = session['user']['email']
@@ -16,7 +19,14 @@ export default defineEventHandler(async (event) => {
         include: { VoterInGroup: true },
     })
 
-    const groupIds = voter?.VoterInGroup.map((item) => item.groupId)
+    if (!voter) {
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized'
+        })
+    }
+
+    const groupIds = voter.VoterInGroup.map((item) => item.groupId)
 
     const VS = await prisma.voteSession.findMany({
         where: {
