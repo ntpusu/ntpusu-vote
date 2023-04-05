@@ -1,6 +1,9 @@
 <template>
-    <h1 class="text-center text-4xl font-black">就是首頁</h1>
-    <NuxtLink to="/vote" class="text-center text-xl font-black"
+    <h1 class="text-center text-3xl font-black">就是首頁</h1>
+    <ElDivider border-style="dotted" />
+    <NuxtLink
+        to="/vote"
+        class="block text-center text-xl font-black text-red-500 hover:text-red-400 hover:underline"
         >前往投票</NuxtLink
     >
 </template>

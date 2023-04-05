@@ -4,7 +4,9 @@
         <ElHeader>
             <ClientOnly>
                 <template #fallback>
-                    <div class="pt-4 text-center">Loading menu......</div>
+                    <div class="pt-4 text-center text-gray-400">
+                        Loading menu......
+                    </div>
                 </template>
                 <ElMenu
                     :default-active="$route.path"
