@@ -89,23 +89,24 @@
         <div
             class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-3/4 xl:w-7/12 2xl:w-1/3"
         >
-            <el-table
+            <ElTable
                 :data="tableData()"
                 border
-                :table-layout="'auto'"
+                table-layout="auto"
                 empty-text="Loading......"
             >
-                <el-table-column prop="title" label="名稱" />
-                <el-table-column prop="group" label="投票範圍" />
-                <el-table-column prop="startTime" label="開始時間" />
-                <el-table-column prop="endTime" label="結束時間" />
-                <el-table-column label="操作" width="80px">
+                <div prop="id" className="hidden" />
+                <ElTableColumn prop="title" label="名稱" />
+                <ElTableColumn prop="group" label="投票範圍" />
+                <ElTableColumn prop="startTime" label="開始時間" />
+                <ElTableColumn prop="endTime" label="結束時間" />
+                <ElTableColumn label="操作" width="80px">
                     <template #default="{ row }">
                         <el-popconfirm
                             title="確定要刪除嗎？"
                             cancElButton-text="取消"
                             confirm-button-text="確定"
-                            @confirm="handleDelete(row)"
+                            @confirm="handleDelete(row.id)"
                         >
                             <template #reference>
                                 <ElButton size="small" type="primary"
@@ -114,8 +115,8 @@
                             </template>
                         </el-popconfirm>
                     </template>
-                </el-table-column>
-            </el-table>
+                </ElTableColumn>
+            </ElTable>
         </div>
     </ClientOnly>
 </template>
@@ -226,6 +227,7 @@ const tableData = () => {
     if (!VS.value) return []
 
     return VS.value.map((item) => ({
+        id: item.id,
         title: item.name,
         group: item.group.name,
         startTime: newDate(item.startTime).toLocaleString(),
@@ -233,18 +235,18 @@ const tableData = () => {
     }))
 }
 
-const handleDelete = async (row: any) => {
-    const res = (await $fetch(
+const handleDelete = async (id: number) => {
+    const res = await $fetch(
         '/api/delVS?' +
             new URLSearchParams({
-                title: row.title,
+                id: id.toString(),
             }),
         {
             method: 'DELETE',
         }
-    )) as any
+    )
 
-    if (!res.data) {
+    if (!res) {
         ElMessage('刪除失敗')
         return
     }

@@ -15,18 +15,26 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!admin) {
-        return { data: false }
+        return null
     }
 
     const query = getQuery(event)
-    const VSTitle = query.title
+    const id = parseInt(query.id as string)
+
+    if (!id) {
+        return null
+    }
 
     const VS = await prisma.voteSession.findUnique({
-        where: { name: VSTitle as string },
+        where: { id: id },
     })
 
+    if (!VS) {
+        return null
+    }
+
     const candidates = await prisma.candidate.findMany({
-        where: { voteSessionId: VS!.id },
+        where: { voteSessionId: VS.id },
     })
 
     for (const candidate of candidates) {
@@ -36,12 +44,12 @@ export default defineEventHandler(async (event) => {
     }
 
     await prisma.candidate.deleteMany({
-        where: { voteSessionId: VS!.id },
+        where: { voteSessionId: VS.id },
     })
 
     await prisma.voteSession.delete({
-        where: { name: VSTitle as string },
+        where: { id: id },
     })
 
-    return { data: true }
+    return {}
 })
