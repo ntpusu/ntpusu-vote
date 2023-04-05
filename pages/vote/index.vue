@@ -45,7 +45,7 @@
                             >{{ candidate.name }}
                         </ElRadio>
                     </ElRadioGroup>
-                    <el-divider border-style="dashed" />
+                    <ElDivider border-style="dashed" />
                     <div
                         v-if="Date.now() > timeCnt(VSitem.endTime)"
                         class="px-32"
@@ -76,7 +76,13 @@
             </div>
         </ElCard>
     </ElSpace>
-    <ElEmpty v-else description="loading......" />
+    <ElSpace v-else class="justify-center" wrap>
+        <ElSkeleton v-for="index in 3" animated>
+            <template #template>
+                <ElSkeletonItem variant="rect" class="!h-72 !w-[25rem]" />
+            </template>
+        </ElSkeleton>
+    </ElSpace>
 </template>
 
 <script lang="ts" setup>
@@ -183,10 +189,10 @@ const seeToken = async (index: number) => {
     if (!voteToken.value[index]) {
         const res = (await $fetch(
             '/api/getToken?' + new URLSearchParams({ id: index.toString() })
-        )) as Ballot | null
+        )) as unknown as Ballot | null
 
         if (!res) {
-            await ElMessageBox.alert('故沒有投票憑證', '未投票', {
+            await ElMessageBox.alert('故無投票憑證', '尚未投票', {
                 confirmButtonText: '確定',
                 type: 'error',
             })
