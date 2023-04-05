@@ -64,23 +64,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ISODateString } from 'next-auth/core/types'
 import { Ref } from 'vue'
-interface DefaultSession {
-    user?: {
-        name?: string | null
-        email?: string | null
-        image?: string | null
-    }
-    expires: ISODateString
-}
 
 const curIndex = ref('/')
 const admin = ref(false)
 
-const { status, data, signIn, signOut } = useSession() as unknown as {
+const { status, signIn, signOut } = useSession() as unknown as {
     status: Ref<string>
-    data: Ref<DefaultSession> | null
     signIn: (provider: string, options?: any) => Promise<void>
     signOut: (options?: any) => Promise<void>
 }
