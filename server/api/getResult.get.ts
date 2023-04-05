@@ -25,7 +25,6 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-
     const { id } = getQuery(event) as { id: string }
 
     const groupIds = voter.VoterInGroup.map((item) => item.groupId)
@@ -47,6 +46,13 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 404,
             statusMessage: 'Not Found'
+        })
+    }
+
+    if (Date.now() <= VS.endTime.getTime()) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request'
         })
     }
 
