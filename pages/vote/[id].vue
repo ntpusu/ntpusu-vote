@@ -1,75 +1,96 @@
 <template>
-    <div v-if="!VSPending">
-        <ElCarousel
-            v-if="timeCnt(VS!.endTime) < Date.now()"
-            :autoplay="false"
-            height="80vh"
-            indicator-position="none"
-            arrow="always"
-            class="py-[3vm]"
-        >
-            <ElCarouselItem
-                v-for="(Candidate, index) in VS!.candidates"
-                :key="index"
+    {{ VS }}
+    <div v-if="!VSPending && VS !== null">
+        <div class="flex justify-center">
+            <ElCard
+                class="w-full sm:w-11/12 md:w-5/6 lg:w-3/4 xl:w-7/12 2xl:w-5/12"
             >
-                <div class="flex">
-                    <div class="pl-[1vw] text-sm font-bold sm:text-lg">
-                        項目：{{ VS!.name }}
+                <div class="flex justify-around">
+                    <div class="flex items-center text-center">
+                        <h1 class="text-2xl font-bold">{{ VS.name }}</h1>
                     </div>
-                    <div class="flex-grow" />
-                    <div class="text-sm font-bold sm:text-lg">
-                        候選人：{{ Candidate.name }}
-                    </div>
-                    <div class="flex-grow" />
-                    <div class="pr-[3vw] text-xs sm:text-base">
-                        共&nbsp;{{ Candidate.ballots.length }}&nbsp;票
-                    </div>
-                </div>
-                <el-divider />
-                <div class="h-[65vh] overflow-y-auto">
-                    <div
-                        v-for="(Ballot, index) in Candidate.ballots"
-                        :key="index"
-                        class="flex justify-center px-[4vw]"
+                    <ElStatistic
+                        class="text-center"
+                        title="投票人數"
+                        :value="voteCnt()"
                     >
-                        <div>{{ index + 1 }}.&nbsp;</div>
-                        <div class="break-all">{{ Ballot.token }}</div>
+                        <template #suffix>人</template>
+                    </ElStatistic>
+                </div>
+                <ElDivider />
+                <div class="flex justify-around">
+                    <div class="text-center">
+                        <h1 class="text-lg">開始時間</h1>
+                        <p class="text-sm">{{ viewDate(VS.startTime) }}</p>
+                    </div>
+                    <div class="text-center">
+                        <h1 class="text-lg">結束時間</h1>
+                        <p class="text-sm">{{ viewDate(VS.endTime) }}</p>
                     </div>
                 </div>
-            </ElCarouselItem>
-        </ElCarousel>
+                <ElDivider />
+                <div class="text-center">
+                    <h1 class="pb-6 text-xl font-bold tracking-[0.5rem]">
+                        候選人
+                    </h1>
+                    <ElSpace :size="10" wrap>
+                        <ElCard
+                            v-for="(candidate, index) in VS.candidates"
+                            shadow="hover"
+                            :key="index"
+                        >
+                            <div class="px-6 text-center">
+                                <h1 class="text-xl">{{ candidate.name }}</h1>
+                            </div>
+                            <ElDivider />
+                            <ElProgress
+                                type="dashboard"
+                                :percentage="
+                                    (candidate.ballots.length * 100) / voteCnt()
+                                "
+                            >
+                                <template #default="{}">
+                                    <ElStatistic
+                                        class="text-center"
+                                        title="票數"
+                                        :value="candidate.ballots.length"
+                                    >
+                                        <template #suffix>票</template>
+                                    </ElStatistic>
+                                </template>
+                            </ElProgress>
+                        </ElCard>
+                    </ElSpace>
+                    <ElDivider />
+                </div>
+            </ElCard>
+        </div>
     </div>
-    <ElEmpty v-else description="loading......" />
+    <ElSkeleton v-else animated />
 </template>
 
 <script lang="ts" setup>
-definePageMeta({
-    middleware: ['back-to-vote'],
-})
-
+import { VoteSession, Candidate, Ballot } from '.prisma/client'
+import { AsyncDataExecuteOptions } from 'nuxt/dist/app/composables/asyncData'
 const { id } = useRoute().params as { id: string }
 
 const {
     data: VS,
     pending: VSPending,
     refresh: VSRefresh,
-} = (await useLazyFetch(
-    '/api/uniVsCaBa?' + new URLSearchParams({ id })
+} = (await useFetch(
+    '/api/getResult?' + new URLSearchParams({ id })
 )) as unknown as {
-    data: {
-        id: string
-        name: string
-        endTime: Date
-        candidates: {
-            id: string
-            name: string
-            ballots: {
-                token: string
-            }[]
-        }[]
-    } | null
+    data: globalThis.Ref<
+        | (VoteSession & {
+              candidates: (Candidate & {
+                  ballots: Ballot[]
+              })[]
+          })
+        | null
+    >
     pending: boolean
-    refresh: () => void
+    refresh: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>
 }
 
 const newDate = (time: Date) => {
@@ -84,11 +105,25 @@ const timeCnt = (time: Date) => {
     return newDate(time).getTime()
 }
 
+const voteCnt = () => {
+    if (VS.value == null) return 0
+
+    return VS.value.candidates.reduce((acc, cur) => {
+        return acc + cur.ballots.length
+    }, 0)
+}
+
 onMounted(async () => {
-    setTimeout(() => {
-        if (VS === null) {
-            VSRefresh()
+    setTimeout(async () => {
+        if (VS.value == null) {
+            await VSRefresh()
         }
     }, 500)
+
+    setTimeout(async () => {
+        if (VS.value == null) {
+            await useRouter().push('/vote')
+        }
+    }, 1000)
 })
 </script>
