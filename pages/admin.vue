@@ -218,7 +218,7 @@ const groupOptions = computed(() => {
     }))
 })
 
-const newDate = (time: Date) => {
+const newDate = (time: string | number | Date) => {
     return new Date(time)
 }
 
