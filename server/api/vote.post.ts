@@ -52,6 +52,13 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    if (Date.now() < voteSession.startTime.getTime() || Date.now() > voteSession.endTime.getTime()) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request'
+        })
+    }
+
     const token = SHA256(studentId + voteSession.name + process.env.AUTH_SECRET).toString()
 
     try {
