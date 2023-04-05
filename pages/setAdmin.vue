@@ -8,7 +8,7 @@
             {{ adminItem.id }}
         </div>
     </div>
-    <ELEmpty v-else description="loading......" />
+    <ElSkeleton v-else animated />
     <ElButton @click="adminRefresh()">刷新</ElButton>
     <ElDivider />
     <div class="flex">
