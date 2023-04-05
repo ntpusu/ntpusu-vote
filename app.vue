@@ -1,12 +1,12 @@
 <template>
     <NuxtLoadingIndicator />
-    <el-container>
-        <el-header>
+    <ElContainer>
+        <ElHeader>
             <ClientOnly>
                 <template #fallback>
                     <div class="pt-4 text-center">Loading menu......</div>
                 </template>
-                <el-menu
+                <ElMenu
                     :default-active="$route.path"
                     :unique-opened="true"
                     mode="horizontal"
@@ -18,49 +18,49 @@
                         >投票系統</span
                     >
                     <div class="flex-grow" />
-                    <el-menu-item
+                    <ElMenuItem
                         class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                         index="/"
                         @click="useRouter().push('/')"
-                        >首頁</el-menu-item
+                        >首頁</ElMenuItem
                     >
-                    <el-menu-item
+                    <ElMenuItem
                         v-if="status === 'authenticated'"
                         class="ms:!px-5 !px-3 !text-[0.8rem] font-bold sm:!text-[1rem]"
                         index="/vote"
                         @click="useRouter().push('/vote')"
-                        >投票清單</el-menu-item
+                        >投票清單</ElMenuItem
                     >
-                    <el-menu-item
+                    <ElMenuItem
                         v-if="admin"
                         class="ms:!px-5 !px-3 !text-[0.8rem] font-bold sm:!text-[1rem]"
                         index="/admin"
                         @click="useRouter().push('/admin')"
-                        >管理</el-menu-item
+                        >管理</ElMenuItem
                     >
-                    <el-menu-item
+                    <ElMenuItem
                         v-if="status === 'unauthenticated'"
                         class="ms:!px-5 !px-3 !text-[0.8rem] font-bold sm:!text-[1rem]"
                         index="/login"
                         @click="signIn('google', { callbackUrl: '/vote' })"
-                        >登入</el-menu-item
+                        >登入</ElMenuItem
                     >
-                    <el-menu-item
+                    <ElMenuItem
                         v-else-if="status === 'authenticated'"
                         class="ms:!px-5 !px-3 !text-[0.8rem] font-bold sm:!text-[1rem]"
                         index="/logout"
                         @click="signOut({ callbackUrl: '/' })"
-                        >登出</el-menu-item
+                        >登出</ElMenuItem
                     >
-                </el-menu>
+                </ElMenu>
             </ClientOnly>
-        </el-header>
-        <el-main>
+        </ElHeader>
+        <ElMain>
             <NuxtPage />
-        </el-main>
+        </ElMain>
         <!-- <el-footer></el-footer> -->
-    </el-container>
-    <el-backtop />
+    </ElContainer>
+    <ElBacktop />
 </template>
 
 <script lang="ts" setup>

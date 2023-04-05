@@ -1,6 +1,6 @@
 <template>
     <div v-if="!VSPending">
-        <el-carousel
+        <ElCarousel
             v-if="timeCnt(VS!.endTime) < Date.now()"
             :autoplay="false"
             height="80vh"
@@ -8,7 +8,7 @@
             arrow="always"
             class="py-[3vm]"
         >
-            <el-carousel-item
+            <ElCarouselItem
                 v-for="(Candidate, index) in VS!.candidates"
                 :key="index"
             >
@@ -36,10 +36,10 @@
                         <div class="break-all">{{ Ballot.token }}</div>
                     </div>
                 </div>
-            </el-carousel-item>
-        </el-carousel>
+            </ElCarouselItem>
+        </ElCarousel>
     </div>
-    <el-empty v-else description="loading......" />
+    <ElEmpty v-else description="loading......" />
 </template>
 
 <script lang="ts" setup>

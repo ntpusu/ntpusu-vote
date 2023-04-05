@@ -1,13 +1,13 @@
 <template>
-    <el-space v-if="!VSPending" class="justify-center" wrap>
-        <el-card
+    <ElSpace v-if="!VSPending" class="justify-center" wrap>
+        <ElCard
             v-for="VSitem in VS"
             :key="VSitem.id"
             shadow="hover"
             class="w-[25rem]"
         >
             <template #header>
-                <el-space class="!flex justify-between">
+                <ElSpace class="!flex justify-between">
                     <div class="flex-wrap text-xl font-bold">
                         {{ VSitem.name }}
                     </div>
@@ -19,7 +19,7 @@
                             截止：{{ viewDate(VSitem.endTime) }}
                         </div>
                     </div>
-                </el-space>
+                </ElSpace>
             </template>
             <div v-if="Date.now() < timeCnt(VSitem.startTime)">
                 <div
@@ -30,21 +30,21 @@
                 </div>
             </div>
             <div v-else>
-                <el-form :model="voteData">
-                    <el-radio-group
+                <ElForm :model="voteData">
+                    <ElRadioGroup
                         class="!grid justify-start"
                         v-model="voteData[VSitem.id]"
                         :disabled="Date.now() > timeCnt(VSitem.endTime)"
                     >
-                        <el-radio
+                        <ElRadio
                             v-for="(candidate, itemIndex) in VSitem.candidates"
                             :key="itemIndex"
                             :label="candidate.id"
                             border
                             class="!mr-0 mb-2"
                             >{{ candidate.name }}
-                        </el-radio>
-                    </el-radio-group>
+                        </ElRadio>
+                    </ElRadioGroup>
                     <el-divider border-style="dashed" />
                     <div
                         v-if="Date.now() > timeCnt(VSitem.endTime)"
@@ -59,24 +59,24 @@
                         </NuxtLink>
                     </div>
                     <div v-else class="flex px-16">
-                        <el-button
+                        <ElButton
                             type="primary"
                             class="w-full !rounded-md tracking-widest"
                             @click="voteConfirm(VSitem)"
                             >投票
-                        </el-button>
-                        <el-button
+                        </ElButton>
+                        <ElButton
                             type="success"
                             class="w-full !rounded-md tracking-widest"
                             @click="seeToken(VSitem.id)"
                             >查看憑證
-                        </el-button>
+                        </ElButton>
                     </div>
-                </el-form>
+                </ElForm>
             </div>
-        </el-card>
-    </el-space>
-    <el-empty v-else description="loading......" />
+        </ElCard>
+    </ElSpace>
+    <ElEmpty v-else description="loading......" />
 </template>
 
 <script lang="ts" setup>

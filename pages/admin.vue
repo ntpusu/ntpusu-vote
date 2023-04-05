@@ -3,7 +3,7 @@
         <div
             class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 sm:w-7/12 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
         >
-            <el-form
+            <ElForm
                 label-width="auto"
                 label-suffix=":"
                 ref="formRef"
@@ -13,18 +13,18 @@
                 class="min-w-max"
                 @keyup.enter.capture="submitForm(formRef)"
             >
-                <el-form-item label="名稱" prop="voteName" class="m-auto">
-                    <el-space>
-                        <el-input
+                <ElFormItem label="名稱" prop="voteName" class="m-auto">
+                    <ElSpace>
+                        <ElInput
                             v-model="addVote.voteName"
                             placeholder="請輸入名稱"
                             clearable
                         />
-                        <el-button class="!hidden"></el-button>
-                    </el-space>
-                </el-form-item>
-                <el-form-item label="範圍" prop="voteGroup" class="m-auto">
-                    <el-select
+                        <ElButton class="!hidden"></ElButton>
+                    </ElSpace>
+                </ElFormItem>
+                <ElFormItem label="範圍" prop="voteGroup" class="m-auto">
+                    <ElSelect
                         v-model="addVote.voteGroup"
                         placeholder="請選擇投票範圍"
                         clearable
@@ -35,23 +35,23 @@
                             :label="item.label"
                             :value="item.value"
                         />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="開始時間" prop="startTime" class="m-auto">
-                    <el-date-picker
+                    </ElSelect>
+                </ElFormItem>
+                <ElFormItem label="開始時間" prop="startTime" class="m-auto">
+                    <ElDatePicker
                         v-model="addVote.startTime"
                         type="datetime"
                         placeholder="請選擇開始時間"
                     />
-                </el-form-item>
-                <el-form-item label="結束時間" prop="endTime">
-                    <el-date-picker
+                </ElFormItem>
+                <ElFormItem label="結束時間" prop="endTime">
+                    <ElDatePicker
                         v-model="addVote.endTime"
                         type="datetime"
                         placeholder="請選擇結束時間"
                     />
-                </el-form-item>
-                <el-form-item
+                </ElFormItem>
+                <ElFormItem
                     v-for="(candidate, index) in addVote.candidates"
                     :key="index"
                     :prop="'candidates.' + index + '.name'"
@@ -62,30 +62,30 @@
                         trigger: 'blur',
                     }"
                 >
-                    <el-space>
-                        <el-input
+                    <ElSpace>
+                        <ElInput
                             v-model="candidate.name"
                             placeholder="請輸入候選人名稱"
                             clearable
                         />
-                        <el-button
-                            v-if="index > 1"
+                        <ElButton
+                            vIf="index > 1"
                             @click.prevent="removeDomain(candidate)"
-                            >X</el-button
+                            >X</ElButton
                         >
-                    </el-space>
-                </el-form-item>
-                <el-form-item>
-                    <el-space class="m-auto">
-                        <el-button @click="addDomain">新增候選人</el-button>
-                        <el-button type="primary" @click="submitForm(formRef)"
-                            >創建</el-button
+                    </ElSpace>
+                </ElFormItem>
+                <ElFormItem>
+                    <ElSpace class="m-auto">
+                        <ElButton @click="addDomain">新增候選人</ElButton>
+                        <ElButton type="primary" @click="submitForm(formRef)"
+                            >創建</ElButton
                         >
-                    </el-space>
-                </el-form-item>
-            </el-form>
+                    </ElSpace>
+                </ElFormItem>
+            </ElForm>
         </div>
-        <el-divider border-style="dashed" />
+        <ElDivider border-style="dashed" />
         <div
             class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-3/4 xl:w-7/12 2xl:w-1/3"
         >
@@ -103,13 +103,13 @@
                     <template #default="{ row }">
                         <el-popconfirm
                             title="確定要刪除嗎？"
-                            cancel-button-text="取消"
+                            cancElButton-text="取消"
                             confirm-button-text="確定"
                             @confirm="handleDelete(row)"
                         >
                             <template #reference>
-                                <el-button size="small" type="primary"
-                                    >刪除</el-button
+                                <ElButton size="small" type="primary"
+                                    >刪除</ElButton
                                 >
                             </template>
                         </el-popconfirm>

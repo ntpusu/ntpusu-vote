@@ -8,20 +8,20 @@
             {{ adminItem.id }}
         </div>
     </div>
-    <el-empty v-else description="loading......" />
-    <el-button @click="adminRefresh()">刷新</el-button>
-    <el-divider />
+    <ELEmpty v-else description="loading......" />
+    <ElButton @click="adminRefresh()">刷新</ElButton>
+    <ElDivider />
     <div class="flex">
-        <el-input v-model="addId" placeholder="請輸入ID" clearable />
-        <el-button v-if="!adminPending" type="primary" @click="addAdmin"
-            >新增</el-button
+        <ElInput v-model="addId" placeholder="請輸入ID" clearable />
+        <ElButton v-if="!adminPending" type="primary" @click="addAdmin"
+            >新增</ElButton
         >
     </div>
-    <el-divider />
+    <ElDivider />
     <div class="flex">
-        <el-input v-model="delId" placeholder="請輸入ID" clearable />
-        <el-button v-if="!adminPending" type="primary" @click="delAdmin"
-            >刪除</el-button
+        <ElInput v-model="delId" placeholder="請輸入ID" clearable />
+        <ElButton v-if="!adminPending" type="primary" @click="delAdmin"
+            >刪除</ElButton
         >
     </div>
 </template>
