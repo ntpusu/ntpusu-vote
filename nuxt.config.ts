@@ -9,6 +9,7 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@sidebase/nuxt-auth',
     ],
+    plugins: [{ src: '~/plugins/vercel.ts', mode: 'client' }],
     auth: {
         // The module is enabled. Change this to disable the module
         isEnabled: true,
