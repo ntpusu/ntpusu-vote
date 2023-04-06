@@ -61,7 +61,10 @@
                             <ElProgress
                                 type="dashboard"
                                 :percentage="
-                                    (candidate.ballots.length * 100) / voteCnt()
+                                    voteCnt() === 0
+                                        ? 0
+                                        : (candidate.ballots.length * 100) /
+                                          voteCnt()
                                 "
                                 :color="
                                     candidate.ballots.length === winnerCnt()
