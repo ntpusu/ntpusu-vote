@@ -4,29 +4,32 @@
             v-for="VSitem in VS"
             :key="VSitem.id"
             shadow="hover"
-            class="w-[25rem]"
+            class="w-[22rem] sm:w-96"
         >
             <template #header>
-                <ElSpace class="!flex justify-between">
-                    <div class="flex-wrap text-xl font-bold">
+                <div class="flex justify-between">
+                    <div class="text-lg font-bold sm:text-xl">
                         {{ VSitem.name }}
                     </div>
-                    <div>
-                        <div class="w-44 text-[0.7rem] leading-4">
-                            開始：{{ viewDate(VSitem.startTime) }}
-                        </div>
-                        <div class="w-44 text-[0.7rem] leading-4">
-                            結束：{{ viewDate(VSitem.endTime) }}
-                        </div>
+                    <div
+                        class="flex w-44 flex-wrap justify-end align-middle text-[0.5rem] leading-4 sm:text-[0.7rem]"
+                    >
+                        開始：{{ viewDate(VSitem.startTime) }}
+                        <br />
+                        結束：{{ viewDate(VSitem.endTime) }}
                     </div>
-                </ElSpace>
+                </div>
             </template>
             <div v-if="Date.now() < timeCnt(VSitem.startTime)">
+                <h1 class="pb-5 text-center text-xl font-bold sm:text-lg">
+                    候選人名單
+                </h1>
                 <div
                     v-for="(candidate, itemIndex) in VSitem.candidates"
                     :key="itemIndex"
+                    class="px-10 py-2 text-base sm:text-lg"
                 >
-                    {{ candidate.name }}
+                    {{ itemIndex + 1 + '. ' + candidate.name }}
                 </div>
             </div>
             <div v-else>
@@ -48,7 +51,7 @@
                     <ElDivider border-style="dashed" />
                     <div
                         v-if="Date.now() > timeCnt(VSitem.endTime)"
-                        class="px-32"
+                        class="px-28 sm:px-32"
                     >
                         <NuxtLink
                             class="inline-flex w-full justify-center rounded-md bg-green-600 px-6 py-1.5 text-sm tracking-widest text-white hover:bg-green-500"
