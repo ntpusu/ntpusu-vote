@@ -181,7 +181,7 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
                 })
                 .catch(async () => {
                     await ElMessageBox.alert(
-                        '可能原因：1. 網路連線斷了, 2. 未登入, 3. 未在投票時間內投票',
+                        '可能原因：1. 網路連線斷了, 2. 未登入, 3. 學號輸入錯誤, 4. 未在投票時間內投票',
                         '投票失敗',
                         {
                             confirmButtonText: '確定',
