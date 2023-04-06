@@ -35,32 +35,52 @@
                     <ElSpace :size="10" wrap>
                         <ElCard
                             v-for="(candidate, index) in VS.candidates"
-                            shadow="hover"
+                            :shadow="
+                                candidate.ballots.length === winnerCnt()
+                                    ? 'always'
+                                    : 'never'
+                            "
+                            :class="{
+                                '!bg-rose-100':
+                                    candidate.ballots.length === winnerCnt(),
+                            }"
                             :key="index"
                         >
                             <div class="px-6 text-center">
                                 <h1 class="text-xl">{{ candidate.name }}</h1>
                             </div>
                             <ElDivider />
+                            <ElStatistic
+                                class="text-center"
+                                title="票數"
+                                :value="candidate.ballots.length"
+                            >
+                                <template #suffix>票</template>
+                            </ElStatistic>
+                            <ElDivider />
                             <ElProgress
                                 type="dashboard"
                                 :percentage="
                                     (candidate.ballots.length * 100) / voteCnt()
                                 "
+                                :color="
+                                    candidate.ballots.length === winnerCnt()
+                                        ? '#f56c6c'
+                                        : '#409eff'
+                                "
                             >
-                                <template #default="{}">
+                                <template #default="{ percentage }">
                                     <ElStatistic
                                         class="text-center"
-                                        title="票數"
-                                        :value="candidate.ballots.length"
+                                        title="得票率"
+                                        :value="percentage"
                                     >
-                                        <template #suffix>票</template>
+                                        <template #suffix>%</template>
                                     </ElStatistic>
                                 </template>
                             </ElProgress>
                         </ElCard>
                     </ElSpace>
-                    <ElDivider />
                 </div>
             </ElCard>
         </div>
@@ -109,6 +129,14 @@ const voteCnt = () => {
 
     return VS.value.candidates.reduce((acc, cur) => {
         return acc + cur.ballots.length
+    }, 0)
+}
+
+const winnerCnt = () => {
+    if (VS.value == null) return 0
+
+    return VS.value.candidates.reduce((acc, cur) => {
+        return acc > cur.ballots.length ? acc : cur.ballots.length
     }, 0)
 }
 
