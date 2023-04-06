@@ -1,9 +1,7 @@
 <template>
     <div v-if="!VSPending && VS !== null">
         <div class="flex justify-center">
-            <ElCard
-                class="w-full sm:w-11/12 md:w-5/6 lg:w-3/4 xl:w-7/12 2xl:w-5/12"
-            >
+            <ElCard class="w-full md:w-5/6 xl:w-2/3 2xl:w-1/2">
                 <div class="flex justify-around">
                     <div class="flex items-center text-center">
                         <h1 class="text-2xl font-bold">{{ VS.name }}</h1>
@@ -32,7 +30,7 @@
                     <h1 class="pb-6 text-xl font-bold tracking-[0.5rem]">
                         候選人
                     </h1>
-                    <ElSpace :size="10" wrap>
+                    <ElSpace :size="10" class="justify-center" wrap>
                         <ElCard
                             v-for="(candidate, index) in VS.candidates"
                             :shadow="
@@ -94,6 +92,7 @@
 <script lang="ts" setup>
 import { VoteSession, Candidate, Ballot } from '.prisma/client'
 import { AsyncDataExecuteOptions } from 'nuxt/dist/app/composables/asyncData'
+
 const { id } = useRoute().params as { id: string }
 
 const {
@@ -115,16 +114,12 @@ const {
     refresh: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>
 }
 
-const newDate = (time: Date) => {
-    return new Date(time)
-}
+definePageMeta({
+    title: '投票結果',
+})
 
 const viewDate = (time: Date) => {
-    return newDate(time).toLocaleString()
-}
-
-const timeCnt = (time: Date) => {
-    return newDate(time).getTime()
+    return new Date(time).toLocaleString()
 }
 
 const voteCnt = () => {

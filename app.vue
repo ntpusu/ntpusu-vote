@@ -68,6 +68,58 @@
 <script lang="ts" setup>
 import { Ref } from 'vue'
 
+const route = useRoute()
+
+useHead({
+    title: '國立臺北大學三峽校區學生會投票網站',
+    titleTemplate() {
+        return `${route.meta.title} | 學生會投票網站`
+    },
+    meta: [
+        {
+            name: 'og:title',
+            content: `${route.meta.title} | 國立臺北大學三峽校區學生會投票網站`,
+        },
+        {
+            name: 'og:description',
+            content: '國立臺北大學三峽校區學生會投票網站',
+        },
+        {
+            name: 'og:image',
+            content:
+                'https://i0.wp.com/su.ntpu.org/wp-content/uploads/2022/09/297330040_5472635102757142_2117759161702702779_n.jpg?resize=1024%2C1024&amp;ssl=1',
+        },
+        {
+            name: 'og:url',
+            content: 'https://ntpu-vote-2023.vercel.app/',
+        },
+        {
+            name: 'og:site_name',
+            content: '學生會投票網站',
+        },
+        {
+            name: 'og:type',
+            content: 'website',
+        },
+        {
+            name: 'description',
+            content: '國立臺北大學三峽校區學生會投票網站',
+        },
+        {
+            name: 'keywords',
+            content: '學生會,投票,臺北大學,三峽校區',
+        },
+        {
+            name: 'author',
+            content: '國立臺北大學三峽校區學生會',
+        },
+        {
+            name: 'copyright',
+            content: '國立臺北大學三峽校區學生會',
+        },
+    ],
+})
+
 const curIndex = ref('/')
 const admin = ref(false)
 

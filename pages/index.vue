@@ -11,5 +11,6 @@
 <script lang="ts" setup>
 definePageMeta({
     auth: false,
+    title: '首頁',
 })
 </script>

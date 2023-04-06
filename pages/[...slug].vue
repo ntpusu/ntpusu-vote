@@ -10,8 +10,6 @@
 <script lang="ts" setup>
 definePageMeta({
     title: '404 NOT FOUND',
-    description: '404 NOT FOUND',
-    keywords: '404 NOT FOUND',
     layout: 'error',
     auth: false,
 })

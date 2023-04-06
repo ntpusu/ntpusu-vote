@@ -126,6 +126,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 
 definePageMeta({
     middleware: ['admin'],
+    title: '投票管理',
 })
 
 const formRef = ref<FormInstance>()

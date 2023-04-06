@@ -29,6 +29,7 @@
 <script lang="ts" setup>
 definePageMeta({
     middleware: ['super-admin'],
+    title: '設定管理員',
 })
 
 const {
