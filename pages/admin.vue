@@ -69,7 +69,7 @@
                             clearable
                         />
                         <ElButton
-                            vIf="index > 1"
+                            v-if="index > 1"
                             @click.prevent="removeDomain(candidate)"
                             >X</ElButton
                         >
@@ -102,7 +102,7 @@
                 <ElTableColumn prop="endTime" label="結束時間" />
                 <ElTableColumn label="操作" width="80px">
                     <template #default="{ row }">
-                        <el-popconfirm
+                        <ElPopconfirm
                             title="確定要刪除嗎？"
                             cancElButton-text="取消"
                             confirm-button-text="確定"
@@ -113,7 +113,7 @@
                                     >刪除</ElButton
                                 >
                             </template>
-                        </el-popconfirm>
+                        </ElPopconfirm>
                     </template>
                 </ElTableColumn>
             </ElTable>

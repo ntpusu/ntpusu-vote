@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Ballot } from '@prisma/client'
+import type { Ballot, Candidate } from '@prisma/client'
 import { Ref } from 'vue'
 const {
     data: VS,
@@ -109,7 +109,7 @@ const timeCnt = (time: any) => {
 const voteData: Ref<number[]> = ref([])
 const voteToken: Ref<string[]> = ref([])
 
-const voteConfirm = async (VS: { id: number; candidates: any[] }) => {
+const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
     if (!voteData.value[VS.id]) {
         ElMessage({
             type: 'warning',
@@ -122,25 +122,29 @@ const voteConfirm = async (VS: { id: number; candidates: any[] }) => {
         (item: { id: number }) => item.id === voteData.value[VS.id]
     )?.name
 
-    await ElMessageBox.confirm(
+    await ElMessageBox.prompt(
+        '輸入學號進行確認',
         '確定要投給「' + candidate + '」嗎？',
-        '再次確認',
         {
             confirmButtonText: '確定',
             cancelButtonText: '取消',
             type: 'warning',
+            inputPlaceholder: '我是輸入欄😎',
+            inputPattern: /^\d{0,9}$/,
+            inputErrorMessage: '學號格式錯誤',
         }
     )
-        .then(async () => {
+        .then(async ({ value }) => {
             await $fetch('/api/vote', {
                 method: 'POST',
                 body: JSON.stringify({
                     candidateId: voteData.value[VS.id],
+                    voterId: value,
                 }),
             })
                 .then(async (res) => {
                     if (res.vote!) {
-                        voteToken.value[VS.id] = res.token!
+                        voteToken.value[VS.id] = res.token
                         await ElMessageBox.alert(
                             '憑證：' + res.token!,
                             '投票成功',
@@ -150,14 +154,14 @@ const voteConfirm = async (VS: { id: number; candidates: any[] }) => {
                                 roundButton: true,
                             }
                         ).then(async () => {
-                            await navigator.clipboard.writeText(res.token!)
+                            await navigator.clipboard.writeText(res.token)
                             ElMessage({
                                 type: 'success',
                                 message: '已複製',
                             })
                         })
                     } else {
-                        voteToken.value[VS.id] = res.token!
+                        voteToken.value[VS.id] = res.token
                         await ElMessageBox.alert(
                             '憑證：' + res.token!,
                             '不可重複投票',
@@ -167,7 +171,7 @@ const voteConfirm = async (VS: { id: number; candidates: any[] }) => {
                                 roundButton: true,
                             }
                         ).then(async () => {
-                            await navigator.clipboard.writeText(res.token!)
+                            await navigator.clipboard.writeText(res.token)
                             ElMessage({
                                 type: 'success',
                                 message: '已複製',
@@ -175,11 +179,17 @@ const voteConfirm = async (VS: { id: number; candidates: any[] }) => {
                         })
                     }
                 })
-                .catch(() => {
-                    ElMessage({
-                        type: 'error',
-                        message: '投票失敗',
-                    })
+                .catch(async () => {
+                    await ElMessageBox.alert(
+                        '可能原因：1. 網路連線斷了, 2. 未登入, 3. 未在投票時間內投票',
+                        '投票失敗',
+                        {
+                            confirmButtonText: '確定',
+                            type: 'error',
+                        }
+                    )
+
+                    await refreshNuxtData()
                 })
         })
         .catch(() => {})
