@@ -118,6 +118,13 @@ useHead({
             content: '國立臺北大學三峽校區學生會',
         },
     ],
+    link: [
+        {
+            rel: 'favicon icon',
+            type: 'image/x-icon',
+            href: '/favicon.ico',
+        },
+    ],
 })
 
 const curIndex = ref('/')
