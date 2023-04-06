@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            statusMessage: 'Unauthorized'
+            statusMessage: '未登入'
         })
     }
 
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     if (!admin) {
         throw createError({
             statusCode: 401,
-            statusMessage: 'Unauthorized'
+            statusMessage: '不在管理員名單中'
         })
     }
 

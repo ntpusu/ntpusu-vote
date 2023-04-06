@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            statusMessage: 'Unauthorized'
+            statusMessage: '未登入'
         })
     }
 
@@ -21,16 +21,23 @@ export default defineEventHandler(async (event) => {
     if (!voter) {
         throw createError({
             statusCode: 401,
-            statusMessage: 'Unauthorized'
+            statusMessage: '不在投票人名冊中'
         })
     }
 
-    const { candidateId } = await readBody(event)
+    const { candidateId, voterId } = await readBody(event)
 
-    if (!candidateId) {
+    if (!candidateId || !voterId) {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request'
+        })
+    }
+
+    if (voterId !== studentId) {
+        throw createError({
+            statusCode: 401,
+            statusMessage: '登入者與投票者不符'
         })
     }
 
@@ -52,10 +59,17 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (Date.now() < voteSession.startTime.getTime() || Date.now() > voteSession.endTime.getTime()) {
+    if (Date.now() < voteSession.startTime.getTime()) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Bad Request'
+            statusMessage: '投票尚未開始'
+        })
+    }
+
+    if (Date.now() > voteSession.endTime.getTime()) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: '投票已結束'
         })
     }
 
