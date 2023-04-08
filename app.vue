@@ -70,49 +70,38 @@ import { Ref } from 'vue'
 
 const route = useRoute()
 
-useHead({
-    title: '國立臺北大學三峽校區學生會投票網站',
+useSeoMeta({
+    title: '學生會投票網站',
     titleTemplate() {
         return `${route.meta.title} | 學生會投票網站`
     },
+    description: '國立臺北大學三峽校區學生會投票網站',
+    ogTitle: '國立臺北大學三峽校區學生會投票網站',
+    ogDescription() {
+        return `${route.meta.title} | 國立臺北大學三峽校區學生會投票網站`
+    },
+    ogSiteName: '國立臺北大學三峽校區學生會投票網站',
+    ogType: 'website',
+    ogUrl: 'https://ntpu-vote-2023.vercel.app/',
+    ogImage: 'https://ntpu-vote-2023.vercel.app/favicon.ico',
+    ogImageAlt:
+        'https://i0.wp.com/su.ntpu.org/wp-content/uploads/2022/09/297330040_5472635102757142_2117759161702702779_n.jpg',
+    ogImageUrl: 'https://ntpu-vote-2023.vercel.app/favicon.ico',
+    ogImageType: 'image/png',
+    author: '國立臺北大學三峽校區學生會',
+    creator: '國立臺北大學三峽校區學生會',
+    publisher: '國立臺北大學三峽校區學生會',
+    twitterTitle: '國立臺北大學三峽校區學生會投票網站',
+    twitterDescription() {
+        return `${route.meta.title} | 國立臺北大學三峽校區學生會投票網站`
+    },
+    twitterImage: 'https://ntpu-vote-2023.vercel.app/favicon.ico',
+    twitterImageAlt:
+        'https://i0.wp.com/su.ntpu.org/wp-content/uploads/2022/09/297330040_5472635102757142_2117759161702702779_n.jpg',
+})
+
+useHead({
     meta: [
-        {
-            name: 'og:title',
-            content: `${route.meta.title} | 國立臺北大學三峽校區學生會投票網站`,
-        },
-        {
-            name: 'og:description',
-            content: '國立臺北大學三峽校區學生會投票網站',
-        },
-        {
-            name: 'og:image',
-            content:
-                'https://i0.wp.com/su.ntpu.org/wp-content/uploads/2022/09/297330040_5472635102757142_2117759161702702779_n.jpg?resize=1024%2C1024&amp;ssl=1',
-        },
-        {
-            name: 'og:url',
-            content: 'https://ntpu-vote-2023.vercel.app/',
-        },
-        {
-            name: 'og:site_name',
-            content: '學生會投票網站',
-        },
-        {
-            name: 'og:type',
-            content: 'website',
-        },
-        {
-            name: 'description',
-            content: '國立臺北大學三峽校區學生會投票網站',
-        },
-        {
-            name: 'keywords',
-            content: '學生會,投票,臺北大學,三峽校區',
-        },
-        {
-            name: 'author',
-            content: '國立臺北大學三峽校區學生會',
-        },
         {
             name: 'copyright',
             content: '國立臺北大學三峽校區學生會',
