@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            statusMessage: '未登入'
+            message: '未登入'
         })
     }
 
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     if (!admin) {
         throw createError({
             statusCode: 401,
-            statusMessage: '不在管理員名單中'
+            message: '不在管理員名單中'
         })
     }
 
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
     if (!id) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Bad Request'
+            message: 'Bad Request'
         })
     }
 
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
     if (!VS) {
         throw createError({
             statusCode: 404,
-            statusMessage: 'Not Found'
+            message: 'Not Found'
         })
     }
 

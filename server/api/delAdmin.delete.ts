@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            statusMessage: '未登入'
+            message: '未登入'
         })
     }
 
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     if (studentId != process.env.ADMIN) {
         throw createError({
             statusCode: 401,
-            statusMessage: '不在管理員名單中'
+            message: '不在管理員名單中'
         })
     }
 

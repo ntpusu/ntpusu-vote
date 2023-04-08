@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            statusMessage: '未登入'
+            message: '未登入'
         })
     }
 
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     if (!voter) {
         throw createError({
             statusCode: 401,
-            statusMessage: '不在投票人名冊中'
+            message: '不在投票人名冊中'
         })
     }
 
@@ -45,21 +45,21 @@ export default defineEventHandler(async (event) => {
     if (!VS) {
         throw createError({
             statusCode: 404,
-            statusMessage: 'Not Found'
+            message: 'Not Found'
         })
     }
 
     if (Date.now() <= VS.endTime.getTime()) {
         throw createError({
             statusCode: 400,
-            statusMessage: '投票尚未結束'
+            message: '投票尚未結束'
         })
     }
 
     if (!groupIds.includes(VS.groupId)) {
         throw createError({
             statusCode: 401,
-            statusMessage: '沒有查看權限'
+            message: '沒有查看權限'
         })
     }
 

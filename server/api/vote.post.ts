@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            statusMessage: '未登入'
+            message: '未登入'
         })
     }
 
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     if (!voter) {
         throw createError({
             statusCode: 401,
-            statusMessage: '不在投票人名冊中'
+            message: '不在投票人名冊中'
         })
     }
 
@@ -30,14 +30,14 @@ export default defineEventHandler(async (event) => {
     if (!candidateId || !voterId) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Bad Request'
+            message: 'Bad Request'
         })
     }
 
     if (voterId !== studentId) {
         throw createError({
             statusCode: 401,
-            statusMessage: '登入者與投票者不符'
+            message: '登入者與投票者不符'
         })
     }
 
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
     if (!candidate) {
         throw createError({
             statusCode: 404,
-            statusMessage: 'Not Found'
+            message: 'Not Found'
         })
     }
 
@@ -55,21 +55,21 @@ export default defineEventHandler(async (event) => {
     if (!voteSession) {
         throw createError({
             statusCode: 404,
-            statusMessage: 'Not Found'
+            message: 'Not Found'
         })
     }
 
     if (Date.now() < voteSession.startTime.getTime()) {
         throw createError({
             statusCode: 400,
-            statusMessage: '投票尚未開始'
+            message: '投票尚未開始'
         })
     }
 
     if (Date.now() > voteSession.endTime.getTime()) {
         throw createError({
             statusCode: 400,
-            statusMessage: '投票已結束'
+            message: '投票已結束'
         })
     }
 

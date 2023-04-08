@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            statusMessage: '未登入'
+            message: '未登入'
         })
     }
 
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     if (!voter) {
         throw createError({
             statusCode: 401,
-            statusMessage: '不在投票人名冊中'
+            message: '不在投票人名冊中'
         })
     }
 
