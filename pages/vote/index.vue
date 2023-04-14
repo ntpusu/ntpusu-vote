@@ -7,7 +7,7 @@
             class="w-[22rem] sm:w-96"
         >
             <template #header>
-                <div class="flex justify-between">
+                <div class="flex items-center justify-between">
                     <div class="text-lg font-bold sm:text-xl">
                         {{ VSitem.name }}
                     </div>
@@ -20,69 +20,127 @@
                     </div>
                 </div>
             </template>
-            <div v-if="Date.now() < timeCnt(VSitem.startTime)">
-                <h1 class="pb-5 text-center text-xl font-bold sm:text-lg">
+            <div>
+                <h2 class="pb-5 text-center text-base font-bold sm:text-lg">
                     候選人名單
-                </h1>
+                </h2>
                 <div
                     v-for="(candidate, itemIndex) in VSitem.candidates"
                     :key="itemIndex"
-                    class="px-10 py-2 text-base sm:text-lg"
+                    class="flex items-center px-10 py-2 text-sm sm:text-base"
                 >
-                    {{ itemIndex + 1 + '. ' + candidate.name }}
+                    <ElTag type="warning" effect="dark">{{
+                        itemIndex + 1
+                    }}</ElTag>
+                    <span>&nbsp;&nbsp;</span>
+                    {{ candidate.name }}
                 </div>
             </div>
+            <ElDivider />
+            <div
+                v-if="Date.now() < timeCnt(VSitem.startTime)"
+                class="px-24 sm:px-28"
+            >
+                <ElButton
+                    type="danger"
+                    class="w-full !rounded-md"
+                    auto-insert-space
+                    plain
+                    loading
+                >
+                    尚未開始
+                </ElButton>
+            </div>
             <div v-else>
-                <ElForm :model="voteData">
-                    <ElRadioGroup
-                        class="!grid justify-start"
-                        v-model="voteData[VSitem.id]"
-                        :disabled="Date.now() > timeCnt(VSitem.endTime)"
+                <ClientOnly>
+                    <ElDialog
+                        :title="VSitem.name"
+                        :center="true"
+                        v-model="voteVisible[VSitem.id]"
+                        width="30%"
+                        class="px-5"
+                        @close="voteLoading[VSitem.id] = false"
                     >
-                        <ElRadio
-                            v-for="(candidate, itemIndex) in VSitem.candidates"
-                            :key="itemIndex"
-                            :label="candidate.id"
-                            border
-                            class="!mr-0 mb-2"
-                            >{{ candidate.name }}
-                        </ElRadio>
-                    </ElRadioGroup>
-                    <ElDivider border-style="dashed" />
-                    <div
-                        v-if="Date.now() > timeCnt(VSitem.endTime)"
-                        class="px-28 sm:px-32"
-                    >
-                        <NuxtLink
-                            class="inline-flex w-full justify-center rounded-md bg-green-600 px-6 py-1.5 text-sm tracking-widest text-white hover:bg-green-500"
-                            @click="seeToken(VSitem.id)"
-                            :to="'/vote/' + VSitem.id"
+                        <ElRadioGroup
+                            class="!grid justify-start"
+                            v-model="voteData[VSitem.id]"
                         >
-                            結果
-                        </NuxtLink>
-                    </div>
-                    <div v-else class="flex px-16">
+                            <ElRadio
+                                v-for="(
+                                    candidate, itemIndex
+                                ) in VSitem.candidates"
+                                :key="itemIndex"
+                                :label="candidate.id"
+                                border
+                                class="!mr-0 mb-2"
+                            >
+                                {{ candidate.name }}
+                            </ElRadio>
+                        </ElRadioGroup>
+                        <ElDivider border-style="dashed" />
                         <ElButton
                             type="primary"
-                            class="w-full !rounded-md tracking-widest"
+                            class="w-full !rounded-md"
                             @click="voteConfirm(VSitem)"
-                            >投票
+                            auto-insert-space
+                            plain
+                        >
+                            投票
                         </ElButton>
-                        <ElButton
-                            type="success"
-                            class="w-full !rounded-md tracking-widest"
-                            @click="seeToken(VSitem.id)"
-                            >查看憑證
-                        </ElButton>
-                    </div>
-                </ElForm>
+                    </ElDialog>
+                </ClientOnly>
+                <div
+                    v-if="Date.now() > timeCnt(VSitem.endTime)"
+                    class="px-28 sm:px-32"
+                >
+                    <ElButton
+                        type="success"
+                        class="w-full !rounded-md"
+                        @click="
+                            seeToken(VSitem.id).then(() => {
+                                useRouter().push('/vote/' + VSitem.id)
+                            })
+                        "
+                        auto-insert-space
+                        plain
+                    >
+                        結果
+                    </ElButton>
+                </div>
+                <div v-else class="flex px-16">
+                    <ElButton
+                        type="primary"
+                        class="w-full !rounded-md tracking-widest"
+                        :disabled="voteToken[VSitem.id] !== undefined"
+                        @click="
+                            voteVisible[VSitem.id] = voteLoading[
+                                VSitem.id
+                            ] = true
+                        "
+                        auto-insert-space
+                        plain
+                        :loading="voteLoading[VSitem.id]"
+                    >
+                        投票
+                    </ElButton>
+                    <ElButton
+                        type="info"
+                        class="w-full !rounded-md tracking-widest"
+                        @click="seeToken(VSitem.id)"
+                        auto-insert-space
+                        plain
+                        :loading="tokenLoading[VSitem.id]"
+                    >
+                        查看憑證
+                    </ElButton>
+                </div>
             </div>
         </ElCard>
     </ElSpace>
     <ElSpace v-else class="justify-center" wrap>
         <ElSkeleton v-for="index in 4" animated>
             <template #template>
-                <ElSkeletonItem variant="rect" class="!h-72 !w-[25rem]" />
+                <ElSkeletonItem variant="rect" class="!h-20 !w-[25rem]" />
             </template>
         </ElSkeleton>
     </ElSpace>
@@ -101,20 +159,19 @@ const {
     refresh: VSRefresh,
 } = await useLazyFetch('/api/voterSession')
 
-const newDate = (time: string | number | Date) => {
-    return new Date(time)
+const viewDate = (time: string | number | Date) => {
+    return new Date(time).toLocaleString()
 }
 
-const viewDate = (time: any) => {
-    return newDate(time).toLocaleString()
+const timeCnt = (time: string | number | Date) => {
+    return new Date(time).getTime()
 }
 
-const timeCnt = (time: any) => {
-    return newDate(time).getTime()
-}
-
+const voteVisible: Ref<boolean[]> = ref([])
 const voteData: Ref<number[]> = ref([])
 const voteToken: Ref<string[]> = ref([])
+const tokenLoading: Ref<boolean[]> = ref([])
+const voteLoading: Ref<boolean[]> = ref([])
 
 const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
     if (!voteData.value[VS.id]) {
@@ -124,6 +181,11 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
         })
         return
     }
+
+    voteVisible.value[VS.id] = false
+    setTimeout(async () => {
+        voteLoading.value[VS.id] = true
+    }, 10)
 
     const candidate = VS.candidates.find(
         (item: { id: number }) => item.id === voteData.value[VS.id]
@@ -137,7 +199,7 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
             cancelButtonText: '取消',
             type: 'warning',
             inputPlaceholder: '我是輸入欄😎',
-            inputPattern: /^\d{0,9}$/,
+            inputPattern: /^\d{1,9}$/,
             inputErrorMessage: '學號格式錯誤',
         }
     )
@@ -200,9 +262,13 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
                 })
         })
         .catch(() => {})
+
+    voteLoading.value[VS.id] = false
 }
 
 const seeToken = async (index: number) => {
+    tokenLoading.value[index] = true
+
     if (!voteToken.value[index]) {
         const res = (await $fetch(
             '/api/getToken?' + new URLSearchParams({ id: index.toString() })
@@ -210,9 +276,10 @@ const seeToken = async (index: number) => {
 
         if (!res) {
             await ElMessageBox.alert('故無投票憑證', '尚未投票', {
+                showClose: false,
                 confirmButtonText: '確定',
                 type: 'error',
-            })
+            }).catch(() => {})
         } else {
             voteToken.value[index] = res.token
         }
@@ -233,6 +300,8 @@ const seeToken = async (index: number) => {
             })
             .catch(() => {})
     }
+
+    tokenLoading.value[index] = false
 }
 
 onMounted(async () => {
