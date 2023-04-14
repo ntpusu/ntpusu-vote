@@ -47,11 +47,15 @@ const input = ref('')
 
 const show = ref(false)
 
-const data = ref({}) as Ref<{
+const data: Ref<{
     vote: string
     candidate: string
     time: string
-}>
+}> = ref({
+    vote: '',
+    candidate: '',
+    time: '',
+})
 
 const search = async () => {
     if (input.value == '') {
