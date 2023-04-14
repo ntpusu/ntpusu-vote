@@ -1,8 +1,8 @@
 <template>
     <div class="pt-16">
-        <el-result icon="error" title="404 NOT FOUND🧐"></el-result>
-        <nuxt-link to="/" class="grid text-center text-sm"
-            >{{ countdown.toFixed(1) }} 秒後自動跳轉至首頁</nuxt-link
+        <ElResult icon="error" title="404 NOT FOUND🧐"></ElResult>
+        <NuxtLink to="/" class="grid text-center text-sm"
+            >{{ countdown.toFixed(1) }} 秒後自動跳轉至首頁</NuxtLink
         >
     </div>
 </template>
@@ -14,20 +14,24 @@ definePageMeta({
     auth: false,
 })
 
+const event = useRequestEvent()
+setResponseStatus(event, 404)
+
 const countdown = ref(10)
-const timer = () => {
-    setTimeout(() => {
+const timer = async () => {
+    setTimeout(async () => {
         countdown.value -= 0.1
 
         if (countdown.value > 0.1) {
-            timer()
+            await timer()
         } else {
-            useRouter().push('/')
+            await useRouter().push('/')
         }
     }, 100)
 }
 
-onMounted(() => {
-    timer()
+onMounted(async () => {
+    if (useRoute().path != '/404') await useRouter().push('/404')
+    await timer()
 })
 </script>
