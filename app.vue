@@ -67,7 +67,6 @@
         <ElMain>
             <NuxtPage />
         </ElMain>
-        <!-- <el-footer></el-footer> -->
     </ElContainer>
     <ElBacktop />
 </template>
@@ -137,7 +136,7 @@ const handleSelect = (key: string) => {
 }
 
 onMounted(() => {
-    curIndex.value = useRouter().currentRoute.value.path
+    curIndex.value = useRoute().path
 
     $fetch('/api/checkAdmin').then((res) => {
         admin.value = res
