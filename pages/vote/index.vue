@@ -90,7 +90,6 @@
 
 <script lang="ts" setup>
 import type { Ballot, Candidate } from '@prisma/client'
-import { Ref } from 'vue'
 
 definePageMeta({
     title: '投票',
