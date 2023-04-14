@@ -57,36 +57,42 @@
                         :title="VSitem.name"
                         :center="true"
                         v-model="voteVisible[VSitem.id]"
-                        width="30%"
-                        class="px-5"
+                        width="40%"
+                        :align-center="true"
+                        class="min-w-fit px-5"
                         @close="voteLoading[VSitem.id] = false"
                     >
-                        <ElRadioGroup
-                            class="!grid justify-start"
-                            v-model="voteData[VSitem.id]"
-                        >
-                            <ElRadio
-                                v-for="(
-                                    candidate, itemIndex
-                                ) in VSitem.candidates"
-                                :key="itemIndex"
-                                :label="candidate.id"
-                                border
-                                class="!mr-0 mb-2"
+                        <div class="flex justify-center px-[10%]">
+                            <ElRadioGroup
+                                class="flex-col !items-stretch"
+                                v-model="voteData[VSitem.id]"
                             >
-                                {{ candidate.name }}
-                            </ElRadio>
-                        </ElRadioGroup>
+                                <ElRadio
+                                    v-for="(
+                                        candidate, itemIndex
+                                    ) in VSitem.candidates"
+                                    :key="itemIndex"
+                                    :label="candidate.id"
+                                    border
+                                    size="large"
+                                    class="my-1 !mr-0"
+                                >
+                                    {{ candidate.name }}
+                                </ElRadio>
+                            </ElRadioGroup>
+                        </div>
                         <ElDivider border-style="dashed" />
-                        <ElButton
-                            type="primary"
-                            class="w-full !rounded-md"
-                            @click="voteConfirm(VSitem)"
-                            auto-insert-space
-                            plain
-                        >
-                            投票
-                        </ElButton>
+                        <div class="flex px-[35%]">
+                            <ElButton
+                                type="primary"
+                                class="w-full !rounded-md"
+                                @click="voteConfirm(VSitem)"
+                                auto-insert-space
+                                plain
+                            >
+                                投票
+                            </ElButton>
+                        </div>
                     </ElDialog>
                 </ClientOnly>
                 <div
@@ -140,7 +146,11 @@
     <ElSpace v-else class="justify-center" wrap>
         <ElSkeleton v-for="index in 4" animated>
             <template #template>
-                <ElSkeletonItem variant="rect" class="!h-20 !w-[25rem]" />
+                <ElSkeletonItem
+                    variant="rect"
+                    class="!w-[22rem] sm:!w-96"
+                    :style="{ height: rand(8, 25) + 'rem' }"
+                />
             </template>
         </ElSkeleton>
     </ElSpace>
@@ -148,6 +158,7 @@
 
 <script lang="ts" setup>
 import type { Ballot, Candidate } from '@prisma/client'
+import { rand } from '@vueuse/shared'
 
 definePageMeta({
     title: '投票',
