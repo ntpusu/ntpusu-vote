@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
 
     const voter = await prisma.voter.findUnique({
         where: { id: parseInt(studentId) },
+        include: { VoterInGroup: true },
     })
 
     if (!voter) {
@@ -25,19 +26,19 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { candidateId, voterId } = await readBody(event)
+    const { VSId, candidateId, voterId } = await readBody(event)
 
-    if (!candidateId || !voterId) {
+    if (!VSId || !candidateId || !voterId) {
         throw createError({
             statusCode: 400,
             message: 'Bad Request'
         })
     }
 
-    if (voterId !== studentId) {
+    if (voterId != studentId) {
         throw createError({
             statusCode: 401,
-            message: '登入者與投票者不符'
+            message: '學號與登入者不符'
         })
     }
 
@@ -50,12 +51,30 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const voteSession = await prisma.voteSession.findUnique({ where: { id: candidate.voteSessionId } })
+    const voteSession = await prisma.voteSession.findUnique({ where: { id: parseInt(VSId) }, include: { candidates: true } })
 
     if (!voteSession) {
         throw createError({
             statusCode: 404,
             message: 'Not Found'
+        })
+    }
+
+    const candidateIds = voteSession.candidates.map((item) => item.id)
+
+    if (!candidateIds.includes(candidateId)) {
+        throw createError({
+            statusCode: 400,
+            message: 'Bad Request'
+        })
+    }
+
+    const groupIds = voter.VoterInGroup.map((item) => item.groupId)
+
+    if (!groupIds.includes(voteSession.groupId)) {
+        throw createError({
+            statusCode: 401,
+            message: '沒有投票權'
         })
     }
 
