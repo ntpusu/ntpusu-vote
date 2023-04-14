@@ -140,13 +140,13 @@ interface Candidate {
 
 const addVote = reactive<{
     voteName: string
-    voteGroup: number
+    voteGroup: number | undefined
     startTime: string
     endTime: string
     candidates: Candidate[]
 }>({
     voteName: '',
-    voteGroup: undefined as unknown as number,
+    voteGroup: undefined,
     startTime: '',
     endTime: '',
     candidates: [{ name: '' }, { name: '' }],
