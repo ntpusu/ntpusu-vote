@@ -10,7 +10,6 @@
                 :model="addVote"
                 :rules="rules"
                 hide-required-asterisk
-                class="min-w-max"
                 @keyup.enter.capture="submitForm(formRef)"
             >
                 <ElFormItem label="名稱" prop="voteName" class="m-auto">
