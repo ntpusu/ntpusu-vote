@@ -154,6 +154,20 @@
             </template>
         </ElSkeleton>
     </ElSpace>
+    <ClientOnly>
+        <ElDialog v-model="voteFail" class="min-w-fit px-5" width="30%">
+            <template #title>
+                <div class="text-2xl font-bold text-red-500">投票失敗</div>
+            </template>
+            <div class="text-lg">
+                可能原因：<br />
+                1. 網路連線斷了<br />
+                2. 未登入<br />
+                3. 學號輸入錯誤<br />
+                4. 未在投票時間內投票
+            </div>
+        </ElDialog>
+    </ClientOnly>
 </template>
 
 <script lang="ts" setup>
@@ -177,6 +191,8 @@ const viewDate = (time: string | number | Date) => {
 const timeCnt = (time: string | number | Date) => {
     return new Date(time).getTime()
 }
+
+const voteFail = ref(false)
 
 const voteVisible: Ref<boolean[]> = ref([])
 const voteData: Ref<number[]> = ref([])
@@ -262,14 +278,7 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
                     }
                 })
                 .catch(async () => {
-                    await ElMessageBox.alert(
-                        '可能原因：1. 網路連線斷了, 2. 未登入, 3. 學號輸入錯誤, 4. 未在投票時間內投票',
-                        '投票失敗',
-                        {
-                            confirmButtonText: '確定',
-                            type: 'error',
-                        }
-                    )
+                    voteFail.value = true
 
                     await refreshNuxtData()
                 })
