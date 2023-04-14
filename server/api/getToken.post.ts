@@ -62,7 +62,7 @@ export default defineEventHandler(async (event) => {
     if (!vote) {
         throw createError({
             statusCode: 404,
-            message: '找不到該投票'
+            message: '找不到該票'
         })
     }
 
