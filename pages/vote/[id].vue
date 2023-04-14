@@ -90,8 +90,8 @@
 </template>
 
 <script lang="ts" setup>
-import { VoteSession, Candidate, Ballot } from '.prisma/client'
-import { AsyncDataExecuteOptions } from 'nuxt/dist/app/composables/asyncData'
+import type { VoteSession, Candidate, Ballot } from '.prisma/client'
+import type { AsyncDataExecuteOptions } from 'nuxt/dist/app/composables/asyncData'
 
 const { id } = useRoute().params as { id: string }
 
@@ -143,11 +143,11 @@ onMounted(async () => {
         if (VS.value == null) {
             await VSRefresh()
         }
-    }, 500)
+    }, 250)
 
     setTimeout(async () => {
         if (VS.value == null) {
-            await useRouter().push('/vote')
+            await useRouter().push('/404')
         }
     }, 1000)
 })
