@@ -194,6 +194,7 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
     }
 
     voteVisible.value[VS.id] = false
+    document.body.style.overflowY = 'hidden'
     setTimeout(async () => {
         voteLoading.value[VS.id] = true
     }, 10)
@@ -218,6 +219,7 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
             await $fetch('/api/vote', {
                 method: 'POST',
                 body: JSON.stringify({
+                    VSId: VS.id,
                     candidateId: voteData.value[VS.id],
                     voterId: value,
                 }),
@@ -275,6 +277,7 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
         .catch(() => {})
 
     voteLoading.value[VS.id] = false
+    document.body.style.overflowY = 'auto'
 }
 
 const seeToken = async (index: number) => {
