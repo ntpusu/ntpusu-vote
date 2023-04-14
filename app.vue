@@ -28,28 +28,35 @@
                     >
                     <ElMenuItem
                         v-if="status === 'authenticated'"
-                        class="ms:!px-5 !px-3 !text-[0.8rem] font-bold sm:!text-[1rem]"
+                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                         index="/vote"
                         @click="useRouter().push('/vote')"
-                        >投票清單</ElMenuItem
+                        >投票</ElMenuItem
                     >
                     <ElMenuItem
                         v-if="admin"
-                        class="ms:!px-5 !px-3 !text-[0.8rem] font-bold sm:!text-[1rem]"
+                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
+                        index="/check"
+                        @click="useRouter().push('/check')"
+                        >查詢</ElMenuItem
+                    >
+                    <ElMenuItem
+                        v-if="admin"
+                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                         index="/admin"
                         @click="useRouter().push('/admin')"
                         >管理</ElMenuItem
                     >
                     <ElMenuItem
                         v-if="status === 'unauthenticated'"
-                        class="ms:!px-5 !px-3 !text-[0.8rem] font-bold sm:!text-[1rem]"
+                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                         index="/login"
                         @click="signIn('google', { callbackUrl: '/vote' })"
                         >登入</ElMenuItem
                     >
                     <ElMenuItem
                         v-else-if="status === 'authenticated'"
-                        class="ms:!px-5 !px-3 !text-[0.8rem] font-bold sm:!text-[1rem]"
+                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                         index="/logout"
                         @click="signOut({ callbackUrl: '/' })"
                         >登出</ElMenuItem
@@ -66,8 +73,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Ref } from 'vue'
-
 const route = useRoute()
 
 useSeoMeta({
