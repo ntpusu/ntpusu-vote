@@ -17,21 +17,23 @@
             查詢
         </ElButton>
 
-        <ElDialog
-            title="選票內容"
-            :center="true"
-            v-model="show"
-            width="30%"
-            class="px-5"
-        >
-            <div class="flex flex-col flex-wrap items-start justify-center">
-                <h1 class="text-base">項目：{{ data.vote }}</h1>
-                <h1 class="text-base">選擇：{{ data.candidate }}</h1>
-                <h1 class="text-base">
-                    時間：{{ new Date(data.time).toLocaleString() }}
-                </h1>
-            </div>
-        </ElDialog>
+        <ClientOnly>
+            <ElDialog
+                title="選票內容"
+                :center="true"
+                v-model="show"
+                width="30%"
+                class="px-5"
+            >
+                <div class="flex flex-col flex-wrap items-start justify-center">
+                    <h1 class="text-base">項目：{{ data.vote }}</h1>
+                    <h1 class="text-base">選擇：{{ data.candidate }}</h1>
+                    <h1 class="text-base">
+                        時間：{{ new Date(data.time).toLocaleString() }}
+                    </h1>
+                </div>
+            </ElDialog>
+        </ClientOnly>
     </ElForm>
 </template>
 

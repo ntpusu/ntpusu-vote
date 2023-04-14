@@ -1,93 +1,98 @@
 <template>
-    <ClientOnly>
-        <div
-            class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 sm:w-7/12 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
+    <div
+        class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 sm:w-7/12 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
+    >
+        <ElForm
+            label-width="auto"
+            label-suffix=":"
+            ref="formRef"
+            :model="addVote"
+            :rules="rules"
+            hide-required-asterisk
+            @keyup.enter.capture="submitForm(formRef)"
         >
-            <ElForm
-                label-width="auto"
-                label-suffix=":"
-                ref="formRef"
-                :model="addVote"
-                :rules="rules"
-                hide-required-asterisk
-                @keyup.enter.capture="submitForm(formRef)"
-            >
-                <ElFormItem label="名稱" prop="voteName" class="m-auto">
-                    <ElSpace>
-                        <ElInput
-                            v-model="addVote.voteName"
-                            placeholder="請輸入名稱"
-                            clearable
-                        />
-                        <ElButton class="!hidden"></ElButton>
-                    </ElSpace>
-                </ElFormItem>
-                <ElFormItem label="範圍" prop="voteGroup" class="m-auto">
-                    <ElSelect
-                        v-model="addVote.voteGroup"
-                        placeholder="請選擇投票範圍"
+            <ElFormItem label="名稱" prop="voteName" class="m-auto">
+                <ElSpace>
+                    <ElInput
+                        v-model="addVote.voteName"
+                        placeholder="請輸入名稱"
                         clearable
-                    >
-                        <el-option
-                            v-for="item in groupOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                        />
-                    </ElSelect>
-                </ElFormItem>
-                <ElFormItem label="開始時間" prop="startTime" class="m-auto">
+                    />
+                    <ElButton class="!hidden"></ElButton>
+                </ElSpace>
+            </ElFormItem>
+            <ElFormItem label="範圍" prop="voteGroup" class="m-auto">
+                <ElSelect
+                    v-model="addVote.voteGroup"
+                    placeholder="請選擇投票範圍"
+                    clearable
+                >
+                    <el-option
+                        v-for="item in groupOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                    />
+                </ElSelect>
+            </ElFormItem>
+            <ElFormItem label="開始時間" prop="startTime" class="m-auto">
+                <ClientOnly>
                     <ElDatePicker
                         v-model="addVote.startTime"
                         type="datetime"
                         placeholder="請選擇開始時間"
                     />
-                </ElFormItem>
-                <ElFormItem label="結束時間" prop="endTime">
+                </ClientOnly>
+            </ElFormItem>
+            <ElFormItem label="結束時間" prop="endTime">
+                <ClientOnly>
                     <ElDatePicker
                         v-model="addVote.endTime"
                         type="datetime"
                         placeholder="請選擇結束時間"
                     />
-                </ElFormItem>
-                <ElFormItem
-                    v-for="(candidate, index) in addVote.candidates"
-                    :key="index"
-                    :prop="'candidates.' + index + '.name'"
-                    :label="index + 1 + '號候選人'"
-                    :rules="{
-                        required: true,
-                        message: '候選人為必填',
-                        trigger: 'blur',
-                    }"
-                >
-                    <ElSpace>
-                        <ElInput
-                            v-model="candidate.name"
-                            placeholder="請輸入候選人名稱"
-                            clearable
-                        />
-                        <ElButton
-                            v-if="index > 1"
-                            @click.prevent="removeDomain(candidate)"
-                            >X</ElButton
-                        >
-                    </ElSpace>
-                </ElFormItem>
-                <ElFormItem>
-                    <ElSpace class="m-auto">
-                        <ElButton @click="addDomain">新增候選人</ElButton>
-                        <ElButton type="primary" @click="submitForm(formRef)"
-                            >創建</ElButton
-                        >
-                    </ElSpace>
-                </ElFormItem>
-            </ElForm>
-        </div>
-        <ElDivider border-style="dashed" />
-        <div
-            class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-3/4 xl:w-7/12 2xl:w-1/3"
-        >
+                </ClientOnly>
+            </ElFormItem>
+            <ElFormItem
+                v-for="(candidate, index) in addVote.candidates"
+                :key="index"
+                :prop="'candidates.' + index + '.name'"
+                :label="index + 1 + '號候選人'"
+                :rules="{
+                    required: true,
+                    message: '候選人為必填',
+                    trigger: 'blur',
+                }"
+            >
+                <ElSpace>
+                    <ElInput
+                        v-model="candidate.name"
+                        placeholder="請輸入候選人名稱"
+                        clearable
+                    />
+                    <ElButton
+                        v-if="index > 1"
+                        @click.prevent="removeDomain(candidate)"
+                    >
+                        X
+                    </ElButton>
+                </ElSpace>
+            </ElFormItem>
+            <ElFormItem>
+                <ElSpace class="m-auto">
+                    <ElButton @click="addDomain">新增候選人</ElButton>
+                    <ElButton type="primary" @click="submitForm(formRef)">
+                        創建
+                    </ElButton>
+                </ElSpace>
+            </ElFormItem>
+        </ElForm>
+    </div>
+    <ElDivider border-style="dashed" />
+    <div
+        class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-3/4 xl:w-7/12 2xl:w-1/3"
+    >
+        <ClientOnly>
             <ElTable
                 :data="tableData()"
                 border
@@ -116,8 +121,8 @@
                     </template>
                 </ElTableColumn>
             </ElTable>
-        </div>
-    </ClientOnly>
+        </ClientOnly>
+    </div>
 </template>
 
 <script lang="ts" setup>

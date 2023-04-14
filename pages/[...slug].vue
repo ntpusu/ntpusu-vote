@@ -1,9 +1,9 @@
 <template>
     <div class="pt-16">
         <ElResult icon="error" title="404 NOT FOUND🧐"></ElResult>
-        <NuxtLink to="/" class="grid text-center text-sm"
-            >{{ countdown.toFixed(1) }} 秒後自動跳轉至首頁</NuxtLink
-        >
+        <NuxtLink to="/" class="grid text-center text-sm">
+            {{ countdown.toFixed(1) }} 秒後自動跳轉至首頁
+        </NuxtLink>
     </div>
 </template>
 

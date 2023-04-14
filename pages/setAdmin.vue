@@ -13,16 +13,16 @@
     <ElDivider />
     <div class="flex">
         <ElInput v-model="addId" placeholder="請輸入ID" clearable />
-        <ElButton v-if="!adminPending" type="primary" @click="addAdmin"
-            >新增</ElButton
-        >
+        <ElButton v-if="!adminPending" type="primary" @click="addAdmin">
+            新增
+        </ElButton>
     </div>
     <ElDivider />
     <div class="flex">
         <ElInput v-model="delId" placeholder="請輸入ID" clearable />
-        <ElButton v-if="!adminPending" type="primary" @click="delAdmin"
-            >刪除</ElButton
-        >
+        <ElButton v-if="!adminPending" type="primary" @click="delAdmin">
+            刪除
+        </ElButton>
     </div>
 </template>
 
