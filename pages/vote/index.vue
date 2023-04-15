@@ -60,7 +60,8 @@
                         width="40%"
                         :align-center="true"
                         class="min-w-fit px-5"
-                        @close="voteLoading[VSitem.id] = false"
+                        @open="startLoading(VSitem.id)"
+                        @close="endLoading(VSitem.id)"
                     >
                         <div class="flex justify-center px-[10%]">
                             <ElRadioGroup
@@ -118,11 +119,7 @@
                         type="primary"
                         class="w-full !rounded-md tracking-widest"
                         :disabled="voteToken[VSitem.id] !== undefined"
-                        @click="
-                            voteVisible[VSitem.id] = voteLoading[
-                                VSitem.id
-                            ] = true
-                        "
+                        @click="voteVisible[VSitem.id] = true"
                         auto-insert-space
                         plain
                         :loading="voteLoading[VSitem.id]"
@@ -200,6 +197,16 @@ const voteToken: Ref<string[]> = ref([])
 const tokenLoading: Ref<boolean[]> = ref([])
 const voteLoading: Ref<boolean[]> = ref([])
 
+const startLoading = (id: number) => {
+    voteLoading.value[id] = true
+    document.body.style.overflowY = 'hidden'
+}
+
+const endLoading = (id: number) => {
+    voteLoading.value[id] = false
+    document.body.style.overflowY = 'auto'
+}
+
 const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
     if (!voteData.value[VS.id]) {
         ElMessage({
@@ -210,10 +217,9 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
     }
 
     voteVisible.value[VS.id] = false
-    document.body.style.overflowY = 'hidden'
-    setTimeout(async () => {
-        voteLoading.value[VS.id] = true
-    }, 10)
+    setTimeout(() => {
+        startLoading(VS.id)
+    }, 1)
 
     const candidate = VS.candidates.find(
         (item: { id: number }) => item.id === voteData.value[VS.id]
@@ -227,7 +233,7 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
             cancelButtonText: '取消',
             type: 'warning',
             inputPlaceholder: '我是輸入欄😎',
-            inputPattern: /^\d{1,9}$/,
+            inputPattern: /^\d{8,9}$/,
             inputErrorMessage: '學號格式錯誤',
         }
     )
@@ -285,8 +291,7 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
         })
         .catch(() => {})
 
-    voteLoading.value[VS.id] = false
-    document.body.style.overflowY = 'auto'
+    endLoading(VS.id)
 }
 
 const seeToken = async (index: number) => {
