@@ -133,6 +133,11 @@ definePageMeta({
     title: '投票管理',
 })
 
+const { data: VS, refresh: VSRefresh } = await useLazyFetch('/api/getVS')
+const { data: Group, refresh: GroupRefresh } = await useLazyFetch(
+    '/api/getGroup'
+)
+
 const formRef = ref<FormInstance>()
 interface Candidate {
     name: string
@@ -208,12 +213,6 @@ const submitForm = async (formRef: FormInstance | undefined) => {
         }
     })
 }
-
-const { data: VS, refresh: VSRefresh } = await useLazyFetch('/api/getVS')
-
-const { data: Group, refresh: GroupRefresh } = await useLazyFetch(
-    '/api/getGroup'
-)
 
 const groupOptions = computed(() => {
     if (!Group.value) return []
