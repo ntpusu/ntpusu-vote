@@ -21,9 +21,10 @@
             <ElDialog
                 title="選票內容"
                 :center="true"
+                :align-center="true"
                 v-model="show"
                 width="30%"
-                class="px-5"
+                class="min-w-fit !rounded-lg px-5"
             >
                 <div class="flex flex-col flex-wrap items-start justify-center">
                     <h1 class="text-base">項目：{{ data.vote }}</h1>

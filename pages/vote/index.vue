@@ -58,12 +58,12 @@
                         :center="true"
                         :align-center="true"
                         v-model="voteVisible[VSitem.id]"
-                        width="40%"
+                        width="30%"
                         class="min-w-fit !rounded-lg px-5"
                         @open="startLoading(VSitem.id)"
                         @close="endLoading(VSitem.id)"
                     >
-                        <div class="flex justify-center px-[10%]">
+                        <div class="flex justify-center px-5">
                             <ElRadioGroup
                                 class="flex-col !items-stretch"
                                 v-model="voteData[VSitem.id]"
@@ -153,14 +153,14 @@
             v-model="voteFail"
             :align-center="true"
             class="min-w-fit !rounded-lg px-5"
-            width="35%"
+            width="30%"
             @opened="startLoading(null)"
             @closed="endLoading(null)"
         >
             <template #title>
                 <div class="text-2xl font-bold text-red-500">投票失敗</div>
             </template>
-            <div class="text-lg">
+            <div class="px-5 text-lg">
                 可能原因：<br />
                 1. 網路連線斷了<br />
                 2. 未登入<br />
