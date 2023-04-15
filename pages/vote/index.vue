@@ -56,10 +56,10 @@
                     <ElDialog
                         :title="VSitem.name"
                         :center="true"
+                        :align-center="true"
                         v-model="voteVisible[VSitem.id]"
                         width="40%"
-                        :align-center="true"
-                        class="min-w-fit px-5"
+                        class="min-w-fit !rounded-lg px-5"
                         @open="startLoading(VSitem.id)"
                         @close="endLoading(VSitem.id)"
                     >
@@ -152,7 +152,14 @@
         </ElSkeleton>
     </ElSpace>
     <ClientOnly>
-        <ElDialog v-model="voteFail" class="min-w-fit px-5" width="30%">
+        <ElDialog
+            v-model="voteFail"
+            :align-center="true"
+            class="min-w-fit !rounded-lg px-5"
+            width="30%"
+            @opened="startLoading(null)"
+            @closed="endLoading(null)"
+        >
             <template #title>
                 <div class="text-2xl font-bold text-red-500">投票失敗</div>
             </template>
@@ -197,13 +204,13 @@ const voteToken: Ref<string[]> = ref([])
 const tokenLoading: Ref<boolean[]> = ref([])
 const voteLoading: Ref<boolean[]> = ref([])
 
-const startLoading = (id: number) => {
-    voteLoading.value[id] = true
+const startLoading = (id: number | null) => {
+    if (id) voteLoading.value[id] = true
     document.body.style.overflowY = 'hidden'
 }
 
-const endLoading = (id: number) => {
-    voteLoading.value[id] = false
+const endLoading = (id: number | null) => {
+    if (id) voteLoading.value[id] = false
     document.body.style.overflowY = 'auto'
 }
 
