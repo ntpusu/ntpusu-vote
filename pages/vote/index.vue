@@ -156,7 +156,7 @@
             v-model="voteFail"
             :align-center="true"
             class="min-w-fit !rounded-lg px-5"
-            width="30%"
+            width="35%"
             @opened="startLoading(null)"
             @closed="endLoading(null)"
         >
