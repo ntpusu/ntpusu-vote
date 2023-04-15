@@ -200,7 +200,7 @@ const submitForm = async (formRef: FormInstance | undefined) => {
 
             if (res) {
                 ElMessage('創建成功')
-                VSRefresh()
+                await VSRefresh()
                 return
             }
 
@@ -251,8 +251,9 @@ const handleDelete = async (id: number) => {
         ElMessage('刪除失敗')
         return
     }
+
     ElMessage('刪除成功')
-    VSRefresh()
+    await VSRefresh()
 }
 
 onMounted(async () => {
