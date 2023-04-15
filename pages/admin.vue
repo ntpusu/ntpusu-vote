@@ -71,7 +71,7 @@
                         clearable
                     />
                     <ElButton
-                        v-if="index > 1"
+                        v-if="index >= 2"
                         @click.prevent="removeDomain(candidate)"
                     >
                         X
@@ -90,7 +90,7 @@
     </div>
     <ElDivider border-style="dashed" />
     <div
-        class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-3/4 xl:w-7/12 2xl:w-1/3"
+        class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-5/6 xl:w-2/3 2xl:w-1/2"
     >
         <ClientOnly>
             <ElTable
@@ -99,7 +99,7 @@
                 table-layout="auto"
                 empty-text="Loading......"
             >
-                <div prop="id" className="hidden" />
+                <div prop="id" class="hidden" />
                 <ElTableColumn prop="title" label="名稱" />
                 <ElTableColumn prop="group" label="投票範圍" />
                 <ElTableColumn prop="startTime" label="開始時間" />
@@ -224,10 +224,6 @@ const groupOptions = computed(() => {
     }))
 })
 
-const newDate = (time: string | number | Date) => {
-    return new Date(time)
-}
-
 const tableData = () => {
     if (!VS.value) return []
 
@@ -235,8 +231,8 @@ const tableData = () => {
         id: item.id,
         title: item.name,
         group: item.group.name,
-        startTime: newDate(item.startTime).toLocaleString(),
-        endTime: newDate(item.endTime).toLocaleString(),
+        startTime: new Date(item.startTime).toLocaleString(),
+        endTime: new Date(item.endTime).toLocaleString(),
     }))
 }
 
