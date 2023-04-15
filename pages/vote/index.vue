@@ -141,7 +141,7 @@
         </ElCard>
     </ElSpace>
     <ElSpace v-else class="justify-center" wrap>
-        <ElSkeleton v-for="index in 4" animated>
+        <ElSkeleton v-for="index in rand(3, 5)" animated>
             <template #template>
                 <ElSkeletonItem
                     variant="rect"
