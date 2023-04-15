@@ -375,9 +375,9 @@ const seeResult = async (index: number) => {
             .catch(() => {})
     }
 
-    resultLoading.value[index] = false
     document.body.style.overflowY = 'auto'
     await useRouter().push('/vote/' + index)
+    resultLoading.value[index] = false
 }
 
 onMounted(async () => {
