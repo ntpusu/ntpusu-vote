@@ -103,13 +103,10 @@
                     <ElButton
                         type="success"
                         class="w-full !rounded-md"
-                        @click="
-                            seeToken(VSitem.id).then(() => {
-                                useRouter().push('/vote/' + VSitem.id)
-                            })
-                        "
+                        @click="seeResult(VSitem.id)"
                         auto-insert-space
                         plain
+                        :loading="resultLoading[VSitem.id]"
                     >
                         結果
                     </ElButton>
@@ -145,7 +142,7 @@
             <template #template>
                 <ElSkeletonItem
                     variant="rect"
-                    class="!w-[22rem] sm:!w-96"
+                    class="!w-[22rem] !rounded-xl sm:!w-96"
                     :style="{ height: rand(8, 25) + 'rem' }"
                 />
             </template>
@@ -201,8 +198,9 @@ const voteFail = ref(false)
 const voteVisible: Ref<boolean[]> = ref([])
 const voteData: Ref<number[]> = ref([])
 const voteToken: Ref<string[]> = ref([])
-const tokenLoading: Ref<boolean[]> = ref([])
 const voteLoading: Ref<boolean[]> = ref([])
+const tokenLoading: Ref<boolean[]> = ref([])
+const resultLoading: Ref<boolean[]> = ref([])
 
 const startLoading = (id: number | null) => {
     if (id) voteLoading.value[id] = true
@@ -339,6 +337,47 @@ const seeToken = async (index: number) => {
 
     tokenLoading.value[index] = false
     document.body.style.overflowY = 'auto'
+}
+
+const seeResult = async (index: number) => {
+    resultLoading.value[index] = true
+    document.body.style.overflowY = 'hidden'
+
+    if (!voteToken.value[index]) {
+        const res = (await $fetch(
+            '/api/getToken?' + new URLSearchParams({ id: index.toString() })
+        )) as unknown as Ballot | null
+
+        if (!res) {
+            await ElMessageBox.alert('故無投票憑證', '尚未投票', {
+                showClose: false,
+                confirmButtonText: '確定',
+                type: 'error',
+            }).catch(() => {})
+        } else {
+            voteToken.value[index] = res.token
+        }
+    }
+
+    if (voteToken.value[index]) {
+        await ElMessageBox.alert(voteToken.value[index], '投票憑證', {
+            confirmButtonText: '複製憑證',
+            type: 'success',
+            roundButton: true,
+        })
+            .then(async () => {
+                await navigator.clipboard.writeText(voteToken.value[index])
+                ElMessage({
+                    type: 'success',
+                    message: '已複製',
+                })
+            })
+            .catch(() => {})
+    }
+
+    resultLoading.value[index] = false
+    document.body.style.overflowY = 'auto'
+    await useRouter().push('/vote/' + index)
 }
 
 onMounted(async () => {
