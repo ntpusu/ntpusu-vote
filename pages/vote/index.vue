@@ -124,7 +124,7 @@
                         plain
                         :loading="voteLoading[VSitem.id]"
                     >
-                        投票
+                        {{ voteToken[VSitem.id] !== undefined ? '已' : '' }}投票
                     </ElButton>
                     <ElButton
                         type="info"
