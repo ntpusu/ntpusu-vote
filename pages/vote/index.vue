@@ -4,7 +4,7 @@
             v-for="VSitem in VS"
             :key="VSitem.id"
             shadow="hover"
-            class="w-[22rem] sm:w-96"
+            class="w-[22rem] !rounded-xl sm:w-96"
         >
             <template #header>
                 <div class="flex items-center justify-between">
@@ -303,6 +303,7 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
 
 const seeToken = async (index: number) => {
     tokenLoading.value[index] = true
+    document.body.style.overflowY = 'hidden'
 
     if (!voteToken.value[index]) {
         const res = (await $fetch(
@@ -337,6 +338,7 @@ const seeToken = async (index: number) => {
     }
 
     tokenLoading.value[index] = false
+    document.body.style.overflowY = 'auto'
 }
 
 onMounted(async () => {
@@ -344,6 +346,6 @@ onMounted(async () => {
         if (VS.value === null) {
             await VSRefresh()
         }
-    }, 500)
+    }, 250)
 })
 </script>
