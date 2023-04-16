@@ -40,7 +40,7 @@
                         :key="itemIndex"
                         class="flex text-sm sm:text-base"
                     >
-                        <ElTag type="warning" effect="dark" size="small">
+                        <ElTag type="warning" effect="light" size="small" round>
                             {{ itemIndex + 1 }}
                         </ElTag>
                         <span>&nbsp;&nbsp;</span>
@@ -103,9 +103,9 @@
                                 @click="voteConfirm(VSitem)"
                                 plain
                             >
-                                <span class="font-bold tracking-[2px]"
-                                    >投票</span
-                                >
+                                <span class="font-bold tracking-[2px]">
+                                    投票
+                                </span>
                             </ElButton>
                         </div>
                     </ElDialog>
