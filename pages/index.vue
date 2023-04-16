@@ -1,12 +1,51 @@
 <template>
-    <h1 class="text-center text-3xl font-black">就是首頁</h1>
-    <ElDivider border-style="dotted" />
-    <NuxtLink
-        to="/vote"
-        class="block text-center text-xl font-black text-red-500 hover:text-red-400 hover:underline"
-    >
-        前往投票
-    </NuxtLink>
+    <div class="flex flex-col flex-wrap content-center">
+        <ElSteps direction="vertical" align-center space="12vh">
+            <ElStep
+                v-for="(activity, index) in activities"
+                :key="index"
+                :status="
+                    activity.start.getTime() > new Date(2023, 4, 26).getTime()
+                        ? 'wait'
+                        : activity.finish.getTime() >
+                          new Date(2023, 4, 26).getTime()
+                        ? 'finish'
+                        : 'success'
+                "
+                class="tracking-[2px]"
+            >
+                <template #title>
+                    <div class="font-bold sm:text-lg">
+                        {{ activity.content }}
+                    </div>
+                </template>
+                <template #description>
+                    <div class="min-w-max sm:text-base">
+                        {{
+                            activity.end
+                                ? activity.start.toLocaleString('zh-TW', {
+                                      dateStyle: 'long',
+                                  }) +
+                                  '〜' +
+                                  activity.end.toLocaleString('zh-TW', {
+                                      dateStyle: 'long',
+                                  })
+                                : activity.start.toLocaleString('zh-TW', {
+                                      dateStyle: 'long',
+                                  })
+                        }}
+                    </div>
+                </template>
+            </ElStep>
+        </ElSteps>
+        <ElButton
+            type="danger"
+            class="m-auto w-1/12 min-w-fit"
+            @click="useRouter().push('/vote')"
+        >
+            <span class="font-bold">前往投票</span>
+        </ElButton>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -14,4 +53,59 @@ definePageMeta({
     auth: false,
     title: '首頁',
 })
+
+const activities = [
+    {
+        content: '登記參選',
+        start: new Date(2023, 4, 1),
+        end: new Date(2023, 4, 12),
+        finish: new Date(2023, 4, 13),
+    },
+    {
+        content: '候選人名單公告',
+        start: new Date(2023, 4, 16),
+        finish: new Date(2023, 4, 17),
+    },
+    {
+        content: '選舉公報',
+        start: new Date(2023, 4, 19),
+        finish: new Date(2023, 4, 20),
+    },
+    {
+        content: '線上投票',
+        start: new Date(2023, 4, 26),
+        finish: new Date(2023, 4, 27),
+    },
+    {
+        content: '當選名單公告',
+        start: new Date(2023, 4, 27),
+        finish: new Date(2023, 4, 28),
+    },
+    {
+        content: '登記補選參選',
+        start: new Date(2023, 4, 29),
+        end: new Date(2023, 5, 5),
+        finish: new Date(2023, 5, 6),
+    },
+    {
+        content: '(補選)候選人名單公告',
+        start: new Date(2023, 5, 7),
+        finish: new Date(2023, 5, 8),
+    },
+    {
+        content: '(補選)選舉公報',
+        start: new Date(2023, 5, 8),
+        finish: new Date(2023, 5, 9),
+    },
+    {
+        content: '(補選)線上投票',
+        start: new Date(2023, 5, 15),
+        finish: new Date(2023, 5, 16),
+    },
+    {
+        content: '(補選)當選名單公告',
+        start: new Date(2023, 5, 16),
+        finish: new Date(2023, 5, 17),
+    },
+]
 </script>
