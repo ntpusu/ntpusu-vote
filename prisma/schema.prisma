@@ -39,7 +39,7 @@ model Voter {
 
 model Group {
   id           Int            @id @default(autoincrement())
-  name         String
+  name         String         @unique
   VoterInGroup VoterInGroup[]
   VoteSession  VoteSession[]
 }
