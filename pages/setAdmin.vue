@@ -9,19 +9,21 @@
         </div>
     </div>
     <ElSkeleton v-else animated />
-    <ElButton @click="adminRefresh()">刷新</ElButton>
+    <ElButton @click="adminRefresh()">
+        <span class="font-bold">刷新</span>
+    </ElButton>
     <ElDivider />
     <div class="flex">
         <ElInput v-model="addId" placeholder="請輸入ID" clearable />
         <ElButton v-if="!adminPending" type="primary" @click="addAdmin">
-            新增
+            <span class="font-bold">新增</span>
         </ElButton>
     </div>
     <ElDivider />
     <div class="flex">
         <ElInput v-model="delId" placeholder="請輸入ID" clearable />
         <ElButton v-if="!adminPending" type="primary" @click="delAdmin">
-            刪除
+            <span class="font-bold">刪除</span>
         </ElButton>
     </div>
 </template>

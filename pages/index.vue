@@ -5,10 +5,9 @@
                 v-for="(activity, index) in activities"
                 :key="index"
                 :status="
-                    activity.start.getTime() > new Date(2023, 4, 26).getTime()
+                    activity.start.getTime() > Date.now()
                         ? 'wait'
-                        : activity.finish.getTime() >
-                          new Date(2023, 4, 26).getTime()
+                        : activity.finish.getTime() > Date.now()
                         ? 'finish'
                         : 'success'
                 "
@@ -40,7 +39,7 @@
         </ElSteps>
         <ElButton
             type="danger"
-            class="m-auto w-1/12 min-w-fit"
+            class="mx-auto my-3 w-1/12 min-w-fit"
             @click="useRouter().push('/vote')"
         >
             <span class="font-bold">前往投票</span>

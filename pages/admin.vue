@@ -77,15 +77,17 @@
                         class="ml-2"
                         :class="{ invisible: index < 2 }"
                     >
-                        X
+                        <span class="font-bold">X</span>
                     </ElButton>
                 </div>
             </ElFormItem>
             <ElFormItem>
                 <ElSpace class="m-auto">
-                    <ElButton @click="addDomain">新增候選人</ElButton>
+                    <ElButton @click="addDomain">
+                        <span class="font-bold">新增候選人</span>
+                    </ElButton>
                     <ElButton type="primary" @click="submitForm(formRef)">
-                        創建
+                        <span class="font-bold">創建</span>
                     </ElButton>
                 </ElSpace>
             </ElFormItem>
@@ -116,9 +118,9 @@
                             @confirm="handleDelete(row.id)"
                         >
                             <template #reference>
-                                <ElButton size="small" type="primary"
-                                    >刪除</ElButton
-                                >
+                                <ElButton size="small" type="primary">
+                                    <span class="font-bold">刪除</span>
+                                </ElButton>
                             </template>
                         </ElPopconfirm>
                     </template>
