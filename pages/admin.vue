@@ -18,7 +18,7 @@
                         placeholder="請輸入名稱"
                         clearable
                     />
-                    <ElButton class="!hidden"></ElButton>
+                    <ElButton class="invisible ml-2"></ElButton>
                 </ElSpace>
             </ElFormItem>
             <ElFormItem label="範圍" prop="voteGroup" class="m-auto">
@@ -63,20 +63,23 @@
                     message: '候選人為必填',
                     trigger: 'blur',
                 }"
+                class="w-full"
             >
-                <ElSpace>
+                <div class="inline-flex">
                     <ElInput
                         v-model="candidate.name"
                         placeholder="請輸入候選人名稱"
                         clearable
                     />
                     <ElButton
-                        v-if="index >= 2"
+                        round
                         @click.prevent="removeDomain(candidate)"
+                        class="ml-2"
+                        :class="{ invisible: index < 2 }"
                     >
                         X
                     </ElButton>
-                </ElSpace>
+                </div>
             </ElFormItem>
             <ElFormItem>
                 <ElSpace class="m-auto">
