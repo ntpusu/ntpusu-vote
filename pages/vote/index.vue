@@ -62,7 +62,7 @@
                     plain
                     loading
                 >
-                    尚未開始
+                    <span class="font-bold">尚未開始</span>
                 </ElButton>
             </div>
             <div v-else>
@@ -105,7 +105,7 @@
                                 auto-insert-space
                                 plain
                             >
-                                投票
+                                <span class="font-bold">投票</span>
                             </ElButton>
                         </div>
                     </ElDialog>
@@ -122,7 +122,7 @@
                         plain
                         :loading="resultLoading[VSitem.id]"
                     >
-                        結果
+                        <span class="font-bold">結果</span>
                     </ElButton>
                 </div>
                 <div v-else class="flex px-16">
@@ -135,7 +135,11 @@
                         plain
                         :loading="voteLoading[VSitem.id]"
                     >
-                        {{ voteToken[VSitem.id] !== undefined ? '已' : '' }}投票
+                        <span class="font-bold"
+                            >{{
+                                voteToken[VSitem.id] !== undefined ? '已' : ''
+                            }}投票</span
+                        >
                     </ElButton>
                     <ElButton
                         type="info"
@@ -145,7 +149,7 @@
                         plain
                         :loading="tokenLoading[VSitem.id]"
                     >
-                        查看憑證
+                        <span class="font-bold">查看憑證</span>
                     </ElButton>
                 </div>
             </div>
