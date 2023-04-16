@@ -39,10 +39,11 @@
         </ElSteps>
         <ElButton
             type="danger"
-            class="mx-auto my-3 w-1/12 min-w-fit"
+            class="mx-auto my-3 w-1/6 min-w-fit"
+            auto-insert-space
             @click="useRouter().push('/vote')"
         >
-            <span class="font-bold">前往投票</span>
+            <span class="font-bold tracking-[2px]">前往投票頁面</span>
         </ElButton>
     </div>
 </template>

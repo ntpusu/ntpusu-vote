@@ -58,11 +58,10 @@
                 <ElButton
                     type="danger"
                     class="w-full !rounded-md"
-                    auto-insert-space
                     plain
                     loading
                 >
-                    <span class="font-bold">尚未開始</span>
+                    <span class="font-bold tracking-[2px]">尚未開始</span>
                 </ElButton>
             </div>
             <div v-else>
@@ -102,10 +101,11 @@
                                 type="primary"
                                 class="w-full !rounded-md"
                                 @click="voteConfirm(VSitem)"
-                                auto-insert-space
                                 plain
                             >
-                                <span class="font-bold">投票</span>
+                                <span class="font-bold tracking-[2px]"
+                                    >投票</span
+                                >
                             </ElButton>
                         </div>
                     </ElDialog>
@@ -118,38 +118,35 @@
                         type="success"
                         class="w-full !rounded-md"
                         @click="seeResult(VSitem.id)"
-                        auto-insert-space
                         plain
                         :loading="resultLoading[VSitem.id]"
                     >
-                        <span class="font-bold">結果</span>
+                        <span class="font-bold tracking-[2px]">結果</span>
                     </ElButton>
                 </div>
                 <div v-else class="flex px-16">
                     <ElButton
                         type="primary"
-                        class="w-full !rounded-md tracking-widest"
+                        class="w-full !rounded-md"
                         :disabled="voteToken[VSitem.id] !== undefined"
                         @click="voteVisible[VSitem.id] = true"
-                        auto-insert-space
                         plain
                         :loading="voteLoading[VSitem.id]"
                     >
-                        <span class="font-bold"
-                            >{{
+                        <span class="font-bold tracking-[2px]">
+                            {{
                                 voteToken[VSitem.id] !== undefined ? '已' : ''
-                            }}投票</span
-                        >
+                            }}投票
+                        </span>
                     </ElButton>
                     <ElButton
                         type="info"
-                        class="w-full !rounded-md tracking-widest"
+                        class="w-full !rounded-md"
                         @click="seeToken(VSitem.id)"
-                        auto-insert-space
                         plain
                         :loading="tokenLoading[VSitem.id]"
                     >
-                        <span class="font-bold">查看憑證</span>
+                        <span class="font-bold tracking-[2px]">查看憑證</span>
                     </ElButton>
                 </div>
             </div>

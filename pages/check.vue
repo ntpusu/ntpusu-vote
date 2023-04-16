@@ -11,10 +11,10 @@
 
         <ElButton
             type="primary"
-            class="w-1/5 !rounded-md tracking-widest md:w-1/6 lg:w-1/12"
+            class="w-1/5 !rounded-md md:w-1/6 lg:w-1/12"
             @click="search"
         >
-            <span class="font-bold">查詢</span>
+            <span class="font-bold tracking-[2px]">查詢</span>
         </ElButton>
 
         <ClientOnly>
