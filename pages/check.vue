@@ -20,8 +20,8 @@
         <ClientOnly>
             <ElDialog
                 title="選票內容"
-                :center="true"
-                :align-center="true"
+                center
+                align-center
                 v-model="show"
                 width="30%"
                 class="min-w-fit !rounded-lg px-5"

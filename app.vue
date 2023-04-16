@@ -11,57 +11,63 @@
                     </template>
                     <ElMenu
                         :default-active="$route.path"
-                        :unique-opened="true"
+                        unique-opened
                         mode="horizontal"
                         :ellipsis="false"
                         :active-index="activeIndex"
                         @select="handleSelect"
                     >
-                        <span class="m-auto pl-2 text-xl font-bold sm:text-2xl"
-                            >投票系統</span
-                        >
+                        <span class="m-auto pl-2 text-xl font-bold sm:text-2xl">
+                            投票系統
+                        </span>
                         <div class="flex-grow" />
                         <ElMenuItem
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                             index="/"
                             @click="useRouter().push('/')"
-                            >首頁</ElMenuItem
                         >
+                            首頁
+                        </ElMenuItem>
                         <ElMenuItem
                             v-if="status === 'authenticated'"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                             index="/vote"
                             @click="useRouter().push('/vote')"
-                            >投票</ElMenuItem
                         >
+                            投票
+                        </ElMenuItem>
                         <ElMenuItem
                             v-if="admin"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                             index="/check"
                             @click="useRouter().push('/check')"
-                            >查詢</ElMenuItem
                         >
+                            查詢
+                        </ElMenuItem>
                         <ElMenuItem
                             v-if="admin"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                             index="/admin"
                             @click="useRouter().push('/admin')"
-                            >管理</ElMenuItem
                         >
+                            管理
+                        </ElMenuItem>
                         <ElMenuItem
                             v-if="status === 'unauthenticated'"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                             index="/login"
                             @click="signIn('google', { callbackUrl: '/vote' })"
-                            >登入</ElMenuItem
                         >
+                            登入
+                        </ElMenuItem>
                         <ElMenuItem
                             v-else-if="status === 'authenticated'"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                             index="/logout"
                             @click="signOut({ callbackUrl: '/' })"
-                            >登出</ElMenuItem
                         >
+                            登出
+                        </ElMenuItem>
                     </ElMenu>
                 </ClientOnly>
             </ElAffix>

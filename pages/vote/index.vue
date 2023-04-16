@@ -4,7 +4,7 @@
             v-for="VSitem in VS"
             :key="VSitem.id"
             shadow="hover"
-            class="w-[22rem] !rounded-xl sm:w-96"
+            class="w-[22rem] !rounded-xl sm:w-[25rem]"
         >
             <template #header>
                 <div class="flex items-center justify-between">
@@ -12,11 +12,15 @@
                         {{ VSitem.name }}
                     </div>
                     <div
-                        class="flex w-44 flex-wrap justify-end align-middle text-[0.5rem] leading-4 sm:text-[0.7rem]"
+                        class="flex flex-col justify-end align-middle text-xs sm:text-sm"
                     >
-                        開始：{{ viewDate(VSitem.startTime) }}
-                        <br />
-                        結束：{{ viewDate(VSitem.endTime) }}
+                        <ElTag round effect="plain">
+                            開始: {{ viewDate(VSitem.startTime) }}
+                        </ElTag>
+                        <div class="h-1 w-full" />
+                        <ElTag round effect="plain">
+                            結束: {{ viewDate(VSitem.endTime) }}
+                        </ElTag>
                     </div>
                 </div>
             </template>
@@ -24,17 +28,27 @@
                 <h2 class="pb-5 text-center text-base font-bold sm:text-lg">
                     候選人名單
                 </h2>
-                <div
-                    v-for="(candidate, itemIndex) in VSitem.candidates"
-                    :key="itemIndex"
-                    class="flex items-center px-10 py-2 text-sm sm:text-base"
+                <ElSpace
+                    direction="vertical"
+                    alignment="start"
+                    class="!flex content-center"
+                    size="large"
+                    wrap
                 >
-                    <ElTag type="warning" effect="dark">{{
-                        itemIndex + 1
-                    }}</ElTag>
-                    <span>&nbsp;&nbsp;</span>
-                    {{ candidate.name }}
-                </div>
+                    <div
+                        v-for="(candidate, itemIndex) in VSitem.candidates"
+                        :key="itemIndex"
+                        class="flex text-sm sm:text-base"
+                    >
+                        <ElTag type="warning" effect="dark" size="small">
+                            {{ itemIndex + 1 }}
+                        </ElTag>
+                        <span>&nbsp;&nbsp;</span>
+                        <div>
+                            {{ candidate.name }}
+                        </div>
+                    </div>
+                </ElSpace>
             </div>
             <ElDivider />
             <div
@@ -55,15 +69,15 @@
                 <ClientOnly>
                     <ElDialog
                         :title="VSitem.name"
-                        :center="true"
-                        :align-center="true"
+                        center
+                        align-center
                         v-model="voteVisible[VSitem.id]"
                         width="30%"
-                        class="min-w-fit !rounded-lg px-5"
+                        class="mx-5 min-w-fit !rounded-lg"
                         @open="startLoading(VSitem.id)"
                         @close="endLoading(VSitem.id)"
                     >
-                        <div class="flex justify-center px-5">
+                        <div class="mx-5 flex justify-center">
                             <ElRadioGroup
                                 class="flex-col !items-stretch"
                                 v-model="voteData[VSitem.id]"
@@ -83,7 +97,7 @@
                             </ElRadioGroup>
                         </div>
                         <ElDivider border-style="dashed" />
-                        <div class="flex px-[35%]">
+                        <div class="px-[30%]">
                             <ElButton
                                 type="primary"
                                 class="w-full !rounded-md"
@@ -142,7 +156,7 @@
             <template #template>
                 <ElSkeletonItem
                     variant="rect"
-                    class="!w-[22rem] !rounded-xl sm:!w-96"
+                    class="!w-[22rem] !rounded-xl sm:!w-[25rem]"
                     :style="{ height: rand(8, 25) + 'rem' }"
                 />
             </template>
@@ -151,7 +165,7 @@
     <ClientOnly>
         <ElDialog
             v-model="voteFail"
-            :align-center="true"
+            align-center
             class="min-w-fit !rounded-lg px-5"
             width="30%"
             @opened="startLoading(null)"
@@ -186,7 +200,13 @@ const {
 } = await useLazyFetch('/api/voterSession')
 
 const viewDate = (time: string | number | Date) => {
-    return new Date(time).toLocaleString()
+    return new Date(time).toLocaleString('zh-TW', {
+        hourCycle: 'h11',
+        month: 'numeric',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: 'numeric',
+    })
 }
 
 const timeCnt = (time: string | number | Date) => {
