@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session['user']['email']
+    const email = session.user.email
     const studentId = email.substring(1, 10)
 
     const voter = await prisma.voter.findUnique({

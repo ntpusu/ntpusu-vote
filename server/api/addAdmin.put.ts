@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session['user']['email']
+    const email = session.user.email
     const studentId = email.substring(1, 10)
 
     if (studentId != process.env.ADMIN) {
@@ -20,11 +20,18 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { id } = getQuery(event) as { id: string }
+    const { id } = getQuery(event) as { id: string | undefined }
+
+    if (!id) {
+        throw createError({
+            statusCode: 400,
+            message: 'Bad Request'
+        })
+    }
 
     return await prisma.admin.upsert({
         where: { id: parseInt(id) },
+        create: { id: parseInt(id) },
         update: {},
-        create: { id: parseInt(id) }
     })
 })

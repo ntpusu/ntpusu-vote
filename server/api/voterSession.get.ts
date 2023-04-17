@@ -1,6 +1,5 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
-
 export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
 
@@ -11,7 +10,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session['user']['email']
+    const email = session.user.email
     const studentId = email.substring(1, 10)
 
     const voter = await prisma.voter.findUnique({
@@ -28,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
     const groupIds = voter.VoterInGroup.map((item) => item.groupId)
 
-    const VS = await prisma.voteSession.findMany({
+    return await prisma.voteSession.findMany({
         where: {
             groupId: {
                 in: groupIds,
@@ -38,6 +37,4 @@ export default defineEventHandler(async (event) => {
             candidates: true,
         },
     })
-
-    return VS
 })

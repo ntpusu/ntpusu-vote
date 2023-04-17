@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session['user']['email']
+    const email = session.user.email
     const studentId = email.substring(1, 10)
 
     const admin = await prisma.admin.findUnique({
@@ -24,8 +24,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const query = getQuery(event)
-    const id = parseInt(query.id as string)
+    const { id } = getQuery(event) as { id: string | undefined }
 
     if (!id) {
         throw createError({
@@ -34,33 +33,28 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const VS = await prisma.voteSession.findUnique({
-        where: { id: id },
-    })
-
-    if (!VS) {
-        throw createError({
-            statusCode: 404,
-            message: 'Not Found'
+    if (studentId != process.env.ADMIN) {
+        const VS = await prisma.voteSession.findUnique({
+            where: { id: parseInt(id) },
         })
+
+        if (!VS) {
+            throw createError({
+                statusCode: 404,
+                message: 'Not Found'
+            })
+        }
+
+        if (Date.now() >= VS.startTime.getTime()) {
+            throw createError({
+                statusCode: 403,
+                message: '投票已開始，不可刪除'
+            })
+        }
     }
-
-    const candidates = await prisma.candidate.findMany({
-        where: { voteSessionId: VS.id },
-    })
-
-    for (const candidate of candidates) {
-        await prisma.ballot.deleteMany({
-            where: { candidateId: candidate.id },
-        })
-    }
-
-    await prisma.candidate.deleteMany({
-        where: { voteSessionId: VS.id },
-    })
 
     await prisma.voteSession.delete({
-        where: { id: id },
+        where: { id: parseInt(id) },
     })
 
     return {}

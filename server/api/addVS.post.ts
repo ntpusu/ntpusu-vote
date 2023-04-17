@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session['user']['email']
+    const email = session.user.email
     const studentId = email.substring(1, 10)
 
     const admin = await prisma.admin.findUnique({
@@ -26,6 +26,13 @@ export default defineEventHandler(async (event) => {
 
     const { voteName, voteGroup, startTime, endTime, candidates } = await readBody(event)
 
+    if (!voteName || !voteGroup || !startTime || !endTime || !candidates) {
+        throw createError({
+            statusCode: 400,
+            message: 'Bad Request'
+        })
+    }
+
     const VS = await prisma.voteSession.create({
         data: {
             name: voteName,
@@ -35,10 +42,10 @@ export default defineEventHandler(async (event) => {
         }
     })
 
-    for (const candidate_name of candidates) {
+    for (const candidate of candidates) {
         await prisma.candidate.create({
             data: {
-                name: candidate_name,
+                name: candidate,
                 voteSessionId: VS.id
             }
         })

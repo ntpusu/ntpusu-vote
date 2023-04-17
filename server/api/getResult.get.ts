@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session['user']['email']
+    const email = session.user.email
     const studentId = email.substring(1, 10)
 
     const voter = await prisma.voter.findUnique({
@@ -25,7 +25,14 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { id } = getQuery(event) as { id: string }
+    const { id } = getQuery(event) as { id: string | undefined }
+
+    if (!id) {
+        throw createError({
+            statusCode: 400,
+            message: 'Bad Request'
+        })
+    }
 
     const groupIds = voter.VoterInGroup.map((item) => item.groupId)
 

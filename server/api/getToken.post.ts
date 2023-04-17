@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session['user']['email']
+    const email = session.user.email
     const studentId = email.substring(1, 10)
 
     const admin = await prisma.admin.findUnique({
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { token } = await readBody(event)
+    const { token } = await readBody(event) as { token: string | undefined }
 
     if (!token) {
         throw createError({
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const ballot = await prisma.ballot.findUnique({
-        where: { token: token },
+        where: { token },
     })
 
     if (!ballot) {
@@ -62,7 +62,7 @@ export default defineEventHandler(async (event) => {
     if (!vote) {
         throw createError({
             statusCode: 404,
-            message: '找不到該票'
+            message: '找不到該投票'
         })
     }
 
