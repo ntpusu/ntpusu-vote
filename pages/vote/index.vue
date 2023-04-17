@@ -40,7 +40,7 @@
                         :key="itemIndex"
                         class="flex text-sm sm:text-base"
                     >
-                        <ElTag type="warning" effect="light" size="small" round>
+                        <ElTag type="success" effect="dark" size="small" round>
                             {{ itemIndex + 1 }}
                         </ElTag>
                         <span>&nbsp;&nbsp;</span>
@@ -330,7 +330,7 @@ const seeToken = async (index: number) => {
         )) as unknown as Ballot | null
 
         if (!res) {
-            await ElMessageBox.alert('故無投票憑證', '尚未投票', {
+            await ElMessageBox.alert('故無投票憑證', '(尚)未投票', {
                 showClose: false,
                 confirmButtonText: '確定',
                 type: 'error',

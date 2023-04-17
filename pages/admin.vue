@@ -104,7 +104,8 @@
                 :data="tableData()"
                 border
                 table-layout="auto"
-                empty-text="Loading......"
+                empty-text="Empty~~~"
+                flexible
             >
                 <div prop="id" class="hidden" />
                 <ElTableColumn prop="title" label="名稱" />
