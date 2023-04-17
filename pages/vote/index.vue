@@ -283,13 +283,15 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
                                 type: 'success',
                                 roundButton: true,
                             }
-                        ).then(async () => {
-                            await navigator.clipboard.writeText(res.token)
-                            ElMessage({
-                                type: 'success',
-                                message: '已複製',
+                        )
+                            .then(async () => {
+                                await navigator.clipboard.writeText(res.token)
+                                ElMessage({
+                                    type: 'success',
+                                    message: '已複製',
+                                })
                             })
-                        })
+                            .catch(() => {})
                     } else {
                         voteToken.value[VS.id] = res.token
                         await ElMessageBox.alert(
@@ -300,13 +302,15 @@ const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
                                 type: 'warning',
                                 roundButton: true,
                             }
-                        ).then(async () => {
-                            await navigator.clipboard.writeText(res.token)
-                            ElMessage({
-                                type: 'success',
-                                message: '已複製',
+                        )
+                            .then(async () => {
+                                await navigator.clipboard.writeText(res.token)
+                                ElMessage({
+                                    type: 'success',
+                                    message: '已複製',
+                                })
                             })
-                        })
+                            .catch(() => {})
                     }
                 })
                 .catch(async () => {
