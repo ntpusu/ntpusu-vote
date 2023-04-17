@@ -15,7 +15,6 @@ export default defineEventHandler(async (event) => {
 
     const voter = await prisma.voter.findUnique({
         where: { id: parseInt(studentId) },
-        include: { VoterInGroup: true },
     })
 
     if (!voter) {
@@ -33,8 +32,6 @@ export default defineEventHandler(async (event) => {
             message: 'Bad Request'
         })
     }
-
-    const groupIds = voter.VoterInGroup.map((item) => item.groupId)
 
     const VS = await prisma.voteSession.findUnique({
         where: {
@@ -63,7 +60,16 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (!groupIds.includes(VS.groupId)) {
+    const VIG = await prisma.voterInGroup.findUnique({
+        where: {
+            voterId_groupId: {
+                voterId: parseInt(studentId),
+                groupId: VS.groupId,
+            },
+        },
+    })
+
+    if (!VIG) {
         throw createError({
             statusCode: 401,
             message: '沒有查看權限'

@@ -16,7 +16,6 @@ export default defineEventHandler(async (event) => {
 
     const voter = await prisma.voter.findUnique({
         where: { id: parseInt(studentId) },
-        include: { VoterInGroup: true },
     })
 
     if (!voter) {
@@ -69,9 +68,16 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const groupIds = voter.VoterInGroup.map((item) => item.groupId)
+    const VIG = await prisma.voterInGroup.findUnique({
+        where: {
+            voterId_groupId: {
+                voterId: parseInt(studentId),
+                groupId: voteSession.groupId
+            }
+        }
+    })
 
-    if (!groupIds.includes(voteSession.groupId)) {
+    if (!VIG) {
         throw createError({
             statusCode: 401,
             message: '沒有投票權'
