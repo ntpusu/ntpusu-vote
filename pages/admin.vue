@@ -35,12 +35,13 @@
                     />
                 </ElSelect>
             </ElFormItem>
-            <ElFormItem label="開始時間" prop="startTime" class="m-auto">
+            <ElFormItem label="開始時間" prop="startTime">
                 <ClientOnly>
                     <ElDatePicker
                         v-model="addVote.startTime"
                         type="datetime"
                         placeholder="請選擇開始時間"
+                        format="YYYY/MM/DD HH:mm:ss"
                     />
                 </ClientOnly>
             </ElFormItem>
@@ -50,6 +51,7 @@
                         v-model="addVote.endTime"
                         type="datetime"
                         placeholder="請選擇結束時間"
+                        format="YYYY/MM/DD HH:mm:ss"
                     />
                 </ClientOnly>
             </ElFormItem>
@@ -63,7 +65,6 @@
                     message: '候選人為必填',
                     trigger: 'blur',
                 }"
-                class="w-full"
             >
                 <div class="inline-flex">
                     <ElInput
