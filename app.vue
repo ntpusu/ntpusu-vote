@@ -17,7 +17,10 @@
                         :active-index="activeIndex"
                         @select="handleSelect"
                     >
-                        <span class="m-auto pl-2 text-xl font-bold sm:text-2xl">
+                        <span
+                            class="m-auto cursor-pointer pl-2 text-xl font-bold sm:text-2xl"
+                            @click="useRouter().push('/')"
+                        >
                             投票系統
                         </span>
                         <div class="flex-grow" />
