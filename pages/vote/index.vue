@@ -9,7 +9,7 @@
             v-for="VSitem in VS"
             :key="VSitem.id"
             shadow="hover"
-            class="w-[22rem] !rounded-xl sm:w-[25rem]"
+            class="w-[84vw] !rounded-xl sm:w-[60vw] md:w-[42vw] lg:w-[28vw] xl:w-[21vw]"
         >
             <template #header>
                 <div class="flex items-center justify-between">
@@ -58,21 +58,15 @@
             <ElDivider />
             <div
                 v-if="Date.now() < timeCnt(VSitem.startTime)"
-                class="px-24 sm:px-28"
+                class="flex justify-center"
             >
-                <ElButton
-                    type="danger"
-                    class="w-full !rounded-md"
-                    plain
-                    loading
-                >
+                <ElButton type="danger" class="w-fit !rounded-md" plain loading>
                     <span class="font-bold tracking-[2px]">尚未開始</span>
                 </ElButton>
             </div>
             <div v-else>
                 <ClientOnly>
                     <ElDialog
-                        :title="VSitem.name"
                         center
                         align-center
                         v-model="voteVisible[VSitem.id]"
@@ -81,6 +75,22 @@
                         @open="startLoading(VSitem.id)"
                         @close="endLoading(VSitem.id)"
                     >
+                        <template #title>
+                            <div class="flex">
+                                <div
+                                    class="m-auto flex text-lg font-bold sm:text-xl md:text-2xl"
+                                >
+                                    {{ VSitem.name }}
+                                </div>
+                                <div class="flex-grow" />
+                                <div
+                                    class="m-auto flex flex-col items-end pl-10 pr-3 text-xs text-gray-500 md:pl-14 md:pr-6 md:text-sm"
+                                >
+                                    <span>請在下方選擇您要投的候選人</span>
+                                    <span>投出後將無法再次更改選票</span>
+                                </div>
+                            </div>
+                        </template>
                         <div class="mx-5 flex justify-center">
                             <ElRadioGroup
                                 class="flex-col !items-stretch"
@@ -94,22 +104,26 @@
                                     :label="candidate.id"
                                     border
                                     size="large"
-                                    class="my-1 !mr-0"
+                                    class="my-1 !mr-0 max-w-[75vw]"
                                 >
-                                    {{ candidate.name }}
+                                    <span
+                                        class="max-w-full whitespace-pre-wrap break-all"
+                                    >
+                                        {{ candidate.name }}
+                                    </span>
                                 </ElRadio>
                             </ElRadioGroup>
                         </div>
                         <ElDivider border-style="dashed" />
-                        <div class="px-[30%]">
+                        <div class="flex justify-center">
                             <ElButton
                                 type="primary"
-                                class="w-full !rounded-md"
+                                class="w-fit !rounded-md"
                                 @click="voteConfirm(VSitem)"
                                 plain
                             >
                                 <span class="font-bold tracking-[2px]">
-                                    投票
+                                    投出選票
                                 </span>
                             </ElButton>
                         </div>
@@ -117,11 +131,11 @@
                 </ClientOnly>
                 <div
                     v-if="Date.now() > timeCnt(VSitem.endTime)"
-                    class="px-28 sm:px-32"
+                    class="flex justify-center"
                 >
                     <ElButton
                         type="success"
-                        class="w-full !rounded-md"
+                        class="w-fit !rounded-md"
                         @click="seeResult(VSitem.id)"
                         plain
                         :loading="resultLoading[VSitem.id]"
@@ -129,10 +143,10 @@
                         <span class="font-bold tracking-[2px]">結果</span>
                     </ElButton>
                 </div>
-                <div v-else class="flex px-16">
+                <div v-else class="flex justify-center">
                     <ElButton
                         type="primary"
-                        class="w-full !rounded-md"
+                        class="w-fit !rounded-md"
                         :disabled="voteToken[VSitem.id] !== undefined"
                         @click="voteVisible[VSitem.id] = true"
                         plain
@@ -146,7 +160,7 @@
                     </ElButton>
                     <ElButton
                         type="info"
-                        class="w-full !rounded-md"
+                        class="w-fit !rounded-md"
                         @click="seeToken(VSitem.id)"
                         plain
                         :loading="tokenLoading[VSitem.id]"
@@ -162,7 +176,7 @@
             <template #template>
                 <ElSkeletonItem
                     variant="rect"
-                    class="!w-[22rem] !rounded-xl sm:!w-[25rem]"
+                    class="!w-[84vw] !rounded-xl sm:!w-[60vw] md:!w-[42vw] lg:!w-[28vw] xl:!w-[21vw]"
                     :style="{ height: rand(15, 20) + 'rem' }"
                 />
             </template>
