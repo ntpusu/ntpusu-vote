@@ -14,7 +14,7 @@ model VoteSession {
   endTime    DateTime
   candidates Candidate[]
   groupId    Int
-  group      Group       @relation(fields: [groupId], references: [id])
+  group      Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
 }
 
 model Candidate {
@@ -22,14 +22,14 @@ model Candidate {
   name          String
   ballots       Ballot[]
   voteSessionId Int
-  voteSession   VoteSession @relation(fields: [voteSessionId], references: [id])
+  voteSession   VoteSession @relation(fields: [voteSessionId], references: [id], onDelete: Cascade)
 }
 
 model Ballot {
   token       String    @id
   time        DateTime  @default(now())
   candidateId Int
-  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
 }
 
 model Voter {
@@ -46,10 +46,10 @@ model Group {
 
 model VoterInGroup {
   voterId Int
-  voter   Voter @relation(fields: [voterId], references: [id])
+  voter   Voter @relation(fields: [voterId], references: [id], onDelete: Cascade)
 
   groupId Int
-  group   Group @relation(fields: [groupId], references: [id])
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   @@id([voterId, groupId])
 }
