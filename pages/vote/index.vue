@@ -1,5 +1,10 @@
 <template>
-    <ElSpace v-if="!VSPending && VS !== null" class="justify-center" wrap>
+    <ElSpace
+        v-if="!VSPending && VS !== null"
+        wrap
+        alignment="center"
+        class="w-full justify-center"
+    >
         <ElCard
             v-for="VSitem in VS"
             :key="VSitem.id"
@@ -158,7 +163,7 @@
                 <ElSkeletonItem
                     variant="rect"
                     class="!w-[22rem] !rounded-xl sm:!w-[25rem]"
-                    :style="{ height: rand(8, 25) + 'rem' }"
+                    :style="{ height: rand(15, 20) + 'rem' }"
                 />
             </template>
         </ElSkeleton>
