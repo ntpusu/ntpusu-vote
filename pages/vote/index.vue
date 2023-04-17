@@ -171,7 +171,7 @@
             </div>
         </ElCard>
     </ElSpace>
-    <ElSpace v-else class="justify-center" wrap>
+    <ElSpace v-else alignment="center" class="w-full justify-center" wrap>
         <ElSkeleton v-for="index in rand(3, 5)" animated>
             <template #template>
                 <ElSkeletonItem
