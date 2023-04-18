@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
 
     const admin = await prisma.admin.findUnique({
         where: { id: parseInt(studentId) },
+        select: null,
     })
 
     if (!admin) {
@@ -25,8 +26,17 @@ export default defineEventHandler(async (event) => {
     }
 
     return await prisma.voteSession.findMany({
-        include: {
-            group: true,
+        select: {
+            id: true,
+            name: true,
+            startTime: true,
+            endTime: true,
+            group: {
+                select: {
+                    id: true,
+                    name: true,
+                }
+            },
         }
     })
 })

@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
 
     const voter = await prisma.voter.findUnique({
         where: { id: parseInt(studentId) },
+        select: null,
     })
 
     if (!voter) {
@@ -41,7 +42,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const candidate = await prisma.candidate.findUnique({ where: { id: parseInt(candidateId) } })
+    const candidate = await prisma.candidate.findUnique({ where: { id: parseInt(candidateId) }, select: null, })
 
     if (!candidate) {
         throw createError({
@@ -50,7 +51,19 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const voteSession = await prisma.voteSession.findUnique({ where: { id: parseInt(VSId) }, include: { candidates: true } })
+    const voteSession = await prisma.voteSession.findUnique({
+        where: { id: parseInt(VSId) }, select: {
+            name: true,
+            groupId: true,
+            startTime: true,
+            endTime: true,
+            candidates: {
+                select: {
+                    id: true,
+                }
+            }
+        }
+    })
 
     if (!voteSession) {
         throw createError({
@@ -74,7 +87,8 @@ export default defineEventHandler(async (event) => {
                 voterId: parseInt(studentId),
                 groupId: voteSession.groupId
             }
-        }
+        },
+        select: null,
     })
 
     if (!VIG) {

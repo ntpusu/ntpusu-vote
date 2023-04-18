@@ -15,7 +15,13 @@ export default defineEventHandler(async (event) => {
 
     const voter = await prisma.voter.findUnique({
         where: { id: parseInt(studentId) },
-        include: { VoterInGroup: true },
+        select: {
+            VoterInGroup: {
+                select: {
+                    groupId: true,
+                }
+            },
+        }
     })
 
     if (!voter) {
@@ -33,8 +39,14 @@ export default defineEventHandler(async (event) => {
                 in: groupIds,
             },
         },
-        include: {
-            candidates: true,
+        select: {
+            id: true, name: true, startTime: true, endTime: true,
+            candidates: {
+                select: {
+                    id: true,
+                    name: true,
+                }
+            },
         },
     })
 })

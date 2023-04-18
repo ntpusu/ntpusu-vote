@@ -35,6 +35,10 @@ export default defineEventHandler(async (event) => {
 
     const ballot = await prisma.ballot.findUnique({
         where: { token },
+        select: {
+            candidateId: true,
+            time: true,
+        }
     })
 
     if (!ballot) {
@@ -46,6 +50,10 @@ export default defineEventHandler(async (event) => {
 
     const candidate = await prisma.candidate.findUnique({
         where: { id: ballot.candidateId },
+        select: {
+            name: true,
+            voteSessionId: true,
+        }
     })
 
     if (!candidate) {
@@ -57,6 +65,9 @@ export default defineEventHandler(async (event) => {
 
     const vote = await prisma.voteSession.findUnique({
         where: { id: candidate.voteSessionId },
+        select: {
+            name: true,
+        }
     })
 
     if (!vote) {
