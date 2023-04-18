@@ -21,7 +21,7 @@
                             class="m-auto cursor-pointer pl-2 text-xl font-bold sm:text-2xl"
                             @click="useRouter().push('/')"
                         >
-                            投票系統
+                            北大選委會
                         </span>
                         <div class="flex-grow" />
                         <ElMenuItem
