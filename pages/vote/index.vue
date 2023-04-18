@@ -86,8 +86,8 @@
                                 <div
                                     class="m-auto flex flex-col items-end pl-10 pr-3 text-xs text-gray-500 md:pl-14 md:pr-6 md:text-sm"
                                 >
-                                    <span>請在下方選擇您要投的候選人</span>
-                                    <span>投出後將無法再次更改選票</span>
+                                    <span class="text-gray-500">請在下方選擇您要投的候選人</span>
+                                    <span class="text-pink-500">投出選票後即無法再做變更</span>
                                 </div>
                             </div>
                         </template>
