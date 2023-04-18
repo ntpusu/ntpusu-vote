@@ -34,13 +34,13 @@
                         <ElCard
                             v-for="(candidate, index) in VS.candidates"
                             :shadow="
-                                candidate.ballots.length === winnerCnt()
+                                candidate._count.ballots === winnerCnt()
                                     ? 'always'
                                     : 'never'
                             "
                             :class="{
                                 '!bg-rose-100':
-                                    candidate.ballots.length === winnerCnt(),
+                                    candidate._count.ballots === winnerCnt(),
                             }"
                             :key="index"
                         >
@@ -51,7 +51,7 @@
                             <ElStatistic
                                 class="text-center"
                                 title="票數"
-                                :value="candidate.ballots.length"
+                                :value="candidate._count.ballots"
                             >
                                 <template #suffix>票</template>
                             </ElStatistic>
@@ -61,11 +61,11 @@
                                 :percentage="
                                     voteCnt() === 0
                                         ? 0
-                                        : (candidate.ballots.length * 100) /
+                                        : (candidate._count.ballots * 100) /
                                           voteCnt()
                                 "
                                 :color="
-                                    candidate.ballots.length === winnerCnt()
+                                    candidate._count.ballots === winnerCnt()
                                         ? '#f56c6c'
                                         : '#409eff'
                                 "
@@ -105,7 +105,9 @@ const {
     data: globalThis.Ref<
         | (VoteSession & {
               candidates: (Candidate & {
-                  ballots: Ballot[]
+                  _count: {
+                      ballots: number
+                  }
               })[]
           })
         | null
@@ -126,7 +128,7 @@ const voteCnt = () => {
     if (VS.value == null) return 0
 
     return VS.value.candidates.reduce((acc, cur) => {
-        return acc + cur.ballots.length
+        return acc + cur._count.ballots
     }, 0)
 }
 
@@ -134,7 +136,7 @@ const winnerCnt = () => {
     if (VS.value == null) return 0
 
     return VS.value.candidates.reduce((acc, cur) => {
-        return acc > cur.ballots.length ? acc : cur.ballots.length
+        return acc > cur._count.ballots ? acc : cur._count.ballots
     }, 0)
 }
 

@@ -86,8 +86,12 @@
                                 <div
                                     class="m-auto flex flex-col items-end pl-10 pr-3 text-xs text-gray-500 md:pl-14 md:pr-6 md:text-sm"
                                 >
-                                    <span class="text-gray-400">請在下方選擇您要投的候選人</span>
-                                    <span class="text-red-400">投出選票後即無法再做變更</span>
+                                    <span class="text-gray-400"
+                                        >請在下方選擇您要投的候選人</span
+                                    >
+                                    <span class="text-red-400"
+                                        >投出選票後即無法再做變更</span
+                                    >
                                 </div>
                             </div>
                         </template>
@@ -252,7 +256,14 @@ const endLoading = (id: number | null) => {
     document.body.style.overflowY = 'auto'
 }
 
-const voteConfirm = async (VS: { id: number; candidates: Candidate[] }) => {
+const voteConfirm = async (VS: {
+    id: number
+    name: string
+    candidates: {
+        id: number
+        name: string
+    }[]
+}) => {
     if (!voteData.value[VS.id]) {
         ElMessage({
             type: 'warning',
@@ -393,7 +404,7 @@ const seeResult = async (index: number) => {
         )) as unknown as Ballot | null
 
         if (!res) {
-            await ElMessageBox.alert('故無投票憑證', '尚未投票', {
+            await ElMessageBox.alert('故無投票憑證', '未投票', {
                 showClose: false,
                 confirmButtonText: '確定',
                 type: 'error',
