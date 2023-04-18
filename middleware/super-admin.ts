@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    const { data } = useSession()
+    const { data } = useAuth()
 
     if (!data) {
         return await navigateTo('/404')

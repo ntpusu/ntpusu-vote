@@ -59,7 +59,7 @@
                             v-if="status === 'unauthenticated'"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                             index="/login"
-                            @click="signIn('google', { callbackUrl: '/vote' })"
+                            @click="signIn(undefined, { callbackUrl: '/vote' })"
                         >
                             登入
                         </ElMenuItem>
@@ -134,11 +134,7 @@ useHead({
 const curIndex = ref('/')
 const admin = ref(false)
 
-const { status, signIn, signOut } = useSession() as unknown as {
-    status: Ref<string>
-    signIn: (provider: string, options?: any) => Promise<void>
-    signOut: (options?: any) => Promise<void>
-}
+const { status, signIn, signOut } = useAuth()
 
 const activeIndex = () => curIndex.value
 
