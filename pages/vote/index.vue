@@ -133,7 +133,6 @@
                                 class="w-fit !rounded-md"
                                 @click="voteConfirm(VSitem)"
                                 plain
-                                round
                                 size="large"
                             >
                                 <span class="font-bold">投 出 選 票</span>

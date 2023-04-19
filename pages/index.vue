@@ -82,7 +82,7 @@ const activities = [
         finish: new Date(2023, 4, 28),
     },
     {
-        content: '登記補選參選',
+        content: '(補選)登記參選',
         start: new Date(2023, 4, 29),
         end: new Date(2023, 5, 5),
         finish: new Date(2023, 5, 6),
