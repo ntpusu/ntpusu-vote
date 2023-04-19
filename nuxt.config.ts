@@ -8,6 +8,7 @@ export default defineNuxtConfig({
         '@element-plus/nuxt',
         '@nuxtjs/tailwindcss',
         '@sidebase/nuxt-auth',
+        '@nuxt/image-edge',
     ],
     plugins: [{ src: '~/plugins/vercel.ts', mode: 'client' }],
     auth: {

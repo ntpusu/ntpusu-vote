@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.3",
+    "@nuxt/image-edge": "^1.0.0-28020728.5df24eb",
     "@nuxtjs/tailwindcss": "^6.3.1",
     "@sidebase/nuxt-auth": "^0.5.0",
     "nuxt": "^3.0.0",
