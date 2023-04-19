@@ -290,8 +290,8 @@ const voteConfirm = async (VS: {
         '投出選票後無法修改或變更',
         '確定要投給「' + candidate + '」嗎？',
         {
-            confirmButtonText: '確定',
-            cancelButtonText: '取消',
+            confirmButtonText: '確 定',
+            cancelButtonText: '取 消',
             type: 'warning',
         }
     )
@@ -367,7 +367,7 @@ const seeToken = async (index: number) => {
         if (!res) {
             await ElMessageBox.alert('無投票憑證', '(尚)未投票', {
                 showClose: false,
-                confirmButtonText: '確定',
+                confirmButtonText: '確 定',
                 type: 'error',
             }).catch(() => {})
         } else {
@@ -407,7 +407,7 @@ const seeResult = async (index: number) => {
         if (!res) {
             await ElMessageBox.alert('無投票憑證', '未投票', {
                 showClose: false,
-                confirmButtonText: '確定',
+                confirmButtonText: '確 定',
                 type: 'error',
             }).catch(() => {})
         } else {
