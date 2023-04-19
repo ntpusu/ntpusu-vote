@@ -21,7 +21,7 @@
                             class="m-auto cursor-pointer pl-2 text-xl font-bold sm:text-2xl"
                             @click="useRouter().push('/')"
                         >
-                            北大選委會
+                            選舉委員會
                         </span>
                         <div class="flex-grow" />
                         <ElMenuItem
@@ -59,7 +59,7 @@
                             v-if="status === 'unauthenticated'"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
                             index="/login"
-                            @click="signIn(undefined, { callbackUrl: '/vote' })"
+                            @click="useRouter().push('/login')"
                         >
                             登入
                         </ElMenuItem>
@@ -103,6 +103,7 @@ useSeoMeta({
         'https://i0.wp.com/su.ntpu.org/wp-content/uploads/2022/09/297330040_5472635102757142_2117759161702702779_n.jpg',
     ogImageUrl: 'https://ntpu-vote-2023.vercel.app/favicon.ico',
     ogImageType: 'image/png',
+    ogLocale: 'zh_TW',
     author: '國立臺北大學三峽校區學生會',
     creator: '國立臺北大學三峽校區學生會',
     publisher: '國立臺北大學三峽校區學生會',
@@ -116,6 +117,9 @@ useSeoMeta({
 })
 
 useHead({
+    htmlAttrs: {
+        lang: 'zh_TW',
+    },
     meta: [
         {
             name: 'copyright',
@@ -134,7 +138,7 @@ useHead({
 const curIndex = ref('/')
 const admin = ref(false)
 
-const { status, signIn, signOut } = useAuth()
+const { status, signOut } = useAuth()
 
 const activeIndex = () => curIndex.value
 
