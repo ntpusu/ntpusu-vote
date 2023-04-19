@@ -26,23 +26,21 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { VSId, candidateId, voterId } = await readBody(event)
+    const { VSId, candidateId } = await readBody(event)
 
-    if (!VSId || !candidateId || !voterId) {
+    if (!VSId || !candidateId) {
         throw createError({
             statusCode: 400,
             message: 'Bad Request'
         })
     }
 
-    if (voterId != studentId) {
-        throw createError({
-            statusCode: 401,
-            message: '學號與登入者不符'
-        })
-    }
-
-    const candidate = await prisma.candidate.findUnique({ where: { id: parseInt(candidateId) }, select: null, })
+    const candidate = await prisma.candidate.findUnique({
+        where: { id: parseInt(candidateId) },
+        select: {
+            voteSessionId: true,
+        },
+    })
 
     if (!candidate) {
         throw createError({
@@ -51,33 +49,21 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    if (candidate.voteSessionId != parseInt(VSId)) {
+        throw createError({
+            statusCode: 400,
+            message: 'Bad Request'
+        })
+    }
+
     const voteSession = await prisma.voteSession.findUnique({
-        where: { id: parseInt(VSId) }, select: {
-            name: true,
-            groupId: true,
-            startTime: true,
-            endTime: true,
-            candidates: {
-                select: {
-                    id: true,
-                }
-            }
-        }
+        where: { id: parseInt(VSId) },
     })
 
     if (!voteSession) {
         throw createError({
             statusCode: 404,
             message: 'Not Found'
-        })
-    }
-
-    const candidateIds = voteSession.candidates.map((item) => item.id)
-
-    if (!candidateIds.includes(candidateId)) {
-        throw createError({
-            statusCode: 400,
-            message: 'Bad Request'
         })
     }
 
@@ -116,7 +102,8 @@ export default defineEventHandler(async (event) => {
 
     try {
         await prisma.ballot.create({
-            data: { token, candidateId: parseInt(candidateId) }
+            data: { token, candidateId: parseInt(candidateId) },
+            select: null,
         })
     }
     catch (e) {

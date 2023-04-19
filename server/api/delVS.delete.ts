@@ -59,6 +59,7 @@ export default defineEventHandler(async (event) => {
 
     await prisma.voteSession.delete({
         where: { id: parseInt(id) },
+        select: null,
     })
 
     return {}

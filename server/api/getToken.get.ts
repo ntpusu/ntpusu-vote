@@ -36,7 +36,8 @@ export default defineEventHandler(async (event) => {
     }
 
     const voteSession = await prisma.voteSession.findUnique({
-        where: { id: parseInt(id) }, select: {
+        where: { id: parseInt(id) },
+        select: {
             name: true,
         },
     })
@@ -50,5 +51,10 @@ export default defineEventHandler(async (event) => {
 
     const token = SHA256(studentId + voteSession.name + process.env.AUTH_SECRET).toString()
 
-    return await prisma.ballot.findUnique({ where: { token } })
+    return await prisma.ballot.findUnique({
+        where: { token },
+        select: {
+            token: true,
+        }
+    })
 })

@@ -40,6 +40,9 @@ export default defineEventHandler(async (event) => {
             groupId: voteGroup,
             startTime: new Date(startTime),
             endTime: new Date(endTime),
+        },
+        select: {
+            id: true,
         }
     })
 

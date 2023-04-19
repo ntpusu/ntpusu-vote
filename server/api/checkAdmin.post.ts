@@ -14,5 +14,5 @@ export default defineEventHandler(async (event) => {
         select: null,
     })
 
-    return admin !== null
+    return !admin
 })

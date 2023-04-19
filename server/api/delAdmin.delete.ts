@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    await prisma.admin.delete({ where: { id: parseInt(id) } })
+    await prisma.admin.delete({ where: { id: parseInt(id) }, select: null, })
 
     return {}
 })
