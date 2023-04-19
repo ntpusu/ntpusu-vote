@@ -364,7 +364,7 @@ const seeToken = async (index: number) => {
         )) as unknown as Ballot | null
 
         if (!res) {
-            await ElMessageBox.alert('故無投票憑證', '(尚)未投票', {
+            await ElMessageBox.alert('無投票憑證', '(尚)未投票', {
                 showClose: false,
                 confirmButtonText: '確定',
                 type: 'error',
@@ -404,7 +404,7 @@ const seeResult = async (index: number) => {
         )) as unknown as Ballot | null
 
         if (!res) {
-            await ElMessageBox.alert('故無投票憑證', '未投票', {
+            await ElMessageBox.alert('無投票憑證', '未投票', {
                 showClose: false,
                 confirmButtonText: '確定',
                 type: 'error',
