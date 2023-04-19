@@ -3,6 +3,9 @@ import GoogleProvider from 'next-auth/providers/google'
 import AzureProvider from 'next-auth/providers/azure-ad'
 export default NuxtAuthHandler({
     secret: process.env.AUTH_SECRET,
+    pages: {
+        signIn: '/login'
+    },
     providers: [
         (GoogleProvider as any).default({
             clientId: process.env.GOOGLE_ID as string,

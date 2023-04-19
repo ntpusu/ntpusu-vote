@@ -61,7 +61,7 @@
                 class="flex justify-center"
             >
                 <ElButton type="danger" class="w-fit !rounded-md" plain loading>
-                    <span class="font-bold tracking-[2px]">尚未開始</span>
+                    <span class="font-bold">尚 未 開 始</span>
                 </ElButton>
             </div>
             <div v-else>
@@ -86,12 +86,12 @@
                                 <div
                                     class="m-auto flex flex-col items-end pl-10 pr-3 text-xs text-gray-500 md:pl-14 md:pr-6 md:text-sm"
                                 >
-                                    <span class="text-gray-400"
-                                        >請在下方選擇您要投的候選人</span
-                                    >
-                                    <span class="text-red-400"
-                                        >投出選票後即無法再做變更</span
-                                    >
+                                    <span class="text-gray-500">
+                                        請在下方選擇您要投的候選人
+                                    </span>
+                                    <span class="text-red-500">
+                                        投出選票後無法修改或變更
+                                    </span>
                                 </div>
                             </div>
                         </template>
@@ -119,16 +119,24 @@
                             </ElRadioGroup>
                         </div>
                         <ElDivider border-style="dashed" />
-                        <div class="flex justify-center">
+                        <div class="flex flex-col items-center">
+                            <span class="mb-5 text-sm text-gray-600">
+                                目前登入的學號是：{{
+                                    useAuth().data.value?.user?.email?.substring(
+                                        1,
+                                        10
+                                    )
+                                }}
+                            </span>
                             <ElButton
                                 type="primary"
                                 class="w-fit !rounded-md"
                                 @click="voteConfirm(VSitem)"
                                 plain
+                                round
+                                size="large"
                             >
-                                <span class="font-bold tracking-[2px]">
-                                    投出選票
-                                </span>
+                                <span class="font-bold">投 出 選 票</span>
                             </ElButton>
                         </div>
                     </ElDialog>
@@ -144,7 +152,7 @@
                         plain
                         :loading="resultLoading[VSitem.id]"
                     >
-                        <span class="font-bold tracking-[2px]">結果</span>
+                        <span class="font-bold">結 果</span>
                     </ElButton>
                 </div>
                 <div v-else class="flex justify-center">
@@ -156,10 +164,9 @@
                         plain
                         :loading="voteLoading[VSitem.id]"
                     >
-                        <span class="font-bold tracking-[2px]">
-                            {{
-                                voteToken[VSitem.id] !== undefined ? '已' : ''
-                            }}投票
+                        <span class="font-bold">
+                            {{ voteToken[VSitem.id] !== undefined ? '已' : '' }}
+                            投 票
                         </span>
                     </ElButton>
                     <ElButton
@@ -169,7 +176,7 @@
                         plain
                         :loading="tokenLoading[VSitem.id]"
                     >
-                        <span class="font-bold tracking-[2px]">查看憑證</span>
+                        <span class="font-bold">查 看 憑 證</span>
                     </ElButton>
                 </div>
             </div>
@@ -202,15 +209,14 @@
                 可能原因：<br />
                 1. 網路連線斷了<br />
                 2. 未登入<br />
-                3. 學號輸入錯誤<br />
-                4. 未在投票時間內投票
+                3. 未在投票時間內投票
             </div>
         </ElDialog>
     </ClientOnly>
 </template>
 
 <script lang="ts" setup>
-import type { Ballot, Candidate } from '@prisma/client'
+import type { Ballot } from '@prisma/client'
 import { rand } from '@vueuse/shared'
 
 definePageMeta({
@@ -281,25 +287,21 @@ const voteConfirm = async (VS: {
         (item: { id: number }) => item.id === voteData.value[VS.id]
     )?.name
 
-    await ElMessageBox.prompt(
-        '輸入學號進行確認',
+    await ElMessageBox.confirm(
+        '投出選票後無法修改或變更',
         '確定要投給「' + candidate + '」嗎？',
         {
             confirmButtonText: '確定',
             cancelButtonText: '取消',
             type: 'warning',
-            inputPlaceholder: '我是輸入欄😎',
-            inputPattern: /^\d{8,9}$/,
-            inputErrorMessage: '學號格式錯誤',
         }
     )
-        .then(async ({ value }) => {
+        .then(async () => {
             await $fetch('/api/vote', {
                 method: 'POST',
                 body: JSON.stringify({
                     VSId: VS.id,
                     candidateId: voteData.value[VS.id],
-                    voterId: value,
                 }),
             })
                 .then(async (res) => {

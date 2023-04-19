@@ -78,19 +78,19 @@
                         class="ml-2"
                         :class="{ invisible: index < 2 }"
                     >
-                        <span class="font-bold tracking-[2px]">X</span>
+                        <span class="font-bold">X</span>
                     </ElButton>
                 </div>
             </ElFormItem>
             <ElFormItem>
                 <ElSpace class="m-auto">
                     <ElButton @click="addDomain">
-                        <span class="font-bold tracking-[2px]">
-                            新增候選人
+                        <span class="font-bold">
+                            新 增 候 選 人
                         </span>
                     </ElButton>
                     <ElButton type="primary" @click="submitForm(formRef)">
-                        <span class="font-bold tracking-[2px]">創建</span>
+                        <span class="font-bold">創 建</span>
                     </ElButton>
                 </ElSpace>
             </ElFormItem>
@@ -123,8 +123,8 @@
                         >
                             <template #reference>
                                 <ElButton size="small" type="primary">
-                                    <span class="font-bold tracking-[2px]">
-                                        刪除
+                                    <span class="font-bold">
+                                        刪 除
                                     </span>
                                 </ElButton>
                             </template>

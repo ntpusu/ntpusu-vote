@@ -43,7 +43,7 @@
             auto-insert-space
             @click="useRouter().push('/vote')"
         >
-            <span class="font-bold tracking-[2px]">前往投票頁面</span>
+            <span class="font-bold">前 往 投 票 頁 面</span>
         </ElButton>
     </div>
 </template>
