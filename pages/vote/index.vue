@@ -90,7 +90,7 @@
                                         請在下方選擇您要投的候選人
                                     </span>
                                     <span class="text-red-500">
-                                        投出選票後無法修改或變更
+                                        投出選票後無法刪除或變更
                                     </span>
                                 </div>
                             </div>
@@ -287,7 +287,7 @@ const voteConfirm = async (VS: {
     )?.name
 
     await ElMessageBox.confirm(
-        '投出選票後無法修改或變更',
+        '投出選票後無法刪除或變更',
         '確定要投給「' + candidate + '」嗎？',
         {
             confirmButtonText: '確 定',
