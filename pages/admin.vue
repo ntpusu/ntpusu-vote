@@ -85,9 +85,7 @@
             <ElFormItem>
                 <ElSpace class="m-auto">
                     <ElButton @click="addDomain">
-                        <span class="font-bold">
-                            新 增 候 選 人
-                        </span>
+                        <span class="font-bold">新 增 候 選 人</span>
                     </ElButton>
                     <ElButton type="primary" @click="submitForm(formRef)">
                         <span class="font-bold">創 建</span>
@@ -97,6 +95,24 @@
         </ElForm>
     </div>
     <ElDivider border-style="dashed" />
+    <div class="flex justify-center">
+        <ElSwitch
+            class="mx-3 mb-8"
+            v-model="showTime"
+            size="large"
+            inline-prompt
+            active-text="時間"
+            inactive-text="時間"
+        />
+        <ElSwitch
+            class="mx-3 mb-8"
+            v-model="showOption"
+            size="large"
+            inline-prompt
+            active-text="操作"
+            inactive-text="操作"
+        />
+    </div>
     <div
         class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-5/6 xl:w-2/3 2xl:w-1/2"
     >
@@ -106,14 +122,38 @@
                 border
                 table-layout="auto"
                 empty-text="Empty~~~"
-                flexible
+                size="small"
             >
                 <div prop="id" class="hidden" />
+                <div prop="startTime" class="hidden" />
+                <div prop="endTimeStr" class="hidden" />
                 <ElTableColumn prop="title" label="名稱" />
                 <ElTableColumn prop="group" label="投票範圍" />
-                <ElTableColumn prop="startTime" label="開始時間" />
-                <ElTableColumn prop="endTime" label="結束時間" />
-                <ElTableColumn label="操作" width="80px">
+                <ElTableColumn
+                    v-if="showTime"
+                    prop="startTimeStr"
+                    label="開始時間"
+                />
+                <ElTableColumn
+                    v-if="showTime"
+                    prop="endTimeStr"
+                    label="結束時間"
+                />
+                <ElTableColumn v-if="showOption" label="結果" class="min-w-fit">
+                    <template #default="{ row }">
+                        <ElButton
+                            size="small"
+                            type="success"
+                            :disabled="
+                                new Date(row.endTime).getTime() >= Date.now()
+                            "
+                            @click="useRouter().push('/vote/' + row.id)"
+                        >
+                            <span class="font-bold">結 果</span>
+                        </ElButton>
+                    </template>
+                </ElTableColumn>
+                <ElTableColumn v-if="showOption" label="操作" class="min-w-fit">
                     <template #default="{ row }">
                         <ElPopconfirm
                             title="確定要刪除嗎？"
@@ -122,10 +162,8 @@
                             @confirm="handleDelete(row.id)"
                         >
                             <template #reference>
-                                <ElButton size="small" type="primary">
-                                    <span class="font-bold">
-                                        刪 除
-                                    </span>
+                                <ElButton size="small" type="warning">
+                                    <span class="font-bold">刪 除</span>
                                 </ElButton>
                             </template>
                         </ElPopconfirm>
@@ -148,6 +186,9 @@ const { data: VS, refresh: VSRefresh } = await useLazyFetch('/api/getVS')
 const { data: Group, refresh: GroupRefresh } = await useLazyFetch(
     '/api/getGroup'
 )
+
+const showTime = ref(true)
+const showOption = ref(true)
 
 const formRef = ref<FormInstance>()
 interface Candidate {
@@ -241,8 +282,10 @@ const tableData = () => {
         id: item.id,
         title: item.name,
         group: item.group.name,
-        startTime: new Date(item.startTime).toLocaleString(),
-        endTime: new Date(item.endTime).toLocaleString(),
+        startTime: new Date(item.startTime),
+        startTimeStr: new Date(item.startTime).toLocaleString(),
+        endTime: new Date(item.endTime),
+        endTimeStr: new Date(item.endTime).toLocaleString(),
     }))
 }
 
