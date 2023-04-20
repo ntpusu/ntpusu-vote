@@ -19,13 +19,49 @@
                     <div
                         class="flex flex-col justify-end align-middle text-xs sm:text-sm"
                     >
-                        <ElTag round effect="plain">
-                            開始: {{ viewDate(VSitem.startTime) }}
-                        </ElTag>
+                        <ElTooltip>
+                            <template #content>
+                                <span
+                                    v-if="
+                                        Date.now() >= timeCnt(VSitem.startTime)
+                                    "
+                                    class="m-auto"
+                                >
+                                    已開始
+                                </span>
+                                <ElCountdown
+                                    v-else
+                                    class="text-center"
+                                    format="D 天 H 小時 mm 分 ss 秒"
+                                    title="開始倒數"
+                                    :value="timeCnt(VSitem.startTime)"
+                                />
+                            </template>
+                            <ElTag round effect="plain">
+                                開始: {{ viewDate(VSitem.startTime) }}
+                            </ElTag>
+                        </ElTooltip>
                         <div class="h-1 w-full" />
-                        <ElTag round effect="plain">
-                            結束: {{ viewDate(VSitem.endTime) }}
-                        </ElTag>
+                        <ElTooltip>
+                            <template #content>
+                                <span
+                                    v-if="Date.now() > timeCnt(VSitem.endTime)"
+                                    class="m-auto"
+                                >
+                                    已結束
+                                </span>
+                                <ElCountdown
+                                    v-else
+                                    class="text-center"
+                                    format="D 天 H 小時 mm 分 ss 秒"
+                                    title="結束倒數"
+                                    :value="timeCnt(VSitem.endTime)"
+                                />
+                            </template>
+                            <ElTag round effect="plain">
+                                結束: {{ viewDate(VSitem.endTime) }}
+                            </ElTag>
+                        </ElTooltip>
                     </div>
                 </div>
             </template>
