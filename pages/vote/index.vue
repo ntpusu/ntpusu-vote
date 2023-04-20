@@ -9,7 +9,7 @@
             v-for="VSitem in VS"
             :key="VSitem.id"
             shadow="hover"
-            class="w-[84vw] !rounded-xl sm:w-[60vw] md:w-[42vw] lg:w-[28vw] xl:w-[21vw]"
+            class="w-[84vw] !rounded-xl sm:w-[60vw] md:w-[42vw] lg:w-[32vw] xl:w-[28vw]"
         >
             <template #header>
                 <div class="flex items-center justify-between">
@@ -120,7 +120,7 @@
                         </div>
                         <ElDivider border-style="dashed" />
                         <div class="flex flex-col items-center">
-                            <span class="mb-5 text-sm text-gray-600">
+                            <span class="-mt-2 mb-3 text-sm text-gray-600">
                                 目前登入的學號是：{{
                                     useAuth().data.value?.user?.email?.substring(
                                         1,
@@ -133,7 +133,6 @@
                                 class="w-fit !rounded-md"
                                 @click="voteConfirm(VSitem)"
                                 plain
-                                size="large"
                             >
                                 <span class="font-bold">投 出 選 票</span>
                             </ElButton>
@@ -186,8 +185,8 @@
             <template #template>
                 <ElSkeletonItem
                     variant="rect"
-                    class="!w-[84vw] !rounded-xl sm:!w-[60vw] md:!w-[42vw] lg:!w-[28vw] xl:!w-[21vw]"
-                    :style="{ height: rand(15, 20) + 'rem' }"
+                    class="!w-[84vw] !rounded-xl sm:!w-[60vw] md:!w-[42vw] lg:!w-[32vw] xl:!w-[28vw]"
+                    :style="{ height: rand(18, 25) + 'rem' }"
                 />
             </template>
         </ElSkeleton>

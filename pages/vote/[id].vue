@@ -39,22 +39,30 @@
                                     : 'never'
                             "
                             :class="{
-                                '!bg-rose-100':
+                                '!bg-green-50':
                                     candidate._count.ballots === winnerCnt(),
                             }"
                             :key="index"
+                            class="max-w-[12rem] md:max-w-[15rem] xl:max-w-[18rem]"
                         >
                             <div class="px-6 text-center">
                                 <h1 class="text-xl">{{ candidate.name }}</h1>
                             </div>
                             <ElDivider />
-                            <ElStatistic
-                                class="text-center"
-                                title="票數"
-                                :value="candidate._count.ballots"
+                            <ElBadge
+                                :hidden="
+                                    candidate._count.ballots !== winnerCnt()
+                                "
+                                value="#最高票"
                             >
-                                <template #suffix>票</template>
-                            </ElStatistic>
+                                <ElStatistic
+                                    class="text-center"
+                                    title="票數"
+                                    :value="candidate._count.ballots"
+                                >
+                                    <template #suffix>票</template>
+                                </ElStatistic>
+                            </ElBadge>
                             <ElDivider />
                             <ElProgress
                                 type="dashboard"
@@ -66,8 +74,8 @@
                                 "
                                 :color="
                                     candidate._count.ballots === winnerCnt()
-                                        ? '#f56c6c'
-                                        : '#409eff'
+                                        ? '#67C23A'
+                                        : '#409EFF'
                                 "
                             >
                                 <template #default="{ percentage }">

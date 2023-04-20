@@ -85,7 +85,7 @@
             <ElFormItem>
                 <ElSpace class="m-auto">
                     <ElButton @click="addDomain">
-                        <span class="font-bold">新 增 候 選 人</span>
+                        <span class="font-bold">新增候選人</span>
                     </ElButton>
                     <ElButton type="primary" @click="submitForm(formRef)">
                         <span class="font-bold">創 建</span>
