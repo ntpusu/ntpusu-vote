@@ -187,7 +187,7 @@ const { data: Group, refresh: GroupRefresh } = await useLazyFetch(
     '/api/getGroup'
 )
 
-const showTime = ref(true)
+const showTime = ref(false)
 const showOption = ref(true)
 
 const formRef = ref<FormInstance>()
