@@ -31,6 +31,7 @@
                                         :format="chooseFormat(VSitem.startTime)"
                                         :value="timeCnt(VSitem.startTime)"
                                         value-style="color: white;"
+                                        @finish="refreshNuxtData()"
                                     >
                                         <template #title>
                                             <span class="!text-white">
@@ -76,6 +77,7 @@
                                         :format="chooseFormat(VSitem.endTime)"
                                         :value="timeCnt(VSitem.endTime)"
                                         value-style="color: white;"
+                                        @finish="refreshNuxtData()"
                                     >
                                         <template #title>
                                             <span class="!text-white">
@@ -112,8 +114,7 @@
                         <ElTag type="success" effect="dark" size="small" round>
                             {{ itemIndex + 1 }}
                         </ElTag>
-                        <span>&nbsp;&nbsp;</span>
-                        <div>
+                        <div class="ml-2 mr-5">
                             {{ candidate.name }}
                         </div>
                     </div>
