@@ -20,30 +20,34 @@
                         class="flex flex-col justify-end align-middle text-xs sm:text-sm"
                     >
                         <ClientOnly>
-                            <ElTooltip>
+                            <ElTooltip placement="right">
                                 <template #content>
-                                    <span
+                                    <ElCountdown
                                         v-if="
-                                            Date.now() >=
+                                            Date.now() <
                                             timeCnt(VSitem.startTime)
                                         "
-                                        class="m-auto"
-                                    >
-                                        已開始
-                                    </span>
-                                    <ElCountdown
-                                        v-else
                                         class="text-center"
-                                        format="D 天 H 小時 m 分 s 秒"
+                                        :format="chooseFormat(VSitem.startTime)"
                                         :value="timeCnt(VSitem.startTime)"
                                         value-style="color: white;"
                                     >
                                         <template #title>
                                             <span class="!text-white">
-                                                開始倒數
+                                                距離開始還有
                                             </span>
                                         </template>
                                     </ElCountdown>
+                                    <span
+                                        v-else-if="
+                                            Date.now() <=
+                                            timeCnt(VSitem.endTime)
+                                        "
+                                        class="m-auto"
+                                    >
+                                        已開始
+                                    </span>
+                                    <span v-else class="m-auto"> 已結束 </span>
                                 </template>
                                 <ElTag round effect="plain">
                                     開始: {{ viewDate(VSitem.startTime) }}
@@ -52,29 +56,34 @@
                         </ClientOnly>
                         <div class="h-1 w-full" />
                         <ClientOnly>
-                            <ElTooltip>
+                            <ElTooltip placement="right">
                                 <template #content>
                                     <span
                                         v-if="
-                                            Date.now() > timeCnt(VSitem.endTime)
+                                            Date.now() <
+                                            timeCnt(VSitem.startTime)
                                         "
                                         class="m-auto"
                                     >
-                                        已結束
+                                        尚未開始
                                     </span>
                                     <ElCountdown
-                                        v-else
+                                        v-else-if="
+                                            Date.now() <=
+                                            timeCnt(VSitem.endTime)
+                                        "
                                         class="text-center"
-                                        format="D 天 H 小時 m 分 s 秒"
+                                        :format="chooseFormat(VSitem.endTime)"
                                         :value="timeCnt(VSitem.endTime)"
                                         value-style="color: white;"
                                     >
                                         <template #title>
                                             <span class="!text-white">
-                                                結束倒數
+                                                距離結束還有
                                             </span>
                                         </template>
                                     </ElCountdown>
+                                    <span v-else class="m-auto"> 已結束 </span>
                                 </template>
                                 <ElTag round effect="plain">
                                     結束: {{ viewDate(VSitem.endTime) }}
@@ -294,6 +303,15 @@ const viewDate = (time: string | number | Date) => {
 
 const timeCnt = (time: string | number | Date) => {
     return new Date(time).getTime()
+}
+
+const chooseFormat = (time: string | number | Date) => {
+    if (timeCnt(time) - Date.now() >= 24 * 60 * 60 * 1000)
+        return 'D 天 H 小時 m 分 s 秒'
+    else if (timeCnt(time) - Date.now() >= 60 * 60 * 1000)
+        return 'H 小時 m 分 s 秒'
+    else if (timeCnt(time) - Date.now() >= 60 * 1000) return 'm 分 s 秒'
+    else return 's 秒'
 }
 
 const voteFail = ref(false)
