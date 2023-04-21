@@ -183,7 +183,7 @@ definePageMeta({
 })
 
 const { data: VS, refresh: VSRefresh } = await useLazyFetch('/api/getVS')
-const { data: Group, refresh: GroupRefresh } = await useFetch(
+const { data: Group, refresh: GroupRefresh } = await useLazyFetch(
     '/api/getGroup'
 )
 

@@ -1,6 +1,9 @@
 <template>
-    <div v-if="!VSPending && VS !== null" class="flex justify-center">
-        <ElCard class="w-full md:w-5/6 xl:w-2/3 2xl:w-1/2">
+    <div class="flex justify-center">
+        <ElCard
+            v-if="!VSPending && VS !== null"
+            class="w-full md:w-5/6 xl:w-2/3 2xl:w-1/2"
+        >
             <div class="flex justify-around">
                 <div class="flex items-center text-center">
                     <h1 class="text-2xl font-bold">{{ VS.name }}</h1>
@@ -87,11 +90,19 @@
                 </ElSpace>
             </div>
         </ElCard>
+        <ElSkeleton v-else class="w-full justify-center" animated>
+            <template #template>
+                <ElSkeletonItem
+                    variant="rect"
+                    class="!h-[100vh] !w-full md:!w-5/6 xl:!w-2/3 2xl:!w-1/2"
+                />
+            </template>
+        </ElSkeleton>
     </div>
 </template>
 
 <script lang="ts" setup>
-import type { VoteSession, Candidate, Ballot } from '.prisma/client'
+import type { VoteSession, Candidate } from '.prisma/client'
 import type { AsyncDataExecuteOptions } from 'nuxt/dist/app/composables/asyncData'
 
 const { id } = useRoute().params as { id: string }
@@ -100,7 +111,7 @@ const {
     data: VS,
     pending: VSPending,
     refresh: VSRefresh,
-} = (await useFetch('/api/getResult?' + new URLSearchParams({ id }), {
+} = (await useLazyFetch('/api/getResult?' + new URLSearchParams({ id }), {
     key: id,
 })) as unknown as {
     data: globalThis.Ref<

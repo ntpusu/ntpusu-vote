@@ -300,7 +300,7 @@ const {
     data: VS,
     pending: VSPending,
     refresh: VSRefresh,
-} = await useFetch('/api/voterSession')
+} = await useLazyFetch('/api/voterSession')
 
 const viewDate = (time: string | number | Date) => {
     return new Date(time).toLocaleString('zh-TW', {
