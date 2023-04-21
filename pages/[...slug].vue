@@ -18,20 +18,17 @@ const event = useRequestEvent()
 setResponseStatus(event, 404)
 
 const countdown = ref(10)
-const timer = async () => {
+const timer = () => {
     setTimeout(async () => {
         countdown.value -= 0.1
 
-        if (countdown.value > 0.1) {
-            await timer()
-        } else {
-            await useRouter().push('/')
-        }
+        if (countdown.value > 0.1) timer()
+        else await useRouter().push('/')
     }, 100)
 }
 
 onMounted(async () => {
     if (useRoute().path != '/404') await useRouter().push('/404')
-    await timer()
+    else timer()
 })
 </script>
