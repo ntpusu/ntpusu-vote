@@ -13,7 +13,7 @@
         >
             <template #header>
                 <div class="flex items-center justify-between">
-                    <div class="text-lg font-bold sm:text-xl">
+                    <div class="cursor-default text-lg font-bold sm:text-xl">
                         {{ VSitem.name }}
                     </div>
                     <div
@@ -48,9 +48,9 @@
                                     >
                                         已開始
                                     </span>
-                                    <span v-else class="m-auto"> 已結束 </span>
+                                    <span v-else class="m-auto">已結束</span>
                                 </template>
-                                <ElTag round effect="plain">
+                                <ElTag round effect="plain" class="cursor-help">
                                     開始: {{ viewDate(VSitem.startTime) }}
                                 </ElTag>
                             </ElTooltip>
@@ -87,7 +87,7 @@
                                     </ElCountdown>
                                     <span v-else class="m-auto"> 已結束 </span>
                                 </template>
-                                <ElTag round effect="plain">
+                                <ElTag round effect="plain" class="cursor-help">
                                     結束: {{ viewDate(VSitem.endTime) }}
                                 </ElTag>
                             </ElTooltip>
@@ -96,7 +96,9 @@
                 </div>
             </template>
             <div>
-                <h2 class="pb-5 text-center text-base font-bold sm:text-lg">
+                <h2
+                    class="cursor-default pb-5 text-center text-base font-bold sm:text-lg"
+                >
                     候選人名單
                 </h2>
                 <ElSpace
@@ -111,7 +113,13 @@
                         :key="itemIndex"
                         class="flex text-sm sm:text-base"
                     >
-                        <ElTag type="success" effect="dark" size="small" round>
+                        <ElTag
+                            type="success"
+                            effect="dark"
+                            size="small"
+                            round
+                            class="cursor-default"
+                        >
                             {{ itemIndex + 1 }}
                         </ElTag>
                         <div class="ml-2 mr-5">
@@ -270,9 +278,11 @@
             </template>
             <div class="px-5 text-lg">
                 可能原因：<br />
-                1. 網路連線斷了<br />
-                2. 未登入<br />
-                3. 未在投票時間內投票
+                1. 未登入<br />
+                2. 網路連線斷了<br />
+                3. 未在投票時間內投票<br />
+                4. 操作過於頻繁<br />
+                若有疑問請聯絡選委會
             </div>
         </ElDialog>
     </ClientOnly>
@@ -290,7 +300,7 @@ const {
     data: VS,
     pending: VSPending,
     refresh: VSRefresh,
-} = await useLazyFetch('/api/voterSession')
+} = await useFetch('/api/voterSession')
 
 const viewDate = (time: string | number | Date) => {
     return new Date(time).toLocaleString('zh-TW', {
@@ -377,10 +387,10 @@ const voteConfirm = async (VS: {
                 }),
             })
                 .then(async (res) => {
-                    if (res.vote!) {
+                    if (res.vote) {
                         voteToken.value[VS.id] = res.token
                         await ElMessageBox.alert(
-                            '憑證：' + res.token!,
+                            '憑證：' + res.token,
                             '投票成功',
                             {
                                 confirmButtonText: '複製憑證',
@@ -399,7 +409,7 @@ const voteConfirm = async (VS: {
                     } else {
                         voteToken.value[VS.id] = res.token
                         await ElMessageBox.alert(
-                            '憑證：' + res.token!,
+                            '憑證：' + res.token,
                             '不可重複投票',
                             {
                                 confirmButtonText: '複製憑證',
@@ -505,11 +515,11 @@ const seeResult = async (index: number) => {
     }
 
     document.body.style.overflowY = 'auto'
-    await useRouter().push('/vote/' + index)
     resultLoading.value[index] = false
+    await useRouter().push('/vote/' + index)
 }
 
-onMounted(async () => {
+onMounted(() => {
     setTimeout(async () => {
         if (VS.value === null) {
             await VSRefresh()
