@@ -14,7 +14,7 @@
                         unique-opened
                         mode="horizontal"
                         :ellipsis="false"
-                        :active-index="activeIndex"
+                        :active-index="curIndex"
                         @select="handleSelect"
                     >
                         <span
@@ -78,6 +78,24 @@
         <ElMain>
             <NuxtPage />
         </ElMain>
+        <ElFooter>
+            <ClientOnly>
+                <ElDrawer v-model="cookie" direction="btt" size="25%">
+                    <template #header>
+                        <span class="-my-3 text-sm sm:text-base md:text-lg">
+                            Cookie 使用聲明
+                        </span>
+                    </template>
+                    <div class="-my-5 flex justify-center">
+                        <span
+                            class="w-11/12 whitespace-pre-wrap break-all text-xs sm:text-sm md:text-base"
+                        >
+                            我們使用cookie來記錄您的登入狀態，用以提升網站的安全性和增進使用者的使用體驗。我們不會與第三方共享cookie數據，也不會將cookie用於廣告目的。您可以在您的瀏覽器設置中管理和刪除cookie。若想了解更多關於我們的隱私政策，請查看我們的隱私政策頁面。
+                        </span>
+                    </div>
+                </ElDrawer>
+            </ClientOnly>
+        </ElFooter>
     </ElContainer>
     <ElBacktop />
 </template>
@@ -135,22 +153,14 @@ useHead({
     ],
 })
 
-const curIndex = ref('/')
-const admin = ref(false)
+const curIndex = ref(useRoute().path)
+const cookie = ref(true)
+
+const { data: admin } = useFetch('/api/checkAdmin')
 
 const { status, signOut } = useAuth()
-
-const activeIndex = () => curIndex.value
 
 const handleSelect = (key: string) => {
     curIndex.value = key
 }
-
-onMounted(() => {
-    curIndex.value = useRoute().path
-
-    $fetch('/api/checkAdmin').then((res) => {
-        admin.value = res
-    })
-})
 </script>
