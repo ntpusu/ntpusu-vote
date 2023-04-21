@@ -1,12 +1,12 @@
 <template>
     <ElSpace
-        v-if="!VSPending && VS !== null"
+        v-if="!VSPending && data !== null"
         wrap
         alignment="center"
         class="w-full justify-center"
     >
         <ElCard
-            v-for="VSitem in VS"
+            v-for="VSitem in data.VS"
             :key="VSitem.id"
             shadow="hover"
             class="w-[84vw] !rounded-xl sm:w-[60vw] md:w-[42vw] lg:w-[32vw] xl:w-[28vw]"
@@ -148,7 +148,7 @@
                         @open="startLoading(VSitem.id)"
                         @close="endLoading(VSitem.id)"
                     >
-                        <template #title>
+                        <template #header>
                             <div class="flex">
                                 <div
                                     class="m-auto flex text-lg font-bold sm:text-xl md:text-2xl"
@@ -230,24 +230,34 @@
                     <ElButton
                         type="primary"
                         class="w-fit !rounded-md"
-                        :disabled="voteToken[VSitem.id] !== undefined"
+                        :disabled="data.tokens[VSitem.id] !== undefined"
                         @click="voteVisible[VSitem.id] = true"
                         plain
                         :loading="voteLoading[VSitem.id]"
                     >
-                        <span class="font-bold">
-                            {{ voteToken[VSitem.id] !== undefined ? '已' : '' }}
-                            投 票
+                        <span
+                            v-if="data.tokens[VSitem.id] === undefined"
+                            class="font-bold"
+                        >
+                            已 投 票
                         </span>
+                        <span v-else class="font-bold">投 票</span>
                     </ElButton>
                     <ElButton
                         type="info"
                         class="w-fit !rounded-md"
+                        :disabled="data.tokens[VSitem.id] === undefined"
                         @click="seeToken(VSitem.id)"
                         plain
                         :loading="tokenLoading[VSitem.id]"
                     >
-                        <span class="font-bold">查 看 憑 證</span>
+                        <span
+                            v-if="data.tokens[VSitem.id] !== undefined"
+                            class="font-bold"
+                        >
+                            查 看 憑 證
+                        </span>
+                        <span v-else class="font-bold">尚 未 投 票</span>
                     </ElButton>
                 </div>
             </div>
@@ -273,7 +283,7 @@
             @opened="startLoading(null)"
             @closed="endLoading(null)"
         >
-            <template #title>
+            <template #header>
                 <div class="text-2xl font-bold text-red-500">投票失敗</div>
             </template>
             <div class="px-5 text-lg">
@@ -289,7 +299,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { Ballot } from '@prisma/client'
 import { rand } from '@vueuse/shared'
 
 definePageMeta({
@@ -297,13 +306,13 @@ definePageMeta({
 })
 
 const {
-    data: VS,
+    data,
     pending: VSPending,
     refresh: VSRefresh,
 } = await useLazyFetch('/api/voterSession')
 
 const viewDate = (time: string | number | Date) => {
-    return new Date(time).toLocaleString('zh-TW', {
+    return new Date(time).toLocaleString(undefined, {
         hourCycle: 'h11',
         month: 'numeric',
         day: 'numeric',
@@ -329,7 +338,6 @@ const voteFail = ref(false)
 
 const voteVisible: Ref<boolean[]> = ref([])
 const voteData: Ref<number[]> = ref([])
-const voteToken: Ref<string[]> = ref([])
 const voteLoading: Ref<boolean[]> = ref([])
 const tokenLoading: Ref<boolean[]> = ref([])
 const resultLoading: Ref<boolean[]> = ref([])
@@ -367,7 +375,7 @@ const voteConfirm = async (VS: {
 
     const candidate = VS.candidates.find(
         (item: { id: number }) => item.id === voteData.value[VS.id]
-    )?.name
+    )!.name
 
     await ElMessageBox.confirm(
         '投出選票後無法刪除或變更',
@@ -388,7 +396,6 @@ const voteConfirm = async (VS: {
             })
                 .then(async (res) => {
                     if (res.vote) {
-                        voteToken.value[VS.id] = res.token
                         await ElMessageBox.alert(
                             '憑證：' + res.token,
                             '投票成功',
@@ -407,7 +414,6 @@ const voteConfirm = async (VS: {
                             })
                             .catch(() => {})
                     } else {
-                        voteToken.value[VS.id] = res.token
                         await ElMessageBox.alert(
                             '憑證：' + res.token,
                             '不可重複投票',
@@ -427,9 +433,10 @@ const voteConfirm = async (VS: {
                             .catch(() => {})
                     }
                 })
-                .catch(async () => {
+                .catch(() => {
                     voteFail.value = true
-
+                })
+                .finally(async () => {
                     await refreshNuxtData()
                 })
         })
@@ -440,90 +447,68 @@ const voteConfirm = async (VS: {
 
 const seeToken = async (index: number) => {
     tokenLoading.value[index] = true
-    document.body.style.overflowY = 'hidden'
 
-    if (!voteToken.value[index]) {
-        const res = (await $fetch(
-            '/api/getToken?' + new URLSearchParams({ id: index.toString() })
-        )) as unknown as Ballot | null
-
-        if (!res) {
-            await ElMessageBox.alert('無投票憑證', '(尚)未投票', {
-                showClose: false,
-                confirmButtonText: '確 定',
-                type: 'error',
-            }).catch(() => {})
-        } else {
-            voteToken.value[index] = res.token
-        }
+    if (!data.value) {
+        await refreshNuxtData()
+        return
     }
 
-    if (voteToken.value[index]) {
-        await ElMessageBox.alert(voteToken.value[index], '投票憑證', {
-            confirmButtonText: '複製憑證',
-            type: 'success',
-            roundButton: true,
-        })
-            .then(async () => {
-                await navigator.clipboard.writeText(voteToken.value[index])
-                ElMessage({
-                    type: 'success',
-                    message: '已複製',
-                })
+    await ElMessageBox.alert(data.value!.tokens[index], '投票憑證', {
+        confirmButtonText: '複製憑證',
+        type: 'success',
+        roundButton: true,
+    })
+        .then(async () => {
+            await navigator.clipboard.writeText(data.value!.tokens[index])
+            ElMessage({
+                type: 'success',
+                message: '已複製',
             })
-            .catch(() => {})
-    }
+        })
+        .catch(() => {})
 
     tokenLoading.value[index] = false
-    document.body.style.overflowY = 'auto'
 }
 
 const seeResult = async (index: number) => {
     resultLoading.value[index] = true
-    document.body.style.overflowY = 'hidden'
 
-    if (!voteToken.value[index]) {
-        const res = (await $fetch(
-            '/api/getToken?' + new URLSearchParams({ id: index.toString() })
-        )) as unknown as Ballot | null
-
-        if (!res) {
-            await ElMessageBox.alert('無投票憑證', '未投票', {
-                showClose: false,
-                confirmButtonText: '確 定',
-                type: 'error',
-            }).catch(() => {})
-        } else {
-            voteToken.value[index] = res.token
-        }
+    if (!data.value) {
+        await refreshNuxtData()
+        return
     }
 
-    if (voteToken.value[index]) {
-        await ElMessageBox.alert(voteToken.value[index], '投票憑證', {
+    if (data.value.tokens[index]) {
+        await ElMessageBox.alert(data.value.tokens[index], '投票憑證', {
             confirmButtonText: '複製憑證',
             type: 'success',
             roundButton: true,
         })
             .then(async () => {
-                await navigator.clipboard.writeText(voteToken.value[index])
+                await navigator.clipboard.writeText(data.value!.tokens[index])
                 ElMessage({
                     type: 'success',
                     message: '已複製',
                 })
             })
             .catch(() => {})
+    } else {
+        await ElMessageBox.alert('無投票憑證', '未投票', {
+            showClose: false,
+            confirmButtonText: '確 定',
+            type: 'error',
+        }).catch(() => {})
     }
 
-    document.body.style.overflowY = 'auto'
     resultLoading.value[index] = false
     await useRouter().push('/vote/' + index)
 }
 
-onMounted(() => {
-    setTimeout(async () => {
-        if (VS.value === null) {
-            await VSRefresh()
-        }
-    }, 250)
-})
+// onMounted(() => {
+//     setTimeout(async () => {
+//         if (data.value === null) {
+//             await VSRefresh()
+//         }
+//     }, 250)
+// })
 </script>

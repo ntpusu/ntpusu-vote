@@ -1,5 +1,5 @@
 import prisma from '~/lib/prisma'
-import SHA256 from 'crypto-js/sha256.js'
+import HS256 from 'crypto-js/hmac-sha256'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
@@ -98,7 +98,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const token = SHA256(studentId + voteSession.name + process.env.AUTH_SECRET).toString()
+    const token = HS256(studentId.toString() + voteSession.id.toString() + voteSession.name, process.env.AUTH_SECRET as string).toString()
 
     try {
         await prisma.ballot.create({
