@@ -67,12 +67,14 @@ const search = async () => {
         return
     }
 
-    data.value = await $fetch('/api/getToken', {
-        method: 'POST',
-        body: JSON.stringify({
-            token: input.value,
-        }),
-    })
+    data.value = (
+        await useFetch('/api/getToken', {
+            method: 'POST',
+            body: JSON.stringify({
+                token: input.value,
+            }),
+        })
+    ).data.value!
 
     show.value = true
 }

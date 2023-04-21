@@ -156,7 +156,7 @@ useHead({
 const curIndex = ref(useRoute().path)
 const cookie = ref(true)
 
-const { data: admin } = useFetch('/api/checkAdmin')
+const { data: admin } = useLazyFetch('/api/checkAdmin')
 
 const { status, signOut } = useAuth()
 

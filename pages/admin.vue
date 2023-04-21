@@ -179,13 +179,11 @@ import type { FormInstance, FormRules } from 'element-plus'
 
 definePageMeta({
     middleware: ['admin'],
-    title: '投票管理',
+    title: '管理',
 })
 
 const { data: VS, refresh: VSRefresh } = await useLazyFetch('/api/getVS')
-const { data: Group, refresh: GroupRefresh } = await useLazyFetch(
-    '/api/getGroup'
-)
+const { data: Group } = await useLazyFetch('/api/getGroup')
 
 const showTime = ref(false)
 const showOption = ref(true)
@@ -245,7 +243,7 @@ const submitForm = async (formRef: FormInstance | undefined) => {
                 candidates: candidates.map((candidate) => candidate.name),
             }
 
-            await $fetch('/api/addVS', {
+            await useFetch('/api/addVS', {
                 method: 'POST',
                 body: JSON.stringify(data),
             })
@@ -290,15 +288,10 @@ const tableData = () => {
 }
 
 const handleDelete = async (id: number) => {
-    await $fetch(
-        '/api/delVS?' +
-            new URLSearchParams({
-                id: id.toString(),
-            }),
-        {
-            method: 'DELETE',
-        }
-    )
+    await useFetch('/api/delVS', {
+        method: 'DELETE',
+        query: { id },
+    })
         .then(async () => {
             ElMessage.success('刪除成功')
             await VSRefresh()
@@ -307,26 +300,4 @@ const handleDelete = async (id: number) => {
             ElMessage.error('刪除失敗')
         })
 }
-
-onMounted(async () => {
-    const task = []
-
-    task.push(
-        setTimeout(async () => {
-            if (VS.value === null) {
-                await VSRefresh()
-            }
-        }, 250)
-    )
-
-    task.push(
-        setTimeout(async () => {
-            if (Group.value === null) {
-                await GroupRefresh()
-            }
-        }, 250)
-    )
-
-    await Promise.all(task)
-})
 </script>

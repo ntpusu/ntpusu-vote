@@ -44,8 +44,9 @@ const addId = ref('')
 const delId = ref('')
 
 const addAdmin = async () => {
-    await $fetch('/api/addAdmin?' + new URLSearchParams({ id: addId.value }), {
+    await useFetch('/api/addAdmin', {
         method: 'PUT',
+        query: { id: addId.value },
     })
         .then(async () => {
             ElMessage.success('新增成功')
@@ -60,8 +61,9 @@ const addAdmin = async () => {
 }
 
 const delAdmin = async () => {
-    await $fetch('/api/delAdmin?' + new URLSearchParams({ id: delId.value }), {
+    await useFetch('/api/delAdmin', {
         method: 'DELETE',
+        query: { id: delId.value },
     })
         .then(async () => {
             ElMessage.success('刪除成功')

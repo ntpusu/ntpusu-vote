@@ -20,7 +20,10 @@
                         class="flex flex-col justify-end align-middle text-xs sm:text-sm"
                     >
                         <ClientOnly>
-                            <ElTooltip placement="right">
+                            <ElTooltip
+                                placement="right"
+                                :disabled="Date.now() > timeCnt(VSitem.endTime)"
+                            >
                                 <template #content>
                                     <ElCountdown
                                         v-if="
@@ -39,37 +42,35 @@
                                             </span>
                                         </template>
                                     </ElCountdown>
-                                    <span
-                                        v-else-if="
-                                            Date.now() <=
-                                            timeCnt(VSitem.endTime)
-                                        "
-                                        class="m-auto"
-                                    >
-                                        已開始
-                                    </span>
-                                    <span v-else class="m-auto">已結束</span>
+                                    <span v-else class="m-auto"> 已開始 </span>
                                 </template>
-                                <ElTag round effect="plain" class="cursor-help">
+                                <ElTag
+                                    round
+                                    effect="plain"
+                                    :class="{
+                                        'cursor-help':
+                                            Date.now() <=
+                                            timeCnt(VSitem.endTime),
+                                        'cursor-default':
+                                            Date.now() >
+                                            timeCnt(VSitem.endTime),
+                                    }"
+                                >
                                     開始: {{ viewDate(VSitem.startTime) }}
                                 </ElTag>
                             </ElTooltip>
                         </ClientOnly>
                         <div class="h-1 w-full" />
                         <ClientOnly>
-                            <ElTooltip placement="right">
+                            <ElTooltip
+                                placement="right"
+                                :disabled="
+                                    Date.now() < timeCnt(VSitem.startTime)
+                                "
+                            >
                                 <template #content>
-                                    <span
-                                        v-if="
-                                            Date.now() <
-                                            timeCnt(VSitem.startTime)
-                                        "
-                                        class="m-auto"
-                                    >
-                                        尚未開始
-                                    </span>
                                     <ElCountdown
-                                        v-else-if="
+                                        v-if="
                                             Date.now() <=
                                             timeCnt(VSitem.endTime)
                                         "
@@ -85,9 +86,20 @@
                                             </span>
                                         </template>
                                     </ElCountdown>
-                                    <span v-else class="m-auto"> 已結束 </span>
+                                    <span v-else class="m-auto">已結束</span>
                                 </template>
-                                <ElTag round effect="plain" class="cursor-help">
+                                <ElTag
+                                    round
+                                    effect="plain"
+                                    :class="{
+                                        'cursor-help':
+                                            Date.now() >=
+                                            timeCnt(VSitem.startTime),
+                                        'cursor-default':
+                                            Date.now() <
+                                            timeCnt(VSitem.startTime),
+                                    }"
+                                >
                                     結束: {{ viewDate(VSitem.endTime) }}
                                 </ElTag>
                             </ElTooltip>
@@ -387,17 +399,17 @@ const voteConfirm = async (VS: {
         }
     )
         .then(async () => {
-            await $fetch('/api/vote', {
+            await useFetch('/api/vote', {
                 method: 'POST',
                 body: JSON.stringify({
                     VSId: VS.id,
                     candidateId: voteData.value[VS.id],
                 }),
             })
-                .then(async (res) => {
-                    if (res.vote) {
+                .then(async ({ data: res }) => {
+                    if (res.value!.vote) {
                         await ElMessageBox.alert(
-                            '憑證：' + res.token,
+                            '憑證：' + res.value!.vote,
                             '投票成功',
                             {
                                 confirmButtonText: '複製憑證',
@@ -406,7 +418,9 @@ const voteConfirm = async (VS: {
                             }
                         )
                             .then(async () => {
-                                await navigator.clipboard.writeText(res.token)
+                                await navigator.clipboard.writeText(
+                                    res.value!.token
+                                )
                                 ElMessage({
                                     type: 'success',
                                     message: '已複製',
@@ -415,7 +429,7 @@ const voteConfirm = async (VS: {
                             .catch(() => {})
                     } else {
                         await ElMessageBox.alert(
-                            '憑證：' + res.token,
+                            '憑證：' + res.value!.token,
                             '不可重複投票',
                             {
                                 confirmButtonText: '複製憑證',
@@ -424,7 +438,9 @@ const voteConfirm = async (VS: {
                             }
                         )
                             .then(async () => {
-                                await navigator.clipboard.writeText(res.token)
+                                await navigator.clipboard.writeText(
+                                    res.value!.token
+                                )
                                 ElMessage({
                                     type: 'success',
                                     message: '已複製',
@@ -437,7 +453,7 @@ const voteConfirm = async (VS: {
                     voteFail.value = true
                 })
                 .finally(async () => {
-                    await refreshNuxtData()
+                    await VSRefresh()
                 })
         })
         .catch(() => {})
@@ -453,7 +469,7 @@ const seeToken = async (index: number) => {
         return
     }
 
-    await ElMessageBox.alert(data.value!.tokens[index], '投票憑證', {
+    await ElMessageBox.alert(data.value.tokens[index], '投票憑證', {
         confirmButtonText: '複製憑證',
         type: 'success',
         roundButton: true,
@@ -503,12 +519,4 @@ const seeResult = async (index: number) => {
     resultLoading.value[index] = false
     await useRouter().push('/vote/' + index)
 }
-
-// onMounted(() => {
-//     setTimeout(async () => {
-//         if (data.value === null) {
-//             await VSRefresh()
-//         }
-//     }, 250)
-// })
 </script>

@@ -54,7 +54,7 @@
                             value="#最高票"
                         >
                             <ElStatistic
-                                class="text-center"
+                                class="m-1 text-center"
                                 title="票數"
                                 :value="candidate._count.ballots"
                             >
@@ -90,7 +90,7 @@
                 </ElSpace>
             </div>
         </ElCard>
-        <ElSkeleton v-else class="w-full justify-center" animated>
+        <ElSkeleton v-else class="flex justify-center" animated>
             <template #template>
                 <ElSkeletonItem
                     variant="rect"
@@ -102,37 +102,18 @@
 </template>
 
 <script lang="ts" setup>
-import type { VoteSession, Candidate } from '.prisma/client'
-import type { AsyncDataExecuteOptions } from 'nuxt/dist/app/composables/asyncData'
-
 const { id } = useRoute().params as { id: string }
 
-const {
-    data: VS,
-    pending: VSPending,
-    refresh: VSRefresh,
-} = (await useLazyFetch('/api/getResult?' + new URLSearchParams({ id }), {
+const { data: VS, pending: VSPending } = await useLazyFetch('/api/getResult', {
     key: id,
-})) as unknown as {
-    data: globalThis.Ref<
-        | (VoteSession & {
-              candidates: (Candidate & {
-                  _count: {
-                      ballots: number
-                  }
-              })[]
-          })
-        | null
-    >
-    pending: boolean
-    refresh: (opts?: AsyncDataExecuteOptions | undefined) => Promise<void>
-}
-
-definePageMeta({
-    title: '投票結果',
+    query: { id },
 })
 
-const viewDate = (time: Date) => {
+definePageMeta({
+    title: '結果',
+})
+
+const viewDate = (time: string | number | Date) => {
     return new Date(time).toLocaleString()
 }
 
@@ -151,18 +132,4 @@ const winnerCnt = () => {
         return acc > cur._count.ballots ? acc : cur._count.ballots
     }, 0)
 }
-
-onMounted(async () => {
-    setTimeout(async () => {
-        if (VS.value == null) {
-            await VSRefresh()
-        }
-    }, 250)
-
-    setTimeout(async () => {
-        if (VS.value == null) {
-            await useRouter().push('/404')
-        }
-    }, 1000)
-})
 </script>
