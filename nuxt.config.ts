@@ -40,7 +40,7 @@ export default defineNuxtConfig({
     security: {
         rateLimiter: {
             tokensPerInterval: 10,
-            interval: 5 * 60 * 1000,
+            interval: 'minute',
             fireImmediately: true,
         },
         xssValidator: {
