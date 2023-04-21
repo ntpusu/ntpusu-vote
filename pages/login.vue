@@ -23,10 +23,10 @@
                         class="m-auto my-2 max-w-[240px] cursor-pointer"
                         @click="signIn('azure-ad', { callbackUrl: '/vote' })"
                     />
-                    <span class="m-auto pt-5 text-xs text-gray-500">
+                    <span class="m-auto pt-5 text-sm text-gray-500">
                         請使用學校 Google 或 Microsoft 帳號進行登錄
                     </span>
-                    <span class="m-auto text-sm text-gray-500">
+                    <span class="m-auto text-xs text-gray-500">
                         (s+學號@gm.ntpu.edu.tw 或 s+學號@ms.ntpu.edu.tw)
                     </span>
                 </div>
