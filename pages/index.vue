@@ -22,14 +22,14 @@
                     <div class="min-w-max sm:text-base">
                         {{
                             activity.end
-                                ? activity.start.toLocaleString('zh-TW', {
+                                ? activity.start.toLocaleString(undefined, {
                                       dateStyle: 'long',
                                   }) +
                                   '〜' +
-                                  activity.end.toLocaleString('zh-TW', {
+                                  activity.end.toLocaleString(undefined, {
                                       dateStyle: 'long',
                                   })
-                                : activity.start.toLocaleString('zh-TW', {
+                                : activity.start.toLocaleString(undefined, {
                                       dateStyle: 'long',
                                   })
                         }}
