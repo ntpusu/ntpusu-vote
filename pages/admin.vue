@@ -183,7 +183,7 @@ definePageMeta({
 })
 
 const { data: VS, refresh: VSRefresh } = await useLazyFetch('/api/getVS')
-const { data: Group, refresh: GroupRefresh } = await useLazyFetch(
+const { data: Group, refresh: GroupRefresh } = await useFetch(
     '/api/getGroup'
 )
 
@@ -245,23 +245,23 @@ const submitForm = async (formRef: FormInstance | undefined) => {
                 candidates: candidates.map((candidate) => candidate.name),
             }
 
-            const res = await $fetch('/api/addVS', {
+            await $fetch('/api/addVS', {
                 method: 'POST',
                 body: JSON.stringify(data),
             })
-
-            formRef.resetFields()
-            while (addVote.candidates.length > 2) {
-                addVote.candidates.pop()
-            }
-
-            if (res) {
-                ElMessage('創建成功')
-                await VSRefresh()
-                return
-            }
-
-            ElMessage('創建失敗')
+                .then(async () => {
+                    ElMessage.success('創建成功')
+                    await VSRefresh()
+                })
+                .catch(() => {
+                    ElMessage.error('創建失敗')
+                })
+                .finally(() => {
+                    formRef.resetFields()
+                    while (addVote.candidates.length > 2) {
+                        addVote.candidates.pop()
+                    }
+                })
         }
     })
 }
@@ -290,7 +290,7 @@ const tableData = () => {
 }
 
 const handleDelete = async (id: number) => {
-    const res = await $fetch(
+    await $fetch(
         '/api/delVS?' +
             new URLSearchParams({
                 id: id.toString(),
@@ -299,14 +299,13 @@ const handleDelete = async (id: number) => {
             method: 'DELETE',
         }
     )
-
-    if (!res) {
-        ElMessage('刪除失敗')
-        return
-    }
-
-    ElMessage('刪除成功')
-    await VSRefresh()
+        .then(async () => {
+            ElMessage.success('刪除成功')
+            await VSRefresh()
+        })
+        .catch(() => {
+            ElMessage.error('刪除失敗')
+        })
 }
 
 onMounted(async () => {
@@ -317,7 +316,7 @@ onMounted(async () => {
             if (VS.value === null) {
                 await VSRefresh()
             }
-        }, 500)
+        }, 250)
     )
 
     task.push(
@@ -325,7 +324,7 @@ onMounted(async () => {
             if (Group.value === null) {
                 await GroupRefresh()
             }
-        }, 500)
+        }, 250)
     )
 
     await Promise.all(task)

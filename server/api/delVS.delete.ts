@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (studentId != process.env.ADMIN) {
+    if (studentId !== process.env.ADMIN) {
         const VS = await prisma.voteSession.findUnique({
             where: { id: parseInt(id) },
             select: {

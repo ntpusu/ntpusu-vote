@@ -12,10 +12,10 @@ export default defineEventHandler(async (event) => {
     }
 
     const email = session.user.email
-    const studentId = email.substring(1, 10)
+    const studentId = parseInt(email.substring(1, 10))
 
     const voter = await prisma.voter.findUnique({
-        where: { id: parseInt(studentId) },
+        where: { id: studentId },
         select: null,
     })
 
@@ -70,7 +70,7 @@ export default defineEventHandler(async (event) => {
     const VIG = await prisma.voterInGroup.findUnique({
         where: {
             voterId_groupId: {
-                voterId: parseInt(studentId),
+                voterId: studentId,
                 groupId: voteSession.groupId
             }
         },

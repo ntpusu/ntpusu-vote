@@ -38,7 +38,7 @@ const {
     data: admin,
     pending: adminPending,
     refresh: adminRefresh,
-} = useLazyFetch('/api/getAdmin')
+} = await useLazyFetch('/api/getAdmin')
 
 const addId = ref('')
 const delId = ref('')
@@ -47,17 +47,31 @@ const addAdmin = async () => {
     await $fetch('/api/addAdmin?' + new URLSearchParams({ id: addId.value }), {
         method: 'PUT',
     })
-
-    addId.value = ''
-    await adminRefresh()
+        .then(async () => {
+            ElMessage.success('新增成功')
+            await adminRefresh()
+        })
+        .catch(() => {
+            ElMessage.error('新增失敗')
+        })
+        .finally(() => {
+            addId.value = ''
+        })
 }
 
 const delAdmin = async () => {
     await $fetch('/api/delAdmin?' + new URLSearchParams({ id: delId.value }), {
         method: 'DELETE',
     })
-
-    delId.value = ''
-    await adminRefresh()
+        .then(async () => {
+            ElMessage.success('刪除成功')
+            await adminRefresh()
+        })
+        .catch(() => {
+            ElMessage.error('刪除失敗')
+        })
+        .finally(() => {
+            delId.value = ''
+        })
 }
 </script>

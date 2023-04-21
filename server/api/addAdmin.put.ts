@@ -29,9 +29,12 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    return await prisma.admin.upsert({
+    await prisma.admin.upsert({
         where: { id: parseInt(id) },
         create: { id: parseInt(id) },
         update: {},
+        select: null,
     })
+
+    return {}
 })
