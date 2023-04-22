@@ -83,7 +83,6 @@
                 <ElDrawer
                     v-model="showCookie"
                     direction="btt"
-                    size="25%"
                     @close="cookie = 'true'"
                 >
                     <template #header>
@@ -95,7 +94,18 @@
                         <span
                             class="w-11/12 whitespace-pre-wrap break-all text-xs sm:text-sm md:text-base"
                         >
-                            我們使用cookie來記錄您的登入狀態，用以提升網站的安全性和增進使用者的使用體驗。我們不會與第三方共享cookie數據，也不會將cookie用於廣告目的。您可以在您的瀏覽器設置中管理和刪除cookie。若想了解更多關於我們的隱私政策，請查看我們的隱私政策頁面。
+                            國立臺北大學三峽校區學生會投票網站(下稱「投票網站」)使用cookie來記錄您的登入狀態及增進您的使用體驗。這些cookie僅限於投票網站使用，不會與第三方共享cookie數據，也不會將cookie用於廣告目的。這些cookie將在您訪問投票網站時存儲在您的設備上，並在一定時間後過期。您可以在您的瀏覽器設置中管理和刪除cookie。如果您選擇禁用cookie，將會無法使用投票網站的登入功能。若您對此使用聲明有任何疑問，請隨時
+                            <ElLink
+                                type="primary"
+                                href="https://www.facebook.com/NTPUSU"
+                                target="_blank"
+                            >
+                                <span
+                                    class="whitespace-pre-wrap break-all text-xs sm:text-sm md:text-base"
+                                    >聯繫我們</span
+                                >
+                            </ElLink>
+                            。
                         </span>
                     </div>
                 </ElDrawer>
