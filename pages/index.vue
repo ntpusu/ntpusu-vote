@@ -41,7 +41,7 @@
             type="danger"
             class="mx-auto my-3 w-1/6 min-w-fit"
             auto-insert-space
-            @click="useRouter().push('/vote')"
+            @click="useRouter().push('/vote/')"
         >
             <span class="font-bold">前 往 投 票 頁 面</span>
         </ElButton>

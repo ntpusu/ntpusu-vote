@@ -34,39 +34,39 @@
                         <ElMenuItem
                             v-if="status === 'authenticated'"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                            index="/vote"
-                            @click="useRouter().push('/vote')"
+                            index="/vote/"
+                            @click="useRouter().push('/vote/')"
                         >
                             投票
                         </ElMenuItem>
                         <ElMenuItem
                             v-if="admin"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                            index="/check"
-                            @click="useRouter().push('/check')"
+                            index="/check/"
+                            @click="useRouter().push('/check/')"
                         >
                             查詢
                         </ElMenuItem>
                         <ElMenuItem
                             v-if="admin"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                            index="/admin"
-                            @click="useRouter().push('/admin')"
+                            index="/admin/"
+                            @click="useRouter().push('/admin/')"
                         >
                             管理
                         </ElMenuItem>
                         <ElMenuItem
                             v-if="status === 'unauthenticated'"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                            index="/login"
-                            @click="useRouter().push('/login')"
+                            index="/login/"
+                            @click="useRouter().push('/login/')"
                         >
                             登入
                         </ElMenuItem>
                         <ElMenuItem
                             v-else-if="status === 'authenticated'"
                             class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                            index="/logout"
+                            index="/logout/"
                             @click="signOut({ callbackUrl: '/' })"
                         >
                             登出

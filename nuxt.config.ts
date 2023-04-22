@@ -1,8 +1,6 @@
 export default defineNuxtConfig({
     runtimeConfig: {
-        public: {
-            ADMIN: process.env.ADMIN,
-        },
+        ADMIN: process.env.ADMIN,
     },
     modules: [
         '@element-plus/nuxt',
@@ -39,13 +37,11 @@ export default defineNuxtConfig({
     },
     security: {
         rateLimiter: {
-            tokensPerInterval: 5,
+            tokensPerInterval: 10,
             interval: 60 * 1000,
             fireImmediately: true,
         },
-        xssValidator: {
-            stripIgnoreTag: true,
-        },
+        xssValidator: false,
     },
     routeRules: {
         '/api/auth/**': {
@@ -53,5 +49,5 @@ export default defineNuxtConfig({
                 rateLimiter: false,
             },
         },
-    }
+    },
 });

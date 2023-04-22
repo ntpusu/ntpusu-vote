@@ -28,7 +28,7 @@ const timer = () => {
 }
 
 onMounted(async () => {
-    if (useRoute().path != '/404') await useRouter().push('/404')
+    if (useRoute().path != '/404/') await useRouter().push('/404/')
     else timer()
 })
 </script>
