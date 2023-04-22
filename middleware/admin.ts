@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     const id = email.substring(1, 10)
-    const admin = await $fetch('/api/checkAdmin', {
+    const { data: admin } = await useFetch('/api/checkAdmin', {
         method: 'POST',
         body: JSON.stringify({ id })
     })
