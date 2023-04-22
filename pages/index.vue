@@ -1,51 +1,53 @@
 <template>
-    <div class="flex flex-col flex-wrap content-center">
-        <ElSteps direction="vertical" align-center space="12vh">
-            <ElStep
-                v-for="(activity, index) in activities"
-                :key="index"
-                :status="
-                    activity.start.getTime() > Date.now()
-                        ? 'wait'
-                        : activity.finish.getTime() > Date.now()
-                        ? 'finish'
-                        : 'success'
-                "
-                class="tracking-[2px]"
+    <ElScrollbar height="85vh" class="-my-1.5">
+        <div class="flex flex-col flex-wrap content-center">
+            <ElSteps direction="vertical" align-center space="12vh">
+                <ElStep
+                    v-for="(activity, index) in activities"
+                    :key="index"
+                    :status="
+                        activity.start.getTime() > Date.now()
+                            ? 'wait'
+                            : activity.finish.getTime() > Date.now()
+                            ? 'finish'
+                            : 'success'
+                    "
+                    class="tracking-[2px]"
+                >
+                    <template #title>
+                        <div class="font-bold sm:text-lg">
+                            {{ activity.content }}
+                        </div>
+                    </template>
+                    <template #description>
+                        <div class="min-w-max sm:text-base">
+                            {{
+                                activity.end
+                                    ? activity.start.toLocaleString(undefined, {
+                                          dateStyle: 'long',
+                                      }) +
+                                      '〜' +
+                                      activity.end.toLocaleString(undefined, {
+                                          dateStyle: 'long',
+                                      })
+                                    : activity.start.toLocaleString(undefined, {
+                                          dateStyle: 'long',
+                                      })
+                            }}
+                        </div>
+                    </template>
+                </ElStep>
+            </ElSteps>
+            <ElButton
+                type="danger"
+                class="mx-auto my-3 w-1/6 min-w-fit"
+                auto-insert-space
+                @click="useRouter().push('/vote/')"
             >
-                <template #title>
-                    <div class="font-bold sm:text-lg">
-                        {{ activity.content }}
-                    </div>
-                </template>
-                <template #description>
-                    <div class="min-w-max sm:text-base">
-                        {{
-                            activity.end
-                                ? activity.start.toLocaleString(undefined, {
-                                      dateStyle: 'long',
-                                  }) +
-                                  '〜' +
-                                  activity.end.toLocaleString(undefined, {
-                                      dateStyle: 'long',
-                                  })
-                                : activity.start.toLocaleString(undefined, {
-                                      dateStyle: 'long',
-                                  })
-                        }}
-                    </div>
-                </template>
-            </ElStep>
-        </ElSteps>
-        <ElButton
-            type="danger"
-            class="mx-auto my-3 w-1/6 min-w-fit"
-            auto-insert-space
-            @click="useRouter().push('/vote/')"
-        >
-            <span class="font-bold">前 往 投 票 頁 面</span>
-        </ElButton>
-    </div>
+                <span class="font-bold">前 往 投 票 頁 面</span>
+            </ElButton>
+        </div>
+    </ElScrollbar>
 </template>
 
 <script lang="ts" setup>

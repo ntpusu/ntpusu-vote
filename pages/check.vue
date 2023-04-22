@@ -27,9 +27,11 @@
                 class="min-w-fit !rounded-lg px-5"
             >
                 <div class="flex flex-col flex-wrap items-start justify-center">
-                    <h1 class="text-base">項目：{{ data.vote }}</h1>
-                    <h1 class="text-base">選擇：{{ data.candidate }}</h1>
-                    <h1 class="text-base">
+                    <h1 class="text-lg font-bold">項目：{{ data.vote }}</h1>
+                    <h1 class="text-lg font-bold">
+                        選擇：{{ data.candidate }}
+                    </h1>
+                    <h1 class="text-lg font-bold">
                         時間：{{ new Date(data.time).toLocaleString() }}
                     </h1>
                 </div>
