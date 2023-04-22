@@ -1,7 +1,4 @@
 export default defineNuxtConfig({
-    runtimeConfig: {
-        ADMIN: process.env.ADMIN,
-    },
     modules: [
         '@element-plus/nuxt',
         '@nuxtjs/tailwindcss',

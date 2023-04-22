@@ -12,8 +12,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     const id = email.substring(1, 10)
+    const { data: admin } = await useFetch('/api/checkSuperAdmin', {
+        method: 'POST',
+        body: JSON.stringify({ id })
+    })
 
-    if (id !== useRuntimeConfig().ADMIN) {
+    if (!admin) {
         return await navigateTo('/404')
     }
 })
