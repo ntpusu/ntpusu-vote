@@ -34,7 +34,7 @@
                                         :format="chooseFormat(VSitem.startTime)"
                                         :value="timeCnt(VSitem.startTime)"
                                         value-style="color: white;"
-                                        @finish="refreshNuxtData()"
+                                        @finish="VSRefresh()"
                                     >
                                         <template #title>
                                             <span class="!text-white">
@@ -78,7 +78,7 @@
                                         :format="chooseFormat(VSitem.endTime)"
                                         :value="timeCnt(VSitem.endTime)"
                                         value-style="color: white;"
-                                        @finish="refreshNuxtData()"
+                                        @finish="VSRefresh()"
                                     >
                                         <template #title>
                                             <span class="!text-white">
@@ -465,7 +465,7 @@ const seeToken = async (index: number) => {
     tokenLoading.value[index] = true
 
     if (!data.value) {
-        await refreshNuxtData()
+        await VSRefresh()
         return
     }
 
@@ -490,7 +490,7 @@ const seeResult = async (index: number) => {
     resultLoading.value[index] = true
 
     if (!data.value) {
-        await refreshNuxtData()
+        await VSRefresh()
         return
     }
 
