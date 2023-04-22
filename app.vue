@@ -78,7 +78,6 @@
         <ElMain>
             <NuxtPage />
         </ElMain>
-        {{ showCookie }}
         <ElFooter>
             <ClientOnly>
                 <ElDrawer
