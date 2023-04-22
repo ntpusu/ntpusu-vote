@@ -78,9 +78,15 @@
         <ElMain>
             <NuxtPage />
         </ElMain>
+        {{ showCookie }}
         <ElFooter>
             <ClientOnly>
-                <ElDrawer v-model="cookie" direction="btt" size="25%">
+                <ElDrawer
+                    v-model="showCookie"
+                    direction="btt"
+                    size="25%"
+                    @close="cookie = 'true'"
+                >
                     <template #header>
                         <span class="-my-3 text-sm sm:text-base md:text-lg">
                             Cookie 使用聲明
@@ -154,7 +160,9 @@ useHead({
 })
 
 const curIndex = ref(useRoute().path)
-const cookie = ref(true)
+
+const cookie = useCookie('cookie')
+const showCookie = ref(!cookie.value)
 
 const { data: admin } = useFetch('/api/checkAdmin')
 
