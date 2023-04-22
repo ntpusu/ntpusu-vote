@@ -1,7 +1,7 @@
 <template>
     <ElScrollbar height="85vh" class="-my-1.5">
         <div class="flex flex-col flex-wrap content-center">
-            <ElSteps direction="vertical" align-center space="12vh">
+            <ElSteps direction="vertical" align-center space="12vh" class="m-5">
                 <ElStep
                     v-for="(activity, index) in activities"
                     :key="index"
@@ -40,7 +40,7 @@
             </ElSteps>
             <ElButton
                 type="danger"
-                class="mx-auto -mt-4 mb-5 w-[10%] min-w-fit sm:mb-10 sm:mt-4"
+                class="mx-auto -mt-8 mb-5 w-[10%] min-w-fit sm:-mt-2 sm:mb-10"
                 auto-insert-space
                 @click="useRouter().push('/vote/')"
             >
