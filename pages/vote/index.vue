@@ -409,7 +409,7 @@ const voteConfirm = async (VS: {
                 .then(async ({ data: res }) => {
                     if (res.value!.vote) {
                         await ElMessageBox.alert(
-                            '憑證：' + res.value!.vote,
+                            '憑證：' + res.value!.token,
                             '投票成功',
                             {
                                 confirmButtonText: '複製憑證',
