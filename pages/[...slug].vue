@@ -28,12 +28,12 @@ const timer = () => {
         countdown.value -= 0.1
 
         if (countdown.value > 0.1) timer()
-        else await useRouter().push('/')
+        else if (useRoute().path == '/404') await useRouter().push('/')
     }, 100)
 }
 
 onMounted(async () => {
-    if (useRoute().path != '/404/') await useRouter().push('/404/')
+    if (useRoute().path != '/404') await useRouter().push('/404')
     else timer()
 })
 </script>

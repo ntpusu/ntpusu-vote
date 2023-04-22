@@ -141,11 +141,14 @@ const winnerCnt = () => {
     }, 0)
 }
 
-onMounted(() => {
+const checkData = () => {
     setTimeout(async () => {
-        if (!VS.value) {
-            await useRouter().push('/404')
-        }
-    }, 500)
+        if (VSPending.value) checkData()
+        else if (!VS.value) await useRouter().push('/404')
+    }, 100)
+}
+
+onMounted(() => {
+    checkData()
 })
 </script>
