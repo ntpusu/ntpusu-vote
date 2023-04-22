@@ -251,9 +251,9 @@
                             v-if="data.tokens[VSitem.id] === undefined"
                             class="font-bold"
                         >
-                            已 投 票
+                            投 票
                         </span>
-                        <span v-else class="font-bold">投 票</span>
+                        <span v-else class="font-bold">已 投 票</span>
                     </ElButton>
                     <ElButton
                         type="info"
