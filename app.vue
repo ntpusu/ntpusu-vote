@@ -78,7 +78,7 @@
         <ElMain>
             <NuxtPage />
         </ElMain>
-        <ElFooter>
+        <ElFooter v-if="showCookie">
             <ClientOnly>
                 <ElDrawer
                     v-model="showCookie"
