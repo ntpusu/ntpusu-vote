@@ -36,14 +36,36 @@ export default defineNuxtConfig({
         },
     },
     security: {
-        rateLimiter: {
-            tokensPerInterval: 10,
-            interval: 60 * 1000,
-            fireImmediately: true,
-        },
         xssValidator: false,
     },
     routeRules: {
+        '/api/voterSession': {
+            security: {
+                rateLimiter: {
+                    tokensPerInterval: 5,
+                    interval: 'minute',
+                    fireImmediately: true,
+                },
+            },
+        },
+        '/api/vote': {
+            security: {
+                rateLimiter: {
+                    tokensPerInterval: 3,
+                    interval: 'minute',
+                    fireImmediately: true,
+                },
+            },
+        },
+        '/api/getResult': {
+            security: {
+                rateLimiter: {
+                    tokensPerInterval: 3,
+                    interval: 'minute',
+                    fireImmediately: true,
+                },
+            },
+        },
         '/api/auth/**': {
             security: {
                 rateLimiter: false,
