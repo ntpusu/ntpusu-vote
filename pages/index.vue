@@ -40,7 +40,7 @@
             </ElSteps>
             <ElButton
                 type="danger"
-                class="mx-auto my-3 w-1/6 min-w-fit"
+                class="mx-auto -mt-4 mb-5 w-[10%] min-w-fit sm:mb-10 sm:mt-4"
                 auto-insert-space
                 @click="useRouter().push('/vote/')"
             >
