@@ -21,15 +21,11 @@
                 <div class="flex justify-around">
                     <div class="text-center">
                         <h1 class="text-lg">開始時間</h1>
-                        <ElText tag="b" size="large">{{
-                            viewDate(VS.startTime)
-                        }}</ElText>
+                        <ElText tag="b">{{ viewDate(VS.startTime) }}</ElText>
                     </div>
                     <div class="text-center">
                         <h1 class="text-lg">結束時間</h1>
-                        <ElText tag="b" size="large">{{
-                            viewDate(VS.endTime)
-                        }}</ElText>
+                        <ElText tag="b">{{ viewDate(VS.endTime) }}</ElText>
                     </div>
                 </div>
                 <ElDivider />
@@ -122,7 +118,13 @@ definePageMeta({
 })
 
 const viewDate = (time: string | number | Date) => {
-    return new Date(time).toLocaleString()
+    return new Date(time).toLocaleString(undefined, {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+    })
 }
 
 const voteCnt = () => {
