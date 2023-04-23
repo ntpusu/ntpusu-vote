@@ -35,11 +35,7 @@ export default defineNuxtConfig({
     security: {
         xssValidator: false,
         corsHandler: {
-            origin: '*',
             methods: ['GET', 'PUT', 'POST', 'DELETE'],
-            preflight: {
-                statusCode: 204
-            }
         },
     },
     routeRules: {

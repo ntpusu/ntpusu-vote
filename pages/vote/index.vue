@@ -538,4 +538,31 @@ const seeResult = async (index: number) => {
     resultLoading.value[index] = false
     await useRouter().push('/vote/' + index)
 }
+
+const checkData = () => {
+    setTimeout(async () => {
+        if (VSPending.value) checkData()
+        else if (!data.value && useRoute().path == '/vote') {
+            ElMessage({
+                type: 'error',
+                message: '操作過於頻繁，請稍後再試',
+            })
+
+            setTimeout(() => {
+                ElMessage({
+                    type: 'warning',
+                    message: '將自動返回首頁',
+                })
+            }, 1500)
+
+            setTimeout(async () => {
+                await useRouter().push('/')
+            }, 3000)
+        }
+    }, 100)
+}
+
+onMounted(() => {
+    checkData()
+})
 </script>
