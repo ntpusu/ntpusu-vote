@@ -34,13 +34,20 @@ export default defineNuxtConfig({
     },
     security: {
         xssValidator: false,
+        corsHandler: {
+            origin: '*',
+            methods: ['GET', 'PUT', 'POST', 'DELETE'],
+            preflight: {
+                statusCode: 204
+            }
+        },
     },
     routeRules: {
         '/api/voterSession': {
             security: {
                 rateLimiter: {
-                    tokensPerInterval: 5,
-                    interval: 'minute',
+                    tokensPerInterval: 2,
+                    interval: 10 * 1000,
                     fireImmediately: true,
                 },
             },
@@ -48,8 +55,8 @@ export default defineNuxtConfig({
         '/api/vote': {
             security: {
                 rateLimiter: {
-                    tokensPerInterval: 3,
-                    interval: 'minute',
+                    tokensPerInterval: 2,
+                    interval: 10 * 1000,
                     fireImmediately: true,
                 },
             },
@@ -57,8 +64,8 @@ export default defineNuxtConfig({
         '/api/getResult': {
             security: {
                 rateLimiter: {
-                    tokensPerInterval: 3,
-                    interval: 'minute',
+                    tokensPerInterval: 2,
+                    interval: 10 * 1000,
                     fireImmediately: true,
                 },
             },
