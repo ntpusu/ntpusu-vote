@@ -7,7 +7,7 @@
                     :key="index"
                     :status="
                         activity.start.getTime() > Date.now()
-                            ? 'wait'
+                            ? 'process'
                             : activity.finish.getTime() > Date.now()
                             ? 'finish'
                             : 'success'
