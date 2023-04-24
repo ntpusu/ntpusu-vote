@@ -12,7 +12,7 @@
                             ? 'finish'
                             : 'success'
                     "
-                    class="tracking-[2px]"
+                    class="tracking-[1.5px]"
                 >
                     <template #title>
                         <div class="font-bold sm:text-lg">
@@ -34,6 +34,7 @@
                                           dateStyle: 'long',
                                       })
                             }}
+                            {{ activity.maybe ? '(預定)' : '' }}
                         </div>
                     </template>
                 </ElStep>
@@ -62,57 +63,68 @@ const activities = [
         start: new Date(2023, 4, 1),
         end: new Date(2023, 4, 12),
         finish: new Date(2023, 4, 13),
+        maybe: false,
     },
     {
         content: '候選人名單公告',
         start: new Date(2023, 4, 15),
         finish: new Date(2023, 4, 16),
+        maybe: false,
     },
     {
         content: '選舉公報',
         start: new Date(2023, 4, 17),
         finish: new Date(2023, 4, 18),
+        maybe: false,
     },
     {
-        content: '候選人政見發表會(預定)',
+        content: '候選人政見發表會',
         start: new Date(2023, 4, 22),
         finish: new Date(2023, 4, 23),
+        maybe: true,
     },
     {
         content: '線上投票',
         start: new Date(2023, 4, 24),
         finish: new Date(2023, 4, 25),
+        maybe: false,
     },
     {
         content: '當選名單公告',
         start: new Date(2023, 4, 25),
         finish: new Date(2023, 4, 26),
+        maybe: false,
     },
     {
         content: '(補選)登記參選',
         start: new Date(2023, 4, 29),
         end: new Date(2023, 5, 5),
         finish: new Date(2023, 5, 6),
+        maybe: false,
     },
     {
         content: '(補選)候選人名單公告',
         start: new Date(2023, 5, 7),
         finish: new Date(2023, 5, 8),
+        maybe: false,
     },
     {
         content: '(補選)選舉公報',
         start: new Date(2023, 5, 8),
         finish: new Date(2023, 5, 9),
+        maybe: false,
     },
     {
         content: '(補選)線上投票',
         start: new Date(2023, 5, 15),
         finish: new Date(2023, 5, 16),
+        maybe: false,
     },
     {
         content: '(補選)當選名單公告',
         start: new Date(2023, 5, 16),
         finish: new Date(2023, 5, 17),
+        maybe: false,
     },
 ]
 </script>
