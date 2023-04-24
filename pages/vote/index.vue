@@ -1,5 +1,5 @@
 <template>
-    <ElScrollbar height="85vh" class="-my-1.5">
+    <ElScrollbar height="85vh" class="-my-2">
         <ElSpace
             v-if="!VSPending && data !== null"
             wrap

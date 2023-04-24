@@ -1,5 +1,5 @@
 <template>
-    <ElScrollbar height="85vh" class="-my-1.5">
+    <ElScrollbar height="85vh" class="-my-2">
         <div class="flex justify-center">
             <ElCard
                 v-if="!VSPending && VS !== null"
@@ -146,7 +146,8 @@ const winnerCnt = () => {
 const checkData = () => {
     setTimeout(async () => {
         if (VSPending.value) checkData()
-        else if (!VS.value && useRoute().path == '/vote/' + id) await useRouter().push('/404')
+        else if (!VS.value && useRoute().path == '/vote/' + id)
+            await useRouter().push('/404')
     }, 100)
 }
 

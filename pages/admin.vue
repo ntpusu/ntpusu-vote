@@ -1,5 +1,5 @@
 <template>
-    <ElScrollbar height="85vh" class="-my-1.5">
+    <ElScrollbar height="85vh" class="-my-2">
         <div
             class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 sm:w-7/12 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
         >

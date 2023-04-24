@@ -1,5 +1,5 @@
 <template>
-    <ElScrollbar height="85vh" class="-my-1.5">
+    <ElScrollbar height="85vh" class="-my-2">
         <div class="flex flex-col flex-wrap content-center">
             <ElSteps direction="vertical" align-center space="12vh" class="m-5">
                 <ElStep
