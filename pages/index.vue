@@ -65,23 +65,28 @@ const activities = [
     },
     {
         content: '候選人名單公告',
-        start: new Date(2023, 4, 16),
-        finish: new Date(2023, 4, 17),
+        start: new Date(2023, 4, 15),
+        finish: new Date(2023, 4, 16),
     },
     {
         content: '選舉公報',
-        start: new Date(2023, 4, 19),
-        finish: new Date(2023, 4, 20),
+        start: new Date(2023, 4, 17),
+        finish: new Date(2023, 4, 18),
+    },
+    {
+        content: '候選人政見發表會(預定)',
+        start: new Date(2023, 4, 22),
+        finish: new Date(2023, 4, 23),
     },
     {
         content: '線上投票',
-        start: new Date(2023, 4, 26),
-        finish: new Date(2023, 4, 27),
+        start: new Date(2023, 4, 24),
+        finish: new Date(2023, 4, 25),
     },
     {
         content: '當選名單公告',
-        start: new Date(2023, 4, 27),
-        finish: new Date(2023, 4, 28),
+        start: new Date(2023, 4, 25),
+        finish: new Date(2023, 4, 26),
     },
     {
         content: '(補選)登記參選',
