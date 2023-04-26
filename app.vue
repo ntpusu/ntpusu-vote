@@ -170,7 +170,12 @@ useHead({
 
 const curIndex = ref(useRoute().path)
 
-const cookie = useCookie('cookie')
+const cookie = useCookie('cookie', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'lax',
+})
+
 const showCookie = ref(!cookie.value)
 
 const { data: admin } = useFetch('/api/checkAdmin')
