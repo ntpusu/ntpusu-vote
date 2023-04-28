@@ -83,12 +83,16 @@
                 <ElDrawer
                     v-model="showCookie"
                     direction="btt"
+                    :show-close="false"
                     @close="cookie = 'true'"
                 >
-                    <template #header>
+                    <template #header="{ close }">
                         <span class="-my-3 text-sm sm:text-base md:text-lg">
                             Cookie 使用聲明
                         </span>
+                        <ElButton type="warning" @click="close">
+                            了解
+                        </ElButton>
                     </template>
                     <div class="-my-5 flex justify-center">
                         <span
@@ -173,7 +177,6 @@ const curIndex = ref(useRoute().path)
 const cookie = useCookie('cookie', {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
 })
 
 const showCookie = ref(!cookie.value)
