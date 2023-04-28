@@ -175,7 +175,7 @@ useHead({
 const curIndex = ref(useRoute().path)
 
 const cookie = useCookie('cookie', {
-    httpOnly: true,
+    sameSite: 'lax',
     secure: true,
 })
 
