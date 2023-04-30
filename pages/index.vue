@@ -1,54 +1,52 @@
 <template>
-    <ElScrollbar height="85vh" class="-my-2">
-        <div class="flex flex-col flex-wrap content-center">
-            <ElSteps direction="vertical" align-center space="12vh" class="m-5">
-                <ElStep
-                    v-for="(activity, index) in activities"
-                    :key="index"
-                    :status="
-                        activity.start.getTime() > Date.now()
-                            ? 'process'
-                            : activity.finish.getTime() > Date.now()
-                            ? 'finish'
-                            : 'success'
-                    "
-                    class="tracking-[1.5px]"
-                >
-                    <template #title>
-                        <div class="font-bold sm:text-lg">
-                            {{ activity.content }}
-                        </div>
-                    </template>
-                    <template #description>
-                        <div class="min-w-max sm:text-base">
-                            {{
-                                activity.end
-                                    ? activity.start.toLocaleString(undefined, {
-                                          dateStyle: 'long',
-                                      }) +
-                                      '〜' +
-                                      activity.end.toLocaleString(undefined, {
-                                          dateStyle: 'long',
-                                      })
-                                    : activity.start.toLocaleString(undefined, {
-                                          dateStyle: 'long',
-                                      })
-                            }}
-                            {{ activity.maybe ? '(預定)' : '' }}
-                        </div>
-                    </template>
-                </ElStep>
-            </ElSteps>
-            <ElButton
-                type="danger"
-                class="mx-auto -mt-8 mb-5 w-[10%] min-w-fit sm:-mt-2 sm:mb-10"
-                auto-insert-space
-                @click="useRouter().push('/vote')"
+    <div class="flex flex-col flex-wrap content-center">
+        <ElSteps direction="vertical" align-center space="12vh" class="m-5">
+            <ElStep
+                v-for="(activity, index) in activities"
+                :key="index"
+                :status="
+                    activity.start.getTime() > Date.now()
+                        ? 'process'
+                        : activity.finish.getTime() > Date.now()
+                        ? 'finish'
+                        : 'success'
+                "
+                class="tracking-[1.5px]"
             >
-                <span class="font-bold">前 往 投 票 頁 面</span>
-            </ElButton>
-        </div>
-    </ElScrollbar>
+                <template #title>
+                    <div class="font-bold sm:text-lg">
+                        {{ activity.content }}
+                    </div>
+                </template>
+                <template #description>
+                    <div class="min-w-max sm:text-base">
+                        {{
+                            activity.end
+                                ? activity.start.toLocaleString(undefined, {
+                                      dateStyle: 'long',
+                                  }) +
+                                  '〜' +
+                                  activity.end.toLocaleString(undefined, {
+                                      dateStyle: 'long',
+                                  })
+                                : activity.start.toLocaleString(undefined, {
+                                      dateStyle: 'long',
+                                  })
+                        }}
+                        {{ activity.maybe ? '(預定)' : '' }}
+                    </div>
+                </template>
+            </ElStep>
+        </ElSteps>
+        <ElButton
+            type="danger"
+            class="mx-auto -mt-8 mb-5 w-[10%] min-w-fit sm:-mt-2 sm:mb-10"
+            auto-insert-space
+            @click="useRouter().push('/vote')"
+        >
+            <span class="font-bold">前 往 投 票 頁 面</span>
+        </ElButton>
+    </div>
 </template>
 
 <script lang="ts" setup>

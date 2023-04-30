@@ -8,7 +8,6 @@
         <ElFormItem label="憑證" class="m-auto w-11/12 md:w-2/3 lg:w-1/2">
             <ElInput v-model="input" placeholder="請輸入憑證" clearable />
         </ElFormItem>
-
         <ElButton
             type="primary"
             class="w-1/5 !rounded-md md:w-1/6 lg:w-1/12"
@@ -16,7 +15,6 @@
         >
             <span class="font-bold">查 詢</span>
         </ElButton>
-
         <ClientOnly>
             <ElDialog
                 title="選票內容"

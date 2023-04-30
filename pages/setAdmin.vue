@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!adminPending">
+    <template v-if="!adminPending">
         <div
             v-for="(adminItem, index) in admin"
             :key="index"
@@ -7,7 +7,7 @@
         >
             {{ adminItem.id }}
         </div>
-    </div>
+    </template>
     <ElSkeleton v-else animated />
     <ElButton @click="adminRefresh()">
         <span class="font-bold">刷 新</span>

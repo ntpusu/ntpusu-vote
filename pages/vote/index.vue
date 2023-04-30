@@ -1,11 +1,11 @@
 <template>
-    <ElScrollbar height="85vh" class="-my-2">
-        <ElSpace
-            v-if="!VSPending && data !== null"
-            wrap
-            alignment="center"
-            class="w-full justify-center"
-        >
+    <ElSpace
+        v-if="!VSPending && data !== null"
+        wrap
+        alignment="center"
+        class="w-full justify-center"
+    >
+        <template v-if="data.VS.length">
             <ElCard
                 v-for="VSitem in data.VS"
                 :key="VSitem.id"
@@ -292,41 +292,51 @@
                     </div>
                 </div>
             </ElCard>
-        </ElSpace>
-        <ElSpace v-else alignment="center" class="w-full justify-center" wrap>
-            <ElSkeleton v-for="index in rand(3, 5)" animated>
-                <template #template>
-                    <ElSkeletonItem
-                        variant="rect"
-                        class="!w-[84vw] !rounded-xl sm:!w-[60vw] md:!w-[42vw] lg:!w-[32vw] xl:!w-[28vw]"
-                        :style="{ height: rand(18, 25) + 'rem' }"
-                    />
-                </template>
-            </ElSkeleton>
-        </ElSpace>
-        <ClientOnly>
-            <ElDialog
-                v-model="voteFail"
-                align-center
-                class="min-w-fit !rounded-lg px-5"
-                width="30%"
-                @opened="startLoading(null)"
-                @closed="endLoading(null)"
-            >
-                <template #header>
-                    <div class="text-2xl font-bold text-red-500">投票失敗</div>
-                </template>
-                <div class="px-5 text-lg">
-                    可能原因：<br />
-                    1. 未登入<br />
-                    2. 網路連線斷了<br />
-                    3. 未在投票時間內投票<br />
-                    4. 操作過於頻繁<br />
-                    若有疑問請聯絡選委會
-                </div>
-            </ElDialog>
-        </ClientOnly>
-    </ElScrollbar>
+        </template>
+        <ElResult v-else title="沒有投票" icon="info" class="mt-16">
+            <template #sub-title>
+                若有疑問請隨時<NuxtLink
+                    to="https://www.facebook.com/NTPUSU"
+                    target="_blank"
+                    class="whitespace-pre-wrap break-all font-bold text-blue-500 hover:text-blue-800 hover:underline"
+                    >聯繫我們</NuxtLink
+                >
+            </template>
+        </ElResult>
+    </ElSpace>
+    <ElSpace v-else alignment="center" class="w-full justify-center" wrap>
+        <ElSkeleton v-for="index in rand(3, 5)" animated>
+            <template #template>
+                <ElSkeletonItem
+                    variant="rect"
+                    class="!w-[84vw] !rounded-xl sm:!w-[60vw] md:!w-[42vw] lg:!w-[32vw] xl:!w-[28vw]"
+                    :style="{ height: rand(18, 25) + 'rem' }"
+                />
+            </template>
+        </ElSkeleton>
+    </ElSpace>
+    <ClientOnly>
+        <ElDialog
+            v-model="voteFail"
+            align-center
+            class="min-w-fit !rounded-lg px-5"
+            width="30%"
+            @opened="startLoading(null)"
+            @closed="endLoading(null)"
+        >
+            <template #header>
+                <div class="text-2xl font-bold text-red-500">投票失敗</div>
+            </template>
+            <div class="px-5 text-lg">
+                可能原因：<br />
+                1. 未登入<br />
+                2. 網路連線斷了<br />
+                3. 未在投票時間內投票<br />
+                4. 操作過於頻繁<br />
+                若有疑問請聯絡選委會
+            </div>
+        </ElDialog>
+    </ClientOnly>
 </template>
 
 <script lang="ts" setup>

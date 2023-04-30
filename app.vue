@@ -1,8 +1,8 @@
 <template>
     <NuxtLoadingIndicator />
-    <ElContainer>
-        <ElHeader>
-            <ElAffix>
+    <ElContainer direction="vertical">
+        <ElAffix>
+            <ElHeader>
                 <ClientOnly>
                     <template #fallback>
                         <div class="pt-4 text-center text-gray-400">
@@ -16,6 +16,7 @@
                         :ellipsis="false"
                         :active-index="curIndex"
                         @select="handleSelect"
+                        class="h-[8.5vh] sm:h-[9vh] md:h-[9.5vh]"
                     >
                         <span
                             class="m-auto cursor-pointer pl-2 text-xl font-bold sm:text-2xl"
@@ -73,48 +74,73 @@
                         </ElMenuItem>
                     </ElMenu>
                 </ClientOnly>
-            </ElAffix>
-        </ElHeader>
+            </ElHeader>
+        </ElAffix>
         <ElMain>
-            <NuxtPage />
+            <ElScrollbar height="80vh" class="-my-2" :always="true">
+                <NuxtPage />
+                <noscript>
+                    <strong>
+                        此網頁需要支援 JavaScript
+                        才能正確運行，請先至你的瀏覽器設定中開啟 JavaScript。
+                    </strong>
+                </noscript>
+            </ElScrollbar>
         </ElMain>
-        <ElFooter v-if="showCookie">
-            <ClientOnly>
-                <ElDrawer
-                    v-model="showCookie"
-                    direction="btt"
-                    :show-close="false"
-                    @close="cookie = 'true'"
-                >
-                    <template #header="{ close }">
-                        <span class="-my-3 text-sm sm:text-base md:text-lg">
-                            Cookie 使用聲明
-                        </span>
-                        <ElButton type="warning" @click="close">
-                            了解
-                        </ElButton>
-                    </template>
-                    <div class="-my-5 flex justify-center">
-                        <span
-                            class="w-11/12 whitespace-pre-wrap break-all text-xs sm:text-sm md:text-base"
-                        >
-                            國立臺北大學三峽校區學生會投票網站(下稱「投票網站」)使用cookie來記錄您的登入狀態及增進您的使用體驗。這些cookie僅限於投票網站使用，不會與第三方共享cookie數據，也不會將cookie用於廣告目的。這些cookie將在您訪問投票網站時存儲在您的設備上，並在一定時間後過期。您可以在您的瀏覽器設置中管理和刪除cookie。如果您選擇禁用cookie，將會無法使用投票網站的登入功能。若您對此使用聲明有任何疑問，請隨時
-                            <ElLink
-                                type="primary"
-                                href="https://www.facebook.com/NTPUSU"
-                                target="_blank"
+        <ElAffix position="bottom">
+            <ElFooter class="!h-0">
+                <ClientOnly>
+                    <ElDrawer
+                        v-model="showCookie"
+                        direction="btt"
+                        :show-close="false"
+                        @close="cookie = 'true'"
+                    >
+                        <template #header="{ close }">
+                            <div
+                                class="mx-6 my-0 flex h-[5vh] justify-between py-0"
                             >
-                                <span
-                                    class="whitespace-pre-wrap break-all text-xs sm:text-sm md:text-base"
-                                    >聯繫我們</span
+                                <span class="text-sm sm:text-base md:text-lg">
+                                    Cookie 使用聲明
+                                </span>
+                                <ElButton type="warning" @click="close">
+                                    <span class="font-bold">了 解</span>
+                                </ElButton>
+                            </div>
+                        </template>
+                        <div class="-my-6 flex justify-center">
+                            <span
+                                class="w-11/12 whitespace-pre-wrap break-all text-xs sm:text-sm md:text-base"
+                                >國立臺北大學三峽校區學生會投票網站(下稱「投票網站」)使用cookie來記錄您的登入狀態及增進您的使用體驗。這些cookie僅限於投票網站使用，不會與第三方共享cookie數據，也不會將cookie用於廣告目的。這些cookie將在您訪問投票網站時存儲在您的設備上，並在一定時間後過期。您可以在您的瀏覽器設置中管理和刪除cookie。如果您選擇禁用cookie，將會無法使用投票網站的登入功能。若您對此使用聲明有任何疑問，請隨時<NuxtLink
+                                    to="https://www.facebook.com/NTPUSU"
+                                    target="_blank"
+                                    class="whitespace-pre-wrap break-all font-bold text-blue-400 hover:text-blue-700 hover:underline"
+                                    >聯繫我們</NuxtLink
                                 >
-                            </ElLink>
-                            。
-                        </span>
-                    </div>
-                </ElDrawer>
-            </ClientOnly>
-        </ElFooter>
+                                。</span
+                            >
+                        </div>
+                    </ElDrawer>
+                </ClientOnly>
+                <div class="flex justify-center">
+                    <span class="text-xs font-bold sm:text-sm md:text-base">
+                        ©
+                        {{ new Date().getFullYear() }}
+                        <NuxtLink
+                            to="https://www.facebook.com/NTPUSU"
+                            class="whitespace-pre-wrap break-all font-bold hover:text-stone-600 hover:underline"
+                            >國立臺北大學三峽校區學生會</NuxtLink
+                        >
+                        |
+                        <NuxtLink
+                            to="https://github.com/garyellow/ntpusu-vote-2023"
+                            class="whitespace-pre-wrap break-all font-bold hover:text-stone-600 hover:underline"
+                            >開放原始碼</NuxtLink
+                        >
+                    </span>
+                </div>
+            </ElFooter>
+        </ElAffix>
     </ElContainer>
     <ElBacktop />
 </template>
