@@ -10,6 +10,7 @@
                 <template #title>
                     <div class="font-bold sm:text-lg">
                         {{ activity.content }}
+                        {{ style(activity.start, activity.finish) }}
                     </div>
                 </template>
                 <template #description>
