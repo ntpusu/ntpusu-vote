@@ -1,17 +1,10 @@
 <template>
-    {{ Date.now() }} {{ activities[0].start.getTime() }}
     <div class="flex flex-col flex-wrap content-center">
         <ElSteps direction="vertical" align-center space="12vh" class="m-5">
             <ElStep
                 v-for="(activity, index) in activities"
                 :key="index"
-                :status="
-                    activity.start.getTime() > Date.now()
-                        ? 'process'
-                        : activity.finish.getTime() > Date.now()
-                        ? 'finish'
-                        : 'success'
-                "
+                :status="style(activity.start, activity.finish)"
                 class="tracking-[1.5px]"
             >
                 <template #title>
@@ -55,6 +48,14 @@ definePageMeta({
     auth: false,
     title: '首頁',
 })
+
+const style = (start: Date, end: Date) => {
+    return Date.now() < start.getTime()
+        ? 'process'
+        : Date.now() < end.getTime()
+        ? 'finish'
+        : 'success'
+}
 
 const activities = [
     {
