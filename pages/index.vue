@@ -11,23 +11,20 @@
                     <template #title>
                         <div class="font-bold sm:text-lg">
                             {{ activity.content }}
-                            {{ style(activity.start, activity.finish) }}
                         </div>
                     </template>
                     <template #description>
                         <div class="min-w-max sm:text-base">
                             {{
-                                activity.end
-                                    ? activity.start.toLocaleString(undefined, {
-                                          dateStyle: 'long',
-                                      }) +
-                                      '〜' +
+                                activity.start.toLocaleString(undefined, {
+                                    dateStyle: 'long',
+                                }) +
+                                (activity.end
+                                    ? '〜' +
                                       activity.end.toLocaleString(undefined, {
                                           dateStyle: 'long',
                                       })
-                                    : activity.start.toLocaleString(undefined, {
-                                          dateStyle: 'long',
-                                      })
+                                    : '')
                             }}
                             {{ activity.maybe ? '(預定)' : '' }}
                         </div>
