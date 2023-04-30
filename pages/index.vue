@@ -1,4 +1,5 @@
 <template>
+    {{ Date.now() }} {{ activities[0].start.getTime() }}
     <div class="flex flex-col flex-wrap content-center">
         <ElSteps direction="vertical" align-center space="12vh" class="m-5">
             <ElStep
