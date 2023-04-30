@@ -33,12 +33,20 @@
             </ClientOnly>
         </ElSteps>
         <ElButton
+            v-if="status === 'authenticated'"
             type="danger"
             class="mx-auto -mt-8 mb-5 w-[10%] min-w-fit sm:-mt-2 sm:mb-10"
-            auto-insert-space
             @click="useRouter().push('/vote')"
         >
             <span class="font-bold">前 往 投 票 頁 面</span>
+        </ElButton>
+        <ElButton
+            v-else
+            type="danger"
+            class="mx-auto -mt-8 mb-5 w-[10%] min-w-fit sm:-mt-2 sm:mb-10"
+            @click="useRouter().push('/login')"
+        >
+            <span class="font-bold">前 往 登 入 頁 面</span>
         </ElButton>
     </div>
 </template>
@@ -48,6 +56,8 @@ definePageMeta({
     auth: false,
     title: '首頁',
 })
+
+const { status } = useAuth()
 
 const style = (start: Date, end: Date) => {
     return Date.now() < start.getTime()
