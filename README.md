@@ -1,26 +1,20 @@
-# Nuxt Example
+# 國立臺北大學三峽校區學生會投票網站
 
-Deploy your [Nuxt](https://nuxt.com) project to Vercel with zero configuration.
+## 簡介
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/vercel/tree/main/examples/nuxtjs&template=nuxtjs)
+使用 nuxt 框架製作的全端網站，並使用 postgreSQL 作為資料庫，再透過 vercel 部署，僅供學生會進行投票使用。
 
-_Live Example: https://nuxtjs-template.vercel.app_
+## 網址
 
-Look at the [Nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
+https://ntpusu-vote.vercel.app/
 
 ## Setup
 
 Make sure to install the dependencies:
 
 ```bash
-# yarn
-yarn
-
 # npm
 npm install
-
-# pnpm
-pnpm install --shamefully-hoist
 ```
 
 ## Development Server
