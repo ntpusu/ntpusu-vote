@@ -1,37 +1,39 @@
 <template>
     <div class="flex flex-col flex-wrap content-center">
         <ElSteps direction="vertical" align-center space="12vh" class="m-5">
-            <ElStep
-                v-for="(activity, index) in activities"
-                :key="index"
-                :status="style(activity.start, activity.finish)"
-                class="tracking-[1.5px]"
-            >
-                <template #title>
-                    <div class="font-bold sm:text-lg">
-                        {{ activity.content }}
-                        {{ style(activity.start, activity.finish) }}
-                    </div>
-                </template>
-                <template #description>
-                    <div class="min-w-max sm:text-base">
-                        {{
-                            activity.end
-                                ? activity.start.toLocaleString(undefined, {
-                                      dateStyle: 'long',
-                                  }) +
-                                  '〜' +
-                                  activity.end.toLocaleString(undefined, {
-                                      dateStyle: 'long',
-                                  })
-                                : activity.start.toLocaleString(undefined, {
-                                      dateStyle: 'long',
-                                  })
-                        }}
-                        {{ activity.maybe ? '(預定)' : '' }}
-                    </div>
-                </template>
-            </ElStep>
+            <ClientOnly>
+                <ElStep
+                    v-for="(activity, index) in activities"
+                    :key="index"
+                    :status="style(activity.start, activity.finish)"
+                    class="tracking-[1.5px]"
+                >
+                    <template #title>
+                        <div class="font-bold sm:text-lg">
+                            {{ activity.content }}
+                            {{ style(activity.start, activity.finish) }}
+                        </div>
+                    </template>
+                    <template #description>
+                        <div class="min-w-max sm:text-base">
+                            {{
+                                activity.end
+                                    ? activity.start.toLocaleString(undefined, {
+                                          dateStyle: 'long',
+                                      }) +
+                                      '〜' +
+                                      activity.end.toLocaleString(undefined, {
+                                          dateStyle: 'long',
+                                      })
+                                    : activity.start.toLocaleString(undefined, {
+                                          dateStyle: 'long',
+                                      })
+                            }}
+                            {{ activity.maybe ? '(預定)' : '' }}
+                        </div>
+                    </template>
+                </ElStep>
+            </ClientOnly>
         </ElSteps>
         <ElButton
             type="danger"
