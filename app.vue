@@ -1,8 +1,8 @@
 <template>
     <NuxtLoadingIndicator />
     <ElContainer direction="vertical">
-        <ElAffix>
-            <ElHeader>
+        <ElAffix :z-index="999">
+            <ElHeader class="bg-white">
                 <ClientOnly>
                     <template #fallback>
                         <div class="pt-4 text-center text-gray-400">
@@ -87,8 +87,8 @@
                 </noscript>
             </ElScrollbar>
         </ElMain>
-        <ElAffix position="bottom" class="!h-6">
-            <ElFooter class="!h-6">
+        <ElAffix position="bottom" :z-index="999" class="min-h-fit">
+            <ElFooter class="!h-6 bg-white">
                 <ClientOnly>
                     <ElDrawer
                         v-model="showCookie"
