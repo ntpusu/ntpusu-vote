@@ -16,7 +16,7 @@
                         :ellipsis="false"
                         :active-index="curIndex"
                         @select="handleSelect"
-                        class="h-[8.5vh] sm:h-[9vh] md:h-[9.5vh]"
+                        class="h-[8.5vh] min-h-[40px] sm:h-[9vh] md:h-[9.5vh]"
                     >
                         <span
                             class="m-auto cursor-pointer pl-2 text-xl font-bold sm:text-2xl"
@@ -77,7 +77,7 @@
             </ElHeader>
         </ElAffix>
         <ElMain>
-            <ElScrollbar height="83vh" class="-my-4" :always="true">
+            <ElScrollbar height="80vh" class="-my-3" :always="true">
                 <NuxtPage />
                 <noscript>
                     <strong>
