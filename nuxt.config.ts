@@ -42,7 +42,7 @@ export default defineNuxtConfig({
         '/api/voterSession': {
             security: {
                 rateLimiter: {
-                    tokensPerInterval: 2,
+                    tokensPerInterval: 3,
                     interval: 10 * 1000,
                     fireImmediately: true,
                 },
@@ -51,7 +51,7 @@ export default defineNuxtConfig({
         '/api/vote': {
             security: {
                 rateLimiter: {
-                    tokensPerInterval: 2,
+                    tokensPerInterval: 3,
                     interval: 10 * 1000,
                     fireImmediately: true,
                 },
@@ -60,7 +60,7 @@ export default defineNuxtConfig({
         '/api/getResult': {
             security: {
                 rateLimiter: {
-                    tokensPerInterval: 2,
+                    tokensPerInterval: 3,
                     interval: 10 * 1000,
                     fireImmediately: true,
                 },
