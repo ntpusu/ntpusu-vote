@@ -77,7 +77,7 @@
             </ElHeader>
         </ElAffix>
         <ElMain>
-            <ElScrollbar height="80vh" class="-my-3" :always="true">
+            <ElScrollbar height="80vh" class="-mb-4 -mt-2" :always="true">
                 <NuxtPage />
                 <noscript>
                     <strong>
