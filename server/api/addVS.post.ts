@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const VS = await prisma.voteSession.create({
+    const VS = await prisma.voting.create({
         data: {
             name: voteName,
             groupId: voteGroup,
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
         await prisma.candidate.create({
             data: {
                 name: candidate,
-                voteSessionId: VS.id
+                votingId: VS.id
             }
         })
     }

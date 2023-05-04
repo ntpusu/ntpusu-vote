@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const VS = await prisma.voteSession.findUnique({
+    const VS = await prisma.voting.findUnique({
         where: {
             id: parseInt(id),
         },

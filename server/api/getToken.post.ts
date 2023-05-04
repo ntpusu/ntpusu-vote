@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
             candidate: {
                 select: {
                     name: true,
-                    voteSession: {
+                    voting: {
                         select: {
                             name: true,
                         },
@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
     }
 
     return {
-        vote: ballot.candidate.voteSession.name,
+        vote: ballot.candidate.voting.name,
         candidate: ballot.candidate.name,
         time: ballot.time,
     }

@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
     const candidate = await prisma.candidate.findUnique({
         where: { id: parseInt(candidateId) },
         select: {
-            voteSessionId: true,
+            votingId: true,
         },
     })
 
@@ -49,14 +49,14 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (candidate.voteSessionId != parseInt(VSId)) {
+    if (candidate.votingId != parseInt(VSId)) {
         throw createError({
             statusCode: 400,
             message: 'Bad Request'
         })
     }
 
-    const voteSession = await prisma.voteSession.findUnique({
+    const voteSession = await prisma.voting.findUnique({
         where: { id: parseInt(VSId) },
     })
 

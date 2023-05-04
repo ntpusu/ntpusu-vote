@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    return await prisma.voteSession.findMany({
+    return await prisma.voting.findMany({
         select: {
             id: true,
             name: true,

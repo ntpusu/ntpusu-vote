@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
     }
 
     if (studentId !== process.env.ADMIN) {
-        const VS = await prisma.voteSession.findUnique({
+        const VS = await prisma.voting.findUnique({
             where: { id: parseInt(id) },
             select: {
                 startTime: true,
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    await prisma.voteSession.delete({
+    await prisma.voting.delete({
         where: { id: parseInt(id) },
         select: null,
     })
