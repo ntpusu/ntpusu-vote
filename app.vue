@@ -1,80 +1,95 @@
 <template>
-    <NuxtLoadingIndicator />
-    <ElContainer direction="vertical">
-        <ElAffix>
-            <ClientOnly>
-                <template #fallback>
-                    <div class="pt-4 text-center text-gray-400">
-                        Loading menu......
-                    </div>
-                </template>
-                <ElMenu
-                    :default-active="$route.path"
-                    unique-opened
-                    mode="horizontal"
-                    :ellipsis="false"
-                    :active-index="curIndex"
-                    @select="handleSelect"
-                    class="h-[8.5vh] min-h-[40px] sm:h-[9vh] md:h-[9.5vh]"
+    <ElContainer direction="vertical" class="h-[100vh]">
+        <NuxtLoadingIndicator />
+        <ClientOnly>
+            <template #fallback>
+                <div
+                    class="flex h-12 items-center justify-center sm:h-14 md:h-16"
                 >
-                    <span
-                        class="m-auto cursor-pointer pl-2 text-xl font-bold sm:text-2xl"
-                        @click="useRouter().push('/')"
-                    >
-                        選舉委員會
+                    <span class="margin text-gray-400">
+                        Loading menu......
                     </span>
-                    <div class="flex-grow" />
-                    <ElMenuItem
-                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                        index="/"
-                        @click="useRouter().push('/')"
-                    >
+                </div>
+                <ElDivider class="!m-0" />
+            </template>
+            <ElMenu
+                :default-active="useRoute().path"
+                unique-opened
+                mode="horizontal"
+                :ellipsis="false"
+                :active-index="curIndex"
+                @select="handleSelect"
+                class="h-12 sm:h-14 md:h-16"
+            >
+                <span
+                    class="m-auto cursor-pointer pl-2 text-xl font-bold sm:pl-3 sm:text-2xl md:pl-4 md:text-3xl"
+                    @click="useRouter().push('/')"
+                >
+                    選舉委員會
+                </span>
+                <div class="flex-grow" />
+                <ElMenuItem
+                    class="!px-3 sm:!px-4 md:!px-5"
+                    index="/"
+                    @click="useRouter().push('/')"
+                >
+                    <span class="text-sm font-bold sm:text-base md:text-lg">
                         首頁
-                    </ElMenuItem>
-                    <ElMenuItem
-                        v-if="status === 'authenticated'"
-                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                        index="/vote"
-                        @click="useRouter().push('/vote')"
-                    >
+                    </span>
+                </ElMenuItem>
+                <ElMenuItem
+                    v-if="status === 'authenticated'"
+                    class="!px-3 sm:!px-4 md:!px-5"
+                    index="/vote"
+                    @click="useRouter().push('/vote')"
+                >
+                    <span class="text-sm font-bold sm:text-base md:text-lg">
                         投票
-                    </ElMenuItem>
-                    <ElMenuItem
-                        v-if="admin"
-                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                        index="/check"
-                        @click="useRouter().push('/check')"
-                    >
+                    </span>
+                </ElMenuItem>
+                <ElMenuItem
+                    v-if="admin"
+                    class="!px-3 sm:!px-4 md:!px-5"
+                    index="/check"
+                    @click="useRouter().push('/check')"
+                >
+                    <span class="text-sm font-bold sm:text-base md:text-lg">
                         查詢
-                    </ElMenuItem>
-                    <ElMenuItem
-                        v-if="admin"
-                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                        index="/admin"
-                        @click="useRouter().push('/admin')"
-                    >
+                    </span>
+                </ElMenuItem>
+                <ElMenuItem
+                    v-if="admin"
+                    class="!px-3 sm:!px-4 md:!px-5"
+                    index="/admin"
+                    @click="useRouter().push('/admin')"
+                >
+                    <span class="text-sm font-bold sm:text-base md:text-lg">
                         管理
-                    </ElMenuItem>
-                    <ElMenuItem
-                        v-if="status === 'unauthenticated'"
-                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                        index="/login"
-                        @click="useRouter().push('/login')"
-                    >
+                    </span>
+                </ElMenuItem>
+                <ElMenuItem
+                    v-if="status === 'unauthenticated'"
+                    class="!px-3 sm:!px-4 md:!px-5"
+                    index="/login"
+                    @click="useRouter().push('/login')"
+                >
+                    <span class="text-sm font-bold sm:text-base md:text-lg">
                         登入
-                    </ElMenuItem>
-                    <ElMenuItem
-                        v-else-if="status === 'authenticated'"
-                        class="!px-3 !text-[0.8rem] font-bold sm:!px-5 sm:!text-[1rem]"
-                        index="/logout"
-                        @click="signOut({ callbackUrl: '/' })"
-                    >
+                    </span>
+                </ElMenuItem>
+                <ElMenuItem
+                    v-else-if="status === 'authenticated'"
+                    class="!px-3 sm:!px-4 md:!px-5"
+                    index="/logout"
+                    @click="signOut({ callbackUrl: '/' })"
+                >
+                    <span class="text-sm font-bold sm:text-base md:text-lg">
                         登出
-                    </ElMenuItem>
-                </ElMenu>
-            </ClientOnly>
-        </ElAffix>
-        <ElScrollbar id="scr" height="85vh" :always="true">
+                    </span>
+                </ElMenuItem>
+            </ElMenu>
+        </ClientOnly>
+        <ElScrollbar :always="true">
             <div class="m-2 sm:m-3 md:m-4">
                 <NuxtPage />
             </div>
@@ -85,26 +100,26 @@
                 </strong>
             </noscript>
         </ElScrollbar>
-        <ElAffix position="bottom" class="mt-2">
-            <ElDivider class="!m-0" />
-            <div class="flex h-full justify-center bg-white">
-                <span class="m-1 text-xs font-bold sm:text-sm md:text-base">
-                    ©
-                    {{ new Date().getFullYear() }}
-                    <NuxtLink
-                        to="https://www.facebook.com/NTPUSU"
-                        class="whitespace-pre-wrap break-all font-bold hover:text-stone-600 hover:underline"
-                        >國立臺北大學三峽校區學生會</NuxtLink
-                    >
-                    |
-                    <NuxtLink
-                        to="https://github.com/garyellow/ntpusu-vote-2023"
-                        class="whitespace-pre-wrap break-all font-bold hover:text-stone-600 hover:underline"
-                        >開放原始碼</NuxtLink
-                    >
-                </span>
-            </div>
-        </ElAffix>
+        <ElDivider class="!m-0" />
+        <div
+            class="flex h-6 items-center justify-center bg-white sm:h-7 md:h-8"
+        >
+            <span class="text-xs font-bold sm:text-sm md:text-base">
+                ©
+                {{ new Date().getFullYear() }}
+                <NuxtLink
+                    to="https://www.facebook.com/NTPUSU"
+                    class="whitespace-pre-wrap break-all font-bold hover:text-stone-600 hover:underline"
+                    >國立臺北大學三峽校區學生會</NuxtLink
+                >
+                |
+                <NuxtLink
+                    to="https://github.com/garyellow/ntpusu-vote-2023"
+                    class="whitespace-pre-wrap break-all font-bold hover:text-stone-600 hover:underline"
+                    >開放原始碼</NuxtLink
+                >
+            </span>
+        </div>
         <ClientOnly>
             <ElDrawer
                 v-model="showCookie"
@@ -142,6 +157,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ElAffix } from 'element-plus'
+
 const route = useRoute()
 
 useSeoMeta({

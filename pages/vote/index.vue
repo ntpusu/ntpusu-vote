@@ -555,19 +555,26 @@ const checkData = () => {
         else if (!data.value && useRoute().path == '/vote') {
             ElMessage({
                 type: 'error',
-                message: '操作過於頻繁，請稍後再試',
+                message: '操作過於頻繁或不在投票人名單內',
             })
 
             setTimeout(() => {
                 ElMessage({
                     type: 'warning',
-                    message: '將自動返回首頁',
+                    message: '若有疑問請聯繫學生會',
                 })
             }, 1500)
 
+            setTimeout(() => {
+                ElMessage({
+                    type: 'info',
+                    message: '將自動返回首頁',
+                })
+            }, 3000)
+
             setTimeout(async () => {
                 await useRouter().push('/')
-            }, 3000)
+            }, 4500)
         }
     }, 100)
 }
