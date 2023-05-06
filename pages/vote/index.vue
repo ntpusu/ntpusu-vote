@@ -416,7 +416,7 @@ const chooseFormat = (time: string | number | Date) => {
     else return 's 秒'
 }
 
-const voteFail = ref(true)
+const voteFail = ref(false)
 
 const voteVisible: Ref<boolean[]> = ref([])
 const voteData: Ref<number[]> = ref([])
