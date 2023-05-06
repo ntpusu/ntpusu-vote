@@ -362,13 +362,18 @@
             <template #header>
                 <div class="text-2xl font-bold text-red-500">投票失敗</div>
             </template>
-            <div class="px-5 text-lg">
+            <div class="px-5 pb-3 text-lg">
                 可能原因：<br />
                 1. 未登入<br />
                 2. 網路連線斷了<br />
                 3. 未在投票時間內投票<br />
                 4. 操作過於頻繁<br />
-                若有疑問請聯絡選委會
+                若有疑問請聯繫<NuxtLink
+                    to="https://www.facebook.com/NTPUSU"
+                    target="_blank"
+                    class="whitespace-pre-wrap break-all font-bold text-blue-400 hover:text-blue-500 hover:underline"
+                    >學生會</NuxtLink
+                >
             </div>
         </ElDialog>
     </ClientOnly>
@@ -411,7 +416,7 @@ const chooseFormat = (time: string | number | Date) => {
     else return 's 秒'
 }
 
-const voteFail = ref(false)
+const voteFail = ref(true)
 
 const voteVisible: Ref<boolean[]> = ref([])
 const voteData: Ref<number[]> = ref([])
