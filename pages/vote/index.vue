@@ -154,7 +154,7 @@
                                 v-for="itemIndex in VSitem.candidates.length -
                                 1"
                                 :key="itemIndex"
-                                class="flex text-sm sm:text-base md:text-lg"
+                                class="flex items-center text-sm sm:text-base md:text-lg"
                             >
                                 <ElTag
                                     type="success"
@@ -223,13 +223,13 @@
                             >
                                 <span
                                     v-if="VSitem.onlyOne"
-                                    class="my-2 cursor-default text-lg font-bold text-black sm:my-3 sm:text-xl md:my-4 md:text-2xl"
+                                    class="my-2 cursor-default text-base font-bold text-black sm:my-3 sm:text-lg md:my-4 md:text-xl"
                                 >
                                     同意{{ VSitem.onlyOne }}當選嗎？
                                 </span>
                                 <span
                                     v-else
-                                    class="my-2 cursor-default text-lg font-bold text-black sm:my-3 sm:text-xl md:my-4 md:text-2xl"
+                                    class="my-2 cursor-default text-base font-bold text-black sm:my-3 sm:text-lg md:my-4 md:text-xl"
                                     >請選擇要投的候選人</span
                                 >
                                 <ElRadioGroup
