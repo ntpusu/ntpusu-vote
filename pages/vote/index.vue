@@ -10,12 +10,12 @@
                 v-for="VSitem in data.VS"
                 :key="VSitem.id"
                 shadow="hover"
-                class="w-[84vw] !rounded-xl sm:w-[60vw] md:w-[42vw] lg:w-[32vw] xl:w-[28vw]"
+                class="w-[85vw] !rounded-xl sm:w-[65vw] md:w-[50vw] lg:w-[40vw] xl:w-[35vw] 2xl:w-[28vw]"
             >
                 <template #header>
                     <div class="flex items-center justify-between">
                         <div
-                            class="cursor-default text-lg font-bold sm:text-xl"
+                            class="cursor-default text-lg font-bold sm:text-xl md:text-2xl"
                         >
                             {{ VSitem.name }}
                         </div>
@@ -122,7 +122,7 @@
                 </template>
                 <div>
                     <h2
-                        class="cursor-default pb-5 text-center text-base font-bold sm:text-lg"
+                        class="cursor-default pb-5 text-center text-base font-bold sm:text-lg md:text-xl"
                     >
                         候選人名單
                     </h2>
@@ -130,13 +130,11 @@
                         direction="vertical"
                         alignment="start"
                         class="!flex content-center"
-                        size="large"
                         wrap
                     >
                         <div
-                            v-for="(candidate, itemIndex) in VSitem.candidates"
-                            :key="itemIndex"
-                            class="flex text-sm sm:text-base"
+                            v-if="VSitem.onlyOne"
+                            class="flex text-sm sm:text-base md:text-lg"
                         >
                             <ElTag
                                 type="success"
@@ -145,12 +143,33 @@
                                 round
                                 class="cursor-default"
                             >
-                                {{ itemIndex + 1 }}
+                                1
                             </ElTag>
                             <div class="ml-2 mr-5">
-                                {{ candidate.name }}
+                                {{ VSitem.onlyOne }}
                             </div>
                         </div>
+                        <template v-else>
+                            <div
+                                v-for="itemIndex in VSitem.candidates.length -
+                                1"
+                                :key="itemIndex"
+                                class="flex text-sm sm:text-base md:text-lg"
+                            >
+                                <ElTag
+                                    type="success"
+                                    effect="dark"
+                                    size="small"
+                                    round
+                                    class="cursor-default"
+                                >
+                                    {{ itemIndex }}
+                                </ElTag>
+                                <div class="ml-2 mr-5">
+                                    {{ VSitem.candidates[itemIndex - 1].name }}
+                                </div>
+                            </div>
+                        </template>
                     </ElSpace>
                 </div>
                 <ElDivider />
@@ -181,16 +200,16 @@
                             <template #header>
                                 <div class="flex">
                                     <div
-                                        class="m-auto flex text-lg font-bold sm:text-xl md:text-2xl"
+                                        class="m-auto flex cursor-default text-lg font-bold sm:text-xl md:text-2xl"
                                     >
                                         {{ VSitem.name }}
                                     </div>
                                     <div class="flex-grow" />
                                     <div
-                                        class="m-auto flex flex-col items-end pl-10 pr-3 text-xs text-gray-500 md:pl-14 md:pr-6 md:text-sm"
+                                        class="m-auto flex cursor-default flex-col items-end pl-10 pr-3 text-xs text-gray-500 md:pl-14 md:pr-6 md:text-sm"
                                     >
                                         <span class="text-gray-500">
-                                            請在下方選擇您要投的候選人
+                                            請在下方選擇您要投的選項
                                         </span>
                                         <span class="text-red-500">
                                             投出選票後無法刪除或變更
@@ -198,7 +217,21 @@
                                     </div>
                                 </div>
                             </template>
-                            <div class="mx-5 flex justify-center">
+                            <ElDivider class="!-mt-5 !mb-0" />
+                            <div
+                                class="mx-5 flex flex-col items-center align-middle"
+                            >
+                                <span
+                                    v-if="VSitem.onlyOne"
+                                    class="my-2 cursor-default text-lg font-bold text-black sm:my-3 sm:text-xl md:my-4 md:text-2xl"
+                                >
+                                    同意{{ VSitem.onlyOne }}當選嗎？
+                                </span>
+                                <span
+                                    v-else
+                                    class="my-2 cursor-default text-lg font-bold text-black sm:my-3 sm:text-xl md:my-4 md:text-2xl"
+                                    >請選擇要投的候選人</span
+                                >
                                 <ElRadioGroup
                                     class="flex-col !items-stretch"
                                     v-model="voteData[VSitem.id]"
@@ -214,7 +247,7 @@
                                         class="my-1 !mr-0 max-w-[75vw]"
                                     >
                                         <span
-                                            class="max-w-full whitespace-pre-wrap break-all"
+                                            class="max-w-full cursor-default whitespace-pre-wrap break-all"
                                         >
                                             {{ candidate.name }}
                                         </span>
@@ -223,7 +256,9 @@
                             </div>
                             <ElDivider border-style="dashed" />
                             <div class="flex flex-col items-center">
-                                <span class="-mt-2 mb-3 text-sm text-gray-600">
+                                <span
+                                    class="-mt-2 mb-3 cursor-default text-sm text-gray-600"
+                                >
                                     目前登入的學號是：{{
                                         useAuth().data.value?.user?.email?.substring(
                                             1,
@@ -340,7 +375,9 @@
 </template>
 
 <script lang="ts" setup>
+import { stringLiteral } from '@babel/types'
 import { rand } from '@vueuse/shared'
+import type { Action } from 'element-plus'
 
 definePageMeta({
     title: '投票',
@@ -485,7 +522,12 @@ const voteConfirm = async (VS: {
                     await VSRefresh()
                 })
         })
-        .catch(() => {})
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '取消投票',
+            })
+        })
 
     endLoading(VS.id)
 }
@@ -498,19 +540,24 @@ const seeToken = async (index: number) => {
         return
     }
 
-    await ElMessageBox.alert(data.value.tokens[index], '投票憑證', {
-        confirmButtonText: '複製憑證',
+    await ElMessageBox.confirm(data.value.tokens[index], '投票憑證', {
+        cancelButtonText: '複製憑證',
+        cancelButtonClass: 'el-button--success',
+        confirmButtonText: '確 定',
+        distinguishCancelAndClose: true,
         type: 'success',
         roundButton: true,
     })
-        .then(async () => {
-            await navigator.clipboard.writeText(data.value!.tokens[index])
-            ElMessage({
-                type: 'success',
-                message: '已複製',
-            })
+        .then(() => {})
+        .catch(async (action: Action) => {
+            if (action === 'cancel') {
+                await navigator.clipboard.writeText(data.value!.tokens[index])
+                ElMessage({
+                    type: 'success',
+                    message: '已複製',
+                })
+            }
         })
-        .catch(() => {})
 
     tokenLoading.value[index] = false
 }
@@ -524,19 +571,26 @@ const seeResult = async (index: number) => {
     }
 
     if (data.value.tokens[index]) {
-        await ElMessageBox.alert(data.value.tokens[index], '投票憑證', {
-            confirmButtonText: '複製憑證',
+        await ElMessageBox.confirm(data.value.tokens[index], '投票憑證', {
+            cancelButtonText: '複製憑證',
+            cancelButtonClass: 'el-button--success',
+            confirmButtonText: '確 定',
+            distinguishCancelAndClose: true,
             type: 'success',
             roundButton: true,
         })
-            .then(async () => {
-                await navigator.clipboard.writeText(data.value!.tokens[index])
-                ElMessage({
-                    type: 'success',
-                    message: '已複製',
-                })
+            .then(() => {})
+            .catch(async (action: Action) => {
+                if (action === 'cancel') {
+                    await navigator.clipboard.writeText(
+                        data.value!.tokens[index]
+                    )
+                    ElMessage({
+                        type: 'success',
+                        message: '已複製',
+                    })
+                }
             })
-            .catch(() => {})
     } else {
         await ElMessageBox.alert('無投票憑證', '未投票', {
             showClose: false,

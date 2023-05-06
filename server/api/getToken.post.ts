@@ -1,6 +1,15 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
+    const { token } = await readBody(event) as { token: string | undefined }
+
+    if (!token) {
+        throw createError({
+            statusCode: 400,
+            message: 'Bad Request'
+        })
+    }
+
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {
@@ -22,15 +31,6 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 401,
             message: '不在管理員名單中'
-        })
-    }
-
-    const { token } = await readBody(event) as { token: string | undefined }
-
-    if (!token) {
-        throw createError({
-            statusCode: 400,
-            message: 'Bad Request'
         })
     }
 

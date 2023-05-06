@@ -25,7 +25,13 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { voteName, voteGroup, startTime, endTime, candidates } = await readBody(event)
+    const { voteName, voteGroup, startTime, endTime, candidates } = await readBody(event) as {
+        voteName: string;
+        voteGroup: number | undefined;
+        startTime: string;
+        endTime: string;
+        candidates: string | string[];
+    }
 
     if (!voteName || !voteGroup || !startTime || !endTime || !candidates) {
         throw createError({
@@ -38,18 +44,46 @@ export default defineEventHandler(async (event) => {
         data: {
             name: voteName,
             groupId: voteGroup,
-            startTime: new Date(startTime),
-            endTime: new Date(endTime),
+            startTime,
+            endTime,
+            onlyOne: typeof candidates === 'string' ? candidates : null,
         },
         select: {
             id: true,
         }
     })
 
-    for (const candidate of candidates) {
+    if (typeof candidates === 'string') {
+        await prisma.candidate.createMany({
+            data: [
+                {
+                    name: '同意',
+                    votingId: VS.id
+                },
+                {
+                    name: '不同意',
+                    votingId: VS.id
+                },
+                {
+                    name: '廢票',
+                    votingId: VS.id
+                }
+            ]
+        })
+    }
+    else {
+        for (const candidate of candidates) {
+            await prisma.candidate.create({
+                data: {
+                    name: candidate,
+                    votingId: VS.id
+                }
+            })
+        }
+
         await prisma.candidate.create({
             data: {
-                name: candidate,
+                name: '廢票',
                 votingId: VS.id
             }
         })

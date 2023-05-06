@@ -2,6 +2,15 @@ import prisma from '~/lib/prisma'
 import HS256 from 'crypto-js/hmac-sha256.js'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
+    const { VSId, candidateId } = await readBody(event)
+
+    if (!VSId || !candidateId) {
+        throw createError({
+            statusCode: 400,
+            message: 'Bad Request'
+        })
+    }
+
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {
@@ -26,15 +35,6 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { VSId, candidateId } = await readBody(event)
-
-    if (!VSId || !candidateId) {
-        throw createError({
-            statusCode: 400,
-            message: 'Bad Request'
-        })
-    }
-
     const candidate = await prisma.candidate.findUnique({
         where: { id: parseInt(candidateId) },
         select: {
@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
     if (!candidate) {
         throw createError({
             statusCode: 404,
-            message: 'Not Found'
+            message: 'candidate Not Found'
         })
     }
 
@@ -56,14 +56,20 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const voteSession = await prisma.voting.findUnique({
+    const voting = await prisma.voting.findUnique({
         where: { id: parseInt(VSId) },
+        select: {
+            id: true,
+            startTime: true,
+            endTime: true,
+            groupId: true
+        }
     })
 
-    if (!voteSession) {
+    if (!voting) {
         throw createError({
             statusCode: 404,
-            message: 'Not Found'
+            message: 'Voting Not Found'
         })
     }
 
@@ -71,7 +77,7 @@ export default defineEventHandler(async (event) => {
         where: {
             voterId_groupId: {
                 voterId: studentId,
-                groupId: voteSession.groupId
+                groupId: voting.groupId
             }
         },
         select: null,
@@ -84,21 +90,21 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (Date.now() < voteSession.startTime.getTime()) {
+    if (Date.now() < voting.startTime.getTime()) {
         throw createError({
             statusCode: 400,
             message: '投票尚未開始'
         })
     }
 
-    if (Date.now() > voteSession.endTime.getTime()) {
+    if (Date.now() > voting.endTime.getTime()) {
         throw createError({
             statusCode: 400,
             message: '投票已結束'
         })
     }
 
-    const token = HS256(studentId.toString() + voteSession.id.toString() + voteSession.name, process.env.AUTH_SECRET as string).toString()
+    const token = HS256(studentId.toString() + voting.id.toString(), process.env.AUTH_SECRET as string).toString()
 
     try {
         await prisma.ballot.create({

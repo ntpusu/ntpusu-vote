@@ -33,7 +33,6 @@ export default defineEventHandler(async (event) => {
             endTime: true,
             group: {
                 select: {
-                    id: true,
                     name: true,
                 }
             },

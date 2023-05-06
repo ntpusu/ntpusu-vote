@@ -6,7 +6,9 @@
         >
             <div class="flex justify-around">
                 <div class="flex items-center text-center">
-                    <h1 class="text-2xl font-bold">{{ VS.name }}</h1>
+                    <h1 class="text-2xl font-bold sm:text-3xl md:text-4xl">
+                        {{ VS.name }}
+                    </h1>
                 </div>
                 <ElStatistic
                     class="text-center"
@@ -29,7 +31,18 @@
             </div>
             <ElDivider />
             <div class="text-center">
-                <h1 class="pb-6 text-xl font-bold">候 選 人</h1>
+                <h1
+                    v-if="VS.onlyOne"
+                    class="pb-6 text-xl font-bold sm:text-2xl md:text-3xl"
+                >
+                    {{ VS.onlyOne }}
+                </h1>
+                <h1
+                    v-else
+                    class="pb-6 text-xl font-bold sm:text-2xl md:text-3xl"
+                >
+                    候 選 人
+                </h1>
                 <ElSpace class="justify-center" wrap>
                     <ElCard
                         v-for="(candidate, index) in VS.candidates"
@@ -46,9 +59,11 @@
                         class="max-w-[12rem] md:max-w-[15rem] xl:max-w-[18rem]"
                     >
                         <div class="px-6 text-center">
-                            <h1 class="text-xl">{{ candidate.name }}</h1>
+                            <h1 class="text-lg sm:text-xl md:text-2xl">
+                                {{ candidate.name }}
+                            </h1>
                         </div>
-                        <ElDivider />
+                        <ElDivider class="!my-5" />
                         <ElBadge
                             :hidden="candidate._count.ballots !== winnerCnt()"
                             value="#最高票"
@@ -57,11 +72,10 @@
                                 class="m-1 text-center"
                                 title="票數"
                                 :value="candidate._count.ballots"
-                            >
-                                <template #suffix>票</template>
-                            </ElStatistic>
+                                suffix="票"
+                            />
                         </ElBadge>
-                        <ElDivider />
+                        <ElDivider class="!xy-5" />
                         <ElProgress
                             type="dashboard"
                             :percentage="
@@ -80,10 +94,10 @@
                                 <ElStatistic
                                     class="text-center"
                                     title="得票率"
+                                    :precision="2"
                                     :value="percentage"
-                                >
-                                    <template #suffix>%</template>
-                                </ElStatistic>
+                                    suffix="%"
+                                />
                             </template>
                         </ElProgress>
                     </ElCard>

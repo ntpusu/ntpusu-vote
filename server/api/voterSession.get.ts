@@ -42,6 +42,7 @@ export default defineEventHandler(async (event) => {
         },
         select: {
             id: true, name: true, startTime: true, endTime: true,
+            onlyOne: true,
             candidates: {
                 select: {
                     id: true,
@@ -53,9 +54,9 @@ export default defineEventHandler(async (event) => {
 
     const tokens: string[] = []
     for (const VSitem of VS) {
-        const token = HS256(studentId.toString() + VSitem.id.toString() + VSitem.name, process.env.AUTH_SECRET as string).toString()
+        const token = HS256(studentId.toString() + VSitem.id.toString(), process.env.AUTH_SECRET as string).toString()
         const ballot = await prisma.ballot.findUnique({
-            where: { token, },
+            where: { token },
             select: null,
         })
 
