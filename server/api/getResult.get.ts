@@ -47,6 +47,9 @@ export default defineEventHandler(async (event) => {
                             ballots: true,
                         }
                     }
+                },
+                orderBy: {
+                    id: 'asc',
                 }
             }
         }

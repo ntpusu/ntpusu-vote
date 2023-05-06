@@ -375,7 +375,6 @@
 </template>
 
 <script lang="ts" setup>
-import { stringLiteral } from '@babel/types'
 import { rand } from '@vueuse/shared'
 import type { Action } from 'element-plus'
 
