@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (!id) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request'
+            message: 'Bad Request',
         })
     }
 
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            message: '未登入'
+            message: '未登入',
         })
     }
 
@@ -25,11 +25,14 @@ export default defineEventHandler(async (event) => {
     if (studentId != process.env.ADMIN) {
         throw createError({
             statusCode: 401,
-            message: '不在管理員名單中'
+            message: '不在管理員名單中',
         })
     }
 
-    await prisma.admin.delete({ where: { id: parseInt(id) }, select: null, })
+    await prisma.admin.delete({
+        where: { id: parseInt(id) },
+        select: null,
+    })
 
     return {}
 })

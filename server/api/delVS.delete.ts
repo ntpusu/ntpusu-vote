@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (!id) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request'
+            message: 'Bad Request',
         })
     }
 
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            message: '未登入'
+            message: '未登入',
         })
     }
 
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
     if (!admin) {
         throw createError({
             statusCode: 401,
-            message: '不在管理員名單中'
+            message: '不在管理員名單中',
         })
     }
 
@@ -39,20 +39,20 @@ export default defineEventHandler(async (event) => {
             where: { id: parseInt(id) },
             select: {
                 startTime: true,
-            }
+            },
         })
 
         if (!VS) {
             throw createError({
                 statusCode: 404,
-                message: 'Not Found'
+                message: 'Not Found',
             })
         }
 
         if (Date.now() >= VS.startTime.getTime()) {
             throw createError({
                 statusCode: 403,
-                message: '投票已開始，不可刪除'
+                message: '投票已開始，不可刪除',
             })
         }
     }

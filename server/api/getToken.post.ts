@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (!token) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request'
+            message: 'Bad Request',
         })
     }
 
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            message: '未登入'
+            message: '未登入',
         })
     }
 
@@ -37,6 +37,7 @@ export default defineEventHandler(async (event) => {
     const ballot = await prisma.ballot.findUnique({
         where: { token },
         select: {
+            time: true,
             candidate: {
                 select: {
                     name: true,
@@ -47,8 +48,7 @@ export default defineEventHandler(async (event) => {
                     },
                 },
             },
-            time: true,
-        }
+        },
     })
 
     if (!ballot) {

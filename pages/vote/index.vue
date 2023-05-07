@@ -194,8 +194,8 @@
                             v-model="voteVisible[VSitem.id]"
                             width="30%"
                             class="mx-5 min-w-fit !rounded-lg"
-                            @open="startLoading(VSitem.id)"
-                            @close="endLoading(VSitem.id)"
+                            @open="voteLoading[VSitem.id] = true"
+                            @close="voteLoading[VSitem.id] = false"
                         >
                             <template #header>
                                 <div class="flex">
@@ -230,8 +230,9 @@
                                 <span
                                     v-else
                                     class="my-2 cursor-default text-base font-bold text-black sm:my-3 sm:text-lg md:my-4 md:text-xl"
-                                    >請選擇要投的候選人</span
                                 >
+                                    請選擇要投的候選人
+                                </span>
                                 <ElRadioGroup
                                     class="flex-col !items-stretch"
                                     v-model="voteData[VSitem.id]"
@@ -356,8 +357,6 @@
             align-center
             class="min-w-fit !rounded-lg px-5"
             width="30%"
-            @opened="startLoading(null)"
-            @closed="endLoading(null)"
         >
             <template #header>
                 <div class="text-2xl font-bold text-red-500">投票失敗</div>
@@ -424,16 +423,6 @@ const voteLoading: Ref<boolean[]> = ref([])
 const tokenLoading: Ref<boolean[]> = ref([])
 const resultLoading: Ref<boolean[]> = ref([])
 
-const startLoading = (id: number | null) => {
-    if (id) voteLoading.value[id] = true
-    document.body.style.overflowY = 'hidden'
-}
-
-const endLoading = (id: number | null) => {
-    if (id) voteLoading.value[id] = false
-    document.body.style.overflowY = 'auto'
-}
-
 const voteConfirm = async (VS: {
     id: number
     name: string
@@ -452,7 +441,7 @@ const voteConfirm = async (VS: {
 
     voteVisible.value[VS.id] = false
     setTimeout(() => {
-        startLoading(VS.id)
+        voteLoading.value[VS.id] = true
     }, 1)
 
     const candidate = VS.candidates.find(
@@ -533,27 +522,44 @@ const voteConfirm = async (VS: {
             })
         })
 
-    endLoading(VS.id)
+    voteLoading.value[VS.id] = false
 }
 
 const seeToken = async (index: number) => {
     tokenLoading.value[index] = true
 
-    if (!data.value) {
-        await VSRefresh()
-        return
-    }
-
-    await ElMessageBox.confirm(data.value.tokens[index], '投票憑證', {
+    await ElMessageBox.confirm(data.value!.tokens[index], '投票憑證', {
         cancelButtonText: '複製憑證',
         cancelButtonClass: 'el-button--success',
         confirmButtonText: '確 定',
         distinguishCancelAndClose: true,
         type: 'success',
         roundButton: true,
+    }).catch(async (action: Action) => {
+        if (action === 'cancel') {
+            await navigator.clipboard.writeText(data.value!.tokens[index])
+            ElMessage({
+                type: 'success',
+                message: '已複製',
+            })
+        }
     })
-        .then(() => {})
-        .catch(async (action: Action) => {
+
+    tokenLoading.value[index] = false
+}
+
+const seeResult = async (index: number) => {
+    resultLoading.value[index] = true
+
+    if (data.value!.tokens[index]) {
+        await ElMessageBox.confirm(data.value!.tokens[index], '投票憑證', {
+            cancelButtonText: '複製憑證',
+            cancelButtonClass: 'el-button--success',
+            confirmButtonText: '確 定',
+            distinguishCancelAndClose: true,
+            type: 'success',
+            roundButton: true,
+        }).catch(async (action: Action) => {
             if (action === 'cancel') {
                 await navigator.clipboard.writeText(data.value!.tokens[index])
                 ElMessage({
@@ -562,39 +568,6 @@ const seeToken = async (index: number) => {
                 })
             }
         })
-
-    tokenLoading.value[index] = false
-}
-
-const seeResult = async (index: number) => {
-    resultLoading.value[index] = true
-
-    if (!data.value) {
-        await VSRefresh()
-        return
-    }
-
-    if (data.value.tokens[index]) {
-        await ElMessageBox.confirm(data.value.tokens[index], '投票憑證', {
-            cancelButtonText: '複製憑證',
-            cancelButtonClass: 'el-button--success',
-            confirmButtonText: '確 定',
-            distinguishCancelAndClose: true,
-            type: 'success',
-            roundButton: true,
-        })
-            .then(() => {})
-            .catch(async (action: Action) => {
-                if (action === 'cancel') {
-                    await navigator.clipboard.writeText(
-                        data.value!.tokens[index]
-                    )
-                    ElMessage({
-                        type: 'success',
-                        message: '已複製',
-                    })
-                }
-            })
     } else {
         await ElMessageBox.alert('無投票憑證', '未投票', {
             showClose: false,

@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     if (!VSId || !candidateId) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request'
+            message: 'Bad Request',
         })
     }
 
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            message: '未登入'
+            message: '未登入',
         })
     }
 
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     if (!voter) {
         throw createError({
             statusCode: 401,
-            message: '不在投票人名冊中'
+            message: '不在投票人名冊中',
         })
     }
 
@@ -45,31 +45,30 @@ export default defineEventHandler(async (event) => {
     if (!candidate) {
         throw createError({
             statusCode: 404,
-            message: 'candidate Not Found'
+            message: 'candidate Not Found',
         })
     }
 
     if (candidate.votingId != parseInt(VSId)) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request'
+            message: 'Bad Request',
         })
     }
 
     const voting = await prisma.voting.findUnique({
         where: { id: parseInt(VSId) },
         select: {
-            id: true,
             startTime: true,
             endTime: true,
-            groupId: true
-        }
+            groupId: true,
+        },
     })
 
     if (!voting) {
         throw createError({
             statusCode: 404,
-            message: 'Voting Not Found'
+            message: 'Voting Not Found',
         })
     }
 
@@ -77,8 +76,8 @@ export default defineEventHandler(async (event) => {
         where: {
             voterId_groupId: {
                 voterId: studentId,
-                groupId: voting.groupId
-            }
+                groupId: voting.groupId,
+            },
         },
         select: null,
     })
@@ -86,25 +85,25 @@ export default defineEventHandler(async (event) => {
     if (!VIG) {
         throw createError({
             statusCode: 401,
-            message: '沒有投票權'
+            message: '沒有投票權',
         })
     }
 
     if (Date.now() < voting.startTime.getTime()) {
         throw createError({
             statusCode: 400,
-            message: '投票尚未開始'
+            message: '投票尚未開始',
         })
     }
 
     if (Date.now() > voting.endTime.getTime()) {
         throw createError({
             statusCode: 400,
-            message: '投票已結束'
+            message: '投票已結束',
         })
     }
 
-    const token = HS256(studentId.toString() + voting.id.toString(), process.env.AUTH_SECRET as string).toString()
+    const token = HS256(studentId.toString() + VSId.toString(), process.env.AUTH_SECRET as string).toString()
 
     try {
         await prisma.ballot.create({

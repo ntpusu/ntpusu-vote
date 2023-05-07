@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            message: '未登入'
+            message: '未登入',
         })
     }
 
@@ -21,22 +21,22 @@ export default defineEventHandler(async (event) => {
     if (!admin) {
         throw createError({
             statusCode: 401,
-            message: '不在管理員名單中'
+            message: '不在管理員名單中',
         })
     }
 
     const { voteName, voteGroup, startTime, endTime, candidates } = await readBody(event) as {
-        voteName: string;
-        voteGroup: number | undefined;
-        startTime: string;
-        endTime: string;
-        candidates: string | string[];
+        voteName: string
+        voteGroup: number | undefined
+        startTime: string
+        endTime: string
+        candidates: string | string[]
     }
 
     if (!voteName || !voteGroup || !startTime || !endTime || !candidates) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request'
+            message: 'Bad Request',
         })
     }
 
@@ -58,17 +58,17 @@ export default defineEventHandler(async (event) => {
             data: [
                 {
                     name: '同意',
-                    votingId: VS.id
+                    votingId: VS.id,
                 },
                 {
                     name: '不同意',
-                    votingId: VS.id
+                    votingId: VS.id,
                 },
                 {
                     name: '廢票',
-                    votingId: VS.id
-                }
-            ]
+                    votingId: VS.id,
+                },
+            ],
         })
     }
     else {
@@ -76,16 +76,18 @@ export default defineEventHandler(async (event) => {
             await prisma.candidate.create({
                 data: {
                     name: candidate,
-                    votingId: VS.id
-                }
+                    votingId: VS.id,
+                },
+                select: null,
             })
         }
 
         await prisma.candidate.create({
             data: {
                 name: '廢票',
-                votingId: VS.id
-            }
+                votingId: VS.id,
+            },
+            select: null,
         })
     }
 

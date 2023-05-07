@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            message: '未登入'
+            message: '未登入',
         })
     }
 
@@ -30,42 +30,29 @@ export default defineEventHandler(async (event) => {
     if (!voter) {
         throw createError({
             statusCode: 401,
-            message: '不在投票人名冊中'
+            message: '不在投票人名冊中',
         })
     }
 
     const VS = await prisma.voting.findUnique({
-        where: {
-            id: parseInt(id),
+        where: { id: parseInt(id) },
+        select: {
+            endTime: true,
+            groupId: true,
         },
-        include: {
-            candidates: {
-                select: {
-                    name: true,
-                    _count: {
-                        select: {
-                            ballots: true,
-                        }
-                    }
-                },
-                orderBy: {
-                    id: 'asc',
-                }
-            }
-        }
     })
 
     if (!VS) {
         throw createError({
             statusCode: 404,
-            message: 'Not Found'
+            message: 'Not Found',
         })
     }
 
     if (Date.now() <= VS.endTime.getTime()) {
         throw createError({
             statusCode: 400,
-            message: '投票尚未結束'
+            message: '投票尚未結束',
         })
     }
 
@@ -88,10 +75,33 @@ export default defineEventHandler(async (event) => {
         if (!VIG) {
             throw createError({
                 statusCode: 401,
-                message: '沒有查看權限'
+                message: '沒有查看權限',
             })
         }
     }
 
-    return VS
+    return await prisma.voting.findUnique({
+        where: {
+            id: parseInt(id),
+        },
+        select: {
+            name: true,
+            startTime: true,
+            endTime: true,
+            onlyOne: true,
+            candidates: {
+                select: {
+                    name: true,
+                    _count: {
+                        select: {
+                            ballots: true,
+                        },
+                    },
+                },
+                orderBy: {
+                    id: 'asc',
+                },
+            },
+        },
+    })
 })

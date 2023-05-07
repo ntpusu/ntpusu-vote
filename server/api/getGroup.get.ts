@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            message: '未登入'
+            message: '未登入',
         })
     }
 
@@ -21,9 +21,11 @@ export default defineEventHandler(async (event) => {
     if (!admin) {
         throw createError({
             statusCode: 401,
-            message: '不在管理員名單中'
+            message: '不在管理員名單中',
         })
     }
 
-    return await prisma.group.findMany()
+    return await prisma.group.findMany({
+        orderBy: { id: 'asc' }
+    })
 })

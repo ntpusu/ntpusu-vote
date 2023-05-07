@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
-            message: '未登入'
+            message: '未登入',
         })
     }
 
@@ -20,15 +20,15 @@ export default defineEventHandler(async (event) => {
             voterInGroup: {
                 select: {
                     groupId: true,
-                }
+                },
             },
-        }
+        },
     })
 
     if (!voter) {
         throw createError({
             statusCode: 401,
-            message: '不在投票人名冊中'
+            message: '不在投票人名冊中',
         })
     }
 
@@ -41,7 +41,10 @@ export default defineEventHandler(async (event) => {
             },
         },
         select: {
-            id: true, name: true, startTime: true, endTime: true,
+            id: true,
+            name: true,
+            startTime: true,
+            endTime: true,
             onlyOne: true,
             candidates: {
                 select: {
