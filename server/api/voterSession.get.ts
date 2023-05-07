@@ -53,6 +53,9 @@ export default defineEventHandler(async (event) => {
                 },
             },
         },
+        orderBy: {
+            id: 'asc',
+        },
     })
 
     const tokens: string[] = []
