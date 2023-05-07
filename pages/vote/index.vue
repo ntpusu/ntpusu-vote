@@ -134,7 +134,7 @@
                     >
                         <div
                             v-if="VSitem.onlyOne"
-                            class="flex text-sm sm:text-base md:text-lg"
+                            class="flex items-center text-sm sm:text-base md:text-lg"
                         >
                             <ElTag
                                 type="success"
