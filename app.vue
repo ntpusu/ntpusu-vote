@@ -19,10 +19,10 @@
                 :ellipsis="false"
                 :active-index="curIndex"
                 @select="handleSelect"
-                class="h-12 sm:h-14 md:h-16"
+                class="h-14 sm:h-[3.75rem] md:h-16"
             >
                 <span
-                    class="m-auto cursor-pointer pl-2 text-xl font-bold sm:pl-3 sm:text-2xl md:pl-4 md:text-3xl"
+                    class="m-auto cursor-pointer pl-3 text-xl font-bold sm:pl-4 sm:text-2xl md:pl-5 md:text-3xl"
                     @click="useRouter().push('/')"
                 >
                     選舉委員會
@@ -157,8 +157,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ElAffix } from 'element-plus'
-
 const route = useRoute()
 
 useSeoMeta({
@@ -175,11 +173,11 @@ useSeoMeta({
     ogType: 'website',
     ogUrl: 'https://ntpu-vote-2023.vercel.app/',
     ogImage: 'https://ntpu-vote-2023.vercel.app/favicon.ico',
-    ogImageAlt:
-        'https://i0.wp.com/su.ntpu.org/wp-content/uploads/2022/09/297330040_5472635102757142_2117759161702702779_n.jpg',
-    ogImageUrl: 'https://ntpu-vote-2023.vercel.app/favicon.ico',
+    ogImageAlt: '國立臺北大學三峽校區學生會的標誌',
     ogImageType: 'image/png',
+    ogImageSecureUrl: 'https://ntpu-vote-2023.vercel.app/',
     ogLocale: 'zh_TW',
+    ogLocaleAlternate: 'zh_TW',
     author: '國立臺北大學三峽校區學生會',
     creator: '國立臺北大學三峽校區學生會',
     publisher: '國立臺北大學三峽校區學生會',
@@ -188,8 +186,7 @@ useSeoMeta({
         return `${route.meta.title} | 國立臺北大學三峽校區學生會投票網站`
     },
     twitterImage: 'https://ntpu-vote-2023.vercel.app/favicon.ico',
-    twitterImageAlt:
-        'https://i0.wp.com/su.ntpu.org/wp-content/uploads/2022/09/297330040_5472635102757142_2117759161702702779_n.jpg',
+    twitterImageAlt: '國立臺北大學三峽校區學生會的標誌',
 })
 
 useHead({
