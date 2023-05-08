@@ -22,18 +22,20 @@
                 </ElSpace>
             </ElFormItem>
             <ElFormItem label="範圍" prop="voteGroup">
-                <ElSelect
-                    v-model="addVote.voteGroup"
-                    placeholder="請選擇投票範圍"
-                    clearable
-                >
-                    <el-option
-                        v-for="item in groupOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    />
-                </ElSelect>
+                <ClientOnly>
+                    <ElSelect
+                        v-model="addVote.voteGroup"
+                        placeholder="請選擇投票範圍"
+                        clearable
+                    >
+                        <el-option
+                            v-for="item in groupOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        />
+                    </ElSelect>
+                </ClientOnly>
             </ElFormItem>
             <ElFormItem label="開始時間" prop="startTime">
                 <ClientOnly>
@@ -225,7 +227,7 @@ definePageMeta({
 })
 
 const { data: VS, refresh: VSRefresh } = await useLazyFetch('/api/getVS')
-const { data: Group } = await useLazyFetch('/api/getGroup')
+const { data: Group } = await useFetch('/api/getGroup')
 
 const showTime = ref(false)
 const showOption = ref(true)
@@ -267,7 +269,7 @@ const addDomain = () => {
 
 const rules = reactive<FormRules>({
     voteName: [{ required: true, message: '名稱為必填', trigger: 'blur' }],
-    voteGroup: [{ required: true, message: '組別為必填', trigger: 'change' }],
+    voteGroup: [{ required: true, message: '範圍為必填', trigger: 'change' }],
     startTime: [
         { required: true, message: '開始時間為必填', trigger: 'change' },
     ],
