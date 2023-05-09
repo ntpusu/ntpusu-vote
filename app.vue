@@ -131,9 +131,11 @@
                     <div
                         class="mx-6 -mb-8 flex h-[5vh] justify-between sm:-mb-5 md:-mb-2"
                     >
-                        <span class="text-sm sm:text-base md:text-lg">
+                        <div
+                            class="flex items-center text-sm sm:text-base md:text-lg"
+                        >
                             Cookie 使用聲明
-                        </span>
+                        </div>
                         <ElButton type="warning" @click="close">
                             <span class="font-bold">了 解</span>
                         </ElButton>
