@@ -15,7 +15,7 @@
             </ElSpace>
         </template>
         <template #default>
-            <template v-if="!VSPending && data !== null">
+            <div v-if="!VSPending && data !== null" class="flex justify-center">
                 <ElSpace
                     v-if="data.VS.length"
                     alignment="center"
@@ -396,7 +396,7 @@
                         >
                     </template>
                 </ElResult>
-            </template>
+            </div>
         </template>
     </ElSkeleton>
     <ClientOnly>
