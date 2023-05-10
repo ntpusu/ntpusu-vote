@@ -1,6 +1,6 @@
 <template>
     <div
-        class="m-auto flex w-full justify-center rounded-xl border-4 border-blue-100 p-5 sm:w-7/12 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
+        class="m-auto flex w-full justify-center rounded-xl border-4 border-green-200 p-5 sm:w-7/12 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
     >
         <ElForm
             label-width="auto"
@@ -126,7 +126,7 @@
             </ElFormItem>
         </ElForm>
     </div>
-    <ElDivider border-style="dashed" />
+    <ElDivider />
     <div class="flex justify-center">
         <ElSwitch
             class="mx-3 mb-8"
@@ -145,76 +145,172 @@
             inactive-text="操作"
         />
     </div>
-    <div
-        class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-5/6 xl:w-2/3 2xl:w-1/2"
-    >
-        <ClientOnly>
-            <ElTable
-                :data="tableData()"
-                border
-                table-layout="auto"
-                empty-text="Empty~~~"
-                size="small"
-            >
-                <div prop="id" class="hidden" />
-                <div prop="startTime" class="hidden" />
-                <div prop="endTimeStr" class="hidden" />
-                <ElTableColumn prop="title" label="名稱" align="center" />
-                <ElTableColumn prop="group" label="投票範圍" align="center" />
-                <ElTableColumn
-                    v-if="showTime"
-                    prop="startTimeStr"
-                    label="開始時間"
-                    align="center"
-                />
-                <ElTableColumn
-                    v-if="showTime"
-                    prop="endTimeStr"
-                    label="結束時間"
-                    align="center"
-                />
-                <ElTableColumn
-                    v-if="showOption"
-                    label="結果"
-                    class="min-w-fit"
-                    align="center"
+    <template v-if="!VSPending">
+        <div
+            class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-5/6 xl:w-2/3 2xl:w-1/2"
+        >
+            <ClientOnly>
+                <ElTable
+                    :data="tableData()"
+                    border
+                    table-layout="auto"
+                    empty-text="Empty~~~"
+                    size="small"
                 >
-                    <template #default="{ row }">
-                        <ElButton
-                            size="small"
-                            type="success"
-                            :disabled="
-                                new Date(row.endTime).getTime() >= Date.now()
-                            "
-                            @click="useRouter().push('/vote/' + row.id)"
-                        >
-                            <span class="font-bold">結 果</span>
-                        </ElButton>
-                    </template>
-                </ElTableColumn>
-                <ElTableColumn
-                    v-if="showOption"
-                    label="操作"
-                    class="min-w-fit"
-                    align="center"
+                    <div prop="id" class="hidden" />
+                    <div prop="startTime" class="hidden" />
+                    <div prop="endTimeStr" class="hidden" />
+                    <ElTableColumn prop="title" label="名稱" align="center" />
+                    <ElTableColumn
+                        prop="group"
+                        label="投票範圍"
+                        align="center"
+                    />
+                    <ElTableColumn
+                        v-if="showTime"
+                        prop="startTimeStr"
+                        label="開始時間"
+                        align="center"
+                    />
+                    <ElTableColumn
+                        v-if="showTime"
+                        prop="endTimeStr"
+                        label="結束時間"
+                        align="center"
+                    />
+                    <ElTableColumn
+                        v-if="showOption"
+                        label="結果"
+                        class="min-w-fit"
+                        align="center"
+                    >
+                        <template #default="{ row }">
+                            <ElButton
+                                size="small"
+                                type="success"
+                                :disabled="
+                                    new Date(row.endTime).getTime() >=
+                                    Date.now()
+                                "
+                                @click="useRouter().push('/vote/' + row.id)"
+                            >
+                                <span class="font-bold">結 果</span>
+                            </ElButton>
+                        </template>
+                    </ElTableColumn>
+                    <ElTableColumn
+                        v-if="showOption"
+                        label="操作"
+                        class="min-w-fit"
+                        align="center"
+                    >
+                        <template #default="{ row }">
+                            <ElPopconfirm
+                                title="確定要封存嗎？"
+                                cancElButton-text="取消"
+                                confirm-button-text="確定"
+                                @confirm="handleArchive(row.id)"
+                            >
+                                <template #reference>
+                                    <ElButton size="small" type="warning">
+                                        <span class="font-bold">封 存</span>
+                                    </ElButton>
+                                </template>
+                            </ElPopconfirm>
+                        </template>
+                    </ElTableColumn>
+                </ElTable>
+            </ClientOnly>
+        </div>
+        <ElDivider border-style="dashed" />
+        <div
+            class="m-auto w-full rounded-xl border-4 border-red-100 p-5 md:w-11/12 lg:w-5/6 xl:w-2/3 2xl:w-1/2"
+        >
+            <ClientOnly>
+                <ElTable
+                    :data="archiveData()"
+                    border
+                    table-layout="auto"
+                    empty-text="Empty~~~"
+                    size="small"
                 >
-                    <template #default="{ row }">
-                        <ElPopconfirm
-                            title="確定要刪除嗎？"
-                            cancElButton-text="取消"
-                            confirm-button-text="確定"
-                            @confirm="handleDelete(row.id)"
-                        >
-                            <template #reference>
-                                <ElButton size="small" type="warning">
-                                    <span class="font-bold">刪 除</span>
-                                </ElButton>
-                            </template>
-                        </ElPopconfirm>
-                    </template>
-                </ElTableColumn>
-            </ElTable>
-        </ClientOnly>
+                    <div prop="id" class="hidden" />
+                    <div prop="startTime" class="hidden" />
+                    <div prop="endTimeStr" class="hidden" />
+                    <ElTableColumn prop="title" label="名稱" align="center" />
+                    <ElTableColumn
+                        prop="group"
+                        label="投票範圍"
+                        align="center"
+                    />
+                    <ElTableColumn
+                        v-if="showTime"
+                        prop="startTimeStr"
+                        label="開始時間"
+                        align="center"
+                    />
+                    <ElTableColumn
+                        v-if="showTime"
+                        prop="endTimeStr"
+                        label="結束時間"
+                        align="center"
+                    />
+                    <ElTableColumn
+                        v-if="showOption"
+                        label="結果"
+                        class="min-w-fit"
+                        align="center"
+                    >
+                        <template #default="{ row }">
+                            <ElPopconfirm
+                                title="確定要解封嗎？"
+                                cancElButton-text="取消"
+                                confirm-button-text="確定"
+                                @confirm="handleUnarchive(row.id)"
+                            >
+                                <template #reference>
+                                    <ElButton size="small" type="primary">
+                                        <span class="font-bold">解除封存</span>
+                                    </ElButton>
+                                </template>
+                            </ElPopconfirm>
+                        </template>
+                    </ElTableColumn>
+                    <ElTableColumn
+                        v-if="showOption"
+                        label="操作"
+                        class="min-w-fit"
+                        align="center"
+                    >
+                        <template #default="{ row }">
+                            <ElPopconfirm
+                                title="確定要刪除嗎？"
+                                cancElButton-text="取消"
+                                confirm-button-text="確定"
+                                @confirm="handleDelete(row.id)"
+                            >
+                                <template #reference>
+                                    <ElButton size="small" type="danger">
+                                        <span class="font-bold">刪 除</span>
+                                    </ElButton>
+                                </template>
+                            </ElPopconfirm>
+                        </template>
+                    </ElTableColumn>
+                </ElTable>
+            </ClientOnly>
+        </div>
+    </template>
+    <ElDivider />
+    <div class="flex justify-center">
+        <ElButton
+            type="primary"
+            title="設定管理員"
+            plain
+            @click="useRouter().push('/setAdmin')"
+        >
+            <span class="font-bold">設定管理員</span>
+        </ElButton>
     </div>
 </template>
 
@@ -226,7 +322,11 @@ definePageMeta({
     title: '管理',
 })
 
-const { data: VS, refresh: VSRefresh } = await useLazyFetch('/api/getVS')
+const {
+    data: VS,
+    pending: VSPending,
+    refresh: VSRefresh,
+} = await useLazyFetch('/api/getVS')
 const { data: Group } = await useFetch('/api/getGroup')
 
 const showTime = ref(false)
@@ -334,15 +434,61 @@ const groupOptions = computed(() => {
 const tableData = () => {
     if (!VS.value) return []
 
-    return VS.value.map((item) => ({
-        id: item.id,
-        title: item.name,
-        group: item.group.name,
-        startTime: new Date(item.startTime),
-        startTimeStr: new Date(item.startTime).toLocaleString(),
-        endTime: new Date(item.endTime),
-        endTimeStr: new Date(item.endTime).toLocaleString(),
-    }))
+    return VS.value
+        .filter((item) => !item.delete)
+        .map((item) => ({
+            id: item.id,
+            title: item.name,
+            group: item.group.name,
+            startTime: new Date(item.startTime),
+            startTimeStr: new Date(item.startTime).toLocaleString(),
+            endTime: new Date(item.endTime),
+            endTimeStr: new Date(item.endTime).toLocaleString(),
+        }))
+}
+
+const archiveData = () => {
+    if (!VS.value) return []
+
+    return VS.value
+        .filter((item) => item.delete)
+        .map((item) => ({
+            id: item.id,
+            title: item.name,
+            group: item.group.name,
+            startTime: new Date(item.startTime),
+            startTimeStr: new Date(item.startTime).toLocaleString(),
+            endTime: new Date(item.endTime),
+            endTimeStr: new Date(item.endTime).toLocaleString(),
+        }))
+}
+
+const handleArchive = async (id: number) => {
+    await useFetch('/api/archiveVS', {
+        method: 'POST',
+        body: { id },
+    })
+        .then(async () => {
+            ElMessage.success('封存成功')
+            await VSRefresh()
+        })
+        .catch(() => {
+            ElMessage.error('封存失敗')
+        })
+}
+
+const handleUnarchive = async (id: number) => {
+    await useFetch('/api/unarchiveVS', {
+        method: 'POST',
+        body: { id },
+    })
+        .then(async () => {
+            ElMessage.success('解封成功')
+            await VSRefresh()
+        })
+        .catch(() => {
+            ElMessage.error('解封失敗')
+        })
 }
 
 const handleDelete = async (id: number) => {

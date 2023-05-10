@@ -44,6 +44,7 @@ export default defineEventHandler(async (event) => {
                     voting: {
                         select: {
                             name: true,
+                            delete: true,
                         },
                     },
                 },
@@ -55,6 +56,13 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 404,
             message: '找不到該票'
+        })
+    }
+
+    if (ballot.candidate.voting.delete) {
+        throw createError({
+            statusCode: 401,
+            message: '投票已被封存'
         })
     }
 

@@ -31,6 +31,7 @@ export default defineEventHandler(async (event) => {
             name: true,
             startTime: true,
             endTime: true,
+            delete: true,
             group: {
                 select: {
                     name: true,

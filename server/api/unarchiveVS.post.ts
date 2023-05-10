@@ -1,7 +1,7 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const { id } = getQuery(event) as { id: string | undefined }
+    const { id } = await readBody(event) as { id: string | undefined }
 
     if (!id) {
         throw createError({
@@ -22,34 +22,21 @@ export default defineEventHandler(async (event) => {
     const email = session.user.email
     const studentId = email.substring(1, 10)
 
-    if (studentId != process.env.ADMIN) {
-        throw createError({
-            statusCode: 401,
-            message: '不是超級管理員',
-        })
-    }
-
-    const VS = await prisma.voting.findUnique({
-        where: { id: parseInt(id) },
-        select: { delete: true },
+    const admin = await prisma.admin.findUnique({
+        where: { id: parseInt(studentId) },
+        select: null,
     })
 
-    if (!VS) {
+    if (!admin) {
         throw createError({
-            statusCode: 404,
-            message: 'Not Found',
+            statusCode: 401,
+            message: '不在管理員名單中',
         })
     }
 
-    if (!VS.delete) {
-        throw createError({
-            statusCode: 403,
-            message: '投票尚未封存',
-        })
-    }
-
-    await prisma.voting.delete({
+    await prisma.voting.update({
         where: { id: parseInt(id) },
+        data: { delete: false },
         select: null,
     })
 

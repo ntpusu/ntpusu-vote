@@ -37,9 +37,7 @@ export default defineEventHandler(async (event) => {
 
     const candidate = await prisma.candidate.findUnique({
         where: { id: parseInt(candidateId) },
-        select: {
-            votingId: true,
-        },
+        select: { votingId: true },
     })
 
     if (!candidate) {
@@ -61,6 +59,7 @@ export default defineEventHandler(async (event) => {
         select: {
             startTime: true,
             endTime: true,
+            delete: true,
             groupId: true,
         },
     })
@@ -69,6 +68,13 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 404,
             message: 'Voting Not Found',
+        })
+    }
+
+    if (voting.delete) {
+        throw createError({
+            statusCode: 401,
+            message: '投票已被封存',
         })
     }
 

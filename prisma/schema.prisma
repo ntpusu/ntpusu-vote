@@ -8,33 +8,38 @@ datasource db {
 }
 
 model Voting {
-  id         Int         @id @default(autoincrement())
+  id         Int         @unique @default(autoincrement())
   name       String
   startTime  DateTime
   endTime    DateTime
   candidates Candidate[]
   onlyOne    String?
   groupId    Int
-  group      Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group      Group       @relation(fields: [groupId], references: [id])
+  delete     Boolean     @default(false)
 
+  @@id([id, groupId])
   @@unique([name, groupId])
 }
 
 model Candidate {
-  id       Int      @id @default(autoincrement())
+  id       Int      @unique @default(autoincrement())
   name     String
   ballots  Ballot[]
   votingId Int
   voting   Voting   @relation(fields: [votingId], references: [id], onDelete: Cascade)
 
+  @@id([id, votingId])
   @@unique([name, votingId])
 }
 
 model Ballot {
-  token       String    @id
+  token       String    @unique
   time        DateTime  @default(now())
   candidateId Int
   candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@id([token, candidateId])
 }
 
 model Voter {

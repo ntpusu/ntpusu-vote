@@ -39,6 +39,7 @@ export default defineEventHandler(async (event) => {
         select: {
             endTime: true,
             groupId: true,
+            delete: true,
         },
     })
 
@@ -53,6 +54,13 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             message: '投票尚未結束',
+        })
+    }
+
+    if (VS.delete) {
+        throw createError({
+            statusCode: 401,
+            message: '投票已被封存',
         })
     }
 
@@ -81,9 +89,7 @@ export default defineEventHandler(async (event) => {
     }
 
     return await prisma.voting.findUnique({
-        where: {
-            id: parseInt(id),
-        },
+        where: { id: parseInt(id) },
         select: {
             name: true,
             startTime: true,
