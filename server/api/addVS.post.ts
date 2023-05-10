@@ -1,6 +1,22 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
+import { Prisma } from '@prisma/client'
 export default defineEventHandler(async (event) => {
+    const { voteName, voteGroup, startTime, endTime, candidates } = await readBody(event) as {
+        voteName: string
+        voteGroup: number | undefined
+        startTime: string
+        endTime: string
+        candidates: string | string[]
+    }
+
+    if (!voteName || !voteGroup || !startTime || !endTime || !candidates) {
+        throw createError({
+            statusCode: 400,
+            message: 'Bad Request',
+        })
+    }
+
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {
@@ -22,21 +38,6 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 401,
             message: '不在管理員名單中',
-        })
-    }
-
-    const { voteName, voteGroup, startTime, endTime, candidates } = await readBody(event) as {
-        voteName: string
-        voteGroup: number | undefined
-        startTime: string
-        endTime: string
-        candidates: string | string[]
-    }
-
-    if (!voteName || !voteGroup || !startTime || !endTime || !candidates) {
-        throw createError({
-            statusCode: 400,
-            message: 'Bad Request',
         })
     }
 
@@ -72,22 +73,14 @@ export default defineEventHandler(async (event) => {
         })
     }
     else {
-        for (const candidate of candidates) {
-            await prisma.candidate.create({
-                data: {
-                    name: candidate,
-                    votingId: VS.id,
-                },
-                select: null,
-            })
-        }
-
-        await prisma.candidate.create({
-            data: {
+        await prisma.candidate.createMany({
+            data: candidates.map((candidate) => ({
+                name: candidate,
+                votingId: VS.id,
+            })).concat([{
                 name: '廢票',
                 votingId: VS.id,
-            },
-            select: null,
+            }]),
         })
     }
 

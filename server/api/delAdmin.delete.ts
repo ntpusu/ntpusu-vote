@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     if (studentId != process.env.ADMIN) {
         throw createError({
             statusCode: 401,
-            message: '不在管理員名單中',
+            message: '不是超級管理員',
         })
     }
 

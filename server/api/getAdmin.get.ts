@@ -13,10 +13,10 @@ export default defineEventHandler(async (event) => {
     const email = session.user.email
     const studentId = email.substring(1, 10)
 
-    if (studentId !== process.env.ADMIN) {
+    if (studentId != process.env.ADMIN) {
         throw createError({
             statusCode: 401,
-            message: '不在管理員名單中',
+            message: '不是超級管理員',
         })
     }
 
