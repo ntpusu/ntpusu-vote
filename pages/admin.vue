@@ -200,7 +200,7 @@
                     </ElTableColumn>
                     <ElTableColumn
                         v-if="showOption"
-                        label="操作"
+                        label="封存"
                         class="min-w-fit"
                         align="center"
                     >
@@ -257,7 +257,7 @@
                     />
                     <ElTableColumn
                         v-if="showOption"
-                        label="結果"
+                        label="解除封存"
                         class="min-w-fit"
                         align="center"
                     >
@@ -278,7 +278,7 @@
                     </ElTableColumn>
                     <ElTableColumn
                         v-if="showOption"
-                        label="操作"
+                        label="刪除"
                         class="min-w-fit"
                         align="center"
                     >
