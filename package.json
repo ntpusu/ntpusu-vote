@@ -15,10 +15,10 @@
     "nuxt": "^3.4.2",
     "nuxt-security": "^0.13.0",
     "prettier-plugin-tailwindcss": "^0.2.7",
-    "prisma": "^4.13.0"
+    "prisma": "^4.14.0"
   },
   "dependencies": {
-    "@prisma/client": "^4.13.0",
+    "@prisma/client": "^4.14.0",
     "@types/crypto-js": "^4.1.1",
     "@vercel/analytics": "^1.0.0",
     "consola": "^3.0.1",
