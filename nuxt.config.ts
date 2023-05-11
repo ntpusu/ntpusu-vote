@@ -71,5 +71,10 @@ export default defineNuxtConfig({
                 rateLimiter: false,
             },
         },
+        '/form': {
+            headers: {
+                'Cross-Origin-Embedder-Policy': 'unsafe-none',
+            },
+        },
     },
 });

@@ -100,15 +100,15 @@
             </ElMenu>
         </ClientOnly>
         <ElScrollbar :always="true">
+            <noscript>
+                <strong>
+                    您的瀏覽器尚未啟用
+                    JavaScript，因此無法開啟檔案。請於啟用後重新載入頁面。
+                </strong>
+            </noscript>
             <div class="m-2 sm:m-3 md:m-4">
                 <NuxtPage />
             </div>
-            <noscript>
-                <strong>
-                    此網頁需要支援 JavaScript
-                    才能正確運行，請先至你的瀏覽器設定中開啟 JavaScript。
-                </strong>
-            </noscript>
         </ElScrollbar>
         <ElDivider class="!m-0" />
         <div
