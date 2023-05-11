@@ -22,7 +22,7 @@
                 class="h-14 sm:h-[3.75rem] md:h-16"
             >
                 <span
-                    class="m-auto cursor-pointer ml-3 text-xl font-bold sm:ml-4 sm:text-2xl md:ml-5 md:text-3xl"
+                    class="m-auto ml-3 cursor-pointer text-xl font-bold sm:ml-4 sm:text-2xl md:ml-5 md:text-3xl"
                     @click="useRouter().push('/')"
                 >
                     選舉委員會
@@ -45,6 +45,16 @@
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
                         投票
+                    </span>
+                </ElMenuItem>
+                <ElMenuItem
+                    v-if="status === 'authenticated'"
+                    class="!px-3 sm:!px-4 md:!px-5"
+                    index="/form"
+                    @click="useRouter().push('/form')"
+                >
+                    <span class="text-sm font-bold sm:text-base md:text-lg">
+                        表單
                     </span>
                 </ElMenuItem>
                 <ElMenuItem
