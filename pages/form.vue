@@ -8,7 +8,7 @@
         marginwidth="0"
         class="m-auto flex"
     >
-        載入中...
+        載入中......
     </iframe>
 </template>
 
