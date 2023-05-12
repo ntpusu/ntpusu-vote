@@ -429,6 +429,7 @@
 <script lang="ts" setup>
 import { rand } from '@vueuse/shared'
 import type { Action } from 'element-plus'
+import { useReCaptcha } from 'vue-recaptcha-v3'
 
 definePageMeta({
     title: '投票',
@@ -471,6 +472,15 @@ const voteLoading: Ref<boolean[]> = ref([])
 const tokenLoading: Ref<boolean[]> = ref([])
 const resultLoading: Ref<boolean[]> = ref([])
 
+const recaptchaInstance = useReCaptcha()
+
+const recaptcha = async (action: string) => {
+    await recaptchaInstance?.recaptchaLoaded()
+    const token = await recaptchaInstance?.executeRecaptcha(action)
+
+    return token
+}
+
 const voteConfirm = async (VS: {
     id: number
     name: string
@@ -506,6 +516,28 @@ const voteConfirm = async (VS: {
         }
     )
         .then(async () => {
+            const response = await recaptcha('vote')
+
+            const { data } = (await useFetch('/api/recaptcha', {
+                method: 'POST',
+                body: JSON.stringify({ response }),
+            })) as unknown as {
+                data: {
+                    value: {
+                        action: string
+                        challenge_ts: string
+                        hostname: string
+                        score: number
+                        success: boolean
+                    }
+                }
+            }
+
+            if (data.value.action != 'vote' || data.value.score <= 0.6) {
+                ElMessage.error('ReCatCha驗證失敗，請稍後再試')
+                return
+            }
+
             await useFetch('/api/vote', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -597,6 +629,28 @@ const seeToken = async (index: number) => {
 }
 
 const seeResult = async (index: number) => {
+    const response = await recaptcha('result')
+
+    const { data: res } = (await useFetch('/api/recaptcha', {
+        method: 'POST',
+        body: JSON.stringify({ response }),
+    })) as unknown as {
+        data: {
+            value: {
+                action: string
+                challenge_ts: string
+                hostname: string
+                score: number
+                success: boolean
+            }
+        }
+    }
+
+    if (res.value.action != 'vote' || res.value.score <= 0.6) {
+        ElMessage.error('ReCatCha驗證失敗，請稍後再試')
+        return
+    }
+
     resultLoading.value[index] = true
 
     if (data.value!.tokens[index]) {

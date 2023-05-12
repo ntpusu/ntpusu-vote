@@ -23,7 +23,7 @@
             >
                 <span
                     class="m-auto ml-3 cursor-pointer text-xl font-bold sm:ml-4 sm:text-2xl md:ml-5 md:text-3xl"
-                    @click="useRouter().push('/')"
+                    @click="router('/')"
                 >
                     選舉委員會
                 </span>
@@ -31,7 +31,7 @@
                 <ElMenuItem
                     class="!px-3 sm:!px-4 md:!px-5"
                     index="/"
-                    @click="useRouter().push('/')"
+                    @click="router('/')"
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
                         首頁
@@ -41,7 +41,7 @@
                     v-if="status === 'authenticated'"
                     class="!px-3 sm:!px-4 md:!px-5"
                     index="/vote"
-                    @click="useRouter().push('/vote')"
+                    @click="router('/vote')"
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
                         投票
@@ -51,7 +51,7 @@
                     v-if="status === 'authenticated'"
                     class="!px-3 sm:!px-4 md:!px-5"
                     index="/form"
-                    @click="useRouter().push('/form')"
+                    @click="router('/form')"
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
                         表單
@@ -81,7 +81,7 @@
                     v-if="status === 'unauthenticated'"
                     class="!px-3 sm:!px-4 md:!px-5"
                     index="/login"
-                    @click="useRouter().push('/login')"
+                    @click="tologin"
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
                         登入
@@ -169,6 +169,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useReCaptcha } from 'vue-recaptcha-v3'
+
 const route = useRoute()
 
 useSeoMeta({
@@ -229,11 +231,70 @@ const cookie = useCookie('cookie', {
 
 const showCookie = ref(!cookie.value)
 
-const { data: admin } = useFetch('/api/checkAdmin')
+const { data: admin } = await useFetch('/api/checkAdmin')
 
 const { status, signOut } = useAuth()
 
 const handleSelect = (key: string) => {
     curIndex.value = key
+}
+
+const recaptchaInstance = useReCaptcha()
+
+const recaptcha = async (action: string) => {
+    await recaptchaInstance?.recaptchaLoaded()
+    const token = await recaptchaInstance?.executeRecaptcha(action)
+
+    return token
+}
+
+const router = async (to: string) => {
+    const response = await recaptcha('router')
+
+    const { data } = (await useFetch('/api/recaptcha', {
+        method: 'POST',
+        body: JSON.stringify({ response }),
+    })) as unknown as {
+        data: {
+            value: {
+                action: string
+                challenge_ts: string
+                hostname: string
+                score: number
+                success: boolean
+            }
+        }
+    }
+
+    if (data.value.action == 'router' && data.value.score > 0.6) {
+        await useRouter().push(to)
+    } else {
+        ElMessage.error('ReCatCha驗證失敗，請稍後再試')
+    }
+}
+
+const tologin = async () => {
+    const response = await recaptcha('login')
+
+    const { data } = (await useFetch('/api/recaptcha', {
+        method: 'POST',
+        body: JSON.stringify({ response }),
+    })) as unknown as {
+        data: {
+            value: {
+                action: string
+                challenge_ts: string
+                hostname: string
+                score: number
+                success: boolean
+            }
+        }
+    }
+
+    if (data.value.action == 'login' && data.value.score > 0.6) {
+        await useRouter().push('/login')
+    } else {
+        ElMessage.error('ReCatCha驗證失敗，請稍後再試')
+    }
 }
 </script>

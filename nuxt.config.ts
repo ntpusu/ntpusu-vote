@@ -6,7 +6,10 @@ export default defineNuxtConfig({
         '@nuxt/image-edge',
         'nuxt-security',
     ],
-    plugins: [{ src: '~/plugins/vercel.ts', mode: 'client' }],
+    plugins: [
+        '~/plugins/vercel.client.ts',
+        '~/plugins/google-recaptcha.client.ts',
+    ],
     auth: {
         // The module is enabled. Change this to disable the module
         isEnabled: true,
@@ -33,10 +36,16 @@ export default defineNuxtConfig({
         },
     },
     security: {
+        headers: {
+            crossOriginEmbedderPolicy: 'unsafe-none',
+        },
         xssValidator: false,
         corsHandler: {
             methods: ['GET', 'PUT', 'POST', 'DELETE'],
         },
+    },
+    typescript: {
+        strict: true,
     },
     routeRules: {
         '/api/voterSession': {
@@ -69,11 +78,6 @@ export default defineNuxtConfig({
         '/api/auth/**': {
             security: {
                 rateLimiter: false,
-            },
-        },
-        '/form': {
-            headers: {
-                'Cross-Origin-Embedder-Policy': 'unsafe-none',
             },
         },
     },
