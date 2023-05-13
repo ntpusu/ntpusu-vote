@@ -185,11 +185,11 @@ useSeoMeta({
     },
     ogSiteName: '國立臺北大學三峽校區學生會投票網站',
     ogType: 'website',
-    ogUrl: 'https://ntpu-vote-2023.vercel.app/',
-    ogImage: 'https://ntpu-vote-2023.vercel.app/favicon.ico',
+    ogUrl: 'https://ntpusu-vote.vercel.app/',
+    ogImage: 'https://ntpusu-vote.vercel.app/favicon.ico',
     ogImageAlt: '國立臺北大學三峽校區學生會的標誌',
     ogImageType: 'image/png',
-    ogImageSecureUrl: 'https://ntpu-vote-2023.vercel.app/',
+    ogImageSecureUrl: 'https://ntpusu-vote.vercel.app/',
     ogLocale: 'zh_TW',
     ogLocaleAlternate: 'zh_TW',
     author: '國立臺北大學三峽校區學生會',
@@ -199,7 +199,7 @@ useSeoMeta({
     twitterDescription() {
         return `${route.meta.title} | 國立臺北大學三峽校區學生會投票網站`
     },
-    twitterImage: 'https://ntpu-vote-2023.vercel.app/favicon.ico',
+    twitterImage: 'https://ntpusu-vote.vercel.app/favicon.ico',
     twitterImageAlt: '國立臺北大學三峽校區學生會的標誌',
 })
 
