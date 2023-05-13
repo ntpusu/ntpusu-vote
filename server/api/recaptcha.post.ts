@@ -1,4 +1,3 @@
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
     const { response } = await readBody(event) as { response: string | undefined }
 
@@ -6,15 +5,6 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             message: 'Bad Request',
-        })
-    }
-
-    const session = await getServerSession(event)
-
-    if (!session) {
-        throw createError({
-            statusCode: 401,
-            message: '未登入',
         })
     }
 
