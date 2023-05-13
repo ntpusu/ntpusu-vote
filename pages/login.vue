@@ -12,18 +12,16 @@
             <div class="flex w-full flex-col">
                 <NuxtImg
                     src="/login/btn_google_normal.png"
-                    format="webp"
-                    fit="fill"
+                    format="png"
                     preload
-                    class="m-auto my-2 max-w-[245px] cursor-pointer"
+                    class="m-auto my-2 w-64 cursor-pointer sm:w-72"
                     @click="signIn('google', { callbackUrl: '/vote' })"
                 />
                 <NuxtImg
                     src="/login/ms-symbollockup.svg"
-                    format="webp"
-                    fit="fill"
+                    format="svg"
                     preload
-                    class="m-auto my-2 max-w-[240px] cursor-pointer"
+                    class="m-auto my-2 w-[250px] cursor-pointer sm:w-[280px]"
                     @click="signIn('azure-ad', { callbackUrl: '/vote' })"
                 />
                 <span class="m-auto pt-5 text-sm text-gray-600">
