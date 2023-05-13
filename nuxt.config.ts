@@ -1,4 +1,9 @@
 export default defineNuxtConfig({
+    runtimeConfig: {
+        public: {
+            recaptchaSiteKey: process.env.RECAPTCHA_V3_SITE_KEY,
+        },
+    },
     modules: [
         '@element-plus/nuxt',
         '@nuxtjs/tailwindcss',
