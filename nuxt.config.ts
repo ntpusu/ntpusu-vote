@@ -49,41 +49,4 @@ export default defineNuxtConfig({
             methods: ['GET', 'PUT', 'POST', 'DELETE'],
         },
     },
-    typescript: {
-        strict: true,
-    },
-    routeRules: {
-        '/api/voterSession': {
-            security: {
-                rateLimiter: {
-                    tokensPerInterval: 3,
-                    interval: 10 * 1000,
-                    fireImmediately: true,
-                },
-            },
-        },
-        '/api/vote': {
-            security: {
-                rateLimiter: {
-                    tokensPerInterval: 3,
-                    interval: 10 * 1000,
-                    fireImmediately: true,
-                },
-            },
-        },
-        '/api/getResult': {
-            security: {
-                rateLimiter: {
-                    tokensPerInterval: 3,
-                    interval: 10 * 1000,
-                    fireImmediately: true,
-                },
-            },
-        },
-        '/api/auth/**': {
-            security: {
-                rateLimiter: false,
-            },
-        },
-    },
 });

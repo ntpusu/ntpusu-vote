@@ -706,7 +706,7 @@ const checkData = () => {
             }, 3000)
 
             setTimeout(async () => {
-                await useRouter().push('/')
+                if (useRoute().path == '/vote') await useRouter().push('/')
             }, 4500)
         }
     }, 100)

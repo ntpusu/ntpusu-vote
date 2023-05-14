@@ -1,6 +1,5 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
-import { Prisma } from '@prisma/client'
 export default defineEventHandler(async (event) => {
     const { voteName, voteGroup, startTime, endTime, candidates } = await readBody(event) as {
         voteName: string
