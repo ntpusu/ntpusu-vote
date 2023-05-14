@@ -696,18 +696,18 @@ const checkData = () => {
                     type: 'warning',
                     message: '若有疑問請聯繫學生會',
                 })
-            }, 1500)
+            }, 1000)
 
             setTimeout(() => {
                 ElMessage({
                     type: 'info',
                     message: '將自動返回首頁',
                 })
-            }, 3000)
+            }, 2000)
 
             setTimeout(async () => {
                 if (useRoute().path == '/vote') await useRouter().push('/')
-            }, 4500)
+            }, 3000)
         }
     }, 100)
 }
