@@ -139,10 +139,10 @@
             >
                 <template #header="{ close }">
                     <div
-                        class="mx-6 -mb-8 flex h-[5vh] justify-between sm:-mb-5 md:-mb-2"
+                        class="mx-6 -mb-8 flex h-[5vh] justify-between sm:-mb-5 md:-mb-3"
                     >
                         <div
-                            class="flex items-center text-sm sm:text-base md:text-lg"
+                            class="flex items-center text-base font-bold md:text-lg"
                         >
                             Cookie 使用聲明
                         </div>
@@ -153,8 +153,8 @@
                 </template>
                 <div class="-my-3 flex justify-center">
                     <span
-                        class="w-11/12 whitespace-pre-wrap break-all text-xs sm:text-sm md:text-base"
-                        >國立臺北大學三峽校區學生會投票網站(下稱「投票網站」)使用cookie來記錄您的登入狀態及增進您的使用體驗。這些cookie僅限於投票網站使用，不會與第三方共享cookie數據，也不會將cookie用於廣告目的。這些cookie將在您訪問投票網站時存儲在您的設備上，並在一定時間後過期。您可以在您的瀏覽器設置中管理和刪除cookie。如果您選擇禁用cookie，將會無法使用投票網站的登入功能。若您對此使用聲明有任何疑問，請隨時<NuxtLink
+                        class="w-11/12 whitespace-pre-wrap break-words text-xs md:text-sm"
+                        >國立臺北大學三峽校區學生會投票網站（下稱「投票網站」）使用cookie來記錄您的登入狀態及增進您的使用體驗。這些Cookie僅限於投票網站使用，不會將Cookie用於商業目的。這些Cookie將在您使用投票網站時存儲在您的設備上，並在一定時間後過期。您可以在您的瀏覽器設置中管理和刪除cookie。如果您選擇禁用cookie，將會無法使用投票網站的登入功能。繼續使用投票網站即表示你同意我們使用Cookie。若您對此使用聲明有任何疑問，請隨時<NuxtLink
                             to="https://www.facebook.com/NTPUSU"
                             target="_blank"
                             class="whitespace-pre-wrap break-all font-bold text-blue-400 hover:text-blue-500 hover:underline"
