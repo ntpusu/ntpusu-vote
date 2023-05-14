@@ -1,7 +1,7 @@
 import { RateLimiter } from "limiter";
 
-const tokensPerInterval = 100
-const interval = 5 * 60 * 1000
+const tokensPerInterval = 150
+const interval = 15 * 60 * 1000
 const limiter = new RateLimiter({
     tokensPerInterval,
     interval,
@@ -25,6 +25,7 @@ const limitList = [
 ]
 
 export default defineEventHandler(async (event) => {
+    console.log(event.path)
     if (event.node.req.url) {
         if (superLimitList.includes(event.node.req.url)) {
             if (await limiter.removeTokens(5) < 0) {
