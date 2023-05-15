@@ -130,7 +130,10 @@
                 >
             </span>
         </div>
-        <ElCard v-if="!cookie" class="fixed bottom-0 z-10 w-full !rounded-2xl">
+        <ElCard
+            v-if="!cookie"
+            class="fixed bottom-0 z-10 w-full !rounded-b-none !rounded-t-3xl"
+        >
             <template #header>
                 <div class="-my-1 mx-2 flex justify-between sm:mx-4 md:mx-6">
                     <div
