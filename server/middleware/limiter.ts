@@ -25,7 +25,6 @@ const limitList = [
 ]
 
 export default defineEventHandler(async (event) => {
-    console.log(event.path)
     if (event.node.req.url) {
         if (superLimitList.includes(event.node.req.url)) {
             if (await limiter.removeTokens(5) < 0) {

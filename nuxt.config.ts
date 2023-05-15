@@ -15,6 +15,9 @@ export default defineNuxtConfig({
         '~/plugins/vercel.client.ts',
         '~/plugins/google-recaptcha.client.ts',
     ],
+    app: {
+        pageTransition: { name: 'page', mode: 'out-in' }
+    },
     auth: {
         // The module is enabled. Change this to disable the module
         isEnabled: true,
