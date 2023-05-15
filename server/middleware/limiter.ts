@@ -1,6 +1,6 @@
 import { RateLimiter } from "limiter";
 
-const tokensPerInterval = 150
+const tokensPerInterval = 100
 const interval = 15 * 60 * 1000
 const limiter = new RateLimiter({
     tokensPerInterval,
@@ -27,7 +27,7 @@ const limitList = [
 export default defineEventHandler(async (event) => {
     if (event.node.req.url) {
         if (superLimitList.includes(event.node.req.url)) {
-            if (await limiter.removeTokens(5) < 0) {
+            if (await limiter.removeTokens(4) < 0) {
                 event.node.res.writeHead(429, { 'Content-Type': 'text/plain;charset=UTF-8' })
                 event.node.res.end('429 Too Many Requests - your IP is being rate limited')
             }
