@@ -120,12 +120,14 @@
                 <NuxtLink
                     to="https://www.facebook.com/NTPUSU"
                     class="whitespace-pre-wrap break-all font-bold hover:text-stone-600 hover:underline"
+                    target="_blank"
                     >國立臺北大學三峽校區學生會</NuxtLink
                 >
                 |
                 <NuxtLink
                     to="https://github.com/garyellow/ntpusu-vote-2023"
                     class="whitespace-pre-wrap break-all font-bold hover:text-stone-600 hover:underline"
+                    target="_blank"
                     >開放原始碼</NuxtLink
                 >
             </span>
