@@ -16,7 +16,7 @@ export default defineNuxtConfig({
         '~/plugins/google-recaptcha.client.ts',
     ],
     app: {
-        pageTransition: { name: 'page', mode: 'out-in' }
+        pageTransition: { name: 'page', mode: 'out-in' },
     },
     auth: {
         // The module is enabled. Change this to disable the module
