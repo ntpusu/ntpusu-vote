@@ -68,7 +68,7 @@ const search = async () => {
     }
 
     data.value = (
-        await useFetch('/api/getToken', {
+        await useFetch('/api/getBallot', {
             method: 'POST',
             body: JSON.stringify({
                 token: input.value,
