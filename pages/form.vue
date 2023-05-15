@@ -7,6 +7,7 @@
             frameborder="0"
             marginheight="0"
             marginwidth="0"
+            loading="lazy"
         >
             載入中......
         </iframe>
@@ -15,6 +16,6 @@
 
 <script lang="ts" setup>
 definePageMeta({
-    title: '表單',
+    title: '抽獎',
 })
 </script>

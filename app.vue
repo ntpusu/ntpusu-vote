@@ -1,6 +1,6 @@
 <template>
     <ElContainer direction="vertical" class="h-[100vh]">
-        <NuxtLoadingIndicator :height="5" />
+        <NuxtLoadingIndicator />
         <ClientOnly>
             <template #fallback>
                 <div
@@ -54,7 +54,7 @@
                     @click="router('/form')"
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
-                        表單
+                        抽獎
                     </span>
                 </ElMenuItem>
                 <ElMenuItem
@@ -291,7 +291,7 @@ const tologin = async () => {
 <style>
 .page-enter-active,
 .page-leave-active {
-    transition: all 0.3s;
+    transition: all 0.2s;
 }
 
 .page-enter-from,
