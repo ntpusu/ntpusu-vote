@@ -107,7 +107,7 @@
                 </strong>
             </noscript>
             <div class="m-2 sm:m-3 md:m-4">
-                <NuxtPage />
+                <NuxtPage keepalive />
             </div>
         </ElScrollbar>
         <ElDivider class="!m-0" />
