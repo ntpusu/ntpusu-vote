@@ -735,10 +735,16 @@ const checkData = () => {
 }
 
 onMounted(() => {
+    recaptchaInstance?.instance.value?.showBadge()
     checkData()
 })
 
 onActivated(() => {
+    recaptchaInstance?.instance.value?.showBadge()
     checkData()
+})
+
+onDeactivated(() => {
+    recaptchaInstance?.instance.value?.hideBadge()
 })
 </script>
