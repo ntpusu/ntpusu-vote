@@ -23,7 +23,7 @@
             >
                 <span
                     class="m-auto ml-3 cursor-pointer text-xl font-bold sm:ml-4 sm:text-2xl md:ml-5 md:text-3xl"
-                    @click="router('/')"
+                    @click="useRouter().push('/')"
                 >
                     選舉委員會
                 </span>
@@ -31,7 +31,7 @@
                 <ElMenuItem
                     class="!px-3 sm:!px-4 md:!px-5"
                     index="/"
-                    @click="router('/')"
+                    @click="useRouter().push('/')"
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
                         首頁
@@ -41,17 +41,16 @@
                     v-if="status === 'authenticated'"
                     class="!px-3 sm:!px-4 md:!px-5"
                     index="/vote"
-                    @click="router('/vote')"
+                    @click="useRouter().push('/vote')"
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
                         投票
                     </span>
                 </ElMenuItem>
                 <ElMenuItem
-                    v-if="status === 'authenticated'"
                     class="!px-3 sm:!px-4 md:!px-5"
                     index="/form"
-                    @click="router('/form')"
+                    @click="useRouter().push('/form')"
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
                         抽獎
@@ -81,7 +80,7 @@
                     v-if="status === 'unauthenticated'"
                     class="!px-3 sm:!px-4 md:!px-5"
                     index="/login"
-                    @click="tologin"
+                    @click="useRouter().push('/login')"
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
                         登入
@@ -110,23 +109,37 @@
         </ElScrollbar>
         <ElDivider class="!m-0" />
         <div
-            class="flex h-6 items-center justify-center bg-white sm:h-7 md:h-8"
+            class="flex h-6 items-center justify-between bg-white px-2 sm:h-7 sm:px-3 md:h-8 md:px-4"
         >
-            <span class="text-xs font-bold sm:text-sm md:text-base">
-                ©
-                {{ new Date().getFullYear() }}
+            <span
+                class="text-xs font-bold text-stone-700 sm:text-sm md:text-base"
+            >
+                Design by
                 <NuxtLink
-                    to="https://www.facebook.com/NTPUSU"
-                    class="whitespace-pre-wrap break-all font-bold hover:text-stone-600 hover:underline"
+                    to="https://github.com/garyellow"
+                    class="font-bold hover:text-stone-600 hover:underline"
                     target="_blank"
-                    >國立臺北大學三峽校區學生會</NuxtLink
+                    >garyellow</NuxtLink
                 >
                 |
                 <NuxtLink
                     to="https://github.com/garyellow/ntpusu-vote-2023"
-                    class="whitespace-pre-wrap break-all font-bold hover:text-stone-600 hover:underline"
+                    class="font-bold hover:text-stone-600 hover:underline"
                     target="_blank"
-                    >開放原始碼</NuxtLink
+                    >Open Source!</NuxtLink
+                >
+            </span>
+
+            <span
+                class="text-xs font-bold text-stone-700 sm:text-sm md:text-base"
+            >
+                ©
+                {{ new Date().getFullYear() }}
+                <NuxtLink
+                    to="https://www.facebook.com/NTPUSU"
+                    class="font-bold hover:text-stone-600 hover:underline"
+                    target="_blank"
+                    >國立臺北大學三峽校區學生會</NuxtLink
                 >
             </span>
         </div>
@@ -163,8 +176,6 @@
 </template>
 
 <script setup lang="ts">
-import { useReCaptcha } from 'vue-recaptcha-v3'
-
 const route = useRoute()
 
 useSeoMeta({
@@ -230,61 +241,6 @@ const cookie = useCookie('cookie', {
     sameSite: 'lax',
     secure: true,
 })
-
-const recaptchaInstance = useReCaptcha()
-
-const recaptcha = async (action: string) => {
-    await recaptchaInstance?.recaptchaLoaded()
-    const token = await recaptchaInstance?.executeRecaptcha(action)
-
-    return token
-}
-
-const router = async (to: string) => {
-    const response = await recaptcha('router')
-
-    const { data } = (await useFetch('/api/recaptcha', {
-        method: 'POST',
-        body: JSON.stringify({ response }),
-    })) as unknown as {
-        data: {
-            value: {
-                action: string
-                challenge_ts: string
-                hostname: string
-                score: number
-                success: boolean
-            }
-        }
-    }
-
-    if (data.value.action == 'router' && data.value.score > 0.6)
-        await useRouter().push(to)
-    else ElMessage.error('ReCatCha驗證失敗，請稍後再試')
-}
-
-const tologin = async () => {
-    const response = await recaptcha('login')
-
-    const { data } = (await useFetch('/api/recaptcha', {
-        method: 'POST',
-        body: JSON.stringify({ response }),
-    })) as unknown as {
-        data: {
-            value: {
-                action: string
-                challenge_ts: string
-                hostname: string
-                score: number
-                success: boolean
-            }
-        }
-    }
-
-    if (data.value.action == 'login' && data.value.score > 0.6)
-        await useRouter().push('/login')
-    else ElMessage.error('ReCatCha驗證失敗，請稍後再試')
-}
 </script>
 
 <style>
