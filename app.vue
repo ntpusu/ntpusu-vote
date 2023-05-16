@@ -129,7 +129,6 @@
                     >Open Source!</NuxtLink
                 >
             </span>
-
             <span
                 class="text-xs font-bold text-stone-700 sm:text-sm md:text-base"
             >
