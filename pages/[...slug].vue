@@ -10,7 +10,7 @@
     </ElResult>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 definePageMeta({
     title: '404 NOT FOUND',
     layout: 'error',
@@ -31,6 +31,11 @@ const timer = () => {
 }
 
 onMounted(async () => {
+    if (useRoute().path != '/404') await useRouter().push('/404')
+    else timer()
+})
+
+onActivated(async () => {
     if (useRoute().path != '/404') await useRouter().push('/404')
     else timer()
 })

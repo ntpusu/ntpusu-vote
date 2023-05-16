@@ -101,10 +101,8 @@
         </ClientOnly>
         <ElScrollbar :always="true">
             <noscript>
-                <strong>
-                    您的瀏覽器尚未啟用
-                    JavaScript，因此無法開啟檔案。請於啟用後重新載入頁面。
-                </strong>
+                您的瀏覽器尚未啟用
+                JavaScript，因此無法開啟檔案。請於啟用後重新載入頁面。
             </noscript>
             <div class="m-2 sm:m-3 md:m-4">
                 <NuxtPage keepalive />
@@ -164,7 +162,7 @@
     </ElContainer>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { useReCaptcha } from 'vue-recaptcha-v3'
 
 const route = useRoute()
@@ -260,11 +258,9 @@ const router = async (to: string) => {
         }
     }
 
-    if (data.value.action == 'router' && data.value.score > 0.6) {
+    if (data.value.action == 'router' && data.value.score > 0.6)
         await useRouter().push(to)
-    } else {
-        ElMessage.error('ReCatCha驗證失敗，請稍後再試')
-    }
+    else ElMessage.error('ReCatCha驗證失敗，請稍後再試')
 }
 
 const tologin = async () => {
@@ -285,11 +281,9 @@ const tologin = async () => {
         }
     }
 
-    if (data.value.action == 'login' && data.value.score > 0.6) {
+    if (data.value.action == 'login' && data.value.score > 0.6)
         await useRouter().push('/login')
-    } else {
-        ElMessage.error('ReCatCha驗證失敗，請稍後再試')
-    }
+    else ElMessage.error('ReCatCha驗證失敗，請稍後再試')
 }
 </script>
 

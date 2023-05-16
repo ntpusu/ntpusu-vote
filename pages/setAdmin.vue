@@ -30,7 +30,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 definePageMeta({
     middleware: ['super-admin'],
     title: '設定管理員',

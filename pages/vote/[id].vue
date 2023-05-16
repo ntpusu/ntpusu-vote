@@ -115,16 +115,16 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
+definePageMeta({
+    title: '結果',
+})
+
 const { id } = useRoute().params as { id: string }
 
 const { data: VS, pending: VSPending } = await useLazyFetch('/api/getResult', {
     key: id,
     query: { id },
-})
-
-definePageMeta({
-    title: '結果',
 })
 
 const viewDate = (time: string | number | Date) => {
@@ -162,6 +162,10 @@ const checkData = () => {
 }
 
 onMounted(() => {
+    checkData()
+})
+
+onActivated(() => {
     checkData()
 })
 </script>

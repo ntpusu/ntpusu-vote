@@ -14,8 +14,9 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 definePageMeta({
+    auth: false,
     title: '抽獎',
 })
 </script>

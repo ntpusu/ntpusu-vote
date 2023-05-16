@@ -38,7 +38,7 @@
     </ElForm>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 definePageMeta({
     middleware: ['admin'],
     title: '查詢',
