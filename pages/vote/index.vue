@@ -448,7 +448,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { rand } from '@vueuse/shared'
 import type { Action } from 'element-plus'
 import { useReCaptcha } from 'vue-recaptcha-v3'
@@ -569,16 +569,19 @@ const voteConfirm = async (VS: {
             })
                 .then(async ({ data: res }) => {
                     if (res.value!.vote) {
-                        await ElMessageBox.alert(
+                        await ElMessageBox.confirm(
                             '憑證：' + res.value!.token,
                             '投票成功',
                             {
-                                confirmButtonText: '複製憑證',
+                                cancelButtonText: '複製憑證',
+                                cancelButtonClass: 'el-button--success',
+                                confirmButtonText: '確 定',
+                                distinguishCancelAndClose: true,
                                 type: 'success',
                                 roundButton: true,
                             }
-                        )
-                            .then(async () => {
+                        ).catch(async (action: Action) => {
+                            if (action === 'cancel') {
                                 await navigator.clipboard.writeText(
                                     res.value!.token
                                 )
@@ -586,19 +589,23 @@ const voteConfirm = async (VS: {
                                     type: 'success',
                                     message: '已複製',
                                 })
-                            })
-                            .catch(() => {})
+                            }
+                        })
                     } else {
-                        await ElMessageBox.alert(
+                        await ElMessageBox.confirm(
                             '憑證：' + res.value!.token,
                             '不可重複投票',
                             {
-                                confirmButtonText: '複製憑證',
-                                type: 'warning',
+                                cancelButtonText: '複製憑證',
+                                cancelButtonClass: 'el-button--success',
+                                confirmButtonText: '確 定',
+                                confirmButtonClass: 'el-button--warning',
+                                distinguishCancelAndClose: true,
+                                type: 'error',
                                 roundButton: true,
                             }
-                        )
-                            .then(async () => {
+                        ).catch(async (action: Action) => {
+                            if (action === 'cancel') {
                                 await navigator.clipboard.writeText(
                                     res.value!.token
                                 )
@@ -606,8 +613,8 @@ const voteConfirm = async (VS: {
                                     type: 'success',
                                     message: '已複製',
                                 })
-                            })
-                            .catch(() => {})
+                            }
+                        })
                     }
                 })
                 .catch(() => {
@@ -668,7 +675,7 @@ const seeResult = async (index: number) => {
         }
     }
 
-    if (res.value.action != 'vote' || res.value.score <= 0.6) {
+    if (res.value.action != 'result' || res.value.score <= 0.6) {
         ElMessage.error('ReCatCha驗證失敗，請稍後再試')
         return
     }
@@ -715,17 +722,10 @@ const checkData = () => {
 
             setTimeout(() => {
                 ElMessage({
-                    type: 'warning',
-                    message: '若有疑問請聯繫學生會',
-                })
-            }, 1000)
-
-            setTimeout(() => {
-                ElMessage({
                     type: 'info',
                     message: '將自動返回首頁',
                 })
-            }, 2000)
+            }, 1500)
 
             setTimeout(async () => {
                 if (useRoute().path == '/vote') await useRouter().push('/')
@@ -735,6 +735,10 @@ const checkData = () => {
 }
 
 onMounted(() => {
+    checkData()
+})
+
+onActivated(() => {
     checkData()
 })
 </script>
