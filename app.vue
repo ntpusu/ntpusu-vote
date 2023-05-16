@@ -48,15 +48,6 @@
                     </span>
                 </ElMenuItem>
                 <ElMenuItem
-                    class="!px-3 sm:!px-4 md:!px-5"
-                    index="/form"
-                    @click="useRouter().push('/form')"
-                >
-                    <span class="text-sm font-bold sm:text-base md:text-lg">
-                        抽獎
-                    </span>
-                </ElMenuItem>
-                <ElMenuItem
                     v-if="admin"
                     class="!px-3 sm:!px-4 md:!px-5"
                     index="/check"
@@ -100,8 +91,10 @@
         </ClientOnly>
         <ElScrollbar :always="true">
             <noscript>
-                您的瀏覽器尚未啟用
-                JavaScript，因此無法開啟檔案。請於啟用後重新載入頁面。
+                <strong>
+                    您的瀏覽器尚未啟用
+                    JavaScript，因此無法開啟檔案。請於啟用後重新載入頁面。
+                </strong>
             </noscript>
             <div class="m-2 sm:m-3 md:m-4">
                 <NuxtPage keepalive />
@@ -126,7 +119,7 @@
                     to="https://github.com/garyellow/ntpusu-vote-2023"
                     class="font-bold hover:text-stone-600 hover:underline"
                     target="_blank"
-                    >Open Source!</NuxtLink
+                    >Open Source</NuxtLink
                 >
             </span>
             <span
