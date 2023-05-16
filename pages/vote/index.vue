@@ -148,9 +148,9 @@
                                                             </span>
                                                         </template>
                                                     </ElCountdown>
-                                                    <span v-else class="m-auto"
-                                                        >已結束</span
-                                                    >
+                                                    <span v-else class="m-auto">
+                                                        已結束
+                                                    </span>
                                                 </template>
                                                 <ElTag
                                                     round
@@ -245,7 +245,7 @@
                                     plain
                                     loading
                                 >
-                                    <span class="font-bold">尚 未 開 始</span>
+                                    <span class="font-bold"> 尚 未 開 始 </span>
                                 </ElButton>
                             </div>
                             <div v-else>
@@ -335,9 +335,9 @@
                                                 @click="voteConfirm(VSitem)"
                                                 plain
                                             >
-                                                <span class="font-bold"
-                                                    >投 出 選 票</span
-                                                >
+                                                <span class="font-bold">
+                                                    投 出 選 票
+                                                </span>
                                             </ElButton>
                                         </div>
                                     </ElDialog>
@@ -353,7 +353,7 @@
                                         plain
                                         :loading="resultLoading[VSitem.id]"
                                     >
-                                        <span class="font-bold">結 果</span>
+                                        <span class="font-bold"> 結 果 </span>
                                     </ElButton>
                                 </div>
                                 <div v-else class="flex justify-center">
@@ -376,9 +376,9 @@
                                         >
                                             投 票
                                         </span>
-                                        <span v-else class="font-bold"
-                                            >已 投 票</span
-                                        >
+                                        <span v-else class="font-bold">
+                                            已 投 票
+                                        </span>
                                     </ElButton>
                                     <ElButton
                                         type="info"
@@ -399,9 +399,9 @@
                                         >
                                             查 看 憑 證
                                         </span>
-                                        <span v-else class="font-bold"
-                                            >尚 未 投 票</span
-                                        >
+                                        <span v-else class="font-bold">
+                                            尚 未 投 票
+                                        </span>
                                     </ElButton>
                                 </div>
                             </div>
@@ -658,28 +658,6 @@ const seeToken = async (index: number) => {
 }
 
 const seeResult = async (index: number) => {
-    const response = await recaptcha('result')
-
-    const { data: res } = (await useFetch('/api/recaptcha', {
-        method: 'POST',
-        body: JSON.stringify({ response }),
-    })) as unknown as {
-        data: {
-            value: {
-                action: string
-                challenge_ts: string
-                hostname: string
-                score: number
-                success: boolean
-            }
-        }
-    }
-
-    if (res.value.action != 'result' || res.value.score <= 0.6) {
-        ElMessage.error('ReCatCha驗證失敗，請稍後再試')
-        return
-    }
-
     resultLoading.value[index] = true
 
     if (data.value!.tokens[index]) {
