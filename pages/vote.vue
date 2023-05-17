@@ -461,6 +461,8 @@ const {
     refresh: VSRefresh,
 } = await useLazyFetch('/api/voterSession')
 
+const freshTime = ref(Date.now())
+
 const viewDate = (time: string | number | Date) => {
     return new Date(time).toLocaleString(undefined, {
         hourCycle: 'h11',
@@ -555,53 +557,55 @@ const voteConfirm = async (VSId: number) => {
                 }),
             })
                 .then(async ({ data: res }) => {
-                    if (res.value!.vote) {
-                        await ElMessageBox.confirm(
-                            '憑證：' + res.value!.token,
-                            '投票成功',
-                            {
-                                cancelButtonText: '複製憑證',
-                                cancelButtonClass: 'el-button--success',
-                                confirmButtonText: '確 定',
-                                distinguishCancelAndClose: true,
-                                type: 'success',
-                                roundButton: true,
-                            }
-                        ).catch(async (action: Action) => {
-                            if (action === 'cancel') {
-                                await navigator.clipboard.writeText(
-                                    res.value!.token
-                                )
-                                ElMessage({
+                    if (!res.value) {
+                        if (res.value!.vote) {
+                            await ElMessageBox.confirm(
+                                '憑證：' + res.value!.token,
+                                '投票成功',
+                                {
+                                    cancelButtonText: '複製憑證',
+                                    cancelButtonClass: 'el-button--success',
+                                    confirmButtonText: '確 定',
+                                    distinguishCancelAndClose: true,
                                     type: 'success',
-                                    message: '已複製',
-                                })
-                            }
-                        })
-                    } else {
-                        await ElMessageBox.confirm(
-                            '憑證：' + res.value!.token,
-                            '不可重複投票',
-                            {
-                                cancelButtonText: '複製憑證',
-                                cancelButtonClass: 'el-button--success',
-                                confirmButtonText: '確 定',
-                                confirmButtonClass: 'el-button--warning',
-                                distinguishCancelAndClose: true,
-                                type: 'error',
-                                roundButton: true,
-                            }
-                        ).catch(async (action: Action) => {
-                            if (action === 'cancel') {
-                                await navigator.clipboard.writeText(
-                                    res.value!.token
-                                )
-                                ElMessage({
-                                    type: 'success',
-                                    message: '已複製',
-                                })
-                            }
-                        })
+                                    roundButton: true,
+                                }
+                            ).catch(async (action: Action) => {
+                                if (action === 'cancel') {
+                                    await navigator.clipboard.writeText(
+                                        res.value!.token
+                                    )
+                                    ElMessage({
+                                        type: 'success',
+                                        message: '已複製',
+                                    })
+                                }
+                            })
+                        } else {
+                            await ElMessageBox.confirm(
+                                '憑證：' + res.value!.token,
+                                '不可重複投票',
+                                {
+                                    cancelButtonText: '複製憑證',
+                                    cancelButtonClass: 'el-button--success',
+                                    confirmButtonText: '確 定',
+                                    confirmButtonClass: 'el-button--warning',
+                                    distinguishCancelAndClose: true,
+                                    type: 'error',
+                                    roundButton: true,
+                                }
+                            ).catch(async (action: Action) => {
+                                if (action === 'cancel') {
+                                    await navigator.clipboard.writeText(
+                                        res.value!.token
+                                    )
+                                    ElMessage({
+                                        type: 'success',
+                                        message: '已複製',
+                                    })
+                                }
+                            })
+                        }
                     }
                 })
                 .catch(() => {
@@ -609,6 +613,7 @@ const voteConfirm = async (VSId: number) => {
                 })
                 .finally(async () => {
                     await VSRefresh()
+                    freshTime.value = Date.now()
                 })
         })
         .catch(() => {
@@ -701,11 +706,18 @@ const checkData = () => {
 
 onMounted(() => {
     recaptchaInstance?.instance.value?.showBadge()
+
     checkData()
 })
 
-onActivated(() => {
+onActivated(async () => {
     recaptchaInstance?.instance.value?.showBadge()
+
+    if (Date.now() - freshTime.value > 1000 * 60 * 15) {
+        await VSRefresh()
+        freshTime.value = Date.now()
+    }
+
     checkData()
 })
 
