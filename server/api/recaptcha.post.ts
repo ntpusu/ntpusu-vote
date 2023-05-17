@@ -4,7 +4,8 @@ export default defineEventHandler(async (event) => {
     if (!response) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request',
+            statusMessage: 'Bad Request',
+            message: 'Parameter response is required',
         })
     }
 

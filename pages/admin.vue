@@ -474,7 +474,7 @@ const archiveData = () => {
 const handleArchive = async (id: number) => {
     await useFetch('/api/archiveVS', {
         method: 'POST',
-        body: { id },
+        body: JSON.stringify({ id }),
     })
         .then(async () => {
             ElMessage.success('封存成功')
@@ -488,7 +488,7 @@ const handleArchive = async (id: number) => {
 const handleUnarchive = async (id: number) => {
     await useFetch('/api/unarchiveVS', {
         method: 'POST',
-        body: { id },
+        body: JSON.stringify({ id }),
     })
         .then(async () => {
             ElMessage.success('解封成功')

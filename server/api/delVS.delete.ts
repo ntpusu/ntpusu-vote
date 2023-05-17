@@ -3,10 +3,11 @@ import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
     const { id } = getQuery(event) as { id: string | undefined }
 
-    if (!id) {
+    if (!id || isNaN(parseInt(id))) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request',
+            statusMessage: 'Bad Request',
+            message: 'Parameter id is required and should be a number',
         })
     }
 
@@ -15,6 +16,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
+            statusMessage: 'Unauthorized',
             message: '未登入',
         })
     }
@@ -24,7 +26,8 @@ export default defineEventHandler(async (event) => {
 
     if (studentId != process.env.ADMIN) {
         throw createError({
-            statusCode: 401,
+            statusCode: 403,
+            statusMessage: 'Forbidden',
             message: '不是超級管理員',
         })
     }
@@ -37,13 +40,15 @@ export default defineEventHandler(async (event) => {
     if (!VS) {
         throw createError({
             statusCode: 404,
-            message: 'Not Found',
+            statusMessage: 'Not Found',
+            message: 'Voting not found',
         })
     }
 
     if (!VS.archive) {
         throw createError({
             statusCode: 403,
+            statusMessage: 'Forbidden',
             message: '投票尚未封存',
         })
     }

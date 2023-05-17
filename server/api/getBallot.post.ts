@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
+            statusMessage: 'Unauthorized',
             message: '未登入',
         })
     }
@@ -29,7 +30,8 @@ export default defineEventHandler(async (event) => {
 
     if (!admin) {
         throw createError({
-            statusCode: 401,
+            statusCode: 403,
+            statusMessage: 'Forbidden',
             message: '不在管理員名單中'
         })
     }
@@ -55,13 +57,15 @@ export default defineEventHandler(async (event) => {
     if (!ballot) {
         throw createError({
             statusCode: 404,
+            statusMessage: 'Not Found',
             message: '找不到該票'
         })
     }
 
     if (ballot.candidate.voting.archive) {
         throw createError({
-            statusCode: 401,
+            statusCode: 403,
+            statusMessage: 'Forbidden',
             message: '投票已被封存'
         })
     }

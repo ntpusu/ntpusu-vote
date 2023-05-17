@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
+            statusMessage: 'Unauthorized',
             message: '未登入',
         })
     }
@@ -27,7 +28,8 @@ export default defineEventHandler(async (event) => {
 
     if (!voter) {
         throw createError({
-            statusCode: 401,
+            statusCode: 403,
+            statusMessage: 'Forbidden',
             message: '不在投票人名冊中',
         })
     }

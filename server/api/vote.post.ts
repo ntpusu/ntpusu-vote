@@ -1,17 +1,25 @@
 import prisma from '~/lib/prisma'
 import HS256 from 'crypto-js/hmac-sha256.js'
 import { getServerSession } from '#auth'
-import { getRandomInt } from 'element-plus/es/utils'
 export default defineEventHandler(async (event) => {
     const { VSId, cname } = await readBody(event) as {
         VSId: string | undefined
         cname: string | undefined
     }
 
-    if (!VSId || !cname) {
+    if (!VSId || isNaN(parseInt(VSId))) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request',
+            statusMessage: 'Bad Request',
+            message: 'Parameter VSId is required and must be a number',
+        })
+    }
+
+    if (!cname) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: 'Parameter cname is required',
         })
     }
 
@@ -20,6 +28,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
+            statusMessage: 'Unauthorized',
             message: '未登入',
         })
     }
@@ -34,7 +43,8 @@ export default defineEventHandler(async (event) => {
 
     if (!voter) {
         throw createError({
-            statusCode: 401,
+            statusCode: 403,
+            statusMessage: 'Forbidden',
             message: '不在投票人名冊中',
         })
     }
@@ -47,6 +57,7 @@ export default defineEventHandler(async (event) => {
     if (!candidate) {
         throw createError({
             statusCode: 404,
+            statusMessage: 'Not Found',
             message: 'candidate Not Found',
         })
     }
@@ -54,7 +65,8 @@ export default defineEventHandler(async (event) => {
     if (candidate.votingId != parseInt(VSId)) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request',
+            statusMessage: 'Bad Request',
+            message: 'Candidate Not In Voting',
         })
     }
 
@@ -71,6 +83,7 @@ export default defineEventHandler(async (event) => {
     if (!voting) {
         throw createError({
             statusCode: 404,
+            statusMessage: 'Not Found',
             message: 'Voting Not Found',
         })
     }
@@ -78,6 +91,7 @@ export default defineEventHandler(async (event) => {
     if (voting.archive) {
         throw createError({
             statusCode: 401,
+            statusMessage: 'Unauthorized',
             message: '投票已被封存',
         })
     }
@@ -95,6 +109,7 @@ export default defineEventHandler(async (event) => {
     if (!VIG) {
         throw createError({
             statusCode: 401,
+            statusMessage: 'Unauthorized',
             message: '沒有投票權',
         })
     }
@@ -102,6 +117,7 @@ export default defineEventHandler(async (event) => {
     if (Date.now() < voting.startTime.getTime()) {
         throw createError({
             statusCode: 400,
+            statusMessage: 'Bad Request',
             message: '投票尚未開始',
         })
     }
@@ -109,6 +125,7 @@ export default defineEventHandler(async (event) => {
     if (Date.now() > voting.endTime.getTime()) {
         throw createError({
             statusCode: 400,
+            statusMessage: 'Bad Request',
             message: '投票已結束',
         })
     }

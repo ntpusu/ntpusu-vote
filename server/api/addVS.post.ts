@@ -13,24 +13,27 @@ export default defineEventHandler(async (event) => {
         }[]
     }
 
-    if (!voteName || !voteGroup || !startTime || !endTime || onlyOne === undefined || !candidates) {
+    if (!voteName || typeof voteGroup === 'undefined' || !startTime || !endTime || onlyOne === undefined || !candidates) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request',
+            statusMessage: 'Bad Request',
+            message: 'Parameters are not enough',
         })
     }
 
     if (onlyOne && candidates.length !== 1) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request',
+            statusMessage: 'Bad Request',
+            message: 'Candidate length should be 1 when onlyOne is true',
         })
     }
 
     if (new Date(startTime) >= new Date(endTime)) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request',
+            statusMessage: 'Bad Request',
+            message: 'StartTime should be earlier than endTime',
         })
     }
 
@@ -39,6 +42,7 @@ export default defineEventHandler(async (event) => {
     if (!session) {
         throw createError({
             statusCode: 401,
+            statusMessage: 'Unauthorized',
             message: '未登入',
         })
     }
@@ -53,7 +57,8 @@ export default defineEventHandler(async (event) => {
 
     if (!admin) {
         throw createError({
-            statusCode: 401,
+            statusCode: 403,
+            statusMessage: 'Forbidden',
             message: '不在管理員名單中',
         })
     }
