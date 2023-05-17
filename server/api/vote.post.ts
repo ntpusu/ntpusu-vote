@@ -1,10 +1,14 @@
 import prisma from '~/lib/prisma'
 import HS256 from 'crypto-js/hmac-sha256.js'
 import { getServerSession } from '#auth'
+import { getRandomInt } from 'element-plus/es/utils'
 export default defineEventHandler(async (event) => {
-    const { VSId, candidateId } = await readBody(event)
+    const { VSId, cname } = await readBody(event) as {
+        VSId: string | undefined
+        cname: string | undefined
+    }
 
-    if (!VSId || !candidateId) {
+    if (!VSId || !cname) {
         throw createError({
             statusCode: 400,
             message: 'Bad Request',
@@ -36,7 +40,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const candidate = await prisma.candidate.findUnique({
-        where: { id: parseInt(candidateId) },
+        where: { votingId_name: { votingId: parseInt(VSId), name: cname } },
         select: { votingId: true },
     })
 
@@ -59,7 +63,7 @@ export default defineEventHandler(async (event) => {
         select: {
             startTime: true,
             endTime: true,
-            delete: true,
+            archive: true,
             groupId: true,
         },
     })
@@ -71,7 +75,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (voting.delete) {
+    if (voting.archive) {
         throw createError({
             statusCode: 401,
             message: '投票已被封存',
@@ -113,7 +117,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         await prisma.ballot.create({
-            data: { token, candidateId: parseInt(candidateId) },
+            data: { token, votingId: parseInt(VSId), candidateName: cname, validation: Math.floor(Math.random() * 1000000).toString().padStart(6, '0') },
             select: null,
         })
     }

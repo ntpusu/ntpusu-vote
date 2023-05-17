@@ -300,11 +300,9 @@
                                                 v-model="voteData[VSitem.id]"
                                             >
                                                 <ElRadio
-                                                    v-for="(
-                                                        candidate, itemIndex
-                                                    ) in VSitem.candidates"
-                                                    :key="itemIndex"
-                                                    :label="candidate.id"
+                                                    v-for="candidate in VSitem.candidates"
+                                                    :key="candidate.name"
+                                                    :label="candidate.name"
                                                     border
                                                     size="large"
                                                     class="my-1 !mr-0 max-w-[75vw]"
@@ -332,7 +330,7 @@
                                             <ElButton
                                                 type="primary"
                                                 class="w-fit !rounded-md"
-                                                @click="voteConfirm(VSitem)"
+                                                @click="voteConfirm(VSitem.id)"
                                                 plain
                                             >
                                                 <span class="font-bold">
@@ -489,7 +487,7 @@ const chooseFormat = (time: string | number | Date) => {
 const voteFail = ref(false)
 
 const voteVisible: Ref<boolean[]> = ref([])
-const voteData: Ref<number[]> = ref([])
+const voteData: Ref<string[]> = ref([])
 const voteLoading: Ref<boolean[]> = ref([])
 const tokenLoading: Ref<boolean[]> = ref([])
 const resultLoading: Ref<boolean[]> = ref([])
@@ -503,15 +501,8 @@ const recaptcha = async (action: string) => {
     return token
 }
 
-const voteConfirm = async (VS: {
-    id: number
-    name: string
-    candidates: {
-        id: number
-        name: string
-    }[]
-}) => {
-    if (!voteData.value[VS.id]) {
+const voteConfirm = async (VSId: number) => {
+    if (!voteData.value[VSId]) {
         ElMessage({
             type: 'warning',
             message: '請選擇候選人',
@@ -519,18 +510,14 @@ const voteConfirm = async (VS: {
         return
     }
 
-    voteVisible.value[VS.id] = false
+    voteVisible.value[VSId] = false
     setTimeout(() => {
-        voteLoading.value[VS.id] = true
+        voteLoading.value[VSId] = true
     }, 1)
-
-    const candidate = VS.candidates.find(
-        (item: { id: number }) => item.id === voteData.value[VS.id]
-    )!.name
 
     await ElMessageBox.confirm(
         '投出選票後無法刪除或變更',
-        '確定要投給「' + candidate + '」嗎？',
+        '確定要投給「' + voteData.value[VSId] + '」嗎？',
         {
             confirmButtonText: '確 定',
             cancelButtonText: '取 消',
@@ -563,8 +550,8 @@ const voteConfirm = async (VS: {
             await useFetch('/api/vote', {
                 method: 'POST',
                 body: JSON.stringify({
-                    VSId: VS.id,
-                    candidateId: voteData.value[VS.id],
+                    VSId,
+                    cname: voteData.value[VSId],
                 }),
             })
                 .then(async ({ data: res }) => {
@@ -631,7 +618,7 @@ const voteConfirm = async (VS: {
             })
         })
 
-    voteLoading.value[VS.id] = false
+    voteLoading.value[VSId] = false
 }
 
 const seeToken = async (index: number) => {
@@ -686,7 +673,7 @@ const seeResult = async (index: number) => {
     }
 
     resultLoading.value[index] = false
-    await useRouter().push('/vote/' + index)
+    await useRouter().push('/result/' + data.value!.VS[index].name)
 }
 
 const checkData = () => {

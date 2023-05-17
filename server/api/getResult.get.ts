@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
         select: {
             endTime: true,
             groupId: true,
-            delete: true,
+            archive: true,
         },
     })
 
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (VS.delete) {
+    if (VS.archive) {
         throw createError({
             statusCode: 401,
             message: '投票已被封存',
@@ -105,7 +105,9 @@ export default defineEventHandler(async (event) => {
                     },
                 },
                 orderBy: {
-                    id: 'asc',
+                    ballots: {
+                        _count: 'desc',
+                    },
                 },
             },
         },

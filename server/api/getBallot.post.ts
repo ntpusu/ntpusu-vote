@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
                     voting: {
                         select: {
                             name: true,
-                            delete: true,
+                            archive: true,
                         },
                     },
                 },
@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (ballot.candidate.voting.delete) {
+    if (ballot.candidate.voting.archive) {
         throw createError({
             statusCode: 401,
             message: '投票已被封存'

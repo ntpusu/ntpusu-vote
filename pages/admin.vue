@@ -64,57 +64,60 @@
                         inline-prompt
                         active-text="是"
                         inactive-text="否"
+                        @change="onlyOneChange"
                     />
                 </ElFormItem>
-                <template v-if="addVote.onlyOne">
-                    <ElFormItem
-                        label="選項名稱"
-                        prop="candidate.name"
-                        :rules="{
-                            required: true,
-                            message: '選項為必填',
-                            trigger: 'blur',
-                        }"
-                    >
-                        <ElSpace>
-                            <ElInput
-                                v-model="addVote.candidate.name"
-                                placeholder="請輸入選項名稱"
-                                clearable
-                            />
-                            <ElButton class="invisible ml-2" />
-                        </ElSpace>
-                    </ElFormItem>
-                </template>
-                <template v-else>
-                    <ElFormItem
-                        v-for="(candidate, index) in addVote.candidates"
-                        :key="index"
-                        :prop="'candidates.' + index + '.name'"
-                        :label="index + 1 + '號選項'"
-                        :rules="{
-                            required: true,
-                            message: '選項為必填',
-                            trigger: 'blur',
-                        }"
-                    >
-                        <div class="inline-flex">
+                <div
+                    v-for="(candidate, index) in addVote.candidates"
+                    class="flex items-center pb-7"
+                >
+                    <div>
+                        <ElFormItem
+                            :key="index"
+                            :prop="'candidates.' + index + '.name'"
+                            :label="index + 1 + '號名稱'"
+                            :rules="{
+                                required: true,
+                                message: '選項為必填',
+                                trigger: 'blur',
+                            }"
+                            class="!mb-4"
+                        >
                             <ElInput
                                 v-model="candidate.name"
                                 placeholder="請輸入選項名稱"
                                 clearable
                             />
-                            <ElButton
-                                round
-                                @click.prevent="removeDomain(candidate)"
-                                class="ml-2"
-                                :class="{ invisible: index < 2 }"
-                            >
-                                <span class="font-bold">X</span>
-                            </ElButton>
-                        </div>
-                    </ElFormItem>
-                </template>
+                        </ElFormItem>
+                        <ElFormItem
+                            :key="index"
+                            :label="index + 1 + '號圖片'"
+                            :prop="'candidates.' + index + '.photo'"
+                            :rules="{
+                                type: 'url',
+                                message: '請輸入網址',
+                                trigger: 'blur',
+                            }"
+                            class="!mb-0"
+                        >
+                            <ElInput
+                                v-model="candidate.photo"
+                                placeholder="請輸入圖片網址"
+                                clearable
+                            />
+                        </ElFormItem>
+                    </div>
+                    <ElButton
+                        type="danger"
+                        plain
+                        round
+                        @click="removeDomain(candidate)"
+                        class="ml-2"
+                        :class="{ invisible: index < 2 }"
+                    >
+                        <span class="font-bold">X</span>
+                    </ElButton>
+                </div>
                 <ElFormItem>
                     <ElSpace class="m-auto">
                         <ElButton v-if="!addVote.onlyOne" @click="addDomain">
@@ -348,6 +351,7 @@ const formRef = ref<FormInstance>()
 
 interface Candidate {
     name: string
+    photo: string | undefined
 }
 
 const addVote = reactive<{
@@ -356,7 +360,6 @@ const addVote = reactive<{
     startTime: string
     endTime: string
     onlyOne: boolean
-    candidate: Candidate
     candidates: Candidate[]
 }>({
     voteName: '',
@@ -364,9 +367,22 @@ const addVote = reactive<{
     startTime: '',
     endTime: '',
     onlyOne: false,
-    candidate: { name: '' },
-    candidates: [{ name: '' }, { name: '' }],
+    candidates: [
+        { name: '', photo: undefined },
+        { name: '', photo: undefined },
+    ],
 })
+
+const onlyOneChange = () => {
+    if (addVote.onlyOne) {
+        addVote.candidates = [{ name: '', photo: undefined }]
+    } else {
+        addVote.candidates = [
+            { name: '', photo: undefined },
+            { name: '', photo: undefined },
+        ]
+    }
+}
 
 const removeDomain = (item: Candidate) => {
     const index = addVote.candidates.indexOf(item)
@@ -376,7 +392,7 @@ const removeDomain = (item: Candidate) => {
 }
 
 const addDomain = () => {
-    addVote.candidates.push({ name: '' })
+    addVote.candidates.push({ name: '', photo: '' })
 }
 
 const rules = reactive<FormRules>({
@@ -393,29 +409,9 @@ const submitForm = async (formRef: FormInstance | undefined) => {
 
     await formRef.validate(async (valid, fields) => {
         if (valid) {
-            const {
-                voteName,
-                voteGroup,
-                startTime,
-                endTime,
-                onlyOne,
-                candidate,
-                candidates,
-            } = addVote
-
-            const data = {
-                voteName,
-                voteGroup,
-                startTime,
-                endTime,
-                candidates: onlyOne
-                    ? candidate.name
-                    : candidates.map((c) => c.name),
-            }
-
             await useFetch('/api/addVS', {
                 method: 'POST',
-                body: JSON.stringify(data),
+                body: JSON.stringify(addVote),
             })
                 .then(async () => {
                     ElMessage.success('創建成功')
@@ -447,7 +443,7 @@ const tableData = () => {
     if (!VS.value) return []
 
     return VS.value
-        .filter((item) => !item.delete)
+        .filter((item) => !item.archive)
         .map((item) => ({
             id: item.id,
             title: item.name,
@@ -463,7 +459,7 @@ const archiveData = () => {
     if (!VS.value) return []
 
     return VS.value
-        .filter((item) => item.delete)
+        .filter((item) => item.archive)
         .map((item) => ({
             id: item.id,
             title: item.name,

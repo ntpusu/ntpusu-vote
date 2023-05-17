@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
 
     const VS = await prisma.voting.findMany({
         where: {
-            delete: false,
+            archive: false,
             groupId: {
                 in: groupIds,
             },
@@ -49,7 +49,6 @@ export default defineEventHandler(async (event) => {
             onlyOne: true,
             candidates: {
                 select: {
-                    id: true,
                     name: true,
                 },
             },

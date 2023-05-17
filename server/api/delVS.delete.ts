@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
 
     const VS = await prisma.voting.findUnique({
         where: { id: parseInt(id) },
-        select: { delete: true },
+        select: { archive: true },
     })
 
     if (!VS) {
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (!VS.delete) {
+    if (!VS.archive) {
         throw createError({
             statusCode: 403,
             message: '投票尚未封存',

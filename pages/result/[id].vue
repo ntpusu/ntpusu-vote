@@ -156,7 +156,7 @@ const winnerCnt = () => {
 const checkData = () => {
     setTimeout(async () => {
         if (VSPending.value) checkData()
-        else if (!VS.value && useRoute().path == '/vote/' + id)
+        else if (!VS.value && useRoute().path == '/result/' + id)
             await useRouter().push('/404')
     }, 100)
 }

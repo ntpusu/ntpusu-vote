@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
 
     await prisma.voting.update({
         where: { id: parseInt(id) },
-        data: { delete: false },
+        data: { archive: false },
         select: null,
     })
 
