@@ -52,6 +52,7 @@ export default defineEventHandler(async (event) => {
             candidates: {
                 select: {
                     name: true,
+                    photo: true,
                 },
             },
         },

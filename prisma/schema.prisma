@@ -18,6 +18,8 @@ model Voting {
 
   groupId Int
   group   Group @relation(fields: [groupId], references: [id])
+
+  @@unique([groupId, name])
 }
 
 model Candidate {
@@ -33,15 +35,13 @@ model Candidate {
 }
 
 model Ballot {
-  token      String   @unique
+  token      String   @id
   time       DateTime @default(now())
   validation String
 
   votingId      Int
   candidateName String
   candidate     Candidate @relation(fields: [votingId, candidateName], references: [votingId, name], onDelete: Cascade)
-
-  @@id([votingId, candidateName, token])
 }
 
 model Voter {

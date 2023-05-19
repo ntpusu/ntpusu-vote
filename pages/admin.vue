@@ -392,7 +392,7 @@ const removeDomain = (item: Candidate) => {
 }
 
 const addDomain = () => {
-    addVote.candidates.push({ name: '', photo: '' })
+    addVote.candidates.push({ name: '', photo: undefined })
 }
 
 const rules = reactive<FormRules>({
