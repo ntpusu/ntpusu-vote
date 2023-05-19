@@ -32,18 +32,10 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const VS = await prisma.voting.findUnique({
+    const VS = await prisma.voting.findUniqueOrThrow({
         where: { id: parseInt(id) },
         select: { archive: true },
     })
-
-    if (!VS) {
-        throw createError({
-            statusCode: 404,
-            statusMessage: 'Not Found',
-            message: 'Voting not found',
-        })
-    }
 
     if (!VS.archive) {
         throw createError({
@@ -55,7 +47,7 @@ export default defineEventHandler(async (event) => {
 
     await prisma.voting.delete({
         where: { id: parseInt(id) },
-        select: null,
+        select: {},
     })
 
     return {}

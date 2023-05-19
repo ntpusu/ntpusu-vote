@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
         const token = HS256(studentId.toString() + VSitem.id.toString(), process.env.AUTH_SECRET as string).toString()
         const ballot = await prisma.ballot.findUnique({
             where: { token },
-            select: null,
+            select: {},
         })
 
         if (ballot) {

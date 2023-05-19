@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
 
     const admin = await prisma.admin.findUnique({
         where: { id: parseInt(studentId) },
-        select: null,
+        select: {},
     })
 
     if (!admin) {
@@ -37,20 +37,12 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const VS = await prisma.voting.findUnique({
+    const VS = await prisma.voting.findUniqueOrThrow({
         where: { id: parseInt(id) },
         select: {
             startTime: true,
         },
     })
-
-    if (!VS) {
-        throw createError({
-            statusCode: 404,
-            statusMessage: 'Not Found',
-            message: 'Voting not found',
-        })
-    }
 
     if (studentId != process.env.ADMIN) {
         if (Date.now() >= VS.startTime.getTime()) {
@@ -65,7 +57,7 @@ export default defineEventHandler(async (event) => {
     await prisma.voting.update({
         where: { id: parseInt(id) },
         data: { archive: true },
-        select: null,
+        select: {},
     })
 
     return {}

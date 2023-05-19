@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
 
     const voter = await prisma.voter.findUnique({
         where: { id: studentId },
-        select: null,
+        select: {},
     })
 
     if (!voter) {
@@ -72,7 +72,7 @@ export default defineEventHandler(async (event) => {
 
     const admin = await prisma.admin.findUnique({
         where: { id: studentId },
-        select: null,
+        select: {},
     })
 
     if (!admin) {
@@ -83,7 +83,7 @@ export default defineEventHandler(async (event) => {
                     groupId: VS.groupId,
                 },
             },
-            select: null,
+            select: {},
         })
 
         if (!VIG) {
@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    return await prisma.voting.findUnique({
+    return await prisma.voting.findUniqueOrThrow({
         where: { id: parseInt(id) },
         select: {
             name: true,

@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
         where: { id: parseInt(id) },
         create: { id: parseInt(id) },
         update: {},
-        select: null,
+        select: {},
     })
 
     return {}

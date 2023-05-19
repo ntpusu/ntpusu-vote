@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
     const admin = await prisma.admin.findUnique({
         where: { id },
-        select: null,
+        select: {},
     })
 
     return admin !== null || id.toString() == process.env.ADMIN

@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
 
     const voter = await prisma.voter.findUnique({
         where: { id: studentId },
-        select: null,
+        select: {},
     })
 
     if (!voter) {
@@ -49,18 +49,10 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const candidate = await prisma.candidate.findUnique({
+    const candidate = await prisma.candidate.findUniqueOrThrow({
         where: { votingId_name: { votingId: parseInt(VSId), name: cname } },
         select: { votingId: true },
     })
-
-    if (!candidate) {
-        throw createError({
-            statusCode: 404,
-            statusMessage: 'Not Found',
-            message: 'candidate Not Found',
-        })
-    }
 
     if (candidate.votingId != parseInt(VSId)) {
         throw createError({
@@ -70,7 +62,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const voting = await prisma.voting.findUnique({
+    const voting = await prisma.voting.findUniqueOrThrow({
         where: { id: parseInt(VSId) },
         select: {
             startTime: true,
@@ -79,14 +71,6 @@ export default defineEventHandler(async (event) => {
             groupId: true,
         },
     })
-
-    if (!voting) {
-        throw createError({
-            statusCode: 404,
-            statusMessage: 'Not Found',
-            message: 'Voting Not Found',
-        })
-    }
 
     if (voting.archive) {
         throw createError({
@@ -103,7 +87,7 @@ export default defineEventHandler(async (event) => {
                 groupId: voting.groupId,
             },
         },
-        select: null,
+        select: {},
     })
 
     if (!VIG) {
@@ -134,8 +118,8 @@ export default defineEventHandler(async (event) => {
 
     try {
         await prisma.ballot.create({
-            data: { token, votingId: parseInt(VSId), candidateName: cname, validation: Math.floor(Math.random() * 1000000).toString().padStart(6, '0') },
-            select: null,
+            data: { token, votingId: parseInt(VSId), candidateName: cname },
+            select: {},
         })
     }
     catch (e) {
