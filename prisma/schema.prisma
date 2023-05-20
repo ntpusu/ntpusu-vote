@@ -51,7 +51,7 @@ model Voter {
 }
 
 model VoterLogin {
-  id   Int      @id @default(autoincrement())
+  id   Int      @id
   time DateTime @default(now())
 
   voterId Int   @unique

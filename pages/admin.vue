@@ -364,6 +364,29 @@
             </div>
         </template>
         <ElDivider />
+        <div class="flex flex-col items-center">
+            <ElPopconfirm
+                title="確定要重設登入數量嗎？"
+                cancElButton-text="取消"
+                confirm-button-text="確定"
+                @confirm="handleLoginReset"
+            >
+                <template #reference>
+                    <ElButton
+                        type="warning"
+                        title="重置登入數"
+                        plain
+                    >
+                        <span class="font-bold">重置登入</span>
+                    </ElButton>
+                </template>
+            </ElPopconfirm>
+            <div class="p-3">
+                目前已登入人數：
+                <ElTag>{{ loginCnt }}</ElTag>
+            </div>
+        </div>
+        <ElDivider />
         <div class="flex justify-center">
             <ElButton
                 type="primary"
@@ -391,6 +414,7 @@ const {
     refresh: VSRefresh,
 } = await useLazyFetch('/api/getVS')
 const { data: Group } = await useFetch('/api/getGroup')
+const { data: loginCnt } = await useFetch('/api/getLoginCnt')
 
 const showTime = ref(false)
 const showOption = ref(true)
@@ -558,6 +582,16 @@ const handleDelete = async (id: number) => {
         })
         .catch(() => {
             ElMessage.error('刪除失敗')
+        })
+}
+
+const handleLoginReset = async () => {
+    await useFetch('/api/resetLoginCnt')
+        .then(async () => {
+            ElMessage.success('重置成功')
+        })
+        .catch(() => {
+            ElMessage.error('重置失敗')
         })
 }
 </script>

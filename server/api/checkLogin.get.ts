@@ -24,7 +24,10 @@ export default defineEventHandler(async (event) => {
 
     if (!login) {
         login = await prisma.voterLogin.create({
-            data: { voterId: id },
+            data: {
+                id: await prisma.voterLogin.count() + 1,
+                voterId: id,
+            },
             select: {
                 id: true,
                 time: true,

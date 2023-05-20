@@ -1,12 +1,13 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const { token } = await readBody(event) as { token: string | undefined }
+    const { token } = getQuery(event) as { token: string | undefined }
 
     if (!token) {
         throw createError({
             statusCode: 400,
-            message: 'Bad Request',
+            statusMessage: 'Bad Request',
+            message: 'Parameter "token" is required.',
         })
     }
 
@@ -46,21 +47,12 @@ export default defineEventHandler(async (event) => {
                     voting: {
                         select: {
                             name: true,
-                            archive: true,
                         },
                     },
                 },
             },
         },
     })
-
-    if (ballot.candidate.voting.archive) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Forbidden',
-            message: '投票已被封存'
-        })
-    }
 
     return {
         vote: ballot.candidate.voting.name,
