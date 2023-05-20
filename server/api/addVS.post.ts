@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
 
     const admin = await prisma.admin.findUnique({
         where: { id: studentId },
-        select: {},
+        select: null,
     })
 
     if (!admin) {
