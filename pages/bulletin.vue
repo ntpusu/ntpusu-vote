@@ -317,12 +317,16 @@ const load = () => {
     setTimeout(() => {
         const instgrm = (window as any).instgrm
 
-        if (instgrm) instgrm.Embeds.process()
-        else load()
+        if (!instgrm) load()
+        else instgrm.Embeds.process()
     }, 100)
 }
 
 onMounted(() => {
+    load()
+})
+
+onActivated(() => {
     load()
 })
 </script>
