@@ -10,7 +10,7 @@
                     frameborder="1"
                     allowfullscreen="true"
                     allow="autoplay; clipboard-write; web-share"
-                    class="h-full min-h-[80vh] w-full"
+                    class="h-full min-h-[75vh] w-full"
                     load="lazy"
                 >
                     載入中~~~
@@ -315,11 +315,8 @@ definePageMeta({
 
 const load = () => {
     setTimeout(() => {
-        const instgrm = (window as any).instgrm
-
-        if (!instgrm) load()
-        else instgrm.Embeds.process()
-    }, 100)
+        ;(window as any).instgrm.Embeds.process()
+    }, 500)
 }
 
 onMounted(() => {

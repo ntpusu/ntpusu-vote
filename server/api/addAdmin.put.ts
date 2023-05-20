@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'Parameter id is required and must be a number',
+            message: 'Parameter "id" is required and must be a number',
         })
     }
 
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不在管理員名單中',
+            message: '不是超級管理員',
         })
     }
 

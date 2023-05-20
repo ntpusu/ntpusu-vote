@@ -713,7 +713,7 @@ const checkData = () => {
         else if (!data.value && useRoute().path == '/vote') {
             ElMessage({
                 type: 'error',
-                message: '操作過於頻繁或不在投票人名單內',
+                message: '操作過於頻繁或不在選舉人名單內',
             })
 
             setTimeout(() => {

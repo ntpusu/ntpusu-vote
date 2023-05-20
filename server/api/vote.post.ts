@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'Parameter VSId is required and must be a number',
+            message: 'Parameter "VSId" is required and must be a number',
         })
     }
 
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'Parameter cname is required',
+            message: 'Parameter "cname" is required',
         })
     }
 

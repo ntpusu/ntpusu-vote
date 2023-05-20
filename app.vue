@@ -104,7 +104,7 @@
         <ElAffix
             v-if="showLoginBage"
             :offset="80"
-            class="absolute right-10"
+            class="absolute right-5"
         >
             <ElButton
                 type="primary"
