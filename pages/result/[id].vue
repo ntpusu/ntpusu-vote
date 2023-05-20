@@ -49,15 +49,7 @@
                 >
                     <ElCard
                         v-for="(candidate, index) in VS.candidates"
-                        :shadow="
-                            candidate._count.ballots === winnerCnt()
-                                ? 'always'
-                                : 'never'
-                        "
-                        :class="{
-                            '!bg-green-50':
-                                candidate._count.ballots === winnerCnt(),
-                        }"
+                        shadow="hover"
                         :key="index"
                         class="max-w-[12rem] md:max-w-[15rem] xl:max-w-[18rem]"
                     >
@@ -67,17 +59,12 @@
                             </h1>
                         </div>
                         <ElDivider class="!my-5" />
-                        <ElBadge
-                            :hidden="candidate._count.ballots !== winnerCnt()"
-                            value="#最高票"
-                        >
-                            <ElStatistic
-                                class="m-1 text-center"
-                                title="票數"
-                                :value="candidate._count.ballots"
-                                suffix="票"
-                            />
-                        </ElBadge>
+                        <ElStatistic
+                            class="m-1 text-center"
+                            title="票數"
+                            :value="candidate._count.ballots"
+                            suffix="票"
+                        />
                         <ElDivider class="!xy-5" />
                         <ElProgress
                             type="dashboard"
@@ -87,11 +74,7 @@
                                     : (candidate._count.ballots * 100) /
                                       voteCnt()
                             "
-                            :color="
-                                candidate._count.ballots === winnerCnt()
-                                    ? '#67C23A'
-                                    : '#409EFF'
-                            "
+                            color="#409EFF"
                         >
                             <template #default="{ percentage }">
                                 <ElStatistic
@@ -149,14 +132,6 @@ const voteCnt = () => {
 
     return VS.value.candidates.reduce((acc, cur) => {
         return acc + cur._count.ballots
-    }, 0)
-}
-
-const winnerCnt = () => {
-    if (!VS.value) return 0
-
-    return VS.value.candidates.reduce((acc, cur) => {
-        return acc > cur._count.ballots ? acc : cur._count.ballots
     }, 0)
 }
 
