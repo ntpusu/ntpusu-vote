@@ -6,9 +6,13 @@
             class="flex justify-center"
         >
             <template #template>
-                <ElSpace alignment="center" wrap class="justify-center">
+                <ElSpace
+                    alignment="center"
+                    wrap
+                    class="justify-center"
+                >
                     <ElSkeletonItem
-                        v-for=" in rand(2, 4)"
+                        v-for=" in rand(1, 4)"
                         variant="rect"
                         class="!w-[85vw] !rounded-xl sm:!w-[65vw] md:!w-[50vw] lg:!w-[40vw] xl:!w-[35vw] 2xl:!w-[28vw]"
                         :style="{ height: rand(15, 25) + 'rem' }"
@@ -55,18 +59,18 @@
                                                         v-if="
                                                             Date.now() <
                                                             timeCnt(
-                                                                VSitem.startTime
+                                                                VSitem.startTime,
                                                             )
                                                         "
                                                         class="text-center"
                                                         :format="
                                                             chooseFormat(
-                                                                VSitem.startTime
+                                                                VSitem.startTime,
                                                             )
                                                         "
                                                         :value="
                                                             timeCnt(
-                                                                VSitem.startTime
+                                                                VSitem.startTime,
                                                             )
                                                         "
                                                         value-style="color: white;"
@@ -80,7 +84,10 @@
                                                             </span>
                                                         </template>
                                                     </ElCountdown>
-                                                    <span v-else class="m-auto">
+                                                    <span
+                                                        v-else
+                                                        class="m-auto"
+                                                    >
                                                         已開始
                                                     </span>
                                                 </template>
@@ -91,19 +98,19 @@
                                                         'cursor-help':
                                                             Date.now() <=
                                                             timeCnt(
-                                                                VSitem.endTime
+                                                                VSitem.endTime,
                                                             ),
                                                         'cursor-default':
                                                             Date.now() >
                                                             timeCnt(
-                                                                VSitem.endTime
+                                                                VSitem.endTime,
                                                             ),
                                                     }"
                                                 >
                                                     開始:
                                                     {{
                                                         viewDate(
-                                                            VSitem.startTime
+                                                            VSitem.startTime,
                                                         )
                                                     }}
                                                 </ElTag>
@@ -123,18 +130,18 @@
                                                         v-if="
                                                             Date.now() <=
                                                             timeCnt(
-                                                                VSitem.endTime
+                                                                VSitem.endTime,
                                                             )
                                                         "
                                                         class="text-center"
                                                         :format="
                                                             chooseFormat(
-                                                                VSitem.endTime
+                                                                VSitem.endTime,
                                                             )
                                                         "
                                                         :value="
                                                             timeCnt(
-                                                                VSitem.endTime
+                                                                VSitem.endTime,
                                                             )
                                                         "
                                                         value-style="color: white;"
@@ -148,7 +155,10 @@
                                                             </span>
                                                         </template>
                                                     </ElCountdown>
-                                                    <span v-else class="m-auto">
+                                                    <span
+                                                        v-else
+                                                        class="m-auto"
+                                                    >
                                                         已結束
                                                     </span>
                                                 </template>
@@ -159,12 +169,12 @@
                                                         'cursor-help':
                                                             Date.now() >=
                                                             timeCnt(
-                                                                VSitem.startTime
+                                                                VSitem.startTime,
                                                             ),
                                                         'cursor-default':
                                                             Date.now() <
                                                             timeCnt(
-                                                                VSitem.startTime
+                                                                VSitem.startTime,
                                                             ),
                                                     }"
                                                 >
@@ -185,9 +195,7 @@
                                     候選人名單
                                 </h2>
                                 <ElSpace
-                                    direction="vertical"
-                                    alignment="start"
-                                    class="!flex content-center"
+                                    class="!flex justify-center"
                                     wrap
                                 >
                                     <div
@@ -204,7 +212,7 @@
                                             1
                                         </ElTag>
                                         <div class="ml-2 mr-5">
-                                            {{ VSitem.onlyOne }}
+                                            {{ VSitem.candidates[0].name }}
                                         </div>
                                     </div>
                                     <template v-else>
@@ -287,7 +295,9 @@
                                                 v-if="VSitem.onlyOne"
                                                 class="my-2 cursor-default text-base font-bold text-black sm:my-3 sm:text-lg md:my-4 md:text-xl"
                                             >
-                                                同意{{ VSitem.onlyOne }}當選嗎？
+                                                同意{{
+                                                    VSitem.candidates[0].name
+                                                }}當選嗎？
                                             </span>
                                             <span
                                                 v-else
@@ -300,7 +310,9 @@
                                                 v-model="voteData[VSitem.id]"
                                             >
                                                 <ElRadio
-                                                    v-for="candidate in VSitem.candidates"
+                                                    v-for="candidate in VSitem.candidates.slice(
+                                                        VSitem.onlyOne ? 1 : 0,
+                                                    )"
                                                     :key="candidate.name"
                                                     :label="candidate.name"
                                                     border
@@ -323,7 +335,7 @@
                                                 目前登入的學號是：{{
                                                     useAuth().data.value?.user?.email?.substring(
                                                         1,
-                                                        10
+                                                        10,
                                                     )
                                                 }}
                                             </span>
@@ -354,7 +366,10 @@
                                         <span class="font-bold"> 結 果 </span>
                                     </ElButton>
                                 </div>
-                                <div v-else class="flex justify-center">
+                                <div
+                                    v-else
+                                    class="flex justify-center"
+                                >
                                     <ElButton
                                         type="primary"
                                         class="w-fit !rounded-md"
@@ -374,7 +389,10 @@
                                         >
                                             投 票
                                         </span>
-                                        <span v-else class="font-bold">
+                                        <span
+                                            v-else
+                                            class="font-bold"
+                                        >
                                             已 投 票
                                         </span>
                                     </ElButton>
@@ -397,7 +415,10 @@
                                         >
                                             查 看 憑 證
                                         </span>
-                                        <span v-else class="font-bold">
+                                        <span
+                                            v-else
+                                            class="font-bold"
+                                        >
                                             尚 未 投 票
                                         </span>
                                     </ElButton>
@@ -405,7 +426,12 @@
                             </div>
                         </ElCard>
                     </ElSpace>
-                    <ElResult v-else title="沒有投票" icon="info" class="mt-16">
+                    <ElResult
+                        v-else
+                        title="沒有投票"
+                        icon="info"
+                        class="mt-16"
+                    >
                         <template #sub-title>
                             若有疑問請隨時<NuxtLink
                                 to="https://www.facebook.com/NTPUSU"
@@ -524,7 +550,7 @@ const voteConfirm = async (VSId: number) => {
             confirmButtonText: '確 定',
             cancelButtonText: '取 消',
             type: 'warning',
-        }
+        },
     )
         .then(async () => {
             const response = await recaptcha('vote')
@@ -557,10 +583,10 @@ const voteConfirm = async (VSId: number) => {
                 }),
             })
                 .then(async ({ data: res }) => {
-                    if (!res.value) {
-                        if (res.value!.vote) {
+                    if (res.value) {
+                        if (res.value.vote) {
                             await ElMessageBox.confirm(
-                                '憑證：' + res.value!.token,
+                                '憑證：' + res.value.token,
                                 '投票成功',
                                 {
                                     cancelButtonText: '複製憑證',
@@ -569,11 +595,11 @@ const voteConfirm = async (VSId: number) => {
                                     distinguishCancelAndClose: true,
                                     type: 'success',
                                     roundButton: true,
-                                }
+                                },
                             ).catch(async (action: Action) => {
                                 if (action === 'cancel') {
                                     await navigator.clipboard.writeText(
-                                        res.value!.token
+                                        res.value!.token,
                                     )
                                     ElMessage({
                                         type: 'success',
@@ -583,7 +609,7 @@ const voteConfirm = async (VSId: number) => {
                             })
                         } else {
                             await ElMessageBox.confirm(
-                                '憑證：' + res.value!.token,
+                                '憑證：' + res.value.token,
                                 '不可重複投票',
                                 {
                                     cancelButtonText: '複製憑證',
@@ -593,11 +619,11 @@ const voteConfirm = async (VSId: number) => {
                                     distinguishCancelAndClose: true,
                                     type: 'error',
                                     roundButton: true,
-                                }
+                                },
                             ).catch(async (action: Action) => {
                                 if (action === 'cancel') {
                                     await navigator.clipboard.writeText(
-                                        res.value!.token
+                                        res.value!.token,
                                     )
                                     ElMessage({
                                         type: 'success',

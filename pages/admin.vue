@@ -12,7 +12,10 @@
                 hide-required-asterisk
                 @keyup.enter.capture="submitForm(formRef)"
             >
-                <ElFormItem label="名稱" prop="voteName">
+                <ElFormItem
+                    label="名稱"
+                    prop="voteName"
+                >
                     <ElSpace>
                         <ElInput
                             v-model="addVote.voteName"
@@ -22,7 +25,10 @@
                         <ElButton class="invisible ml-2" />
                     </ElSpace>
                 </ElFormItem>
-                <ElFormItem label="範圍" prop="voteGroup">
+                <ElFormItem
+                    label="範圍"
+                    prop="voteGroup"
+                >
                     <ClientOnly>
                         <ElSelect
                             v-model="addVote.voteGroup"
@@ -38,7 +44,10 @@
                         </ElSelect>
                     </ClientOnly>
                 </ElFormItem>
-                <ElFormItem label="開始時間" prop="startTime">
+                <ElFormItem
+                    label="開始時間"
+                    prop="startTime"
+                >
                     <ClientOnly>
                         <ElDatePicker
                             v-model="addVote.startTime"
@@ -48,7 +57,10 @@
                         />
                     </ClientOnly>
                 </ElFormItem>
-                <ElFormItem label="結束時間" prop="endTime">
+                <ElFormItem
+                    label="結束時間"
+                    prop="endTime"
+                >
                     <ClientOnly>
                         <ElDatePicker
                             v-model="addVote.endTime"
@@ -58,7 +70,10 @@
                         />
                     </ClientOnly>
                 </ElFormItem>
-                <ElFormItem label="是否單選" prop="onlyOne">
+                <ElFormItem
+                    label="是否單選"
+                    prop="onlyOne"
+                >
                     <ElSwitch
                         v-model="addVote.onlyOne"
                         inline-prompt
@@ -120,10 +135,16 @@
                 </div>
                 <ElFormItem>
                     <ElSpace class="m-auto">
-                        <ElButton v-if="!addVote.onlyOne" @click="addDomain">
+                        <ElButton
+                            v-if="!addVote.onlyOne"
+                            @click="addDomain"
+                        >
                             <span class="font-bold">新增選項</span>
                         </ElButton>
-                        <ElButton type="primary" @click="submitForm(formRef)">
+                        <ElButton
+                            type="primary"
+                            @click="submitForm(formRef)"
+                        >
                             <span class="font-bold">創 建</span>
                         </ElButton>
                     </ElSpace>
@@ -161,9 +182,18 @@
                         empty-text="Empty~~~"
                         size="small"
                     >
-                        <div prop="id" class="hidden" />
-                        <div prop="startTime" class="hidden" />
-                        <div prop="endTimeStr" class="hidden" />
+                        <div
+                            prop="id"
+                            class="hidden"
+                        />
+                        <div
+                            prop="startTime"
+                            class="hidden"
+                        />
+                        <div
+                            prop="endTimeStr"
+                            class="hidden"
+                        />
                         <ElTableColumn
                             prop="title"
                             label="名稱"
@@ -220,7 +250,10 @@
                                     @confirm="handleArchive(row.id)"
                                 >
                                     <template #reference>
-                                        <ElButton size="small" type="warning">
+                                        <ElButton
+                                            size="small"
+                                            type="warning"
+                                        >
                                             <span class="font-bold">封 存</span>
                                         </ElButton>
                                     </template>
@@ -242,9 +275,18 @@
                         empty-text="Empty~~~"
                         size="small"
                     >
-                        <div prop="id" class="hidden" />
-                        <div prop="startTime" class="hidden" />
-                        <div prop="endTimeStr" class="hidden" />
+                        <div
+                            prop="id"
+                            class="hidden"
+                        />
+                        <div
+                            prop="startTime"
+                            class="hidden"
+                        />
+                        <div
+                            prop="endTimeStr"
+                            class="hidden"
+                        />
                         <ElTableColumn
                             prop="title"
                             label="名稱"
@@ -281,7 +323,10 @@
                                     @confirm="handleUnarchive(row.id)"
                                 >
                                     <template #reference>
-                                        <ElButton size="small" type="primary">
+                                        <ElButton
+                                            size="small"
+                                            type="primary"
+                                        >
                                             <span class="font-bold"
                                                 >解除封存</span
                                             >
@@ -304,7 +349,10 @@
                                     @confirm="handleDelete(row.id)"
                                 >
                                     <template #reference>
-                                        <ElButton size="small" type="danger">
+                                        <ElButton
+                                            size="small"
+                                            type="danger"
+                                        >
                                             <span class="font-bold">刪 除</span>
                                         </ElButton>
                                     </template>

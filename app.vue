@@ -1,5 +1,8 @@
 <template>
-    <ElContainer direction="vertical" class="h-[100vh]">
+    <ElContainer
+        direction="vertical"
+        class="h-[100vh]"
+    >
         <NuxtLoadingIndicator />
         <ClientOnly>
             <template #fallback>
@@ -35,6 +38,15 @@
                 >
                     <span class="text-sm font-bold sm:text-base md:text-lg">
                         首頁
+                    </span>
+                </ElMenuItem>
+                <ElMenuItem
+                    class="!px-3 sm:!px-4 md:!px-5"
+                    index="/bulletin"
+                    @click="useRouter().push('/bulletin')"
+                >
+                    <span class="text-sm font-bold sm:text-base md:text-lg">
+                        選舉資訊
                     </span>
                 </ElMenuItem>
                 <ElMenuItem
@@ -146,7 +158,10 @@
                     >
                         Cookie 使用聲明
                     </div>
-                    <ElButton type="warning" @click="cookie = '1'">
+                    <ElButton
+                        type="warning"
+                        @click="cookie = '1'"
+                    >
                         <span class="font-bold">了 解</span>
                     </ElButton>
                 </div>

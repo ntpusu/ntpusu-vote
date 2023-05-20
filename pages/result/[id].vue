@@ -43,7 +43,10 @@
                 >
                     候 選 人
                 </h1>
-                <ElSpace class="justify-center" wrap>
+                <ElSpace
+                    class="justify-center"
+                    wrap
+                >
                     <ElCard
                         v-for="(candidate, index) in VS.candidates"
                         :shadow="
@@ -104,7 +107,11 @@
                 </ElSpace>
             </div>
         </ElCard>
-        <ElSkeleton v-else class="flex justify-center" animated>
+        <ElSkeleton
+            v-else
+            class="flex justify-center"
+            animated
+        >
             <template #template>
                 <ElSkeletonItem
                     variant="rect"

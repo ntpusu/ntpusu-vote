@@ -5,8 +5,15 @@
         hide-required-asterisk
         class="m-auto flex h-[40vh] w-full flex-col items-center justify-center"
     >
-        <ElFormItem label="憑證" class="m-auto w-11/12 md:w-2/3 lg:w-1/2">
-            <ElInput v-model="input" placeholder="請輸入憑證" clearable />
+        <ElFormItem
+            label="憑證"
+            class="m-auto w-11/12 md:w-2/3 lg:w-1/2"
+        >
+            <ElInput
+                v-model="input"
+                placeholder="請輸入憑證"
+                clearable
+            />
         </ElFormItem>
         <ElButton
             type="primary"

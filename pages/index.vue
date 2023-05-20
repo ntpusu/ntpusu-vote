@@ -1,6 +1,11 @@
 <template>
     <div class="flex flex-col flex-wrap content-center">
-        <ElSteps direction="vertical" align-center space="12vh" class="m-5">
+        <ElSteps
+            direction="vertical"
+            align-center
+            space="12vh"
+            class="m-5"
+        >
             <ClientOnly>
                 <ElStep
                     v-for="(activity, index) in activities"

@@ -93,3 +93,8 @@ sw.*
 
 # Vercel
 .vercel
+
+# configuration
+.vscode
+.prettierrc
+tailwind.config.ts
