@@ -232,6 +232,12 @@ useHead({
             href: '/favicon.ico',
         },
     ],
+    script: [
+        {
+            src: 'https://www.instagram.com/embed.js',
+            tagPosition: 'bodyClose',
+        },
+    ],
 })
 
 const curIndex = ref(useRoute().path)
