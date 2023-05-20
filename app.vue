@@ -101,6 +101,19 @@
                 </ElMenuItem>
             </ElMenu>
         </ClientOnly>
+        <ElAffix
+            v-if="showLoginBage"
+            :offset="80"
+            class="absolute right-10"
+        >
+            <ElButton
+                type="primary"
+                round
+                @click="showLoginInfo"
+            >
+                {{ loginInfo.id }}
+            </ElButton>
+        </ElAffix>
         <ElScrollbar :always="true">
             <noscript>
                 <strong>
@@ -253,6 +266,48 @@ const handleSelect = (key: string) => {
 const cookie = useCookie('cookie', {
     sameSite: 'lax',
     secure: true,
+})
+
+const loginInfo = ref({
+    id: 0,
+    time: '',
+})
+
+const showLoginInfo = async () => {
+    await ElMessageBox.alert(
+        '之後會用此序號抽出得獎者',
+        '你是第 ' + loginInfo.value.id + ' 個登入投票網站的人',
+        {
+            confirmButtonText: '確 定',
+            showClose: false,
+            lockScroll: true,
+            type: 'success',
+            roundButton: true,
+        },
+    ).catch(() => {})
+}
+
+const showLoginBage = ref(false)
+
+const checkLogin = () => {
+    setTimeout(async () => {
+        if (status.value && status.value === 'authenticated') {
+            const { data: res } = await useFetch('/api/checkLogin')
+
+            if (res.value?.login) {
+                loginInfo.value = res.value?.login
+                showLoginBage.value = true
+            }
+
+            if (res.value?.firstLogin) {
+                await showLoginInfo()
+            }
+        } else checkLogin()
+    }, 100)
+}
+
+onMounted(() => {
+    checkLogin()
 })
 </script>
 

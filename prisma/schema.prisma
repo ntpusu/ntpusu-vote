@@ -35,9 +35,8 @@ model Candidate {
 }
 
 model Ballot {
-  token      String   @id
-  time       DateTime @default(now())
-  validation String
+  token String   @id
+  time  DateTime @default(now())
 
   votingId      Int
   candidateName String
@@ -45,14 +44,25 @@ model Ballot {
 }
 
 model Voter {
-  id Int @id
+  id    Int         @id
+  login VoterLogin?
 
   voterInGroup VoterInGroup[]
 }
 
+model VoterLogin {
+  id   Int      @id @default(autoincrement())
+  time DateTime @default(now())
+
+  voterId Int   @unique
+  voter   Voter @relation(fields: [voterId], references: [id], onDelete: Cascade)
+}
+
 model Group {
-  id   Int    @id @default(autoincrement())
-  name String @unique
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  level Level
+  count Int    @default(0)
 
   voterInGroup VoterInGroup[]
   voting       Voting[]
@@ -70,4 +80,10 @@ model VoterInGroup {
 
 model Admin {
   id Int @id
+}
+
+enum Level {
+  UNIVERSITY
+  COLLEGE
+  DEPARTMENT
 }
