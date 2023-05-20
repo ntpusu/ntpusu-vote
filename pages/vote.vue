@@ -195,7 +195,7 @@
                                     候選人名單
                                 </h2>
                                 <ElSpace
-                                    class="!flex justify-center"
+                                    class="!flex flex-col content-center justify-center"
                                     wrap
                                 >
                                     <div

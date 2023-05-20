@@ -3,8 +3,6 @@ import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
 
-    console.log(session)
-
     if (!session) {
         throw createError({
             statusCode: 401,
@@ -23,8 +21,6 @@ export default defineEventHandler(async (event) => {
             time: true,
         },
     })
-
-    console.log(login)
 
     if (!login) {
         login = await prisma.voterLogin.create({
