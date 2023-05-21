@@ -1,59 +1,71 @@
 <template>
-    <div class="flex flex-col flex-wrap content-center">
-        <div></div>
+    <div class="flex flex-wrap justify-center">
         <ElSteps
             direction="vertical"
             align-center
             space="12vh"
-            class="m-5"
+            class="w-full !flex-wrap content-center md:w-2/3"
         >
-            <ClientOnly>
-                <ElStep
-                    v-for="(activity, index) in activities"
-                    :key="index"
-                    :status="style(activity.start, activity.finish)"
-                    class="tracking-[1.5px]"
-                >
-                    <template #title>
-                        <div class="font-bold sm:text-lg">
-                            {{ activity.content }}
-                        </div>
-                    </template>
-                    <template #description>
-                        <div class="min-w-max sm:text-base">
-                            {{
-                                activity.start.toLocaleString(undefined, {
-                                    dateStyle: 'long',
-                                }) +
-                                (activity.end
-                                    ? '〜' +
-                                      activity.end.toLocaleString(undefined, {
-                                          dateStyle: 'long',
-                                      })
-                                    : '')
-                            }}
-                            {{ activity.maybe ? '(預定)' : '' }}
-                        </div>
-                    </template>
-                </ElStep>
-            </ClientOnly>
+            <ElStep
+                v-for="(activity, index) in activities"
+                :key="index"
+                :status="style(activity.start, activity.finish)"
+                class="tracking-[1.5px]"
+            >
+                <template #title>
+                    <div class="font-bold sm:text-lg">
+                        {{ activity.content }}
+                    </div>
+                </template>
+                <template #description>
+                    <div class="min-w-max sm:text-base">
+                        {{
+                            activity.start.toLocaleString(undefined, {
+                                dateStyle: 'long',
+                            }) +
+                            (activity.end
+                                ? '〜' +
+                                  activity.end.toLocaleString(undefined, {
+                                      dateStyle: 'long',
+                                  })
+                                : '')
+                        }}
+                        {{ activity.maybe ? '(預定)' : '' }}
+                    </div>
+                </template>
+            </ElStep>
         </ElSteps>
-        <ElButton
-            v-if="status === 'authenticated'"
-            type="danger"
-            class="mx-auto -mt-8 mb-5 w-[10%] min-w-fit sm:-mt-2 sm:mb-10"
-            @click="useRouter().push('/vote')"
-        >
-            <span class="font-bold">前 往 投 票 頁 面</span>
-        </ElButton>
-        <ElButton
-            v-else
-            type="danger"
-            class="mx-auto -mt-8 mb-5 w-[10%] min-w-fit sm:-mt-2 sm:mb-10"
-            @click="useRouter().push('/login')"
-        >
-            <span class="font-bold">前 往 登 入 頁 面</span>
-        </ElButton>
+        <div class="z-10 hidden md:block md:w-1/3" />
+        <div class="h fixed right-0 hidden w-3/5 flex-col items-center md:flex">
+            <div class="my-[4vh] text-center">
+                <div class="text-lg font-bold">今天已登入人數</div>
+                <div class="text-2xl font-bold">{{ todayCnt }} 人</div>
+            </div>
+            <div class="my-[4vh] text-center">
+                <div class="text-lg font-bold">累計已登入人數</div>
+                <div class="text-2xl font-bold">{{ totalCnt }} 人</div>
+            </div>
+            <div class="my-[4vh] text-center">
+                <div class="text-lg font-bold">投票期間登入人數</div>
+                <div class="text-2xl font-bold">{{ realCnt }} 人</div>
+            </div>
+            <ElButton
+                v-if="status === 'authenticated'"
+                type="success"
+                class="my-[4vh]"
+                @click="useRouter().push('/vote')"
+            >
+                <span class="font-bold">前 往 投 票 頁 面</span>
+            </ElButton>
+            <ElButton
+                v-else
+                type="primary"
+                class="my-[4vh]"
+                @click="useRouter().push('/login')"
+            >
+                <span class="font-bold">前 往 登 入 頁 面</span>
+            </ElButton>
+        </div>
     </div>
 </template>
 
@@ -97,7 +109,7 @@ const activities = [
         content: '候選人政見發表會',
         start: new Date(2023, 4, 22),
         finish: new Date(2023, 4, 23),
-        maybe: true,
+        maybe: false,
     },
     {
         content: '線上投票',
@@ -143,4 +155,30 @@ const activities = [
         maybe: false,
     },
 ]
+
+const { data: todayCnt } = await useFetch('/api/getLoginCnt', {
+    params: {
+        startTime: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            new Date().getDate(),
+        ).getTime(),
+        endTime:
+            new Date(
+                new Date().getFullYear(),
+                new Date().getMonth(),
+                new Date().getDate(),
+            ).getTime() +
+            24 * 60 * 60 * 1000,
+    },
+})
+
+const { data: totalCnt } = await useFetch('/api/getLoginCnt')
+
+const { data: realCnt } = await useFetch('/api/getLoginCnt', {
+    params: {
+        startTime: new Date(2023, 4, 24).getTime(),
+        endTime: new Date(2023, 4, 25).getTime(),
+    },
+})
 </script>

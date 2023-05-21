@@ -10,7 +10,7 @@
                     frameborder="1"
                     allowfullscreen="true"
                     allow="autoplay; clipboard-write; web-share"
-                    class="h-full min-h-[75vh] w-full"
+                    class="h-full min-h-[75vh] w-full rounded-md sm:rounded-lg md:rounded-xl"
                     load="lazy"
                 >
                     載入中~~~
@@ -24,7 +24,7 @@
             </h1>
             <ClientOnly>
                 <blockquote
-                    class="instagram-media !m-0 w-full"
+                    class="instagram-media !m-0 w-full !rounded-md sm:!rounded-lg md:!rounded-xl"
                     data-instgrm-captioned
                     data-instgrm-permalink="https://www.instagram.com/p/CsLrwQurAEI/?utm_source=ig_embed&utm_campaign=loading&omitscript=true"
                     data-instgrm-version="14"

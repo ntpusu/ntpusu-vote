@@ -131,7 +131,7 @@
         </ElScrollbar>
         <ElDivider class="!m-0" />
         <div
-            class="flex h-6 items-center justify-between bg-white px-2 sm:h-7 sm:px-3 md:h-8 md:px-4"
+            class="z-10 flex h-6 items-center justify-between bg-white px-2 sm:h-7 sm:px-3 md:h-8 md:px-4"
         >
             <span
                 class="text-xs font-bold text-stone-700 sm:text-sm md:text-base"
@@ -300,7 +300,7 @@ const checkLogin = () => {
                 const { data: res, refresh } = await useFetch('/api/checkLogin')
 
                 while (!res.value) {
-                    refresh()
+                    await refresh()
                 }
 
                 loginInfo.value = res.value.login
@@ -311,7 +311,7 @@ const checkLogin = () => {
                 }
             }
         } else checkLogin()
-    }, 100)
+    }, 250)
 }
 
 onMounted(() => {
@@ -332,6 +332,6 @@ onMounted(() => {
 }
 
 .grecaptcha-badge {
-    z-index: 2;
+    z-index: 11;
 }
 </style>
