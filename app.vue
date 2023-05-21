@@ -134,7 +134,7 @@
             <ClientOnly>
                 <ElTooltip
                     effect="dark"
-                    content="今天已登入人數"
+                    content="累計已登入人數"
                     placement="left"
                 >
                     <div
@@ -143,7 +143,7 @@
                     >
                         <span
                             class="text-sm font-bold text-white sm:text-base"
-                            >{{ todayCnt }}</span
+                            >{{ totalCnt }}</span
                         >
                     </div>
                 </ElTooltip>
@@ -160,7 +160,7 @@
             >
                 <div class="-mt-6 flex flex-col items-center md:flex-row">
                     <div class="m-3 text-center">
-                        <div class="text-lg font-bold">今天已登入人數</div>
+                        <div class="text-lg font-bold">今天新登入人數</div>
                         <div class="text-2xl font-bold">{{ todayCnt }} 人</div>
                     </div>
                     <ElDivider
