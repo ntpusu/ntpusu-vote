@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
             }
         }
         else if (limitList.includes(event.node.req.url)) {
-            if (await limiter.removeTokens(3) < 0) {
+            if (await limiter.removeTokens(2) < 0) {
                 event.node.res.writeHead(429, { 'Content-Type': 'text/plain;charset=UTF-8' })
                 event.node.res.end('429 Too Many Requests - your IP is being rate limited')
             }
