@@ -12,13 +12,18 @@ export default defineEventHandler(async (event) => {
     }
 
     const email = session.user.email
-    const studentId = email.substring(1, 10)
+    const studentId = parseInt(email.substring(1, 10))
 
-    if (studentId != process.env.ADMIN) {
+    const admin = await prisma.admin.findUnique({
+        where: { id: studentId },
+        select: null,
+    })
+
+    if (!admin) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不是超級管理員',
+            message: '不在管理員名單中',
         })
     }
 
