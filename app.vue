@@ -111,9 +111,11 @@
                 size="large"
                 effect="dark"
                 @click="showLoginInfo"
-                class="cursor-pointer"
+                class="cursor-pointer hover:!border-blue-400 hover:!bg-blue-400"
             >
-                {{ loginInfo.id }}
+                <span class="text-sm font-bold sm:text-base">{{
+                    loginInfo.id
+                }}</span>
             </ElTag>
         </ElAffix>
         <ElScrollbar :always="true">
@@ -282,6 +284,7 @@ const showLoginInfo = async () => {
             confirmButtonText: '確 定',
             showClose: false,
             lockScroll: true,
+            autofocus: false,
             type: 'success',
             roundButton: true,
         },
@@ -292,18 +295,20 @@ const showLoginBadge = ref(false)
 
 const checkLogin = () => {
     setTimeout(async () => {
-        if (status.value && status.value === 'authenticated') {
-            const { data: res, refresh } = await useFetch('/api/checkLogin')
+        if (status.value) {
+            if (status.value === 'authenticated') {
+                const { data: res, refresh } = await useFetch('/api/checkLogin')
 
-            while (!res.value) {
-                refresh()
-            }
+                while (!res.value) {
+                    refresh()
+                }
 
-            loginInfo.value = res.value.login
-            showLoginBadge.value = true
+                loginInfo.value = res.value.login
+                showLoginBadge.value = true
 
-            if (res.value.firstLogin) {
-                await showLoginInfo()
+                if (res.value.firstLogin) {
+                    await showLoginInfo()
+                }
             }
         } else checkLogin()
     }, 100)
