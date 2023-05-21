@@ -14,6 +14,19 @@ export default defineEventHandler(async (event) => {
     const email = session.user.email
     const id = parseInt(email.substring(1, 10))
 
+    const voter = await prisma.voter.findUnique({
+        where: { id },
+        select: null,
+    })
+
+    if (!voter) {
+        throw createError({
+            statusCode: 403,
+            statusMessage: 'Forbidden',
+            message: '不在投票人名冊中',
+        })
+    }
+
     let login = await prisma.voterLogin.findUnique({
         where: { voterId: id },
         select: {
