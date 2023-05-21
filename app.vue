@@ -118,6 +118,49 @@
                 }}</span>
             </ElTag>
         </ElAffix>
+        <ElAffix
+            v-if="showLoginBadge"
+            :offset="120"
+            class="absolute right-5 sm:right-8 md:right-10"
+        >
+            <ElTag
+                type="success"
+                round
+                size="large"
+                effect="dark"
+                @click="showTodayBadge = true"
+                class="cursor-pointer hover:!border-lime-500 hover:!bg-lime-500"
+            >
+                <span class="text-sm font-bold sm:text-base">{{
+                    todayCnt
+                }}</span>
+            </ElTag>
+        </ElAffix>
+        <ClientOnly>
+            <ElDialog
+                v-model="showTodayBadge"
+                align-center
+                lock-scroll
+                :show-close="false"
+                width="30%"
+                class="min-w-fit !rounded-lg px-5"
+            >
+                <div class="flex flex-col items-center md:flex-row">
+                    <div class="m-5 text-center">
+                        <div class="text-lg font-bold">今天已登入人數</div>
+                        <div class="text-2xl font-bold">{{ todayCnt }} 人</div>
+                    </div>
+                    <div class="m-5 text-center">
+                        <div class="text-lg font-bold">累計已登入人數</div>
+                        <div class="text-2xl font-bold">{{ totalCnt }} 人</div>
+                    </div>
+                    <div class="m-5 text-center">
+                        <div class="text-lg font-bold">投票期間登入人數</div>
+                        <div class="text-2xl font-bold">{{ realCnt }} 人</div>
+                    </div>
+                </div>
+            </ElDialog>
+        </ClientOnly>
         <ElScrollbar :always="true">
             <noscript>
                 <strong>
@@ -166,7 +209,7 @@
         </div>
         <ElCard
             v-if="!cookie"
-            class="fixed bottom-0 z-10 w-full !rounded-b-none !rounded-t-3xl"
+            class="fixed bottom-0 z-20 w-full !rounded-b-none !rounded-t-3xl"
         >
             <template #header>
                 <div class="-my-1 mx-2 flex justify-between sm:mx-4 md:mx-6">
@@ -292,6 +335,7 @@ const showLoginInfo = async () => {
 }
 
 const showLoginBadge = ref(false)
+const showTodayBadge = ref(false)
 
 const checkLogin = () => {
     setTimeout(async () => {
@@ -313,6 +357,32 @@ const checkLogin = () => {
         } else checkLogin()
     }, 250)
 }
+
+const { data: todayCnt } = await useFetch('/api/getLoginCnt', {
+    params: {
+        startTime: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            new Date().getDate(),
+        ).getTime(),
+        endTime:
+            new Date(
+                new Date().getFullYear(),
+                new Date().getMonth(),
+                new Date().getDate(),
+            ).getTime() +
+            24 * 60 * 60 * 1000,
+    },
+})
+
+const { data: totalCnt } = await useFetch('/api/getLoginCnt')
+
+const { data: realCnt } = await useFetch('/api/getLoginCnt', {
+    params: {
+        startTime: new Date(2023, 4, 24).getTime(),
+        endTime: new Date(2023, 4, 25).getTime(),
+    },
+})
 
 onMounted(() => {
     checkLogin()
