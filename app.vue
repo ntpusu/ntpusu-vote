@@ -103,7 +103,7 @@
         </ClientOnly>
         <ElAffix
             v-if="showLoginBadge"
-            class="absolute right-6 top-16 z-10 sm:right-8 md:right-10 md:top-20"
+            class="absolute right-6 top-[4.5rem] z-10 hover:animate-pulse sm:right-8 sm:top-20 md:right-10 md:top-[5.5rem]"
         >
             <ClientOnly>
                 <ElTooltip
@@ -112,7 +112,7 @@
                     placement="left"
                 >
                     <div
-                        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-500/90 hover:bg-blue-400/90 sm:h-12 sm:w-12 md:h-14 md:w-14"
+                        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-500 sm:h-12 sm:w-12 md:h-14 md:w-14"
                         @click="showLoginInfo"
                     >
                         <span
@@ -124,11 +124,11 @@
             </ClientOnly>
         </ElAffix>
         <ElAffix
-            class="top- absolute right-6 z-10 sm:right-8 md:right-10"
+            class="absolute right-6 z-10 sm:right-8 md:right-10"
             :class="
                 showLoginBadge
-                    ? 'top-28 sm:top-32 md:top-36'
-                    : 'top-16 md:top-20'
+                    ? 'top-[7.5rem] sm:top-[8.5rem] md:top-[9.5rem]'
+                    : 'top-[4.5rem] sm:top-20 md:top-[5.5rem]'
             "
         >
             <ClientOnly>
@@ -138,7 +138,7 @@
                     placement="left"
                 >
                     <div
-                        class="bg- flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-green-600/90 hover:bg-green-600/80 sm:h-12 sm:w-12 md:h-14 md:w-14"
+                        class="bg- flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-green-600 hover:animate-pulse sm:h-12 sm:w-12 md:h-14 md:w-14"
                         @click="showTodayBadge = true"
                     >
                         <span
@@ -386,7 +386,7 @@ const checkLogin = () => {
                 }
             }
         } else checkLogin()
-    }, 250)
+    }, 1000)
 }
 
 const { data: todayCnt } = await useFetch('/api/getLoginCnt', {
@@ -423,13 +423,12 @@ onMounted(() => {
 <style>
 .page-enter-active,
 .page-leave-active {
-    transition: all 0.2s;
+    @apply transition-all duration-200;
 }
 
 .page-enter-from,
 .page-leave-to {
-    opacity: 0;
-    filter: blur(1rem);
+    @apply opacity-0 blur;
 }
 
 .grecaptcha-badge {

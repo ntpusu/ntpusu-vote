@@ -79,11 +79,14 @@
                             <template #default="{ percentage }">
                                 <ElStatistic
                                     class="text-center"
-                                    title="得票率"
                                     :precision="2"
                                     :value="percentage"
                                     suffix="%"
-                                />
+                                >
+                                    <template #title>
+                                        <span class="text-base">得票率</span>
+                                    </template>
+                                </ElStatistic>
                             </template>
                         </ElProgress>
                     </ElCard>
