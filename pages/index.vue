@@ -1,5 +1,6 @@
 <template>
     <div class="flex flex-col flex-wrap content-center">
+        <div></div>
         <ElSteps
             direction="vertical"
             align-center

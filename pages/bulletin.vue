@@ -1,9 +1,9 @@
 <template>
     <div class="flex flex-wrap items-stretch justify-evenly">
         <div
-            class="flex h-auto w-5/6 flex-col justify-center md:w-4/5 lg:w-1/2"
+            class="flex h-auto w-5/6 flex-col justify-center md:w-2/3 lg:w-1/2"
         >
-            <h1 class="my-2 text-center text-2xl font-bold">選舉公報</h1>
+            <h1 class="my-5 text-center text-2xl font-bold">選舉公報</h1>
             <ClientOnly>
                 <iframe
                     src="https://drive.google.com/file/d/1vooeYRpqUp4fQ5w2iMZSNIuL47kORAfe/preview"
@@ -18,13 +18,13 @@
             </ClientOnly>
         </div>
         <ElDivider class="lg:!hidden" />
-        <div class="flex w-5/6 flex-col justify-center md:w-4/5 lg:w-5/12">
-            <h1 class="my-2 text-center text-2xl font-bold">
+        <div class="flex w-5/6 flex-col justify-center md:w-2/3 lg:w-5/12">
+            <h1 class="my-5 text-center text-2xl font-bold">
                 投票系統操作說明
             </h1>
             <ClientOnly>
                 <blockquote
-                    class="instagram-media w-full"
+                    class="instagram-media !m-0 w-full"
                     data-instgrm-captioned
                     data-instgrm-permalink="https://www.instagram.com/p/CsLrwQurAEI/?utm_source=ig_embed&utm_campaign=loading&omitscript=true"
                     data-instgrm-version="14"

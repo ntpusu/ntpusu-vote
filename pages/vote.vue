@@ -549,6 +549,7 @@ const voteConfirm = async (VSId: number) => {
         {
             confirmButtonText: '確 定',
             cancelButtonText: '取 消',
+            autofocus: false,
             type: 'warning',
         },
     )
@@ -593,6 +594,7 @@ const voteConfirm = async (VSId: number) => {
                                     cancelButtonClass: 'el-button--success',
                                     confirmButtonText: '確 定',
                                     distinguishCancelAndClose: true,
+                                    autofocus: false,
                                     type: 'success',
                                     roundButton: true,
                                 },
@@ -617,6 +619,7 @@ const voteConfirm = async (VSId: number) => {
                                     confirmButtonText: '確 定',
                                     confirmButtonClass: 'el-button--warning',
                                     distinguishCancelAndClose: true,
+                                    autofocus: false,
                                     type: 'error',
                                     roundButton: true,
                                 },
@@ -660,6 +663,7 @@ const seeToken = async (index: number) => {
         cancelButtonClass: 'el-button--success',
         confirmButtonText: '確 定',
         distinguishCancelAndClose: true,
+        autofocus: false,
         type: 'success',
         roundButton: true,
     }).catch(async (action: Action) => {
@@ -684,6 +688,7 @@ const seeResult = async (index: number) => {
             cancelButtonClass: 'el-button--success',
             confirmButtonText: '確 定',
             distinguishCancelAndClose: true,
+            autofocus: false,
             type: 'success',
             roundButton: true,
         }).catch(async (action: Action) => {
@@ -699,7 +704,8 @@ const seeResult = async (index: number) => {
         await ElMessageBox.alert('無投票憑證', '未投票', {
             showClose: false,
             confirmButtonText: '確 定',
-            type: 'error',
+            autofocus: false,
+            type: 'warning',
         }).catch(() => {})
     }
 
