@@ -103,38 +103,51 @@
         </ClientOnly>
         <ElAffix
             v-if="showLoginBadge"
-            :offset="80"
-            class="absolute right-5 sm:right-8 md:right-10"
+            class="absolute right-6 top-16 z-10 sm:right-8 md:right-10 md:top-20"
         >
-            <ElTag
-                round
-                size="large"
-                effect="dark"
-                @click="showLoginInfo"
-                class="cursor-pointer hover:!border-blue-400 hover:!bg-blue-400"
-            >
-                <span class="text-sm font-bold sm:text-base">{{
-                    loginInfo.id
-                }}</span>
-            </ElTag>
+            <ClientOnly>
+                <ElTooltip
+                    effect="dark"
+                    content="你的登入序號"
+                    placement="left"
+                >
+                    <div
+                        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-500/90 hover:bg-blue-400/90 sm:h-12 sm:w-12 md:h-14 md:w-14"
+                        @click="showLoginInfo"
+                    >
+                        <span
+                            class="text-sm font-bold text-white sm:text-base"
+                            >{{ loginInfo.id }}</span
+                        >
+                    </div>
+                </ElTooltip>
+            </ClientOnly>
         </ElAffix>
         <ElAffix
-            v-if="showLoginBadge"
-            :offset="120"
-            class="absolute right-5 sm:right-8 md:right-10"
+            class="top- absolute right-6 z-10 sm:right-8 md:right-10"
+            :class="
+                showLoginBadge
+                    ? 'top-28 sm:top-32 md:top-36'
+                    : 'top-16 md:top-20'
+            "
         >
-            <ElTag
-                type="success"
-                round
-                size="large"
-                effect="dark"
-                @click="showTodayBadge = true"
-                class="cursor-pointer hover:!border-lime-500 hover:!bg-lime-500"
-            >
-                <span class="text-sm font-bold sm:text-base">{{
-                    todayCnt
-                }}</span>
-            </ElTag>
+            <ClientOnly>
+                <ElTooltip
+                    effect="dark"
+                    content="今天已登入人數"
+                    placement="left"
+                >
+                    <div
+                        class="bg- flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-green-600/90 hover:bg-green-600/80 sm:h-12 sm:w-12 md:h-14 md:w-14"
+                        @click="showTodayBadge = true"
+                    >
+                        <span
+                            class="text-sm font-bold text-white sm:text-base"
+                            >{{ todayCnt }}</span
+                        >
+                    </div>
+                </ElTooltip>
+            </ClientOnly>
         </ElAffix>
         <ClientOnly>
             <ElDialog
@@ -145,16 +158,34 @@
                 width="30%"
                 class="min-w-fit !rounded-lg px-5"
             >
-                <div class="flex flex-col items-center md:flex-row">
-                    <div class="m-5 text-center">
+                <div class="-mt-6 flex flex-col items-center md:flex-row">
+                    <div class="m-3 text-center">
                         <div class="text-lg font-bold">今天已登入人數</div>
                         <div class="text-2xl font-bold">{{ todayCnt }} 人</div>
                     </div>
-                    <div class="m-5 text-center">
+                    <ElDivider
+                        direction="vertical"
+                        border-style="dashed"
+                        class="!hidden !h-16 !border-l-2 md:!inline-block"
+                    />
+                    <ElDivider
+                        border-style="dashed"
+                        class="!m-0 !border-t-2 md:!hidden"
+                    />
+                    <div class="m-3 text-center">
                         <div class="text-lg font-bold">累計已登入人數</div>
                         <div class="text-2xl font-bold">{{ totalCnt }} 人</div>
                     </div>
-                    <div class="m-5 text-center">
+                    <ElDivider
+                        direction="vertical"
+                        border-style="dashed"
+                        class="!hidden !h-16 !border-l-2 md:!inline-block"
+                    />
+                    <ElDivider
+                        border-style="dashed"
+                        class="!m-0 !border-t-2 md:!hidden"
+                    />
+                    <div class="m-3 text-center">
                         <div class="text-lg font-bold">投票期間登入人數</div>
                         <div class="text-2xl font-bold">{{ realCnt }} 人</div>
                     </div>

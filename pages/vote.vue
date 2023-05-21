@@ -242,7 +242,10 @@
                                     </template>
                                 </ElSpace>
                             </div>
-                            <ElDivider />
+                            <ElDivider
+                                border-style="dotted"
+                                class="!border-t-2"
+                            />
                             <div
                                 v-if="Date.now() < timeCnt(VSitem.startTime)"
                                 class="flex justify-center"
@@ -287,7 +290,9 @@
                                                 </div>
                                             </div>
                                         </template>
-                                        <ElDivider class="!-mt-5 !mb-0" />
+                                        <ElDivider
+                                            class="!-mt-5 !mb-0 !border-t-2"
+                                        />
                                         <div
                                             class="mx-5 flex flex-col items-center align-middle"
                                         >
@@ -327,7 +332,10 @@
                                                 </ElRadio>
                                             </ElRadioGroup>
                                         </div>
-                                        <ElDivider border-style="dashed" />
+                                        <ElDivider
+                                            border-style="dashed"
+                                            class="!border-t-2"
+                                        />
                                         <div class="flex flex-col items-center">
                                             <span
                                                 class="-mt-2 mb-3 cursor-default text-sm text-gray-600"
