@@ -27,5 +27,5 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    return await prisma.voterLogin.count() + 1
+    return await prisma.voterLogin.count()
 })
