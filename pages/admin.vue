@@ -414,7 +414,9 @@ const {
     refresh: VSRefresh,
 } = await useLazyFetch('/api/getVS')
 const { data: Group } = await useFetch('/api/getGroup')
-const { data: loginCnt } = await useFetch('/api/getLoginCnt')
+const { data: loginCnt, refresh: loginCntRefresh } = await useFetch(
+    '/api/getLoginCnt',
+)
 
 const showTime = ref(false)
 const showOption = ref(true)
@@ -494,9 +496,7 @@ const submitForm = async (formRef: FormInstance | undefined) => {
                 })
                 .finally(() => {
                     formRef.resetFields()
-                    while (addVote.candidates.length > 2) {
-                        addVote.candidates.pop()
-                    }
+                    onlyOneChange()
                 })
         }
     })
@@ -582,6 +582,7 @@ const handleDelete = async (id: number) => {
         })
         .catch(() => {
             ElMessage.error('刪除失敗')
+            ElMessage.warning('超級管理員才可以刪除')
         })
 }
 
@@ -589,9 +590,11 @@ const handleLoginReset = async () => {
     await useFetch('/api/resetLoginCnt')
         .then(async () => {
             ElMessage.success('重置成功')
+            await loginCntRefresh()
         })
         .catch(() => {
             ElMessage.error('重置失敗')
+            ElMessage.warning('超級管理員才可以重置')
         })
 }
 </script>
