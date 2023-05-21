@@ -102,17 +102,19 @@
             </ElMenu>
         </ClientOnly>
         <ElAffix
-            v-if="showLoginBage"
+            v-if="showLoginBadge"
             :offset="80"
-            class="absolute right-5"
+            class="absolute right-5 sm:right-8 md:right-10"
         >
-            <ElButton
-                type="primary"
+            <ElTag
                 round
+                size="large"
+                effect="dark"
                 @click="showLoginInfo"
+                class="cursor-pointer"
             >
                 {{ loginInfo.id }}
-            </ElButton>
+            </ElTag>
         </ElAffix>
         <ElScrollbar :always="true">
             <noscript>
@@ -187,8 +189,7 @@
                         target="_blank"
                         class="whitespace-pre-wrap break-all font-bold text-blue-400 hover:text-blue-500 hover:underline"
                         >聯繫我們</NuxtLink
-                    >
-                    。</span
+                    >。</span
                 >
             </div>
         </ElCard>
@@ -287,19 +288,21 @@ const showLoginInfo = async () => {
     ).catch(() => {})
 }
 
-const showLoginBage = ref(false)
+const showLoginBadge = ref(false)
 
 const checkLogin = () => {
     setTimeout(async () => {
         if (status.value && status.value === 'authenticated') {
-            const { data: res } = await useFetch('/api/checkLogin')
+            const { data: res, refresh } = await useFetch('/api/checkLogin')
 
-            if (res.value?.login) {
-                loginInfo.value = res.value?.login
-                showLoginBage.value = true
+            while (!res.value) {
+                refresh()
             }
 
-            if (res.value?.firstLogin) {
+            loginInfo.value = res.value.login
+            showLoginBadge.value = true
+
+            if (res.value.firstLogin) {
                 await showLoginInfo()
             }
         } else checkLogin()
