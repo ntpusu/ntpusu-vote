@@ -1,31 +1,18 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const session = await getServerSession(event) as { user: { email: string } } | null
+    const { startTime, endTime } = getQuery(event) as { startTime: string, endTime: string }
 
-    if (!session) {
-        throw createError({
-            statusCode: 401,
-            statusMessage: 'Unauthorized',
-            message: '未登入',
+    if (!startTime || !endTime) {
+        return await prisma.voterLogin.count()
+    }
+    else {
+        return await prisma.voterLogin.count({
+            where: {
+                time: {
+                    gte: new Date(startTime),
+                    lt: new Date(endTime),
+                },
+            },
         })
     }
-
-    const email = session.user.email
-    const studentId = parseInt(email.substring(1, 10))
-
-    const admin = await prisma.admin.findUnique({
-        where: { id: studentId },
-        select: null,
-    })
-
-    if (!admin) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Forbidden',
-            message: '不在管理員名單中',
-        })
-    }
-
-    return await prisma.voterLogin.count()
 })
