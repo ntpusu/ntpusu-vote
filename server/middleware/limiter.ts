@@ -1,6 +1,6 @@
 import { RateLimiter } from "limiter";
 
-const tokensPerInterval = 100
+const tokensPerInterval = 150
 const interval = 'hour'
 const limiter = new RateLimiter({
     tokensPerInterval,
@@ -19,8 +19,9 @@ const limitList = [
     '/api/archiveVS',
     '/api/checkAdmin',
     '/api/checkLogin',
-    '/api/getGroup',
     '/api/getBallot',
+    '/api/getGroup',
+    '/api/getLoginCnt',
     '/api/getVoter',
     '/api/getVS',
     '/api/unarchiveVS',
