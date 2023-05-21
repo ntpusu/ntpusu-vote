@@ -372,10 +372,21 @@ const checkLogin = () => {
     setTimeout(async () => {
         if (status.value) {
             if (status.value === 'authenticated') {
-                const { data: res, refresh } = await useFetch('/api/checkLogin')
+                const {
+                    data: res,
+                    refresh,
+                    error,
+                } = await useFetch('/api/checkLogin')
 
                 while (!res.value) {
-                    await refresh()
+                    if (error.value) {
+                        ElMessage.error('操作過於頻繁，無法獲得登入序號')
+                        return
+                    }
+
+                    setTimeout(async () => {
+                        await refresh()
+                    }, 250)
                 }
 
                 loginInfo.value = res.value.login
@@ -386,7 +397,7 @@ const checkLogin = () => {
                 }
             }
         } else checkLogin()
-    }, 1000)
+    }, 250)
 }
 
 const { data: todayCnt } = await useFetch('/api/getLoginCnt', {

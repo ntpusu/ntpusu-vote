@@ -143,7 +143,7 @@ const checkData = () => {
         if (VSPending.value) checkData()
         else if (!VS.value && useRoute().path == '/result/' + id)
             await useRouter().push('/404')
-    }, 100)
+    }, 250)
 }
 
 onMounted(() => {

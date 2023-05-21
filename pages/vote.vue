@@ -382,7 +382,7 @@
                                         type="primary"
                                         class="w-fit !rounded-md"
                                         :disabled="
-                                            data.tokens[VSitem.id] !== undefined
+                                            data.tokens[VSitem.id] !== null
                                         "
                                         @click="voteVisible[VSitem.id] = true"
                                         plain
@@ -390,8 +390,7 @@
                                     >
                                         <span
                                             v-if="
-                                                data.tokens[VSitem.id] ===
-                                                undefined
+                                                data.tokens[VSitem.id] === null
                                             "
                                             class="font-bold"
                                         >
@@ -408,7 +407,7 @@
                                         type="info"
                                         class="w-fit !rounded-md"
                                         :disabled="
-                                            data.tokens[VSitem.id] === undefined
+                                            data.tokens[VSitem.id] === null
                                         "
                                         @click="seeToken(VSitem.id)"
                                         plain
@@ -416,8 +415,7 @@
                                     >
                                         <span
                                             v-if="
-                                                data.tokens[VSitem.id] !==
-                                                undefined
+                                                data.tokens[VSitem.id] !== null
                                             "
                                             class="font-bold"
                                         >
@@ -549,7 +547,7 @@ const voteConfirm = async (VSId: number) => {
     voteVisible.value[VSId] = false
     setTimeout(() => {
         voteLoading.value[VSId] = true
-    }, 1)
+    }, 10)
 
     await ElMessageBox.confirm(
         '投出選票後無法刪除或變更',
@@ -718,7 +716,7 @@ const seeResult = async (index: number) => {
     }
 
     resultLoading.value[index] = false
-    await useRouter().push('/result/' + data.value!.VS[index].name)
+    await useRouter().push('/result/' + index)
 }
 
 const checkData = () => {
@@ -741,7 +739,7 @@ const checkData = () => {
                 if (useRoute().path == '/vote') await useRouter().push('/')
             }, 3000)
         }
-    }, 100)
+    }, 250)
 }
 
 onMounted(() => {
