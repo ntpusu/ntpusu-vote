@@ -24,6 +24,7 @@ const limitList = [
     '/api/getLoginCnt',
     '/api/getVoter',
     '/api/getVS',
+    '/api/resetLoginCnt',
     '/api/unarchiveVS',
 ]
 
