@@ -745,20 +745,20 @@ const checkData = () => {
 }
 
 onMounted(() => {
-    recaptchaInstance?.instance.value?.showBadge()
-
     checkData()
+
+    recaptchaInstance?.instance.value?.showBadge()
 })
 
 onActivated(async () => {
-    recaptchaInstance?.instance.value?.showBadge()
-
     if (Date.now() - freshTime.value > 1000 * 60 * 15) {
         await VSRefresh()
         freshTime.value = Date.now()
     }
 
     checkData()
+
+    recaptchaInstance?.instance.value?.showBadge()
 })
 
 onDeactivated(() => {
