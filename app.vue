@@ -156,12 +156,17 @@
                 lock-scroll
                 :show-close="false"
                 width="30%"
-                class="min-w-fit !rounded-lg px-5"
+                @click="showTodayBadge = false"
+                class="-py-4 min-w-fit !rounded-lg"
             >
-                <div class="-mt-6 flex flex-col items-center md:flex-row">
+                <div
+                    class="-mt-7 flex flex-col items-center justify-center md:flex-row"
+                >
                     <div class="m-3 text-center">
-                        <div class="text-lg font-bold">今天新登入人數</div>
-                        <div class="text-2xl font-bold">{{ todayCnt }} 人</div>
+                        <div class="text-lg text-black">累計已登入人數</div>
+                        <div class="text-2xl font-bold text-black">
+                            {{ totalCnt }} 人
+                        </div>
                     </div>
                     <ElDivider
                         direction="vertical"
@@ -173,21 +178,10 @@
                         class="!m-0 !border-t-2 md:!hidden"
                     />
                     <div class="m-3 text-center">
-                        <div class="text-lg font-bold">累計已登入人數</div>
-                        <div class="text-2xl font-bold">{{ totalCnt }} 人</div>
-                    </div>
-                    <ElDivider
-                        direction="vertical"
-                        border-style="dashed"
-                        class="!hidden !h-16 !border-l-2 md:!inline-block"
-                    />
-                    <ElDivider
-                        border-style="dashed"
-                        class="!m-0 !border-t-2 md:!hidden"
-                    />
-                    <div class="m-3 text-center">
-                        <div class="text-lg font-bold">投票期間登入人數</div>
-                        <div class="text-2xl font-bold">{{ realCnt }} 人</div>
+                        <div class="text-lg text-black">投票期間登入人數</div>
+                        <div class="text-2xl font-bold text-black">
+                            {{ realCnt }} 人
+                        </div>
                     </div>
                 </div>
             </ElDialog>
@@ -359,6 +353,8 @@ const showLoginInfo = async () => {
             showClose: false,
             lockScroll: true,
             autofocus: false,
+            closeOnClickModal: true,
+            closeOnPressEscape: true,
             type: 'success',
             roundButton: true,
         },
@@ -400,23 +396,6 @@ const checkLogin = () => {
     }, 250)
 }
 
-const { data: todayCnt } = await useFetch('/api/getLoginCnt', {
-    params: {
-        startTime: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            new Date().getDate(),
-        ).getTime(),
-        endTime:
-            new Date(
-                new Date().getFullYear(),
-                new Date().getMonth(),
-                new Date().getDate(),
-            ).getTime() +
-            24 * 60 * 60 * 1000,
-    },
-})
-
 const { data: totalCnt } = await useFetch('/api/getLoginCnt')
 
 const { data: realCnt } = await useFetch('/api/getLoginCnt', {
@@ -443,6 +422,6 @@ onMounted(() => {
 }
 
 .grecaptcha-badge {
-    z-index: 11;
+    @apply z-[15px];
 }
 </style>
