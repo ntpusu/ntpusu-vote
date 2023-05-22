@@ -35,7 +35,7 @@
                     v-if="voting.onlyOne"
                     class="pb-6 text-xl font-bold sm:text-2xl md:text-3xl"
                 >
-                    {{ voting.onlyOne }}
+                    {{ voting.candidates[0] }}
                 </h1>
                 <h1
                     v-else
@@ -48,7 +48,9 @@
                     wrap
                 >
                     <ElCard
-                        v-for="(candidate, index) in voting.candidates"
+                        v-for="(candidate, index) in voting.candidates.slice(
+                            voting.onlyOne ? 1 : 0,
+                        )"
                         shadow="hover"
                         :key="index"
                         class="max-w-[12rem] md:max-w-[15rem] xl:max-w-[18rem]"

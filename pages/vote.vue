@@ -219,7 +219,7 @@
                                         >
                                             1
                                         </ElTag>
-                                        <div class="mx-2">
+                                        <div class="text-b mx-2">
                                             {{ votingitem.candidates[0].name }}
                                         </div>
                                     </div>
@@ -345,7 +345,7 @@
                                                     class="my-1 !mr-0 max-w-[75vw]"
                                                 >
                                                     <span
-                                                        class="max-w-full cursor-default whitespace-pre-wrap break-all"
+                                                        class="max-w-full cursor-default whitespace-pre-wrap break-all font-medium text-black"
                                                     >
                                                         {{ candidate.name }}
                                                     </span>
@@ -586,6 +586,10 @@ const voteConfirm = async (votingId: number) => {
             cancelButtonText: '取 消',
             autofocus: false,
             type: 'warning',
+            customStyle: {
+                fontFamily:
+                    '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            },
         },
     )
         .then(async () => {
@@ -632,6 +636,10 @@ const voteConfirm = async (votingId: number) => {
                                     autofocus: false,
                                     type: 'success',
                                     roundButton: true,
+                                    customStyle: {
+                                        fontFamily:
+                                            '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                                    },
                                 },
                             ).catch(async (action: Action) => {
                                 if (action === 'cancel') {
@@ -657,6 +665,10 @@ const voteConfirm = async (votingId: number) => {
                                     autofocus: false,
                                     type: 'error',
                                     roundButton: true,
+                                    customStyle: {
+                                        fontFamily:
+                                            '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                                    },
                                 },
                             ).catch(async (action: Action) => {
                                 if (action === 'cancel') {
@@ -701,6 +713,10 @@ const seeToken = async (index: number) => {
         autofocus: false,
         type: 'success',
         roundButton: true,
+        customStyle: {
+            fontFamily:
+                '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+        },
     }).catch(async (action: Action) => {
         if (action === 'cancel') {
             await navigator.clipboard.writeText(data.value!.tokens[index])
@@ -726,6 +742,10 @@ const seeResult = async (index: number) => {
             autofocus: false,
             type: 'success',
             roundButton: true,
+            customStyle: {
+                fontFamily:
+                    '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            },
         }).catch(async (action: Action) => {
             if (action === 'cancel') {
                 await navigator.clipboard.writeText(data.value!.tokens[index])
@@ -741,6 +761,10 @@ const seeResult = async (index: number) => {
             confirmButtonText: '確 定',
             autofocus: false,
             type: 'warning',
+            customStyle: {
+                fontFamily:
+                    '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            },
         }).catch(() => {})
     }
 

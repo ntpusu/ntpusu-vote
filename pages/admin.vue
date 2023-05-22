@@ -84,7 +84,7 @@
                 </ElFormItem>
                 <div
                     v-for="(candidate, index) in addVote.candidates"
-                    class="flex items-center pb-7"
+                    class="flex items-center"
                 >
                     <ElFormItem
                         :key="index"
