@@ -4,7 +4,7 @@
             direction="vertical"
             align-center
             space="12vh"
-            class="w-full !flex-wrap content-center"
+            class="m-3 w-full !flex-wrap content-center"
         >
             <ElStep
                 v-for="(activity, index) in activities"
@@ -38,7 +38,7 @@
         <ElButton
             v-if="status === 'authenticated'"
             type="success"
-            class="my-[4vh] animate-bounce hover:animate-none"
+            class="my-[2vh] animate-bounce hover:animate-none"
             @click="useRouter().push('/vote')"
         >
             <span class="font-bold">前 往 投 票 頁 面</span>
@@ -46,7 +46,7 @@
         <ElButton
             v-else
             type="primary"
-            class="my-[4vh] animate-bounce hover:animate-none"
+            class="my-[2vh] animate-bounce hover:animate-none"
             @click="useRouter().push('/login')"
         >
             <span class="font-bold">前 往 登 入 頁 面</span>
