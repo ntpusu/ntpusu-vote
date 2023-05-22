@@ -19,6 +19,8 @@ model Voting {
   groupId Int
   group   Group @relation(fields: [groupId], references: [id])
 
+  VotingFromGroup VotingFromGroup[]
+
   @@unique([groupId, name])
 }
 
@@ -59,13 +61,14 @@ model VoterLogin {
 }
 
 model Group {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  level Level
-  count Int    @default(0)
+  id   Int    @id @default(autoincrement())
+  name String @unique
 
   voterInGroup VoterInGroup[]
-  voting       Voting[]
+
+  voting Voting[]
+
+  VotingFromGroup VotingFromGroup[]
 }
 
 model VoterInGroup {
@@ -78,12 +81,18 @@ model VoterInGroup {
   @@id([voterId, groupId])
 }
 
-model Admin {
-  id Int @id
+model VotingFromGroup {
+  cnt Int @default(0)
+
+  votingId Int
+  voting   Voting @relation(fields: [votingId], references: [id], onDelete: Cascade)
+
+  groupId Int
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([votingId, groupId])
 }
 
-enum Level {
-  UNIVERSITY
-  COLLEGE
-  DEPARTMENT
+model Admin {
+  id Int @id
 }
