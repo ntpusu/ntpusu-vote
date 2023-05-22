@@ -162,12 +162,22 @@
                 <div
                     class="-mt-7 flex flex-col items-center justify-center md:flex-row"
                 >
-                    <div class="m-3 text-center">
-                        <div class="text-lg text-black">累計已登入人數</div>
-                        <div class="text-2xl font-bold text-black">
-                            {{ totalCnt }} 人
+                    <ElTooltip
+                        effect="dark"
+                        placement="top"
+                    >
+                        <template #content>
+                            <div class="text-center">
+                                投票開始前每日重置<br />投票開始後不再重置
+                            </div>
+                        </template>
+                        <div class="m-3 text-center">
+                            <div class="text-lg text-black">累計已登入人數</div>
+                            <div class="text-2xl font-bold text-black">
+                                {{ totalCnt }} 人
+                            </div>
                         </div>
-                    </div>
+                    </ElTooltip>
                     <ElDivider
                         direction="vertical"
                         border-style="dashed"
@@ -432,6 +442,6 @@ onMounted(() => {
 }
 
 .grecaptcha-badge {
-    @apply z-[15px];
+    @apply z-20;
 }
 </style>
