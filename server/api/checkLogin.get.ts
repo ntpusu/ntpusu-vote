@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不在投票人名冊中',
+            message: '不在選舉人名單中',
         })
     }
 

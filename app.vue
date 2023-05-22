@@ -421,7 +421,7 @@ const { data: totalCnt } = await useFetch('/api/getLoginCnt')
 const { data: realCnt } = await useFetch('/api/getLoginCnt', {
     params: {
         startTime: new Date(2023, 4, 24).getTime(),
-        endTime: new Date(2023, 4, 25).getTime(),
+        endTime: new Date(2023, 4, 24, 23, 59, 59).getTime(),
     },
 })
 

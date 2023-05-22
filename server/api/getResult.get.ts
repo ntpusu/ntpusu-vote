@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'Parameter "id" is required and must be a number',
+            message: 'Parameter "id" is required and must be a number.',
         })
     }
 
@@ -33,11 +33,11 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不在投票人名冊中',
+            message: '不在選舉人名單中',
         })
     }
 
-    const VS = await prisma.voting.findUnique({
+    const voting = await prisma.voting.findUniqueOrThrow({
         where: { id: parseInt(id) },
         select: {
             endTime: true,
@@ -46,15 +46,7 @@ export default defineEventHandler(async (event) => {
         },
     })
 
-    if (!VS) {
-        throw createError({
-            statusCode: 404,
-            statusMessage: 'Not Found',
-            message: 'Voting not found',
-        })
-    }
-
-    if (Date.now() <= VS.endTime.getTime()) {
+    if (Date.now() <= voting.endTime.getTime()) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
@@ -62,7 +54,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    if (VS.archive) {
+    if (voting.archive) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
@@ -80,7 +72,7 @@ export default defineEventHandler(async (event) => {
             where: {
                 voterId_groupId: {
                     voterId: studentId,
-                    groupId: VS.groupId,
+                    groupId: voting.groupId,
                 },
             },
             select: null,

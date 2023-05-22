@@ -9,7 +9,6 @@ export default defineEventHandler(async (event) => {
         onlyOne: boolean
         candidates: {
             name: string
-            photo: string | undefined
         }[]
     }
 
@@ -17,7 +16,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'Parameters are not enough',
+            message: 'Parameters are not enough.',
         })
     }
 
@@ -25,7 +24,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'Candidate length should be 1 when onlyOne is true',
+            message: 'Candidate length should be 1 when onlyOne is true.',
         })
     }
 
@@ -33,7 +32,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'StartTime should be earlier than endTime',
+            message: 'StartTime should be earlier than endTime.',
         })
     }
 
@@ -63,7 +62,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const VS = await prisma.voting.create({
+    const voting = await prisma.voting.create({
         data: {
             name: voteName,
             groupId: voteGroup,
@@ -74,29 +73,39 @@ export default defineEventHandler(async (event) => {
         select: { id: true },
     })
 
+    const groups = await prisma.group.findMany({
+        select: { id: true },
+    })
+
+    await prisma.votingFromGroup.createMany({
+        data: groups.map((group) => ({
+            votingId: voting.id,
+            groupId: group.id,
+        })),
+    })
+
     if (onlyOne) {
         await prisma.candidate.createMany({
             data: [
                 {
                     name: candidates[0].name,
-                    photo: candidates[0].photo,
                     groupId: voteGroup,
-                    votingId: VS.id,
+                    votingId: voting.id,
                 },
                 {
                     name: '同意',
                     groupId: voteGroup,
-                    votingId: VS.id,
+                    votingId: voting.id,
                 },
                 {
                     name: '不同意',
                     groupId: voteGroup,
-                    votingId: VS.id,
+                    votingId: voting.id,
                 },
                 {
                     name: '廢票',
                     groupId: voteGroup,
-                    votingId: VS.id,
+                    votingId: voting.id,
                 },
             ],
         })
@@ -105,14 +114,12 @@ export default defineEventHandler(async (event) => {
         await prisma.candidate.createMany({
             data: candidates.map((candidate) => ({
                 name: candidate.name,
-                photo: candidate.photo && isValidUrl(candidate.photo) ? candidate.photo : undefined,
                 groupId: voteGroup,
-                votingId: VS.id,
+                votingId: voting.id,
             })).concat([{
                 name: '廢票',
-                photo: undefined,
                 groupId: voteGroup,
-                votingId: VS.id,
+                votingId: voting.id,
             }]),
         })
     }

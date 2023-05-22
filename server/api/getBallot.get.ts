@@ -47,12 +47,21 @@ export default defineEventHandler(async (event) => {
                     voting: {
                         select: {
                             name: true,
+                            endTime: true,
                         },
                     },
                 },
             },
         },
     })
+
+    if (new Date() <= ballot.candidate.voting.endTime) {
+        throw createError({
+            statusCode: 403,
+            statusMessage: 'Forbidden',
+            message: '投票尚未結束',
+        })
+    }
 
     return {
         vote: ballot.candidate.voting.name,

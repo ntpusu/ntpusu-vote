@@ -86,42 +86,23 @@
                     v-for="(candidate, index) in addVote.candidates"
                     class="flex items-center pb-7"
                 >
-                    <div>
-                        <ElFormItem
-                            :key="index"
-                            :prop="'candidates.' + index + '.name'"
-                            :label="index + 1 + '號名稱'"
-                            :rules="{
-                                required: true,
-                                message: '選項為必填',
-                                trigger: 'blur',
-                            }"
-                            class="!mb-4"
-                        >
-                            <ElInput
-                                v-model="candidate.name"
-                                placeholder="請輸入選項名稱"
-                                clearable
-                            />
-                        </ElFormItem>
-                        <ElFormItem
-                            :key="index"
-                            :label="index + 1 + '號圖片'"
-                            :prop="'candidates.' + index + '.photo'"
-                            :rules="{
-                                type: 'url',
-                                message: '請輸入網址',
-                                trigger: 'blur',
-                            }"
-                            class="!mb-0"
-                        >
-                            <ElInput
-                                v-model="candidate.photo"
-                                placeholder="請輸入圖片網址"
-                                clearable
-                            />
-                        </ElFormItem>
-                    </div>
+                    <ElFormItem
+                        :key="index"
+                        :prop="'candidates.' + index + '.name'"
+                        :label="index + 1 + '號名稱'"
+                        :rules="{
+                            required: true,
+                            message: '選項為必填',
+                            trigger: 'blur',
+                        }"
+                        class="!mb-4"
+                    >
+                        <ElInput
+                            v-model="candidate.name"
+                            placeholder="請輸入選項名稱"
+                            clearable
+                        />
+                    </ElFormItem>
                     <ElButton
                         type="danger"
                         plain
@@ -170,7 +151,7 @@
                 inactive-text="操作"
             />
         </div>
-        <template v-if="!VSPending">
+        <template v-if="!votingPending">
             <div
                 class="m-auto w-full rounded-xl border-4 border-blue-100 p-5 md:w-11/12 lg:w-5/6 xl:w-2/3 2xl:w-1/2"
             >
@@ -227,8 +208,8 @@
                                     size="small"
                                     type="success"
                                     :disabled="
-                                        new Date(row.endTime).getTime() >=
-                                        Date.now()
+                                        Date.now() <=
+                                        new Date(row.endTime).getTime()
                                     "
                                     @click="useRouter().push('/vote/' + row.id)"
                                 >
@@ -409,9 +390,9 @@ definePageMeta({
 })
 
 const {
-    data: VS,
-    pending: VSPending,
-    refresh: VSRefresh,
+    data: voting,
+    pending: votingPending,
+    refresh: votingRefresh,
 } = await useLazyFetch('/api/getVS')
 const { data: Group } = await useFetch('/api/getGroup')
 const { data: loginCnt, refresh: loginCntRefresh } = await useFetch(
@@ -425,7 +406,6 @@ const formRef = ref<FormInstance>()
 
 interface Candidate {
     name: string
-    photo: string | undefined
 }
 
 const addVote = reactive<{
@@ -441,20 +421,14 @@ const addVote = reactive<{
     startTime: '',
     endTime: '',
     onlyOne: false,
-    candidates: [
-        { name: '', photo: undefined },
-        { name: '', photo: undefined },
-    ],
+    candidates: [{ name: '' }, { name: '' }],
 })
 
 const onlyOneChange = () => {
     if (addVote.onlyOne) {
-        addVote.candidates = [{ name: '', photo: undefined }]
+        addVote.candidates = [{ name: '' }]
     } else {
-        addVote.candidates = [
-            { name: '', photo: undefined },
-            { name: '', photo: undefined },
-        ]
+        addVote.candidates = [{ name: '' }, { name: '' }]
     }
 }
 
@@ -466,7 +440,7 @@ const removeDomain = (item: Candidate) => {
 }
 
 const addDomain = () => {
-    addVote.candidates.push({ name: '', photo: undefined })
+    addVote.candidates.push({ name: '' })
 }
 
 const rules = reactive<FormRules>({
@@ -489,7 +463,7 @@ const submitForm = async (formRef: FormInstance | undefined) => {
             })
                 .then(async () => {
                     ElMessage.success('創建成功')
-                    await VSRefresh()
+                    await votingRefresh()
                 })
                 .catch(() => {
                     ElMessage.error('創建失敗')
@@ -512,9 +486,9 @@ const groupOptions = computed(() => {
 })
 
 const tableData = () => {
-    if (!VS.value) return []
+    if (!voting.value) return []
 
-    return VS.value
+    return voting.value
         .filter((item) => !item.archive)
         .map((item) => ({
             id: item.id,
@@ -528,9 +502,9 @@ const tableData = () => {
 }
 
 const archiveData = () => {
-    if (!VS.value) return []
+    if (!voting.value) return []
 
-    return VS.value
+    return voting.value
         .filter((item) => item.archive)
         .map((item) => ({
             id: item.id,
@@ -550,7 +524,7 @@ const handleArchive = async (id: number) => {
     })
         .then(async () => {
             ElMessage.success('封存成功')
-            await VSRefresh()
+            await votingRefresh()
         })
         .catch(() => {
             ElMessage.error('封存失敗')
@@ -564,7 +538,7 @@ const handleUnarchive = async (id: number) => {
     })
         .then(async () => {
             ElMessage.success('解封成功')
-            await VSRefresh()
+            await votingRefresh()
         })
         .catch(() => {
             ElMessage.error('解封失敗')
@@ -578,7 +552,7 @@ const handleDelete = async (id: number) => {
     })
         .then(async () => {
             ElMessage.success('刪除成功')
-            await VSRefresh()
+            await votingRefresh()
         })
         .catch(() => {
             ElMessage.error('刪除失敗')

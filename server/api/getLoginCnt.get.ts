@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
             where: {
                 time: {
                     gte: new Date(parseInt(startTime)),
-                    lt: new Date(parseInt(endTime)),
+                    lte: new Date(parseInt(endTime)),
                 },
             },
         })

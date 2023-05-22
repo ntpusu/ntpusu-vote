@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'Parameter "id" is required and should be a number',
+            message: 'Parameter "id" is required and should be a number.',
         })
     }
 
@@ -32,12 +32,12 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const VS = await prisma.voting.findUniqueOrThrow({
+    const voting = await prisma.voting.findUniqueOrThrow({
         where: { id: parseInt(id) },
         select: { archive: true },
     })
 
-    if (!VS.archive) {
+    if (!voting.archive) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',

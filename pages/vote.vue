@@ -2,7 +2,7 @@
     <div>
         <ElSkeleton
             animated
-            :loading="VSPending || data === null"
+            :loading="votingPending || data === null"
             class="flex justify-center"
         >
             <template #template>
@@ -21,18 +21,18 @@
             </template>
             <template #default>
                 <div
-                    v-if="!VSPending && data !== null"
+                    v-if="!votingPending && data !== null"
                     class="flex justify-center"
                 >
                     <ElSpace
-                        v-if="data.VS.length"
+                        v-if="data.voting.length"
                         alignment="center"
                         wrap
                         class="justify-center"
                     >
                         <ElCard
-                            v-for="VSitem in data.VS"
-                            :key="VSitem.id"
+                            v-for="votingitem in data.voting"
+                            :key="votingitem.id"
                             shadow="hover"
                             class="w-[85vw] !rounded-xl sm:w-[65vw] md:w-[50vw] lg:w-[40vw] xl:w-[35vw] 2xl:w-[28vw]"
                         >
@@ -41,7 +41,7 @@
                                     <div
                                         class="cursor-default text-lg font-bold sm:text-xl md:text-2xl"
                                     >
-                                        {{ VSitem.name }}
+                                        {{ votingitem.name }}
                                     </div>
                                     <div
                                         class="flex flex-col justify-end align-middle text-xs sm:text-sm"
@@ -51,7 +51,7 @@
                                                 placement="right"
                                                 :disabled="
                                                     Date.now() >
-                                                    timeCnt(VSitem.endTime)
+                                                    timeCnt(votingitem.endTime)
                                                 "
                                             >
                                                 <template #content>
@@ -59,22 +59,24 @@
                                                         v-if="
                                                             Date.now() <
                                                             timeCnt(
-                                                                VSitem.startTime,
+                                                                votingitem.startTime,
                                                             )
                                                         "
                                                         class="text-center"
                                                         :format="
                                                             chooseFormat(
-                                                                VSitem.startTime,
+                                                                votingitem.startTime,
                                                             )
                                                         "
                                                         :value="
                                                             timeCnt(
-                                                                VSitem.startTime,
+                                                                votingitem.startTime,
                                                             )
                                                         "
                                                         value-style="color: white;"
-                                                        @finish="VSRefresh()"
+                                                        @finish="
+                                                            votingRefresh()
+                                                        "
                                                     >
                                                         <template #title>
                                                             <span
@@ -98,19 +100,19 @@
                                                         'cursor-help':
                                                             Date.now() <=
                                                             timeCnt(
-                                                                VSitem.endTime,
+                                                                votingitem.endTime,
                                                             ),
                                                         'cursor-default':
                                                             Date.now() >
                                                             timeCnt(
-                                                                VSitem.endTime,
+                                                                votingitem.endTime,
                                                             ),
                                                     }"
                                                 >
                                                     開始:
                                                     {{
                                                         viewDate(
-                                                            VSitem.startTime,
+                                                            votingitem.startTime,
                                                         )
                                                     }}
                                                 </ElTag>
@@ -122,7 +124,9 @@
                                                 placement="right"
                                                 :disabled="
                                                     Date.now() <
-                                                    timeCnt(VSitem.startTime)
+                                                    timeCnt(
+                                                        votingitem.startTime,
+                                                    )
                                                 "
                                             >
                                                 <template #content>
@@ -130,22 +134,24 @@
                                                         v-if="
                                                             Date.now() <=
                                                             timeCnt(
-                                                                VSitem.endTime,
+                                                                votingitem.endTime,
                                                             )
                                                         "
                                                         class="text-center"
                                                         :format="
                                                             chooseFormat(
-                                                                VSitem.endTime,
+                                                                votingitem.endTime,
                                                             )
                                                         "
                                                         :value="
                                                             timeCnt(
-                                                                VSitem.endTime,
+                                                                votingitem.endTime,
                                                             )
                                                         "
                                                         value-style="color: white;"
-                                                        @finish="VSRefresh()"
+                                                        @finish="
+                                                            votingRefresh()
+                                                        "
                                                     >
                                                         <template #title>
                                                             <span
@@ -169,18 +175,20 @@
                                                         'cursor-help':
                                                             Date.now() >=
                                                             timeCnt(
-                                                                VSitem.startTime,
+                                                                votingitem.startTime,
                                                             ),
                                                         'cursor-default':
                                                             Date.now() <
                                                             timeCnt(
-                                                                VSitem.startTime,
+                                                                votingitem.startTime,
                                                             ),
                                                     }"
                                                 >
                                                     結束:
                                                     {{
-                                                        viewDate(VSitem.endTime)
+                                                        viewDate(
+                                                            votingitem.endTime,
+                                                        )
                                                     }}
                                                 </ElTag>
                                             </ElTooltip>
@@ -199,7 +207,7 @@
                                     wrap
                                 >
                                     <div
-                                        v-if="VSitem.onlyOne"
+                                        v-if="votingitem.onlyOne"
                                         class="flex items-center text-sm sm:text-base md:text-lg"
                                     >
                                         <ElTag
@@ -211,13 +219,13 @@
                                         >
                                             1
                                         </ElTag>
-                                        <div class="ml-2 mr-5">
-                                            {{ VSitem.candidates[0].name }}
+                                        <div class="mx-2">
+                                            {{ votingitem.candidates[0].name }}
                                         </div>
                                     </div>
                                     <template v-else>
                                         <div
-                                            v-for="itemIndex in VSitem
+                                            v-for="itemIndex in votingitem
                                                 .candidates.length - 1"
                                             :key="itemIndex"
                                             class="flex items-center text-sm sm:text-base md:text-lg"
@@ -231,9 +239,9 @@
                                             >
                                                 {{ itemIndex }}
                                             </ElTag>
-                                            <div class="ml-2 mr-5">
+                                            <div class="mx-2">
                                                 {{
-                                                    VSitem.candidates[
+                                                    votingitem.candidates[
                                                         itemIndex - 1
                                                     ].name
                                                 }}
@@ -247,7 +255,9 @@
                                 class="!border-t-2"
                             />
                             <div
-                                v-if="Date.now() < timeCnt(VSitem.startTime)"
+                                v-if="
+                                    Date.now() < timeCnt(votingitem.startTime)
+                                "
                                 class="flex justify-center"
                             >
                                 <ElButton
@@ -264,18 +274,21 @@
                                     <ElDialog
                                         center
                                         align-center
-                                        v-model="voteVisible[VSitem.id]"
-                                        width="30%"
-                                        class="mx-5 min-w-fit !rounded-lg"
-                                        @open="voteLoading[VSitem.id] = true"
-                                        @close="voteLoading[VSitem.id] = false"
+                                        v-model="voteVisible[votingitem.id]"
+                                        class=" !w-fit min-w-[30%] max-w-[90%] !rounded-lg sm:max-w-[80%] md:max-w-[70%] lg:max-w-[50%]"
+                                        @open="
+                                            voteLoading[votingitem.id] = true
+                                        "
+                                        @close="
+                                            voteLoading[votingitem.id] = false
+                                        "
                                     >
                                         <template #header>
                                             <div class="flex">
                                                 <div
                                                     class="m-auto flex cursor-default text-lg font-bold sm:text-xl md:text-2xl"
                                                 >
-                                                    {{ VSitem.name }}
+                                                    {{ votingitem.name }}
                                                 </div>
                                                 <div class="flex-grow" />
                                                 <div
@@ -297,12 +310,15 @@
                                             class="mx-5 flex flex-col items-center align-middle"
                                         >
                                             <span
-                                                v-if="VSitem.onlyOne"
+                                                v-if="votingitem.onlyOne"
                                                 class="my-2 cursor-default text-base font-bold text-black sm:my-3 sm:text-lg md:my-4 md:text-xl"
                                             >
-                                                同意{{
-                                                    VSitem.candidates[0].name
-                                                }}當選嗎？
+                                                同意
+                                                {{
+                                                    votingitem.candidates[0]
+                                                        .name
+                                                }}
+                                                當選嗎？
                                             </span>
                                             <span
                                                 v-else
@@ -312,11 +328,15 @@
                                             </span>
                                             <ElRadioGroup
                                                 class="flex-col !items-stretch"
-                                                v-model="voteData[VSitem.id]"
+                                                v-model="
+                                                    voteData[votingitem.id]
+                                                "
                                             >
                                                 <ElRadio
-                                                    v-for="candidate in VSitem.candidates.slice(
-                                                        VSitem.onlyOne ? 1 : 0,
+                                                    v-for="candidate in votingitem.candidates.slice(
+                                                        votingitem.onlyOne
+                                                            ? 1
+                                                            : 0,
                                                     )"
                                                     :key="candidate.name"
                                                     :label="candidate.name"
@@ -350,7 +370,9 @@
                                             <ElButton
                                                 type="primary"
                                                 class="w-fit !rounded-md"
-                                                @click="voteConfirm(VSitem.id)"
+                                                @click="
+                                                    voteConfirm(votingitem.id)
+                                                "
                                                 plain
                                             >
                                                 <span class="font-bold">
@@ -361,15 +383,17 @@
                                     </ElDialog>
                                 </ClientOnly>
                                 <div
-                                    v-if="Date.now() > timeCnt(VSitem.endTime)"
+                                    v-if="
+                                        Date.now() > timeCnt(votingitem.endTime)
+                                    "
                                     class="flex justify-center"
                                 >
                                     <ElButton
                                         type="success"
                                         class="w-fit !rounded-md"
-                                        @click="seeResult(VSitem.id)"
+                                        @click="seeResult(votingitem.id)"
                                         plain
-                                        :loading="resultLoading[VSitem.id]"
+                                        :loading="resultLoading[votingitem.id]"
                                     >
                                         <span class="font-bold"> 結 果 </span>
                                     </ElButton>
@@ -382,15 +406,18 @@
                                         type="primary"
                                         class="w-fit !rounded-md"
                                         :disabled="
-                                            data.tokens[VSitem.id] != undefined
+                                            data.tokens[votingitem.id] !=
+                                            undefined
                                         "
-                                        @click="voteVisible[VSitem.id] = true"
+                                        @click="
+                                            voteVisible[votingitem.id] = true
+                                        "
                                         plain
-                                        :loading="voteLoading[VSitem.id]"
+                                        :loading="voteLoading[votingitem.id]"
                                     >
                                         <span
                                             v-if="
-                                                data.tokens[VSitem.id] ==
+                                                data.tokens[votingitem.id] ==
                                                 undefined
                                             "
                                             class="font-bold"
@@ -408,15 +435,16 @@
                                         type="info"
                                         class="w-fit !rounded-md"
                                         :disabled="
-                                            data.tokens[VSitem.id] == undefined
+                                            data.tokens[votingitem.id] ==
+                                            undefined
                                         "
-                                        @click="seeToken(VSitem.id)"
+                                        @click="seeToken(votingitem.id)"
                                         plain
-                                        :loading="tokenLoading[VSitem.id]"
+                                        :loading="tokenLoading[votingitem.id]"
                                     >
                                         <span
                                             v-if="
-                                                data.tokens[VSitem.id] !=
+                                                data.tokens[votingitem.id] !=
                                                 undefined
                                             "
                                             class="font-bold"
@@ -454,10 +482,9 @@
         </ElSkeleton>
         <ClientOnly>
             <ElDialog
+            align-center
                 v-model="voteFail"
-                align-center
-                class="min-w-fit !rounded-lg px-5"
-                width="30%"
+                class="!w-fit min-w-[30%] max-w-[90%] !rounded-lg sm:max-w-[80%] md:max-w-[70%] lg:max-w-[50%]"
             >
                 <template #header>
                     <div class="text-2xl font-bold text-red-500">投票失敗</div>
@@ -491,8 +518,8 @@ definePageMeta({
 
 const {
     data,
-    pending: VSPending,
-    refresh: VSRefresh,
+    pending: votingPending,
+    refresh: votingRefresh,
 } = await useLazyFetch('/api/voterSession')
 
 const freshTime = ref(Date.now())
@@ -537,8 +564,8 @@ const recaptcha = async (action: string) => {
     return token
 }
 
-const voteConfirm = async (VSId: number) => {
-    if (!voteData.value[VSId]) {
+const voteConfirm = async (votingId: number) => {
+    if (!voteData.value[votingId]) {
         ElMessage({
             type: 'warning',
             message: '請選擇候選人',
@@ -546,14 +573,14 @@ const voteConfirm = async (VSId: number) => {
         return
     }
 
-    voteVisible.value[VSId] = false
+    voteVisible.value[votingId] = false
     setTimeout(() => {
-        voteLoading.value[VSId] = true
+        voteLoading.value[votingId] = true
     }, 10)
 
     await ElMessageBox.confirm(
         '投出選票後無法刪除或變更',
-        '確定要投給「' + voteData.value[VSId] + '」嗎？',
+        '確定要投給「' + voteData.value[votingId] + '」嗎？',
         {
             confirmButtonText: '確 定',
             cancelButtonText: '取 消',
@@ -587,8 +614,8 @@ const voteConfirm = async (VSId: number) => {
             await useFetch('/api/vote', {
                 method: 'POST',
                 body: JSON.stringify({
-                    VSId,
-                    cname: voteData.value[VSId],
+                    votingId,
+                    cname: voteData.value[votingId],
                 }),
             })
                 .then(async ({ data: res }) => {
@@ -649,7 +676,7 @@ const voteConfirm = async (VSId: number) => {
                     voteFail.value = true
                 })
                 .finally(async () => {
-                    await VSRefresh()
+                    await votingRefresh()
                     freshTime.value = Date.now()
                 })
         })
@@ -660,7 +687,7 @@ const voteConfirm = async (VSId: number) => {
             })
         })
 
-    voteLoading.value[VSId] = false
+    voteLoading.value[votingId] = false
 }
 
 const seeToken = async (index: number) => {
@@ -723,7 +750,7 @@ const seeResult = async (index: number) => {
 
 const checkData = () => {
     setTimeout(async () => {
-        if (VSPending.value) checkData()
+        if (votingPending.value) checkData()
         else if (!data.value && useRoute().path == '/vote') {
             ElMessage({
                 type: 'error',
@@ -752,7 +779,7 @@ onMounted(() => {
 
 onActivated(async () => {
     if (Date.now() - freshTime.value > 1000 * 60 * 15) {
-        await VSRefresh()
+        await votingRefresh()
         freshTime.value = Date.now()
     }
 

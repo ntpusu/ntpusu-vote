@@ -27,7 +27,6 @@ model Voting {
 model Candidate {
   name    String
   ballots Ballot[]
-  photo   String?
 
   groupId  Int
   votingId Int
