@@ -9,6 +9,7 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@sidebase/nuxt-auth',
         '@nuxt/image-edge',
+        '@nuxtjs/google-fonts',
         'nuxt-security',
     ],
     plugins: [
@@ -17,6 +18,23 @@ export default defineNuxtConfig({
     ],
     app: {
         pageTransition: { name: 'page', mode: 'out-in' },
+    },
+    googleFonts: {
+        families: {
+            'Noto+Sans+TC': [400, 500, 700],
+        },
+    },
+    tailwindcss: {
+        config: {
+            content: [],
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sansTC': ['"Noto Sans TC"', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"'],
+                    },
+                },
+            },
+        },
     },
     auth: {
         // The module is enabled. Change this to disable the module

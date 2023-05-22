@@ -1,7 +1,7 @@
 <template>
     <ElContainer
         direction="vertical"
-        class="h-[100vh]"
+        class="font-sansTC h-[100vh]"
     >
         <NuxtLoadingIndicator />
         <ClientOnly>
@@ -377,6 +377,10 @@ const showLoginInfo = async () => {
             closeOnPressEscape: true,
             type: 'success',
             roundButton: true,
+            customStyle: {
+                fontFamily:
+                    '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            },
         },
     ).catch(() => {})
 }
