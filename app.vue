@@ -177,21 +177,31 @@
                         border-style="dashed"
                         class="!m-0 !border-t-2 md:!hidden"
                     />
-                    <div class="m-3 text-center">
-                        <div class="text-lg text-black">投票期間登入人數</div>
-                        <div class="text-2xl font-bold text-black">
-                            {{ realCnt }} 人
+                    <ElTooltip
+                        effect="dark"
+                        placement="top"
+                    >
+                        <template #content>
+                            <div class="text-center">
+                                投票期間為<br />2023年5月24日<br />00:00 ~ 23:59
+                            </div>
+                        </template>
+                        <div class="m-3 text-center">
+                            <div class="text-lg text-black">
+                                投票期間登入人數
+                            </div>
+                            <div class="text-2xl font-bold text-black">
+                                {{ realCnt }} 人
+                            </div>
                         </div>
-                    </div>
+                    </ElTooltip>
                 </div>
             </ElDialog>
         </ClientOnly>
         <ElScrollbar :always="true">
             <noscript>
-                <strong>
-                    您的瀏覽器尚未啟用
-                    JavaScript，因此無法開啟檔案。請於啟用後重新載入頁面。
-                </strong>
+                您的瀏覽器尚未啟用
+                JavaScript，因此無法開啟檔案。請於啟用後重新載入頁面。
             </noscript>
             <div class="m-2 sm:m-3 md:m-4">
                 <NuxtPage keepalive />
