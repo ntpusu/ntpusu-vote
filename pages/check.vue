@@ -4,7 +4,7 @@
             label-width="auto"
             label-suffix=":"
             hide-required-asterisk
-            class="m-auto flex w-full flex-col items-center justify-center py-10"
+            class="m-auto flex w-full flex-col items-center justify-center py-5"
         >
             <ElFormItem
                 label="學號"
@@ -26,12 +26,11 @@
             <ClientOnly>
                 <ElDialog
                     v-if="voterData"
-                    title="選票內容"
+                    title="選舉人資訊"
                     center
                     align-center
                     v-model="voterShow"
-                    width="30%"
-                    class="min-w-fit !rounded-lg px-5"
+                    class="!w-fit !rounded-lg px-5"
                 >
                     <div
                         class="flex flex-col flex-wrap items-start justify-center"
@@ -40,7 +39,7 @@
                             學號：{{ voterData.id }}
                         </h1>
                         <h1 class="text-lg font-bold">
-                            組別：{{ voterData.group }}
+                            範圍：{{ voterData.group }}
                         </h1>
                         <h1 class="text-lg font-bold">
                             是否登入：{{ voterData.first.serNum ? '是' : '否' }}
@@ -68,7 +67,7 @@
             label-width="auto"
             label-suffix=":"
             hide-required-asterisk
-            class="m-auto flex w-full flex-col items-center justify-center py-10"
+            class="m-auto flex w-full flex-col items-center justify-center py-5"
         >
             <ElFormItem
                 label="憑證"
@@ -90,12 +89,11 @@
             <ClientOnly>
                 <ElDialog
                     v-if="tokenData"
-                    title="選票內容"
+                    title="選票資訊"
                     center
                     align-center
                     v-model="tokenShow"
-                    width="30%"
-                    class="min-w-fit !rounded-lg px-5"
+                    class="!w-fit !rounded-lg px-5"
                 >
                     <div
                         class="flex flex-col flex-wrap items-start justify-center"
@@ -115,6 +113,82 @@
                 </ElDialog>
             </ClientOnly>
         </ElForm>
+        <ElDivider />
+        <ElForm
+            label-width="auto"
+            label-suffix=":"
+            hide-required-asterisk
+            class="m-auto flex w-full flex-col items-center justify-center py-5"
+        >
+            <ElFormItem
+                label="投票名稱"
+                class="m-auto"
+            >
+                <ClientOnly>
+                    <ElSelect
+                        v-model="VG.votingId"
+                        placeholder="請選擇投票名稱"
+                        clearable
+                    >
+                        <el-option
+                            v-for="item in voting"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id"
+                        />
+                    </ElSelect>
+                </ClientOnly>
+            </ElFormItem>
+            <ElFormItem
+                label="範圍名稱"
+                class="m-auto"
+            >
+                <ClientOnly>
+                    <ElSelect
+                        v-model="VG.groupId"
+                        placeholder="請選擇投票範圍"
+                        clearable
+                    >
+                        <el-option
+                            v-for="item in group"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id"
+                        />
+                    </ElSelect>
+                </ClientOnly>
+            </ElFormItem>
+            <ElButton
+                type="primary"
+                class="w-1/5 !rounded-md md:w-1/6 lg:w-1/12"
+                @click="searchVG"
+            >
+                <span class="font-bold">查 詢</span>
+            </ElButton>
+            <ClientOnly>
+                <ElDialog
+                    v-if="VGData"
+                    title="投票範圍資訊"
+                    align-center
+                    v-model="VGShow"
+                    class="!w-fit !rounded-lg px-5"
+                >
+                    <div
+                        class="flex flex-col flex-wrap items-start justify-center"
+                    >
+                        <h1 class="text-lg font-bold">
+                            投票：{{ VGData.Vname }}
+                        </h1>
+                        <h1 class="text-lg font-bold">
+                            範圍：{{ VGData.Gname }}
+                        </h1>
+                        <h1 class="text-lg font-bold">
+                            票數：{{ VGData.cnt }}
+                        </h1>
+                    </div>
+                </ElDialog>
+            </ClientOnly>
+        </ElForm>
     </div>
 </template>
 
@@ -124,11 +198,22 @@ definePageMeta({
     title: '查詢',
 })
 
+const { data: voting } = await useFetch('/api/getVS')
+const { data: group } = await useFetch('/api/getGroup')
+
 const voter = ref('')
 const token = ref('')
+const VG = reactive<{
+    votingId: number | undefined
+    groupId: number | undefined
+}>({
+    votingId: undefined,
+    groupId: undefined,
+})
 
 const voterShow = ref(false)
 const tokenShow = ref(false)
+const VGShow = ref(false)
 
 const voterData: Ref<{
     id: number
@@ -145,10 +230,16 @@ const tokenData: Ref<{
     time: string
 } | null> = ref(null)
 
+const VGData: Ref<{
+    Vname: string
+    Gname: string
+    cnt: number
+} | null> = ref(null)
+
 const searchVoter = async () => {
     if (voter.value == '') {
         ElMessage({
-            message: '請輸入憑證',
+            message: '請輸入學號',
             type: 'warning',
         })
         return
@@ -186,7 +277,7 @@ const searchToken = async () => {
 
     if (res.error.value) {
         ElMessage({
-            message: '查無此憑證',
+            message: '無此憑證或投票尚未結束',
             type: 'warning',
         })
         return
@@ -195,5 +286,31 @@ const searchToken = async () => {
     tokenData.value = res.data.value
 
     tokenShow.value = true
+}
+
+const searchVG = async () => {
+    if (VG.votingId === undefined || VG.groupId === undefined) {
+        ElMessage({
+            message: '請輸入投票及範圍',
+            type: 'warning',
+        })
+        return
+    }
+
+    const res = await useFetch('/api/getVotingGroupCnt', {
+        query: { votingId: VG.votingId, groupId: VG.groupId },
+    })
+
+    if (res.error.value) {
+        ElMessage({
+            message: '投票尚未結束',
+            type: 'warning',
+        })
+        return
+    }
+
+    VGData.value = res.data.value
+
+    VGShow.value = true
 }
 </script>

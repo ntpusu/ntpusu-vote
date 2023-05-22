@@ -30,13 +30,13 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不在投票人名冊中',
+            message: '不在選舉人名單中',
         })
     }
 
     const groupIds = voter.voterInGroup.map((item) => item.groupId)
 
-    const VS = await prisma.voting.findMany({
+    const voting = await prisma.voting.findMany({
         where: {
             archive: false,
             groupId: {
@@ -52,7 +52,6 @@ export default defineEventHandler(async (event) => {
             candidates: {
                 select: {
                     name: true,
-                    photo: true,
                 },
             },
         },
@@ -62,20 +61,21 @@ export default defineEventHandler(async (event) => {
     })
 
     const tokens: string[] = []
-    for (const VSitem of VS) {
-        const token = HS256(studentId.toString() + VSitem.id.toString(), process.env.AUTH_SECRET as string).toString()
+    for (const votingItem of voting) {
+        const token = HS256(studentId.toString() + votingItem.id.toString(), process.env.AUTH_SECRET as string).toString()
+
         const ballot = await prisma.ballot.findUnique({
             where: { token },
             select: null,
         })
 
         if (ballot) {
-            tokens[VSitem.id] = token
+            tokens[votingItem.id] = token
         }
     }
 
     return {
-        VS,
+        voting,
         tokens,
     }
 })

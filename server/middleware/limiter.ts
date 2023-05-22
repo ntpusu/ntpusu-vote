@@ -22,6 +22,7 @@ const limitList = [
     '/api/getBallot',
     '/api/getGroup',
     '/api/getVoter',
+    '/api/getVotingGroupCnt',
     '/api/getVS',
     '/api/resetLoginCnt',
     '/api/unarchiveVS',

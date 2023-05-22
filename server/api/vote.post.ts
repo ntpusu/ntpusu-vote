@@ -2,16 +2,16 @@ import prisma from '~/lib/prisma'
 import HS256 from 'crypto-js/hmac-sha256.js'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const { VSId, cname } = await readBody(event) as {
-        VSId: string | undefined
+    const { votingId, cname } = await readBody(event) as {
+        votingId: string | undefined
         cname: string | undefined
     }
 
-    if (!VSId || isNaN(parseInt(VSId))) {
+    if (!votingId || isNaN(parseInt(votingId))) {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'Parameter "VSId" is required and must be a number',
+            message: 'Parameter "votingId" is required and must be a number.',
         })
     }
 
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'Parameter "cname" is required',
+            message: 'Parameter "cname" is required.',
         })
     }
 
@@ -38,32 +38,30 @@ export default defineEventHandler(async (event) => {
 
     const voter = await prisma.voter.findUnique({
         where: { id: studentId },
-        select: null,
+        select: {
+            voterInGroup: {
+                select: {
+                    groupId: true,
+                },
+            },
+        },
     })
 
     if (!voter) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不在投票人名冊中',
+            message: '不在選舉人名單中',
         })
     }
 
-    const candidate = await prisma.candidate.findUniqueOrThrow({
-        where: { votingId_name: { votingId: parseInt(VSId), name: cname } },
-        select: { votingId: true },
+    await prisma.candidate.findUniqueOrThrow({
+        where: { votingId_name: { votingId: parseInt(votingId), name: cname } },
+        select: null,
     })
 
-    if (candidate.votingId != parseInt(VSId)) {
-        throw createError({
-            statusCode: 400,
-            statusMessage: 'Bad Request',
-            message: 'Candidate Not In Voting',
-        })
-    }
-
     const voting = await prisma.voting.findUniqueOrThrow({
-        where: { id: parseInt(VSId) },
+        where: { id: parseInt(votingId) },
         select: {
             startTime: true,
             endTime: true,
@@ -80,17 +78,9 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const VIG = await prisma.voterInGroup.findUnique({
-        where: {
-            voterId_groupId: {
-                voterId: studentId,
-                groupId: voting.groupId,
-            },
-        },
-        select: null,
-    })
+    const voterGroups = voter.voterInGroup.map(v => v.groupId)
 
-    if (!VIG) {
+    if (!voterGroups.includes(voting.groupId)) {
         throw createError({
             statusCode: 401,
             statusMessage: 'Unauthorized',
@@ -114,13 +104,24 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const token = HS256(studentId.toString() + VSId.toString(), process.env.AUTH_SECRET as string).toString()
+    const token = HS256(studentId.toString() + votingId.toString(), process.env.AUTH_SECRET as string).toString()
 
     try {
-        await prisma.ballot.create({
-            data: { token, votingId: parseInt(VSId), candidateName: cname },
-            select: null,
-        })
+        await prisma.$transaction([
+            prisma.ballot.create({
+                data: { token, votingId: parseInt(votingId), candidateName: cname },
+                select: null,
+            }),
+            prisma.votingFromGroup.updateMany({
+                where: {
+                    votingId: parseInt(votingId),
+                    groupId: {
+                        in: voterGroups,
+                    },
+                },
+                data: { cnt: { increment: 1 } },
+            }),
+        ])
     }
     catch (e) {
         return { vote: false, token }

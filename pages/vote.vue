@@ -275,7 +275,7 @@
                                         center
                                         align-center
                                         v-model="voteVisible[votingitem.id]"
-                                        class=" !w-fit min-w-[30%] max-w-[90%] !rounded-lg sm:max-w-[80%] md:max-w-[70%] lg:max-w-[50%]"
+                                        class="!w-fit min-w-[30%] max-w-[90%] !rounded-lg sm:max-w-[80%] md:max-w-[70%] lg:max-w-[50%]"
                                         @open="
                                             voteLoading[votingitem.id] = true
                                         "
@@ -482,7 +482,7 @@
         </ElSkeleton>
         <ClientOnly>
             <ElDialog
-            align-center
+                align-center
                 v-model="voteFail"
                 class="!w-fit min-w-[30%] max-w-[90%] !rounded-lg sm:max-w-[80%] md:max-w-[70%] lg:max-w-[50%]"
             >
@@ -591,7 +591,7 @@ const voteConfirm = async (votingId: number) => {
         .then(async () => {
             const response = await recaptcha('vote')
 
-            const { data } = (await useFetch('/api/recaptcha', {
+            const { data: res } = (await useFetch('/api/recaptcha', {
                 method: 'POST',
                 body: JSON.stringify({ response }),
             })) as unknown as {
@@ -606,7 +606,7 @@ const voteConfirm = async (votingId: number) => {
                 }
             }
 
-            if (data.value.action != 'vote' || data.value.score <= 0.6) {
+            if (res.value.action != 'vote' || res.value.score <= 0.6) {
                 ElMessage.error('ReCatCha驗證失敗，請稍後再試')
                 return
             }
