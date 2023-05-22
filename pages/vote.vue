@@ -291,7 +291,7 @@
                                             </div>
                                         </template>
                                         <ElDivider
-                                            class="!-mt-5 !mb-0 !border-t-2"
+                                            class="!-mt-5 !mb-0 !border-t-[1.5px]"
                                         />
                                         <div
                                             class="mx-5 flex flex-col items-center align-middle"
@@ -382,7 +382,7 @@
                                         type="primary"
                                         class="w-fit !rounded-md"
                                         :disabled="
-                                            data.tokens[VSitem.id] !== null
+                                            data.tokens[VSitem.id] != undefined
                                         "
                                         @click="voteVisible[VSitem.id] = true"
                                         plain
@@ -390,7 +390,8 @@
                                     >
                                         <span
                                             v-if="
-                                                data.tokens[VSitem.id] === null
+                                                data.tokens[VSitem.id] ==
+                                                undefined
                                             "
                                             class="font-bold"
                                         >
@@ -407,7 +408,7 @@
                                         type="info"
                                         class="w-fit !rounded-md"
                                         :disabled="
-                                            data.tokens[VSitem.id] === null
+                                            data.tokens[VSitem.id] == undefined
                                         "
                                         @click="seeToken(VSitem.id)"
                                         plain
@@ -415,7 +416,8 @@
                                     >
                                         <span
                                             v-if="
-                                                data.tokens[VSitem.id] !== null
+                                                data.tokens[VSitem.id] !=
+                                                undefined
                                             "
                                             class="font-bold"
                                         >
