@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     },
     googleFonts: {
         families: {
-            'Noto+Sans+TC': [400, 500, 700],
+            'Noto+Sans+TC': [400, 700],
         },
     },
     tailwindcss: {
