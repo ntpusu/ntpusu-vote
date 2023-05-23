@@ -3,9 +3,13 @@
         <ElSkeleton
             animated
             :loading="votingPending || data === null"
-            class="flex justify-center"
+            class="flex flex-col items-center"
         >
             <template #template>
+                <ElSkeletonItem
+                    variant="rect"
+                    class="mb-3 !h-8 !w-1/3 !min-w-[360px] !rounded-sm"
+                />
                 <ElSpace
                     alignment="center"
                     wrap
@@ -22,8 +26,23 @@
             <template #default>
                 <div
                     v-if="!votingPending && data !== null"
-                    class="flex justify-center"
+                    class="flex flex-col items-center"
                 >
+                    <ElAlert
+                        show-icon
+                        center
+                        class="!mb-2.5 !w-1/3 !min-w-fit"
+                    >
+                        <template #title>
+                            <div class="mr-3 items-center text-gray-600">
+                                若要查看照片或政見等資訊，可以至<NuxtLink
+                                    to="/bulletin"
+                                    class="whitespace-pre-wrap break-all font-bold text-blue-400 hover:text-blue-500 hover:underline"
+                                    >選舉資訊</NuxtLink
+                                >查看
+                            </div>
+                        </template>
+                    </ElAlert>
                     <ElSpace
                         v-if="data.voting.length"
                         alignment="center"
@@ -205,10 +224,11 @@
                                 <ElSpace
                                     class="!flex flex-col content-center justify-center"
                                     wrap
+                                    alignment="flex-start"
                                 >
                                     <div
                                         v-if="votingitem.onlyOne"
-                                        class="flex items-center text-sm sm:text-base md:text-lg"
+                                        class="flex text-sm sm:text-base md:text-lg"
                                     >
                                         <ElTag
                                             type="success"
@@ -228,7 +248,7 @@
                                             v-for="itemIndex in votingitem
                                                 .candidates.length - 1"
                                             :key="itemIndex"
-                                            class="flex items-center text-sm sm:text-base md:text-lg"
+                                            class="flex text-sm sm:text-base md:text-lg"
                                         >
                                             <ElTag
                                                 type="success"
