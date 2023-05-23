@@ -222,16 +222,18 @@
             class="z-10 flex h-6 items-center justify-between bg-white px-2 sm:h-7 sm:px-3 md:h-8 md:px-4"
         >
             <span
-                class="text-[10px] text-xs font-bold tracking-tight text-stone-700 sm:text-sm sm:tracking-normal md:text-base"
+                class="text-center text-xs font-bold tracking-tighter text-stone-700 sm:text-sm sm:tracking-tight md:text-base md:tracking-normal"
             >
-                Design by
-                <NuxtLink
-                    to="https://github.com/garyellow"
-                    class="font-bold hover:text-stone-600 hover:underline"
-                    target="_blank"
-                    >garyellow</NuxtLink
-                >
-                |
+                <span class="max-[400px]:hidden">
+                    Design by
+                    <NuxtLink
+                        to="https://github.com/garyellow"
+                        class="font-bold hover:text-stone-600 hover:underline"
+                        target="_blank"
+                        >garyellow</NuxtLink
+                    >
+                    |
+                </span>
                 <NuxtLink
                     to="https://github.com/garyellow/ntpusu-vote-2023"
                     class="font-bold hover:text-stone-600 hover:underline"
@@ -240,7 +242,7 @@
                 >
             </span>
             <span
-                class="text-[10px] text-xs font-bold tracking-tight text-stone-700 sm:text-sm sm:tracking-normal md:text-base"
+                class="text-center text-xs font-bold tracking-tighter text-stone-700 sm:text-sm sm:tracking-tight md:text-base md:tracking-normal"
             >
                 ©
                 {{ new Date().getFullYear() }}
@@ -254,7 +256,7 @@
         </div>
         <ElCard
             v-if="!cookie"
-            class="fixed bottom-0 z-20 w-full !rounded-b-none !rounded-t-3xl"
+            class="fixed bottom-0 z-30 w-full !rounded-b-none !rounded-t-3xl"
         >
             <template #header>
                 <div class="-my-1 mx-2 flex justify-between sm:mx-4 md:mx-6">
