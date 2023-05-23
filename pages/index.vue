@@ -4,7 +4,7 @@
             direction="vertical"
             align-center
             space="12vh"
-            class="m-3 w-full !flex-wrap content-center"
+            class="mt-5 w-full !flex-wrap content-center"
         >
             <ElStep
                 v-for="(activity, index) in activities"

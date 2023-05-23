@@ -10,7 +10,7 @@
                     frameborder="1"
                     allowfullscreen="true"
                     allow="autoplay; clipboard-write; web-share"
-                    class="h-full min-h-[75vh] w-full rounded-md sm:rounded-lg md:rounded-xl"
+                    class="h-full min-h-[80vh] w-full rounded-md sm:rounded-lg md:rounded-xl"
                     load="lazy"
                 >
                     載入中~~~

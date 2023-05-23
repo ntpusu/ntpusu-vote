@@ -1,14 +1,14 @@
 <template>
-    <div>
+    <div class="flex flex-col md:my-[25vh] md:flex-row">
         <ElForm
             label-width="auto"
             label-suffix=":"
             hide-required-asterisk
-            class="m-auto flex w-full flex-col items-center justify-center py-5"
+            class="m-auto flex w-full flex-col items-center justify-center py-10"
         >
             <ElFormItem
                 label="學號"
-                class="m-auto w-11/12 md:w-2/3 lg:w-1/2"
+                class="m-auto w-5/6"
             >
                 <ElInput
                     v-model="voter"
@@ -18,7 +18,7 @@
             </ElFormItem>
             <ElButton
                 type="primary"
-                class="w-1/5 !rounded-md md:w-1/6 lg:w-1/12"
+                class="w-1/5 !rounded-md"
                 @click="searchVoter"
             >
                 <span class="font-bold">查 詢</span>
@@ -62,16 +62,16 @@
                 </ElDialog>
             </ClientOnly>
         </ElForm>
-        <ElDivider />
+        <ElDivider class="md:!hidden" />
         <ElForm
             label-width="auto"
             label-suffix=":"
             hide-required-asterisk
-            class="m-auto flex w-full flex-col items-center justify-center py-5"
+            class="m-auto flex w-full flex-col items-center justify-center py-10"
         >
             <ElFormItem
                 label="憑證"
-                class="m-auto w-11/12 md:w-2/3 lg:w-1/2"
+                class="m-auto w-5/6"
             >
                 <ElInput
                     v-model="token"
@@ -81,7 +81,7 @@
             </ElFormItem>
             <ElButton
                 type="primary"
-                class="w-1/5 !rounded-md md:w-1/6 lg:w-1/12"
+                class="w-1/5 !rounded-md"
                 @click="searchToken"
             >
                 <span class="font-bold">查 詢</span>
@@ -113,21 +113,21 @@
                 </ElDialog>
             </ClientOnly>
         </ElForm>
-        <ElDivider />
+        <ElDivider class="md:!hidden" />
         <ElForm
             label-width="auto"
             label-suffix=":"
             hide-required-asterisk
-            class="m-auto flex w-full flex-col items-center justify-center py-5"
+            class="m-auto flex w-full flex-col items-center justify-center py-10"
         >
             <ElFormItem
-                label="投票名稱"
+                label="投票"
                 class="m-auto"
             >
                 <ClientOnly>
                     <ElSelect
                         v-model="VG.votingId"
-                        placeholder="請選擇投票名稱"
+                        placeholder="請選擇投票項目"
                         clearable
                     >
                         <el-option
@@ -140,7 +140,7 @@
                 </ClientOnly>
             </ElFormItem>
             <ElFormItem
-                label="範圍名稱"
+                label="範圍"
                 class="m-auto"
             >
                 <ClientOnly>
@@ -160,7 +160,7 @@
             </ElFormItem>
             <ElButton
                 type="primary"
-                class="w-1/5 !rounded-md md:w-1/6 lg:w-1/12"
+                class="w-1/5 !rounded-md"
                 @click="searchVG"
             >
                 <span class="font-bold">查 詢</span>
@@ -198,7 +198,7 @@ definePageMeta({
     title: '查詢',
 })
 
-const { data: voting } = await useFetch('/api/getVS')
+const { data: voting } = await useFetch('/api/getVoting')
 const { data: group } = await useFetch('/api/getGroup')
 
 const voter = ref('')
