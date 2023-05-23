@@ -631,7 +631,12 @@ const voteConfirm = async (votingId: number) => {
             }
 
             if (res.value.action != 'vote' || res.value.score <= 0.6) {
-                ElMessage.error('ReCatCha驗證失敗，請稍後再試')
+                ElMessage.error('ReCaptCha驗證失敗')
+
+                setTimeout(() => {
+                    ElMessage.info('請稍後或更換裝置再試')
+                }, 1500)
+
                 return
             }
 
