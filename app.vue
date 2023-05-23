@@ -222,7 +222,7 @@
             class="z-10 flex h-6 items-center justify-between bg-white px-2 sm:h-7 sm:px-3 md:h-8 md:px-4"
         >
             <span
-                class="text-xs font-bold text-stone-700 sm:text-sm md:text-base"
+                class="text-[10px] text-xs font-bold tracking-tight text-stone-700 sm:text-sm sm:tracking-normal md:text-base"
             >
                 Design by
                 <NuxtLink
@@ -240,7 +240,7 @@
                 >
             </span>
             <span
-                class="text-xs font-bold text-stone-700 sm:text-sm md:text-base"
+                class="text-[10px] text-xs font-bold tracking-tight text-stone-700 sm:text-sm sm:tracking-normal md:text-base"
             >
                 ©
                 {{ new Date().getFullYear() }}
@@ -404,9 +404,9 @@ const checkLogin = () => {
                         return
                     }
 
-                    setTimeout(async () => {
-                        await refresh()
-                    }, 250)
+                    await refresh()
+
+                    setTimeout(() => {}, 500)
                 }
 
                 loginInfo.value = res.value.login
