@@ -1,6 +1,6 @@
 import { RateLimiter } from "limiter";
 
-const tokensPerInterval = 200
+const tokensPerInterval = 300
 const interval = 'hour'
 const limiter = new RateLimiter({
     tokensPerInterval,
