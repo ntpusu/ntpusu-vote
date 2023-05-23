@@ -228,7 +228,7 @@
                                 >
                                     <div
                                         v-if="votingitem.onlyOne"
-                                        class="flex text-sm sm:text-base md:text-lg"
+                                        class="flex items-center text-sm sm:text-base md:text-lg"
                                     >
                                         <ElTag
                                             type="success"
@@ -248,7 +248,7 @@
                                             v-for="itemIndex in votingitem
                                                 .candidates.length - 1"
                                             :key="itemIndex"
-                                            class="flex text-sm sm:text-base md:text-lg"
+                                            class="flex items-center text-sm sm:text-base md:text-lg"
                                         >
                                             <ElTag
                                                 type="success"
