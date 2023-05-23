@@ -37,13 +37,19 @@ const timer = () => {
     }, 100)
 }
 
-onMounted(async () => {
-    if (useRoute().path != '/404') await useRouter().push('/404')
-    else timer()
+onMounted(() => {
+    if (useRoute().path != '/404') {
+        setTimeout(async () => {
+            await useRouter().push('/404')
+        }, 250)
+    } else timer()
 })
 
-onActivated(async () => {
-    if (useRoute().path != '/404') await useRouter().push('/404')
-    else timer()
+onActivated(() => {
+    if (useRoute().path != '/404') {
+        setTimeout(async () => {
+            await useRouter().push('/404')
+        }, 250)
+    } else timer()
 })
 </script>
