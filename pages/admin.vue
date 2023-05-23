@@ -172,7 +172,7 @@
                             class="hidden"
                         />
                         <div
-                            prop="endTimeStr"
+                            prop="endTime"
                             class="hidden"
                         />
                         <ElTableColumn
@@ -211,7 +211,9 @@
                                         Date.now() <=
                                         new Date(row.endTime).getTime()
                                     "
-                                    @click="useRouter().push('/vote/' + row.id)"
+                                    @click="
+                                        useRouter().push('/result/' + row.id)
+                                    "
                                 >
                                     <span class="font-bold">結 果</span>
                                 </ElButton>
@@ -393,7 +395,7 @@ const {
     data: voting,
     pending: votingPending,
     refresh: votingRefresh,
-} = await useLazyFetch('/api/getVS')
+} = await useLazyFetch('/api/getVoting')
 const { data: Group } = await useFetch('/api/getGroup')
 const { data: loginCnt, refresh: loginCntRefresh } = await useFetch(
     '/api/getLoginCnt',
@@ -457,7 +459,7 @@ const submitForm = async (formRef: FormInstance | undefined) => {
 
     await formRef.validate(async (valid, fields) => {
         if (valid) {
-            await useFetch('/api/addVS', {
+            await useFetch('/api/addVoting', {
                 method: 'POST',
                 body: JSON.stringify(addVote),
             })
@@ -518,7 +520,7 @@ const archiveData = () => {
 }
 
 const handleArchive = async (id: number) => {
-    await useFetch('/api/archiveVS', {
+    await useFetch('/api/archiveVoting', {
         method: 'POST',
         body: JSON.stringify({ id }),
     })
@@ -532,7 +534,7 @@ const handleArchive = async (id: number) => {
 }
 
 const handleUnarchive = async (id: number) => {
-    await useFetch('/api/unarchiveVS', {
+    await useFetch('/api/unarchiveVoting', {
         method: 'POST',
         body: JSON.stringify({ id }),
     })
@@ -546,7 +548,7 @@ const handleUnarchive = async (id: number) => {
 }
 
 const handleDelete = async (id: number) => {
-    await useFetch('/api/delVS', {
+    await useFetch('/api/delVoting', {
         method: 'DELETE',
         query: { id },
     })
