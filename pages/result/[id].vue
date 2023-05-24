@@ -35,7 +35,7 @@
                     v-if="voting.onlyOne"
                     class="pb-6 text-xl font-bold sm:text-2xl md:text-3xl"
                 >
-                    {{ voting.candidates[0] }}
+                    {{ voting.candidates[0].name }}
                 </h1>
                 <h1
                     v-else

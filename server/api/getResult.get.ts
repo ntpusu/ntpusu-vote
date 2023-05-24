@@ -105,7 +105,7 @@ export default defineEventHandler(async (event) => {
                 },
                 orderBy: {
                     ballots: {
-                        _count: 'desc',
+                        _count: 'asc',
                     },
                 },
             },
