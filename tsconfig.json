@@ -4,7 +4,7 @@
   "compilerOptions": {
     "types": [
       "element-plus/global",
-      "crypto-js"
+      "crypto-js",
     ]
   }
 }
