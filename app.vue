@@ -1,7 +1,7 @@
 <template>
     <ElContainer
         direction="vertical"
-        class="font-sansTC h-[100vh]"
+        class="h-[100vh] font-sansTC"
     >
         <NuxtLoadingIndicator />
         <ClientOnly>
@@ -153,7 +153,6 @@
             <ElDialog
                 v-model="showTodayBadge"
                 align-center
-                lock-scroll
                 :show-close="false"
                 width="30%"
                 @click="showTodayBadge = false"

@@ -117,20 +117,20 @@ const activities = [
     },
     {
         content: '(補選)候選人名單公告 + 選舉公報',
-        start: new Date(2023, 5, 2),
-        finish: new Date(2023, 5, 3),
+        start: new Date(2023, 5, 3),
+        finish: new Date(2023, 5, 4),
         maybe: false,
     },
     {
         content: '(補選)線上投票',
-        start: new Date(2023, 5, 10),
-        finish: new Date(2023, 5, 11),
+        start: new Date(2023, 5, 12),
+        finish: new Date(2023, 5, 13),
         maybe: false,
     },
     {
         content: '(補選)當選名單公告',
-        start: new Date(2023, 5, 11),
-        finish: new Date(2023, 5, 12),
+        start: new Date(2023, 5, 13),
+        finish: new Date(2023, 5, 14),
         maybe: false,
     },
 ]

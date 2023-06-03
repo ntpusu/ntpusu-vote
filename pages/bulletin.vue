@@ -1,3 +1,4 @@
+<!-- https://drive.google.com/file/d/1vooeYRpqUp4fQ5w2iMZSNIuL47kORAfe/preview -->
 <template>
     <div class="flex flex-wrap items-stretch justify-evenly">
         <div
@@ -6,7 +7,7 @@
             <h1 class="my-5 text-center text-2xl font-bold">選舉公報</h1>
             <ClientOnly>
                 <iframe
-                    src="https://drive.google.com/file/d/1vooeYRpqUp4fQ5w2iMZSNIuL47kORAfe/preview"
+                    src="https://drive.google.com/file/d/1cp2CAYj71bG6fURp5tBQPQyqQ6RvSu-M/preview"
                     frameborder="1"
                     allowfullscreen="true"
                     allow="autoplay; clipboard-write; web-share"
