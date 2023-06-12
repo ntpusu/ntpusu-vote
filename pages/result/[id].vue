@@ -35,7 +35,7 @@
                     v-if="voting.onlyOne"
                     class="pb-6 text-xl font-bold sm:text-2xl md:text-3xl"
                 >
-                    {{ voting.candidates[0].name }}
+                    {{ findCandidate()?.name }}
                 </h1>
                 <h1
                     v-else
@@ -47,51 +47,104 @@
                     class="justify-center"
                     wrap
                 >
-                    <ElCard
-                        v-for="(candidate, index) in voting.candidates.slice(
-                            voting.onlyOne ? 1 : 0,
-                        )"
-                        shadow="hover"
-                        :key="index"
-                        class="max-w-[12rem] md:max-w-[15rem] xl:max-w-[18rem]"
-                    >
-                        <div class="px-6 text-center">
-                            <h1 class="text-lg sm:text-xl md:text-2xl">
-                                {{ candidate.name }}
-                            </h1>
-                        </div>
-                        <ElDivider class="!my-5" />
-                        <ElStatistic
-                            class="m-1 text-center"
-                            title="票數"
-                            :value="candidate._count.ballots"
-                            suffix="票"
-                        />
-                        <ElDivider class="!xy-5" />
-                        <ElProgress
-                            type="dashboard"
-                            :percentage="
-                                voteCnt() === 0
-                                    ? 0
-                                    : (candidate._count.ballots * 100) /
-                                      voteCnt()
-                            "
-                            color="#409EFF"
+                    <template v-if="voting.onlyOne">
+                        <ElCard
+                            v-for="(candidate, index) in findOther()"
+                            shadow="hover"
+                            :key="index"
+                            class="max-w-[12rem] md:max-w-[15rem] xl:max-w-[18rem]"
                         >
-                            <template #default="{ percentage }">
-                                <ElStatistic
-                                    class="text-center"
-                                    :precision="2"
-                                    :value="percentage"
-                                    suffix="%"
-                                >
-                                    <template #title>
-                                        <span class="text-base">得票率</span>
-                                    </template>
-                                </ElStatistic>
-                            </template>
-                        </ElProgress>
-                    </ElCard>
+                            <div class="px-6 text-center">
+                                <h1 class="text-lg sm:text-xl md:text-2xl">
+                                    {{ candidate.name }}
+                                </h1>
+                            </div>
+                            <ElDivider class="!my-5" />
+                            <ElStatistic
+                                class="m-1 text-center"
+                                title="票數"
+                                :value="candidate._count.ballots"
+                                suffix="票"
+                            />
+                            <ElDivider class="!xy-5" />
+                            <ElProgress
+                                type="dashboard"
+                                :percentage="
+                                    voteCnt() === 0
+                                        ? 0
+                                        : (candidate._count.ballots * 100) /
+                                          voteCnt()
+                                "
+                                color="#409EFF"
+                            >
+                                <template #default="{ percentage }">
+                                    <ElStatistic
+                                        class="text-center"
+                                        :precision="2"
+                                        :value="percentage"
+                                        suffix="%"
+                                    >
+                                        <template #title>
+                                            <span class="text-base"
+                                                >得票率</span
+                                            >
+                                        </template>
+                                    </ElStatistic>
+                                </template>
+                            </ElProgress>
+                        </ElCard>
+                    </template>
+                    <template v-else>
+                        <ElCard
+                            v-for="(
+                                candidate, index
+                            ) in voting.candidates.slice(
+                                voting.onlyOne ? 1 : 0,
+                            )"
+                            shadow="hover"
+                            :key="index"
+                            class="max-w-[12rem] md:max-w-[15rem] xl:max-w-[18rem]"
+                        >
+                            <div class="px-6 text-center">
+                                <h1 class="text-lg sm:text-xl md:text-2xl">
+                                    {{ candidate.name }}
+                                </h1>
+                            </div>
+                            <ElDivider class="!my-5" />
+                            <ElStatistic
+                                class="m-1 text-center"
+                                title="票數"
+                                :value="candidate._count.ballots"
+                                suffix="票"
+                            />
+                            <ElDivider class="!xy-5" />
+                            <ElProgress
+                                type="dashboard"
+                                :percentage="
+                                    voteCnt() === 0
+                                        ? 0
+                                        : (candidate._count.ballots * 100) /
+                                          voteCnt()
+                                "
+                                color="#409EFF"
+                            >
+                                <template #default="{ percentage }">
+                                    <ElStatistic
+                                        class="text-center"
+                                        :precision="2"
+                                        :value="percentage"
+                                        suffix="%"
+                                    >
+                                        <template #title>
+                                            <span class="text-base"
+                                                >得票率</span
+                                            >
+                                        </template>
+                                    </ElStatistic>
+                                </template>
+                            </ElProgress>
+                        </ElCard>
+                    </template>
                 </ElSpace>
             </div>
         </ElCard>
@@ -124,6 +177,24 @@ const { data: voting, pending: votingPending } = await useLazyFetch(
         query: { id },
     },
 )
+
+const findCandidate = () => {
+    return voting.value?.candidates.find(
+        (candidate) =>
+            candidate.name != '廢票' &&
+            candidate.name != '同意' &&
+            candidate.name != '不同意',
+    )
+}
+
+const findOther = () => {
+    return voting.value?.candidates.filter(
+        (candidate) =>
+            candidate.name == '廢票' ||
+            candidate.name == '同意' ||
+            candidate.name == '不同意',
+    )
+}
 
 const viewDate = (time: string | number | Date) => {
     return new Date(time).toLocaleString(undefined, {
