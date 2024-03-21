@@ -4,7 +4,7 @@
 
 使用 nuxt 框架製作的全端網站，並使用 postgreSQL 作為資料庫，再透過 vercel 部署，僅供學生會進行投票使用。
 
-## 網址
+## 網址a
 
 https://ntpusu-vote.vercel.app/
 
