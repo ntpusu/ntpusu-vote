@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "Vue.volar",
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "nuxtr.nuxtr-vscode"
+    ]
+}
