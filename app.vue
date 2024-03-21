@@ -285,9 +285,12 @@
             </div>
         </ElCard>
     </ElContainer>
+    <SpeedInsights />
 </template>
 
 <script setup lang="ts">
+import { SpeedInsights } from '@vercel/speed-insights/vue'
+
 const route = useRoute()
 
 useSeoMeta({
@@ -446,7 +449,7 @@ onMounted(() => {
     @apply opacity-0 blur;
 }
 
-.grecaptcha-badge {
+/* .grecaptcha-badge {
     @apply z-20;
-}
+} */
 </style>
