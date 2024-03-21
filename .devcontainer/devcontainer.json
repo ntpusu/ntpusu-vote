@@ -1,0 +1,22 @@
+{
+	"$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.base.schema.json",
+	"name": "node-npm",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"OH_MY_POSH": "1" // Requires Nerd fonts(https://www.nerdfonts.com/font-downloads), set this to 0 to disable
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Vue.volar",
+				"ms-vscode.vscode-typescript-next",
+				"bradlc.vscode-tailwindcss",
+				"esbenp.prettier-vscode",
+				"Nuxtr.nuxtr-vscode"
+			]
+		}
+	},
+	"postCreateCommand": "curl -fsSL https://bun.sh/install | bash"
+}
