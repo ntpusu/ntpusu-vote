@@ -1,20 +1,21 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     runtimeConfig: {
         public: {
-            recaptchaSiteKey: process.env.RECAPTCHA_V3_SITE_KEY,
+            // recaptchaSiteKey: process.env.RECAPTCHA_V3_SITE_KEY,
         },
     },
     modules: [
         '@element-plus/nuxt',
         '@nuxtjs/tailwindcss',
         '@sidebase/nuxt-auth',
-        '@nuxt/image-edge',
+        '@nuxt/image',
         '@nuxtjs/google-fonts',
         'nuxt-security',
     ],
     plugins: [
         '~/plugins/vercel.client.ts',
-        '~/plugins/google-recaptcha.client.ts',
+        // '~/plugins/google-recaptcha.client.ts',
     ],
     app: {
         pageTransition: { name: 'page', mode: 'out-in' },
@@ -57,5 +58,8 @@ export default defineNuxtConfig({
         corsHandler: {
             methods: ['GET', 'PUT', 'POST', 'DELETE'],
         },
+    },
+    devtools: {
+        enabled: true,
     },
 });
