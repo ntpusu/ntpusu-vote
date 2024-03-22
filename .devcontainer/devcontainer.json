@@ -4,9 +4,12 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			"OH_MY_POSH": "1" // Requires Nerd fonts(https://www.nerdfonts.com/font-downloads), set this to 0 to disable
+			"OH_MY_POSH": "0" // Requires Nerd fonts(https://www.nerdfonts.com/font-downloads), set to 1 to enable
 		}
 	},
+	"mounts": [
+		"type=volume,source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules"
+	],
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -14,9 +17,14 @@
 				"ms-vscode.vscode-typescript-next",
 				"bradlc.vscode-tailwindcss",
 				"esbenp.prettier-vscode",
-				"Nuxtr.nuxtr-vscode"
+				"Nuxtr.nuxtr-vscode",
+				"Prisma.prisma"
 			]
 		}
 	},
-	"postCreateCommand": "curl -fsSL https://bun.sh/install | bash"
+	"onCreateCommand": "npm install -g npm@latest bun@latest && sudo rm /usr/local/bin/npm",
+	"postCreateCommand": {
+		"link-npm": "sudo ln -s /usr/local/share/npm-global/bin/npm /usr/local/bin/npm",
+		"link-bun": "sudo ln -s /usr/local/share/npm-global/bin/bun /usr/local/bin/bun"
+	}
 }
