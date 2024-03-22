@@ -321,6 +321,7 @@ useSeoMeta({
     },
     twitterImage: 'https://ntpusu-vote.vercel.app/favicon.ico',
     twitterImageAlt: '國立臺北大學三峽校區學生會的標誌',
+    twitterCard: 'summary',
 })
 
 useHead({
@@ -334,6 +335,11 @@ useHead({
         },
     ],
     link: [
+        {
+            rel: 'icon',
+            type: 'image/png',
+            href: '/favicon.png',
+        },
         {
             rel: 'favicon icon',
             type: 'image/x-icon',
