@@ -17,7 +17,7 @@ if (process.env.VERCEL) {
 export default defineNuxtConfig({
     runtimeConfig: {
         public: {
-            // recaptchaSiteKey: process.env.RECAPTCHA_V3_SITE_KEY,
+            // You can also define runtime config here
         },
     },
     modules: [
@@ -30,7 +30,6 @@ export default defineNuxtConfig({
     ],
     plugins: [
         '~/plugins/vercel.client.ts',
-        // '~/plugins/google-recaptcha.client.ts',
     ],
     app: {
         pageTransition: { name: 'page', mode: 'out-in' },

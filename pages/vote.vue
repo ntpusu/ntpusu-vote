@@ -530,7 +530,6 @@
 <script setup lang="ts">
 import { rand } from '@vueuse/shared'
 import type { Action } from 'element-plus'
-// import { useReCaptcha } from 'vue-recaptcha-v3'
 
 definePageMeta({
     title: '投票',
@@ -575,15 +574,6 @@ const voteLoading: Ref<boolean[]> = ref([])
 const tokenLoading: Ref<boolean[]> = ref([])
 const resultLoading: Ref<boolean[]> = ref([])
 
-// const recaptchaInstance = useReCaptcha()
-
-// const recaptcha = async (action: string) => {
-//     await recaptchaInstance?.recaptchaLoaded()
-//     const token = await recaptchaInstance?.executeRecaptcha(action)
-
-//     return token
-// }
-
 const voteConfirm = async (votingId: number) => {
     if (!voteData.value[votingId]) {
         ElMessage({
@@ -613,32 +603,7 @@ const voteConfirm = async (votingId: number) => {
         },
     )
         .then(async () => {
-            // const response = await recaptcha('vote')
-
-            // const { data: res } = (await useFetch('/api/recaptcha', {
-            //     method: 'POST',
-            //     body: JSON.stringify({ response }),
-            // })) as unknown as {
-            //     data: {
-            //         value: {
-            //             action: string
-            //             challenge_ts: string
-            //             hostname: string
-            //             score: number
-            //             success: boolean
-            //         }
-            //     }
-            // }
-
-            // if (res.value.action != 'vote' || res.value.score <= 0.6) {
-            //     ElMessage.error('ReCaptCha驗證失敗')
-
-            //     setTimeout(() => {
-            //         ElMessage.info('請稍後或更換裝置再試')
-            //     }, 1500)
-
-            //     return
-            // }
+            // Add recaptcha
 
             await useFetch('/api/vote', {
                 method: 'POST',
@@ -822,8 +787,6 @@ const checkData = () => {
 
 onMounted(() => {
     checkData()
-
-    // recaptchaInstance?.instance.value?.showBadge()
 })
 
 onActivated(async () => {
@@ -833,11 +796,5 @@ onActivated(async () => {
     }
 
     checkData()
-
-    // recaptchaInstance?.instance.value?.showBadge()
-})
-
-onDeactivated(() => {
-    // recaptchaInstance?.instance.value?.hideBadge()
 })
 </script>

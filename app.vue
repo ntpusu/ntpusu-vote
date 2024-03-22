@@ -454,8 +454,4 @@ onMounted(() => {
 .page-leave-to {
     @apply opacity-0 blur;
 }
-
-/* .grecaptcha-badge {
-    @apply z-20;
-} */
 </style>
