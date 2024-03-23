@@ -1,23 +1,23 @@
 {
   "private": true,
   "scripts": {
-    "build": "prisma generate && nuxt build",
+    "postinstall": "nuxt prepare && prisma db push",
+    "prebuild": "prisma db push",
+    "build": "nuxt build",
     "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "dbpush": "prisma db push",
+    "db": "prisma studio"
   },
   "dependencies": {
     "@nuxt/image": "^1.4.0",
     "@nuxt/ui": "^2.14.2",
+    "@popperjs/core": "npm:@sxzz/popperjs-es@^2.11.7",
     "@prisma/client": "^5.11.0",
     "@types/crypto-js": "^4.2.2",
     "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
-    "@popperjs/core": "npm:@sxzz/popperjs-es@^2.11.7",
     "crypto-js": "^4.2.0",
-    "next-auth": "4.22.5",
-    "vue-recaptcha-v3": "^2.0.1"
+    "next-auth": "4.22.5"
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.7",

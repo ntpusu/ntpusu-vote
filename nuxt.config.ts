@@ -1,8 +1,23 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+let baseURL: string = 'http://localhost:3000';
+
+if (process.env.VERCEL) {
+    switch (process.env.VERCEL_ENV) {
+        case 'production':
+            baseURL = `https://${process.env.VERCEL_GIT_REPO_SLUG}.vercel.app`;
+            break;
+        case 'preview':
+            baseURL = `https://${process.env.VERCEL_BRANCH_URL}`;
+            break;
+        case 'development':
+            baseURL = `https://${process.env.VERCEL_URL}`;
+    }
+}
+
 export default defineNuxtConfig({
     runtimeConfig: {
         public: {
-            // recaptchaSiteKey: process.env.RECAPTCHA_V3_SITE_KEY,
+            // You can also define runtime config here
         },
     },
     modules: [
@@ -15,7 +30,6 @@ export default defineNuxtConfig({
     ],
     plugins: [
         '~/plugins/vercel.client.ts',
-        // '~/plugins/google-recaptcha.client.ts',
     ],
     app: {
         pageTransition: { name: 'page', mode: 'out-in' },
@@ -60,7 +74,7 @@ export default defineNuxtConfig({
          * @default undefined                      Default for `authjs` in production, will result in an error
          * @default /api/auth                      Default for `local` for both production and development
          */
-        baseURL: process.env.VERCEL ? (process.env.VERCEL_ENV == 'production' ? `https://${process.env.VERCEL_GIT_REPO_SLUG}.vercel.app` : `https://${process.env.VERCEL_URL}`) : 'http://localhost:3000',
+        baseURL: baseURL,
         /**
          * Configuration of the authentication provider. Different providers are supported:
          * - auth.js: OAuth focused provider for non-static Nuxt 3 applications
@@ -69,7 +83,9 @@ export default defineNuxtConfig({
          * Find more about supported providers here: https://sidebase.io/nuxt-auth/v0.6/getting-started
          *
          */
-        provider: undefined,
+        provider: {
+            type: 'authjs'
+        },
         /**
          * Configuration of the application-side session.
          */
@@ -129,5 +145,9 @@ export default defineNuxtConfig({
     },
     devtools: {
         enabled: true,
+
+        timeline: {
+            enabled: true,
+        },
     },
 });

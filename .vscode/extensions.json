@@ -4,6 +4,7 @@
         "ms-vscode.vscode-typescript-next",
         "bradlc.vscode-tailwindcss",
         "esbenp.prettier-vscode",
-        "nuxtr.nuxtr-vscode"
+        "Nuxtr.nuxtr-vscode",
+        "prisma.prisma",
     ]
 }
