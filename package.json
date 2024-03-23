@@ -17,7 +17,7 @@
     "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
     "crypto-js": "^4.2.0",
-    "next-auth": "4.22.5"
+    "next-auth": "4.24.5"
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.7",
