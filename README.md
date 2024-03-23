@@ -84,6 +84,14 @@ bun db
 ```bash
 git update-index --skip-worktree .devcontainer/devcontainer.json
 ```
+
+設定後 checkout 或部分 git 操作會出現錯誤\
+可以輸入以下指令解除設定，操作完畢後再設定回去
+
+```bash
+git update-index --no-skip-worktree .devcontainer/devcontainer.json
+```
+
 #### 權限相關問題
 
 若執行上述 npm 或 bun 指令時，出現權限不足的問題，可以使用 sudo 進行執行
