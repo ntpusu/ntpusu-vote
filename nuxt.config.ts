@@ -1,16 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-let baseURL: string = 'http://localhost:3000';
+let baseURL: string = 'http://localhost:3000/api/auth';
 
 if (process.env.VERCEL) {
     switch (process.env.VERCEL_ENV) {
         case 'production':
-            baseURL = `https://${process.env.VERCEL_GIT_REPO_SLUG}.vercel.app`;
+            baseURL = `https://${process.env.VERCEL_GIT_REPO_SLUG}.vercel.app/api/auth`;
             break;
         case 'preview':
-            baseURL = `https://${process.env.VERCEL_BRANCH_URL}`;
+            baseURL = `https://${process.env.VERCEL_BRANCH_URL}/api/auth`;
             break;
         case 'development':
-            baseURL = `https://${process.env.VERCEL_URL}`;
+            baseURL = `https://${process.env.VERCEL_URL}/api/auth`;
     }
 }
 
@@ -84,12 +84,60 @@ export default defineNuxtConfig({
          *
          */
         provider: {
-            type: 'authjs'
+            /**
+             * Uses the `authjs` provider to facilitate autnetication. Currently, two providers exclusive are supported:
+             * - `authjs`: `next-auth` / `auth.js` based OAuth, Magic URL, Credential provider for non-static applications
+             * - `local`: Username and password provider with support for static-applications
+             *
+             * Read more here: https://sidebase.io/nuxt-auth/v0.6/getting-started
+             */
+            type: 'authjs',
+            /**
+             * If set to `true`, `authjs` will use either the `x-forwarded-host` or `host` headers instead of `auth.baseURL`.
+             *
+             * Make sure that reading `x-forwarded-host` on your hosting platform can be trusted.
+             * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
+             * but **may have complex implications** or side effects.
+             * You should **try to avoid using advanced options** unless you are very comfortable using them.
+             * @default false
+             */
+            trustHost: false,
+            /**
+             * Select the default-provider to use when `signIn` is called. Setting this here will also effect the global middleware behavior: E.g., when you set it to `github` and the user is unauthorized, they will be directly forwarded to the Github OAuth page instead of seeing the app-login page.
+             *
+             * @example "github"
+             * @default undefined
+             */
+            defaultProvider: undefined,
+            /**
+             * Whether to add a callbackUrl to sign in requests. Setting this to a string-value will result in that being used as the callbackUrl path. Setting this to `true` will result in the blocked original target path being chosen (if it can be determined).
+             */
+            addDefaultCallbackUrl: true,
         },
         /**
          * Configuration of the application-side session.
          */
-        session: undefined,
+        session: {
+            /**
+             * Whether to refresh the session every `X` milliseconds. Set this to `false` to turn it off. The session will only be refreshed if a session already exists.
+             *
+             * Setting this to `true` will refresh the session every second.
+             * Setting this to `false` will turn off session refresh.
+             * Setting this to a number `X` will refresh the session every `X` milliseconds.
+             *
+             * @example 1000
+             * @default false
+             *
+             */
+            enableRefreshPeriodically: false,
+            /**
+             * Whether to refresh the session every time the browser window is refocused.
+             *
+             * @example false
+             * @default true
+             */
+            enableRefreshOnWindowFocus: true,
+        },
         /**
          * Whether to add a global authentication middleware that protects all pages. Can be either `false` to disable, `true` to enabled
          * or an object to enable and apply extended configuration.
