@@ -1,6 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.base.schema.json",
-	"name": "node-npm",
+	"name": "node-bun",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
@@ -22,9 +22,11 @@
 			]
 		}
 	},
-	"onCreateCommand": "npm install -g npm@latest bun@latest && sudo rm /usr/local/bin/npm",
+	"onCreateCommand": "npm install -g npm@latest bun@latest && sudo rm /usr/local/bin/npm /usr/local/bin/npx",
 	"postCreateCommand": {
 		"link-npm": "sudo ln -s /usr/local/share/npm-global/bin/npm /usr/local/bin/npm",
-		"link-bun": "sudo ln -s /usr/local/share/npm-global/bin/bun /usr/local/bin/bun"
+		"link-npx": "sudo ln -s /usr/local/share/npm-global/bin/npx /usr/local/bin/npx",
+		"link-bun": "sudo ln -s /usr/local/share/npm-global/bin/bun /usr/local/bin/bun",
+		"link-bunx": "sudo ln -s /usr/local/share/npm-global/bin/bunx /usr/local/bin/bunx"
 	}
 }
