@@ -22,10 +22,10 @@ export default defineNuxtConfig({
     },
     modules: [
         '@element-plus/nuxt',
-        '@nuxtjs/tailwindcss',
-        '@sidebase/nuxt-auth',
         '@nuxt/image',
+        '@nuxtjs/tailwindcss',
         '@nuxtjs/google-fonts',
+        '@sidebase/nuxt-auth',
         'nuxt-security',
     ],
     plugins: [
@@ -197,5 +197,5 @@ export default defineNuxtConfig({
         timeline: {
             enabled: true,
         },
-    },
+    }
 });
