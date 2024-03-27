@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "postinstall": "nuxt prepare && prisma db push",
+    "postinstall": "nuxt prepare",
     "prebuild": "prisma db push",
     "build": "nuxt build",
     "dev": "nuxt dev",

@@ -17,7 +17,7 @@ https://ntpusu-vote.vercel.app/
 
 使用 npm 或 bun 進行安裝，推薦使用 bun
 
-### 安裝(需先填寫資料庫相關環境變數)
+### 安裝
 
 ```bash
 npm install
@@ -46,6 +46,7 @@ npm run build
 ```bash
 bun run build
 ```
+> 編譯前會先進行資料庫同步
 
 ### 環境變數
 
