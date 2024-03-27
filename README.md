@@ -37,7 +37,7 @@ npm run dev
 bun dev
 ```
 
-### 編譯(需先填寫資料庫相關環境變數)
+### 編譯
 
 ```bash
 npm run build
@@ -46,7 +46,6 @@ npm run build
 ```bash
 bun run build
 ```
-> 編譯前會先進行資料庫同步
 
 ### 環境變數
 
@@ -57,7 +56,7 @@ bun run build
 使用 [prisma](https://www.prisma.io/) 作為 ORM，schema 位於 prisma/schema.prisma\
 開好資料庫後將相關環境變數設定好，就能執行以下指令
 
-#### 資料庫同步
+#### 資料庫 Schema 同步
 
 ```bash
 npm run dbpush
