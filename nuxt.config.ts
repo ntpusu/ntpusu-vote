@@ -34,6 +34,9 @@ export default defineNuxtConfig({
     app: {
         pageTransition: { name: 'page', mode: 'out-in' },
     },
+    typescript: {
+        typeCheck: true,
+    },
     googleFonts: {
         families: {
             'Noto+Sans+TC': [400, 700],
