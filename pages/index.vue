@@ -55,6 +55,56 @@
 </template>
 
 <script setup lang="ts">
+
+import { RecaptchaV2 } from "vue3-recaptcha-v2";
+
+const handleErrorCalback = () => {
+  console.log("Error callback");
+};
+
+const onSubmit = async(response:any) => {
+  try {
+    console.log('ReCaptcha token:',JSON.stringify({response}));
+
+    const res = await $fetch('/api/recaptchaV2', {
+      method: 'POST',
+      body: JSON.stringify({response})
+    })
+    //.then(res => res.json());
+
+    console.log('Server Response: ', res);
+
+    //await RecaptchaV2.reset();
+  } catch (error) {
+    console.log('Login error:', error);
+  }
+};
+
+// // const handleLoadCallback = async (response:any) => {
+// //   try {
+// //     console.log('ReCaptcha token:',JSON.stringify({response}));
+
+// //     const res = await useFetch('/api/recaptchaV2', {
+// //           method: 'POST',
+// //           body: JSON.stringify({response})
+// //         })
+// //         // await RecaptchaV2.reset()
+// //       } catch (error) {
+// //         console.log('Login error:', error)
+// //       }
+// // };
+// // const onSuccess = (token:any) => {
+// //   console.log('Succeeded:', token);
+// //   onSubmit(token);
+// // };
+
+const handleWidgetId = (widgetId: number) => {
+  console.log("Widget ID: ", widgetId);
+};
+const handleExpiredCallback = () => {
+  console.log("Expired callback");
+};
+
 definePageMeta({
   auth: false,
   title: "首頁",

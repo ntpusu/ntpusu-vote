@@ -7,4 +7,10 @@
       "crypto-js",
     ]
   }
+  // },
+  // "include":[
+  //   "plugins/recaptcha.client.ts",
+  //   //"pages/index.vue",
+  //   //"pages/vote.vue"
+  // ]
 }
