@@ -4,7 +4,11 @@ let baseURL: string = 'http://localhost:3000/api/auth';
 if (process.env.VERCEL) {
     switch (process.env.VERCEL_ENV) {
         case 'production':
-            baseURL = `https://${process.env.VERCEL_GIT_REPO_SLUG}.vercel.app/api/auth`;
+            if (process.env.PRODUCTION_URL) {
+                baseURL = process.env.PRODUCTION_URL;
+            } else {
+                baseURL = `https://${process.env.VERCEL_GIT_REPO_SLUG}.vercel.app/api/auth`;
+            }
             break;
         case 'preview':
             baseURL = `https://${process.env.VERCEL_BRANCH_URL}/api/auth`;
