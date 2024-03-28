@@ -4,99 +4,79 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Voting {
-  id         Int         @id @default(autoincrement())
-  name       String
-  startTime  DateTime
-  endTime    DateTime
-  candidates Candidate[]
-  onlyOne    Boolean
-  archive    Boolean     @default(false)
-
-  groupId Int
-  group   Group @relation(fields: [groupId], references: [id])
-
-  votingFromGroup VotingFromGroup[]
+  id              Int               @id @default(autoincrement())
+  name            String
+  startTime       DateTime
+  endTime         DateTime
+  onlyOne         Boolean
+  archive         Boolean           @default(false)
+  groupId         Int
+  candidates      Candidate[]
+  group           Group             @relation(fields: [groupId], references: [id])
+  VotingFromGroup VotingFromGroup[]
 
   @@unique([groupId, name])
 }
 
 model Candidate {
-  name    String
-  ballots Ballot[]
-
+  name     String
   groupId  Int
   votingId Int
-  voting   Voting @relation(fields: [votingId], references: [id], onDelete: Cascade)
+  ballots  Ballot[]
+  voting   Voting   @relation(fields: [votingId], references: [id], onDelete: Cascade)
 
   @@id([votingId, name])
 }
 
 model Ballot {
-  token String   @id
-  time  DateTime @default(now())
-
+  token         String    @id
+  time          DateTime  @default(now())
   votingId      Int
   candidateName String
   candidate     Candidate @relation(fields: [votingId, candidateName], references: [votingId, name], onDelete: Cascade)
 }
 
 model Voter {
-  id    Int         @id
-  login VoterLogin?
-
-  departmentId Int
-  department   Department @relation(fields: [departmentId], references: [id])
+  id           Int            @id
+  voterInGroup VoterInGroup[]
+  login        VoterLogin?
 }
 
 model VoterLogin {
-  id   Int      @id
-  time DateTime @default(now())
-
-  voterId Int   @unique
-  voter   Voter @relation(fields: [voterId], references: [id], onDelete: Cascade)
-}
-
-model Department {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
-  voters Voter[]
-
-  departmentInGroup DepartmentInGroup[]
+  id      Int      @id
+  time    DateTime @default(now())
+  voterId Int      @unique
+  voter   Voter    @relation(fields: [voterId], references: [id], onDelete: Cascade)
 }
 
 model Group {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  votings           Voting[]
-  departmentInGroup DepartmentInGroup[]
-  votingFromGroup   VotingFromGroup[]
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  voterInGroup    VoterInGroup[]
+  voting          Voting[]
+  VotingFromGroup VotingFromGroup[]
 }
 
-model DepartmentInGroup {
-  departmentId Int
-  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-
+model VoterInGroup {
+  voterId Int
   groupId Int
   group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  voter   Voter @relation(fields: [voterId], references: [id], onDelete: Cascade)
 
   @@id([groupId, departmentId])
 }
 
 model VotingFromGroup {
-  cnt Int @default(0)
-
+  cnt      Int    @default(0)
   votingId Int
+  groupId  Int
+  group    Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
   voting   Voting @relation(fields: [votingId], references: [id], onDelete: Cascade)
-
-  groupId Int
-  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   @@id([votingId, groupId])
 }
