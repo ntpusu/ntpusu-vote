@@ -5,7 +5,7 @@ if (process.env.VERCEL) {
     switch (process.env.VERCEL_ENV) {
         case 'production':
             if (process.env.PRODUCTION_URL) {
-                baseURL = process.env.PRODUCTION_URL;
+                baseURL = process.env.PRODUCTION_URL + '/api/auth';
             } else {
                 baseURL = `https://${process.env.VERCEL_GIT_REPO_SLUG}.vercel.app/api/auth`;
             }
