@@ -1,5 +1,7 @@
 {
+  "name": "ntpusu-vote",
   "private": true,
+  "type": "module",
   "scripts": {
     "postinstall": "nuxt prepare",
     "build": "nuxt build",
@@ -13,7 +15,9 @@
     "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
     "crypto-js": "^4.2.0",
-    "element-plus": "^2.6.2"
+    "element-plus": "^2.6.2",
+    "nuxt": "^3.11.1",
+    "nuxt-security": "^1.2.2"
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.8",
@@ -22,8 +26,6 @@
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@sidebase/nuxt-auth": "^0.7.0",
     "@types/crypto-js": "^4.2.2",
-    "nuxt": "^3.11.1",
-    "nuxt-security": "^1.2.2",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.13",
     "prisma": "^5.11.0",
