@@ -19,7 +19,10 @@
 				"esbenp.prettier-vscode",
 				"Nuxtr.nuxtr-vscode",
 				"Prisma.prisma"
-			]
+			],
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh"
+			}
 		}
 	},
 	"onCreateCommand": "npm install -g npm@latest bun@latest && sudo rm /usr/local/bin/npm /usr/local/bin/npx",

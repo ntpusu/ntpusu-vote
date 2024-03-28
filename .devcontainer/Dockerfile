@@ -13,6 +13,15 @@ RUN \
     bash-completion; \
     apt dist-upgrade -y; \
     rm -rf /var/lib/apt/lists/*; \
+    # Add hilighting support to zsh
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /usr/share/zsh/zsh-syntax-highlighting && \
+    echo "source /usr/share/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZSHRC_PATH}; \
+    # Add suggestions support to zsh
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/share/zsh/zsh-autosuggestions && \
+    echo "source /usr/share/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ${ZSHRC_PATH}; \
+    echo "export ZSH_AUTOSUGGEST_STRATEGY=(history completion)" >> ${ZSHRC_PATH}; \
+    # Add web search plugin
+    echo "source ~/.oh-my-zsh/plugins/web-search/web-search.plugin.zsh" >> ${ZSHRC_PATH}; \
     # Add npm completion
     npm completion >> ${BASH_COMPLETION_DIR}/npm; \
     npm completion >> ${ZSH_COMPLETION_DIR}/_npm; \
