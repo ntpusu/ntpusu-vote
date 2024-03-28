@@ -25,7 +25,7 @@ definePageMeta({
 })
 
 const event = useRequestEvent()
-setResponseStatus(event, 404)
+if (event) setResponseStatus(event, 404)
 
 const countdown = ref(10)
 const timer = () => {

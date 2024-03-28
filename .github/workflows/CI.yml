@@ -1,0 +1,23 @@
+name: CI CHECK
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build app
+        run: bun run build

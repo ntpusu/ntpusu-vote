@@ -224,17 +224,17 @@
                 class="text-center text-xs font-bold tracking-tighter text-stone-700 sm:text-sm sm:tracking-tight md:text-base md:tracking-normal"
             >
                 <span class="max-[400px]:hidden">
-                    Design by
+                    Made by
                     <NuxtLink
-                        to="https://github.com/garyellow"
+                        to="https://github.com/ntpusu/ntpusu-vote/graphs/contributors"
                         class="font-bold hover:text-stone-600 hover:underline"
                         target="_blank"
-                        >garyellow</NuxtLink
+                        >contributors</NuxtLink
                     >
                     |
                 </span>
                 <NuxtLink
-                    to="https://github.com/garyellow/ntpusu-vote-2023"
+                    to="https://github.com/ntpusu/ntpusu-vote"
                     class="font-bold hover:text-stone-600 hover:underline"
                     target="_blank"
                     >Open Source</NuxtLink
@@ -439,7 +439,7 @@ const { data: realCnt } = await useFetch('/api/getLoginCnt', {
     },
 })
 
-onMounted(() => {
+onBeforeMount(() => {
     checkLogin()
 })
 </script>

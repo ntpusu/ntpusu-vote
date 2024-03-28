@@ -41,7 +41,7 @@
                     v-else
                     class="pb-6 text-xl font-bold sm:text-2xl md:text-3xl"
                 >
-                    候 選 人
+                    選 舉 結 果
                 </h1>
                 <ElSpace
                     class="justify-center"
@@ -96,11 +96,7 @@
                     </template>
                     <template v-else>
                         <ElCard
-                            v-for="(
-                                candidate, index
-                            ) in voting.candidates.slice(
-                                voting.onlyOne ? 1 : 0,
-                            )"
+                            v-for="(candidate, index) in voting.candidates"
                             shadow="hover"
                             :key="index"
                             class="max-w-[12rem] md:max-w-[15rem] xl:max-w-[18rem]"
@@ -222,7 +218,7 @@ const checkData = () => {
     }, 250)
 }
 
-onMounted(() => {
+onBeforeMount(() => {
     checkData()
 })
 
