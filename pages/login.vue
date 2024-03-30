@@ -11,17 +11,17 @@
             </template>
             <div class="flex w-full flex-col">
                 <NuxtImg
-                    src="/login/btn_google_normal.png"
+                    src="/login/google.png"
                     format="png"
                     preload
                     class="m-auto my-2 w-64 cursor-pointer sm:w-72"
                     @click="signIn('google', { callbackUrl: '/vote' })"
                 />
                 <NuxtImg
-                    src="/login/ms-symbollockup.svg"
+                    src="/login/microsoft.svg"
                     format="svg"
                     preload
-                    class="m-auto my-2 w-[250px] cursor-pointer sm:w-[280px]"
+                    class="m-auto my-2 w-64 cursor-pointer sm:w-72"
                     @click="signIn('azure-ad', { callbackUrl: '/vote' })"
                 />
                 <span class="m-auto pt-5 text-sm text-gray-600">

@@ -292,6 +292,7 @@
 import { SpeedInsights } from '@vercel/speed-insights/vue'
 
 const route = useRoute()
+const url = useRuntimeConfig().public.productionUrl as string
 
 useSeoMeta({
     title: '學生會投票網站',
@@ -305,11 +306,11 @@ useSeoMeta({
     },
     ogSiteName: '國立臺北大學三峽校區學生會投票網站',
     ogType: 'website',
-    ogUrl: 'https://ntpusu-vote.vercel.app/',
-    ogImage: 'https://ntpusu-vote.vercel.app/favicon.ico',
+    ogUrl: url,
+    ogImage: url + '/ntpusu.jpg',
     ogImageAlt: '國立臺北大學三峽校區學生會的標誌',
-    ogImageType: 'image/png',
-    ogImageSecureUrl: 'https://ntpusu-vote.vercel.app/',
+    ogImageType: 'image/jpg',
+    ogImageSecureUrl: url,
     ogLocale: 'zh_TW',
     ogLocaleAlternate: 'zh_TW',
     author: '國立臺北大學三峽校區學生會',
@@ -319,7 +320,7 @@ useSeoMeta({
     twitterDescription() {
         return `${route.meta.title} | 國立臺北大學三峽校區學生會投票網站`
     },
-    twitterImage: 'https://ntpusu-vote.vercel.app/favicon.ico',
+    twitterImage: url + '/ntpusu.jpg',
     twitterImageAlt: '國立臺北大學三峽校區學生會的標誌',
     twitterCard: 'summary',
 })

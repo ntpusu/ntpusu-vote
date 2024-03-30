@@ -21,7 +21,7 @@ if (process.env.VERCEL) {
 export default defineNuxtConfig({
     runtimeConfig: {
         public: {
-            // You can also define runtime config here
+            productionUrl: process.env.PRODUCTION_URL,
         },
     },
     modules: [
