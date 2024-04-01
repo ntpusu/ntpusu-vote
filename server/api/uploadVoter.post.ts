@@ -35,23 +35,48 @@ export default defineEventHandler(async (event) => {
     let voter_workbook = XLSX.read(file)
     let name = voter_workbook.SheetNames[0]
     let voter_sheet = voter_workbook.Sheets[voter_workbook.SheetNames[0]]
-    const voter_table : any[][] = XLSX.utils.sheet_to_json(voter_sheet, { header: 1 })
+    const voter_table: any[][] = XLSX.utils.sheet_to_json(voter_sheet, { header: 1 })
+    
+    let failAddingVoter: {
+        id: number,
+        name: string,
+        department: string,
+    }[] = [];
     
     for (let i = 1; i < voter_table.length; i++) {
         const studentId = voter_table[i][0] as number
         const studentName = voter_table[i][1] as string
         const studentDepartment = (voter_table[i][2] as string).replace(/\d[AB]?/, "")
-        await prisma.Voter.upsert({
+        const departmentId = (await prisma.department.findUniqueOrThrow({
             where: {
-                id: studentId,
             },
-            update: {},
-            create: {
-                id: studentId,
-                //voterInGroup: 
+                name: studentDepartment,
+            select: {
+                id: true,
             },
-        })
+        }))!
+        if (department !== null) {
+            await prisma.voter.upsert({
+                where: {
+                    id: studentId,
+                },
+                update: {
+                    departmentId: department.id,
+                },
+                create: {
+                    id: studentId,
+                    departmentId: department.id,
+                },
+            })
+        }
+        else {
+            failAddingVoter.push({
+                id: studentId,
+                name: studentName,
+                department: studentDepartment,
+            })
+        }
     }
 
-    return {}
+    return failAddingVoter;
 })

@@ -15,7 +15,7 @@
             <el-button type="primary">選擇檔案</el-button>
         </template>
     
-        <el-button class="ml-3" type="success" @click="uploadDialogVisible = true">
+        <el-button class="ml-3" type="success" @click="uploadSubmit">
             上傳至伺服器端
         </el-button>
     
@@ -26,33 +26,25 @@
         </template>
         </el-upload>
         <el-text class="mx-1" size="large">目前系統內已有{{voterCount}}筆投票者資料</el-text>
-
-        <el-dialog
-            v-model="uploadDialogVisible"
-            title="設定上傳模式"
-            width="500"
-            align-center
-        >
-        <el-select
-            v-model="seletingUploadMode"
-            placeholder="新增"
-            size="large"
-            style="width: 240px"
-        >
-            <el-option
-                v-for="item in uploadModes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-            />
-        </el-select>
         <br>
+        <br>
+        <el-button type="danger" round @click="deleteAllVoterDialogVisible = true">
+            刪除所有投票者資料
+        </el-button>
+        <el-dialog
+            v-model="deleteAllVoterDialogVisible"
+            title="確認要刪除所有投票者嗎?"
+            width="500"
+        >
+            <span>刪除後將無法復原</span>
+            <template #footer>
             <div class="dialog-footer">
-                <el-button @click="uploadDialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="uploadSubmit">
-                    確認上傳
+                <el-button @click="deleteAllVoterDialogVisible = false">取消</el-button>
+                <el-button type="danger" @click="deleteAllVoter">
+                    確認刪除
                 </el-button>
             </div>
+            </template>
         </el-dialog>
         <br>
         <br>
@@ -121,24 +113,13 @@ import type { UploadInstance, ElMessageBox } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 
 const dataChangedialogVisible = ref(false)
-const uploadDialogVisible = ref(false)
+const deleteAllVoterDialogVisible = ref(false)
 const queryInput = ref('')
 const modifydepartmentInput = ref('')
 const studentIdStatus = ref(0) /* 0: no input, 1 : not found, 2 : found data */
-const seletingUploadMode = ref('')
 const addNewStudentIdInput = ref('')
 const addNewDepartmentInput = ref('')
 let queryInputData = ''
-const uploadModes = [
-  {
-    value: 'override',
-    label: '覆蓋現有全部資料',
-  },
-  {
-    value: 'add',
-    label: '新增',
-  },
-]
 
 const voterData: Ref<{
     id: number
@@ -173,11 +154,6 @@ const uploadfunc = async (item : any) => {
         uploadRef.value!.clearFiles()
         return false
     }
-    if (seletingUploadMode.value == 'override') {
-        await useFetch('/api/delAllVoter', {
-            method: 'DELETE',
-        })
-    }
     let formData = new FormData()
 
     formData.append("file", file)
@@ -207,13 +183,36 @@ const queryStudentData = async() => {
         studentIdStatus.value = 1;
         return;
     }
+    const t = res.data.value
     voterData.value = res.data.value
     queryInputData = queryInput.value
     studentIdStatus.value = 2;
 }
 
-const midifyDepartment = async () => {
+const modifyDepartment = async () => {
+    await useFetch('/api/modifyVoter', {
+        method: 'POST',
+        body: {
+            voterId: parseInt(queryInputData),
+            voterDepartment: addNewDepartmentInput.value,
+        },
+    })
+}
 
+const deleteAllVoter = async () => {
+    const {
+        error: delAllVoterError,
+    } = await useFetch('/api/delAllVoter', {
+        method: 'DELETE',
+    })
+    deleteAllVoterDialogVisible.value = false
+    voterCountRefresh()
+    if (delAllVoterError.value) {
+        ElMessage('刪除成功')
+    }
+    else {
+        ElMessage.error('刪除失敗')
+    }
 }
 
 const deleteVoterData = async () => {
@@ -233,13 +232,12 @@ const deleteVoterData = async () => {
 
 const uploadSubmit = async () => {
     submitUpload();
-    uploadDialogVisible.value = false;
 }
 
 const addNewVoter = async () => {
     const addNewStudentId = addNewStudentIdInput.value;
     const addNewDepartment = addNewDepartmentInput.value;
-    if(addNewStudentId.length !== 9) {
+    if(addNewStudentId.length !== 9 || isNaN(parseInt(addNewStudentId))) {
         throw createError
     }
     await useFetch('api/addVoter', {
@@ -251,5 +249,5 @@ const addNewVoter = async () => {
     }) 
 }
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 </script>
