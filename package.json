@@ -16,7 +16,7 @@
     "@vercel/speed-insights": "^1.0.10",
     "@popperjs/core": "npm:@sxzz/popperjs-es@^2.11.7",
     "crypto-js": "^4.2.0",
-    "element-plus": "^2.6.2",
+    "element-plus": "^2.6.3",
     "nuxt": "^3.11.1",
     "nuxt-security": "^1.2.2"
   },
