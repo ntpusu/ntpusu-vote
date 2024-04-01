@@ -61,6 +61,20 @@
         </el-dialog>
         <br>
         <br>
+
+        <el-dialog
+            v-model="dataChangedialogVisible"
+            title="更動頁面"
+            width="500"
+        >
+            <template #footer>
+            <div class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">
+                    關閉頁面
+                </el-button>
+            </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -132,17 +146,13 @@ const uploadfunc = async (item) => {
 
     //3. add api_upload  ok
     const {
-        error: uploadingFileStatus,
+        data: uploadingFileStatus,
     } = await useFetch('/api/uploadGroup', {
             method: 'POST',
             body: formData,
         })
-    if(uploadingFileStatus.value){
-        ElMessage.error('上傳失敗')
-    }else{
-        ElMessage.success('上傳成功')
-    }
     //console.log(uploadingFileName)
+    ElMessage.success('上傳成功' + " " + uploadingFileStatus)
     electorCountRefresh()
     uploadRef.value!.clearFiles()
 }
