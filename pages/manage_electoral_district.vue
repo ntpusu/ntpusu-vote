@@ -120,7 +120,7 @@ const {
     data: electorCount,
     //pending: adminPending,
     refresh: electorCountRefresh,
-} = await useLazyFetch('/api/getAllElectorCnt')
+} = await useLazyFetch('/api/getGroupCnt')
 //1. add api_getAllElectorCnt
 
 //const t = await useLazyFetch('/api/getAllVoter')
