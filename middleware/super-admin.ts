@@ -1,8 +1,8 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
     if (process.client) {
-        const { data: admin } = await useFetch('/api/checkSuperAdmin')
+        const isSuperAdmin = await $fetch('/api/checkSuperAdmin')
 
-        if (!admin) {
+        if (!isSuperAdmin) {
             return await navigateTo('/404')
         }
     }
