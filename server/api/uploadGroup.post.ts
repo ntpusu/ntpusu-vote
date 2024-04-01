@@ -55,14 +55,14 @@ export default defineEventHandler(async (event) => {
         await prisma.Group.upsert({
             where: {
                 name: Group_Name,
-                voterInGroup: Small_Group,
-                VotingFromGroup: VotingFromGroup,
+                //voterInGroup: Small_Group,
+                //VotingFromGroup: VotingFromGroup,
             },
             update: {},
             create: {
                 name: Group_Name,
-                voterInGroup: Small_Group,
-                VotingFromGroup: VotingFromGroup,
+                //voterInGroup: Small_Group,
+                //VotingFromGroup: VotingFromGroup,
             },
         })
     }
