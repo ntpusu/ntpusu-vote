@@ -33,12 +33,7 @@
         <!-- 顯示目前系統內的資料筆數 -->
         <el-text class="mx-1" size="large">目前系統內有{{electorCount}}筆資料</el-text>
         <!-- 列出所有選區 -->
-        <el-table
-        >
-        </el-table>
-        :data="GroupData ? [GroupData] : []"
-        style="width: 100%"
-        >
+        <el-table>
         <el-table-column
             prop="id"
             label="選區編號"
@@ -49,7 +44,7 @@
             label="選區名稱"
             width="100"
         ></el-table-column>
-        
+        </el-table>
     <el-dialog
             v-model="uploadDialogVisible"
             title="設定上傳模式"
@@ -124,7 +119,7 @@ const submitUpload = () => {
 const {
     data: electorCount,
     //pending: adminPending,
-    refresh: electorCountRefresh,
+    refresh: electorCountRefresh,    
 } = await useLazyFetch('/api/getGroupCnt')
 //1. add api_getAllElectorCnt
 
@@ -169,7 +164,7 @@ const uploadfunc = async (item) => {
 const queryStudentData = async() => {
     const res = await useFetch('/api/getGroup', {
         method: 'GET',
-        query: { voter: parseInt(queryInput.value)},
+        query: { group: parseInt(queryInput.value)},
     })
     if (res.error.value) {
         groupIdStatus.value = 1;
@@ -184,7 +179,7 @@ const midifyDepartment = async () => {
 
 }
 //5. add api_delgroup
-const deleteVoterData = async () => {
+const deleteGroupData = async () => {
     await useFetch('/api/delgroup', {
         method: 'DELETE',
         query: { id: queryInputData },

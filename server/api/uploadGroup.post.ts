@@ -48,25 +48,30 @@ export default defineEventHandler(async (event) => {
     let group_sheet = group_workbook.Sheets[group_workbook.SheetNames[0]]
     const group_table : any[][] = XLSX.utils.sheet_to_json(group_sheet, { header: 1 })
     
+    const data = []
     for (let i = 1; i < group_table.length; i++) {
         const Group_Name = group_table[i][0] as string
-        const Small_Group = group_table[i][1] as string
-        const VotingFromGroup = group_table[i][2] as string
-        await prisma.Group.upsert({
-            where: {
-                id: i,
-                name: Group_Name,
-                //voterInGroup: Small_Group,
-                //VotingFromGroup: VotingFromGroup,
-            },
-            update: {},
-            create: {
-                name: Group_Name,
-                //voterInGroup: Small_Group,
-                //VotingFromGroup: VotingFromGroup,
-            },
-        })
+        const Group = group_table[i].slice(1,4) as string[]
+
+        data.push({ Group_Name}) 
     }
+
+    await prisma.group.createMany({
+        data: [
+            {
+                name: "Group_Name",
+            },
+        ],
+        // where: {
+        //     id: i,
+        //     name: Group_Name,
+        // },
+        // update: {},
+        // create: {
+        //     name: Group_Name,
+        // },
+    })
+    await prisma
 
     return await {}
 })
