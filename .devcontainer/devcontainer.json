@@ -4,7 +4,7 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			"OH_MY_POSH": "0" // Requires Nerd fonts(https://www.nerdfonts.com/font-downloads), set to 1 to enable
+			"OH_MY_POSH": "1" // Requires Nerd fonts(https://www.nerdfonts.com/font-downloads), set to 1 to enable
 		}
 	},
 	"mounts": [
