@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.8",
-    "@nuxt/devtools": "^1.1.4",
+    "@nuxt/devtools": "^1.1.5",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@sidebase/nuxt-auth": "^0.7.0",
