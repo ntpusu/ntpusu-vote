@@ -48,29 +48,60 @@ export default defineEventHandler(async (event) => {
     let group_sheet = group_workbook.Sheets[group_workbook.SheetNames[0]]
     const group_table : any[][] = XLSX.utils.sheet_to_json(group_sheet, { header: 1 })
     
-    const data = []
+    //const data = []
+    let allGroups: string[] = []
     for (let i = 1; i < group_table.length; i++) {
-        const Group_Name = group_table[i][0] as string
+        //const Department_Name = group_table[i][0] as string
         const Group = group_table[i].slice(1,4) as string[]
 
-        data.push({ Group_Name}) 
+        //data.push({ Group_Name})
+        allGroups.concat(Group)
     }
 
+    allGroups = Array.from(new Set(allGroups))
     await prisma.group.createMany({
-        data: [
-            {
-                name: "Group_Name",
-            },
-        ],
-        // where: {
-        //     id: i,
-        //     name: Group_Name,
-        // },
-        // update: {},
-        // create: {
-        //     name: Group_Name,
-        // },
+        data: allGroups.map((group) => {
+            return {
+                name: group,
+            }
+        }),
     })
+
+    for (let i = 1; i < group_table.length; i++) {
+        const department = group_table[i][0] as string
+        const groups = group_table[i].slice(1,4) as string[]
+
+        await prisma.department.create({
+            data: {
+                name: department,
+                departmentInGroup: {
+                    create:[
+                        {
+                            group: {
+                                connect: {
+                                    name: groups[0],
+                                }
+                            }
+                        },
+                        {
+                            group: {
+                                connect: {
+                                    name: groups[1],
+                                }
+                            }
+                        },
+                        {
+                            group: {
+                                connect: {
+                                    name: groups[2],
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        })
+    }
     await prisma
 
     return await {}
