@@ -32,6 +32,22 @@
         </el-upload>
         <!-- 顯示目前系統內的資料筆數 -->
         <el-text class="mx-1" size="large">目前系統內有{{electorCount}}筆資料</el-text>
+        <!-- 搜尋選區 -->
+        <el-input
+        v-model="queryInput"
+        placeholder="請輸入選區編號"
+        class="mx-1"
+        style="width: 200px"
+        >
+        <el-button
+            slot="append"
+            icon="el-icon-search"
+            @click="queryStudentData"
+        ></el-button>
+        </el-input>
+        <!-- 顯示搜尋結果 -->
+        <el-text v-if="groupIdStatus === 1" class="mx-1" size="large">找不到資料</el-text>
+        <el-text v-if="groupIdStatus === 2" class="mx-1" size="large">選區編號: {{GroupData?.Int}}</el-text>
     <el-dialog
             v-model="uploadDialogVisible"
             title="設定上傳模式"
@@ -74,7 +90,7 @@ const dataChangedialogVisible = ref(false)
 const uploadDialogVisible = ref(false)
 const queryInput = ref('')
 const modifydepartmentInput = ref('')
-const studentIdStatus = ref(0) /* 0: no input, 1 : not found, 2 : found data */
+const groupIdStatus = ref(0) /* 0: no input, 1 : not found, 2 : found data */
 const seletingUploadMode = ref('')
 let queryInputData = ''
 
@@ -153,12 +169,12 @@ const queryStudentData = async() => {
         query: { voter: parseInt(queryInput.value)},
     })
     if (res.error.value) {
-        studentIdStatus.value = 1;
+        groupIdStatus.value = 1;
         return;
     }
-    voterData.value = res.data.value
+    GroupData.value = res.data.value
     queryInputData = queryInput.value
-    studentIdStatus.value = 2;
+    groupIdStatus.value = 2;
 }
 
 const midifyDepartment = async () => {
@@ -175,7 +191,7 @@ const deleteVoterData = async () => {
         })
         .finally(() => {
             queryInput.value = ''
-            studentIdStatus.value = 0
+            groupIdStatus.value = 0
             electorCountRefresh()
         })
 }
