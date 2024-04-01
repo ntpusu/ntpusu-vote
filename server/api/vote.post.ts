@@ -39,9 +39,13 @@ export default defineEventHandler(async (event) => {
     const voter = await prisma.voter.findUnique({
         where: { id: studentId },
         select: {
-            voterInGroup: {
+            department: {
                 select: {
-                    groupId: true,
+                    departmentInGroup: {
+                        select: {
+                            groupId: true,
+                        },
+                    },
                 },
             },
         },
@@ -78,7 +82,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const voterGroups = voter.voterInGroup.map(v => v.groupId)
+    const voterGroups = voter.department.departmentInGroup.map(v => v.groupId)
 
     if (!voterGroups.includes(voting.groupId)) {
         throw createError({

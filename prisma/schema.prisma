@@ -20,7 +20,7 @@ model Voting {
   groupId Int
   group   Group @relation(fields: [groupId], references: [id])
 
-  VotingFromGroup VotingFromGroup[]
+  votingFromGroup VotingFromGroup[]
 
   @@unique([groupId, name])
 }
@@ -49,7 +49,8 @@ model Voter {
   id    Int         @id
   login VoterLogin?
 
-  voterInGroup VoterInGroup[]
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id])
 }
 
 model VoterLogin {
@@ -60,25 +61,32 @@ model VoterLogin {
   voter   Voter @relation(fields: [voterId], references: [id], onDelete: Cascade)
 }
 
-model Group {
+model Department {
   id   Int    @id @default(autoincrement())
   name String @unique
 
-  voterInGroup VoterInGroup[]
+  voters Voter[]
 
-  voting Voting[]
-
-  VotingFromGroup VotingFromGroup[]
+  departmentInGroup DepartmentInGroup[]
 }
 
-model VoterInGroup {
-  voterId Int
-  voter   Voter @relation(fields: [voterId], references: [id], onDelete: Cascade)
+model Group {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  votings           Voting[]
+  departmentInGroup DepartmentInGroup[]
+  votingFromGroup   VotingFromGroup[]
+}
+
+model DepartmentInGroup {
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
 
   groupId Int
   group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
-  @@id([voterId, groupId])
+  @@id([groupId, departmentId])
 }
 
 model VotingFromGroup {

@@ -68,11 +68,15 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!admin) {
-        const VIG = await prisma.voterInGroup.findUnique({
+        const VIG = await prisma.voter.findUnique({
             where: {
-                voterId_groupId: {
-                    voterId: studentId,
-                    groupId: voting.groupId,
+                id: studentId,
+                department: {
+                    departmentInGroup: {
+                        some: {
+                            groupId: voting.groupId,
+                        },
+                    },
                 },
             },
             select: null,
