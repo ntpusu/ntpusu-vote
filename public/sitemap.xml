@@ -2,12 +2,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <url>
-        <loc>https://ntpusu-vote.vercel.app/</loc>
+        <loc>https://ntpusu-vote-2024.vercel.app/</loc>
         <lastmod>2023-04-15T15:08:03+00:00</lastmod>
         <priority>1.00</priority>
     </url>
     <url>
-        <loc>https://ntpusu-vote.vercel.app/api/auth/signin?callbackUrl=%2Fvote</loc>
+        <loc>https://ntpusu-vote-2024.vercel.app/api/auth/signin?callbackUrl=%2Fvote</loc>
         <lastmod>2023-04-15T15:08:03+00:00</lastmod>
         <priority>0.80</priority>
     </url>
