@@ -18,9 +18,13 @@ export default defineEventHandler(async (event) => {
     const voter = await prisma.voter.findUnique({
         where: { id: studentId },
         select: {
-            voterInGroup: {
+            department: {
                 select: {
-                    groupId: true,
+                    departmentInGroup: {
+                        select: {
+                            groupId: true,
+                        },
+                    },
                 },
             },
         },
@@ -34,7 +38,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const groupIds = voter.voterInGroup.map((item) => item.groupId)
+    const groupIds = voter.department.departmentInGroup.map((item) => item.groupId)
 
     const voting = await prisma.voting.findMany({
         where: {

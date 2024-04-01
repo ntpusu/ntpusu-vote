@@ -48,11 +48,15 @@ export default defineEventHandler(async (event) => {
                     time: true,
                 },
             },
-            voterInGroup: {
+            department: {
                 select: {
-                    group: {
+                    departmentInGroup: {
                         select: {
-                            name: true,
+                            group: {
+                                select: {
+                                    name: true,
+                                },
+                            },
                         },
                     },
                 },
@@ -61,7 +65,7 @@ export default defineEventHandler(async (event) => {
     })
 
     let group = ''
-    for (const i of item.voterInGroup) {
+    for (const i of item.department.departmentInGroup) {
         group += i.group.name + ', '
     }
 
