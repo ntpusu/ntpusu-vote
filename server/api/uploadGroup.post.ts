@@ -54,6 +54,7 @@ export default defineEventHandler(async (event) => {
         const VotingFromGroup = group_table[i][2] as string
         await prisma.Group.upsert({
             where: {
+                id: i,
                 name: Group_Name,
                 //voterInGroup: Small_Group,
                 //VotingFromGroup: VotingFromGroup,

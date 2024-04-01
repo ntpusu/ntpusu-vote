@@ -32,22 +32,24 @@
         </el-upload>
         <!-- 顯示目前系統內的資料筆數 -->
         <el-text class="mx-1" size="large">目前系統內有{{electorCount}}筆資料</el-text>
-        <!-- 搜尋選區 -->
-        <el-input
-        v-model="queryInput"
-        placeholder="請輸入選區編號"
-        class="mx-1"
-        style="width: 200px"
+        <!-- 列出所有選區 -->
+        <el-table
         >
-        <el-button
-            slot="append"
-            icon="el-icon-search"
-            @click="queryStudentData"
-        ></el-button>
-        </el-input>
-        <!-- 顯示搜尋結果 -->
-        <el-text v-if="groupIdStatus === 1" class="mx-1" size="large">找不到資料</el-text>
-        <el-text v-if="groupIdStatus === 2" class="mx-1" size="large">選區編號: {{GroupData?.Int}}</el-text>
+        </el-table>
+        :data="GroupData ? [GroupData] : []"
+        style="width: 100%"
+        >
+        <el-table-column
+            prop="id"
+            label="選區編號"
+            width="100"
+        ></el-table-column>
+        <el-table-column
+            prop="name"
+            label="選區名稱"
+            width="100"
+        ></el-table-column>
+        
     <el-dialog
             v-model="uploadDialogVisible"
             title="設定上傳模式"
@@ -97,6 +99,7 @@ let queryInputData = ''
 const GroupData: Ref<{
     id: number
     Int: number
+    name: string
     first: {
         serNum: number | null
         time: number | null
