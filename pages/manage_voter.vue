@@ -71,10 +71,20 @@
                     新增資料
                 </el-text>
                 <br>
+                <!--
                 <el-text class="mx-1" size="large">
                     系別&nbsp :&nbsp
                 </el-text>
                 <el-input v-model="addNewDepartmentInput" style="width: 240px" size="small" placeholder="請輸入欲新增系別" />
+                -->
+                <el-autocomplete
+                    v-model="addNewDepartmentInput"
+                    :fetch-suggestions="queryAllDepartment"
+                    clearable
+                    class="inline-input w-50"
+                    placeholder="請輸入欲新增系別"
+                    value-key="name"
+                />
                 <br>
                 <br>
                 <el-button plain @click="addNewVoter">
@@ -85,7 +95,17 @@
                 <el-text class="mx-1" size="large">
                     系別&nbsp : &nbsp{{voterData!.group}}  &nbsp&nbsp
                 </el-text>
+                <!--
                 <el-input v-model="modifydepartmentInput" style="width: 240px" size="small" placeholder="請輸入改動後系別" />
+                -->
+                <el-autocomplete
+                    v-model="modifydepartmentInput"
+                    :fetch-suggestions="queryAllDepartment"
+                    clearable
+                    class="inline-input w-50"
+                    placeholder="請輸入改動後系別"
+                    value-key="name"
+                />
                 <el-button size="small" @click="modifyDepartment">修改</el-button>
                 <br>
                 <br>
@@ -94,7 +114,7 @@
             </div>
             <template #footer>
             <div class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible = false">
+                <el-button type="primary" @click="dataChangedialogVisible = false">
                     關閉頁面
                 </el-button>
             </div>
@@ -108,7 +128,7 @@
 
 <script setup lang="ts">
 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import type { UploadInstance, ElMessageBox } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 
@@ -117,16 +137,15 @@ const deleteAllVoterDialogVisible = ref(false)
 const queryInput = ref('')
 const modifydepartmentInput = ref('')
 const studentIdStatus = ref(0) /* 0: no input, 1 : not found, 2 : found data */
-const addNewStudentIdInput = ref('')
 const addNewDepartmentInput = ref('')
-let queryInputData = ''
+const queryInputData = ref('')
 
 const voterData: Ref<{
     id: number
     group: string
     first: {
-        serNum: number | null
-        time: string | null
+        serNum: number | undefined
+        time: string | undefined
     }
 } | null> = ref(null)
 
@@ -146,6 +165,7 @@ const {
     refresh: voterCountRefresh,
 } = await useLazyFetch('/api/getVoterCnt')
 
+
 const uploadfunc = async (item : any) => {
     const file = item.file as File
     const fileType = file.name.substring(file.name.lastIndexOf('.'))
@@ -158,6 +178,7 @@ const uploadfunc = async (item : any) => {
 
     formData.append("file", file)
     const {
+        data:  failAddingVoter,
         error: uploadingFileError,
     } = await useFetch('/api/uploadVoter', {
             method: 'POST',
@@ -165,16 +186,33 @@ const uploadfunc = async (item : any) => {
         })
 
     if (uploadingFileError.value) {
-        ElMessage('上傳失敗')
+        ElMessage.error('上傳失敗')
     }
     else {
-        ElMessage('上傳成功')
+        ElMessage.success('上傳成功')
     }
+
+    if (failAddingVoter.value && failAddingVoter.value.length != 0) {
+        let errorMessage = '無法新增以下投票者<br>'
+        for (let i = 0; i < failAddingVoter.value.length; i++) {
+            errorMessage += `學號:${failAddingVoter.value[i].id} 姓名:${failAddingVoter.value[i].name} 系別:${failAddingVoter.value[i].department} <br>`
+        }
+        ElMessage({
+            dangerouslyUseHTMLString: true,
+            showClose: true,
+            message: errorMessage, //'無法新增以下投票者' + (failAddingVoter.value as failAddingVoterType[]).toString(),
+            type: 'warning',
+            duration: 0,
+        })
+    }
+
+
     voterCountRefresh()
     uploadRef.value!.clearFiles()
 }
 
 const queryStudentData = async() => {
+    queryInputData.value = queryInput.value
     const res = await useFetch('/api/getVoter', {
         method: 'GET',
         query: { voter: parseInt(queryInput.value)},
@@ -183,20 +221,26 @@ const queryStudentData = async() => {
         studentIdStatus.value = 1;
         return;
     }
-    const t = res.data.value
     voterData.value = res.data.value
-    queryInputData = queryInput.value
     studentIdStatus.value = 2;
 }
 
 const modifyDepartment = async () => {
-    await useFetch('/api/modifyVoter', {
+    const {
+        error: modifyDepartmentError,
+    } = await useFetch('/api/modifyVoter', {
         method: 'POST',
         body: {
-            voterId: parseInt(queryInputData),
-            voterDepartment: addNewDepartmentInput.value,
+            voterId: parseInt(queryInputData.value),
+            voterDepartment: modifydepartmentInput.value,
         },
     })
+    if (modifyDepartmentError.value) {
+        ElMessage.error('修改失敗')
+    }
+    else {
+        ElMessage.success('修改成功')
+    }
 }
 
 const deleteAllVoter = async () => {
@@ -208,26 +252,30 @@ const deleteAllVoter = async () => {
     deleteAllVoterDialogVisible.value = false
     voterCountRefresh()
     if (delAllVoterError.value) {
-        ElMessage('刪除成功')
+        ElMessage.error('刪除失敗')
     }
     else {
-        ElMessage.error('刪除失敗')
+        ElMessage.success('刪除成功')
     }
 }
 
 const deleteVoterData = async () => {
-    await useFetch('/api/delVoter', {
+    const {
+        error: deleteVoterError,
+    } = await useFetch('/api/delVoter', {
         method: 'DELETE',
         query: { id: queryInputData },
     })
-        .catch(() => {
-            ElMessage.error('刪除失敗')
-        })
-        .finally(() => {
-            queryInput.value = ''
-            studentIdStatus.value = 0
-            voterCountRefresh()
-        })
+    queryInput.value = ''
+    studentIdStatus.value = 0
+    voterCountRefresh()
+
+    if (deleteVoterError.value) {
+        ElMessage.error('刪除失敗')
+    }
+    else {
+        ElMessage.success('刪除成功')
+    }
 }
 
 const uploadSubmit = async () => {
@@ -235,19 +283,60 @@ const uploadSubmit = async () => {
 }
 
 const addNewVoter = async () => {
-    const addNewStudentId = addNewStudentIdInput.value;
+    const addNewStudentId = queryInputData;
     const addNewDepartment = addNewDepartmentInput.value;
-    if(addNewStudentId.length !== 9 || isNaN(parseInt(addNewStudentId))) {
-        throw createError
-    }
-    await useFetch('api/addVoter', {
+    const {
+        error: addNewVoterError,
+    } = await useFetch('api/addVoter', {
         method: 'PUT',
         query: { 
-            id: parseInt(addNewStudentId),
+            id: addNewStudentId,
             department: addNewDepartment,
         },
-    }) 
+    })
+    if (addNewVoterError.value) {
+        ElMessage.error('新增失敗')
+    }
+    else {
+        ElMessage.success('新增成功')
+    }
+}
+/**************** */
+interface Department {
+    id: number,
+    name: string,
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+const departmentList = ref<Department[]>([])
+
+const queryAllDepartment = (queryString: string, cb: any) => {
+    const results = queryString
+        ? departmentList.value.filter(createFilter(queryString))
+        : departmentList.value
+    // call callback function to return suggestions
+    cb(results)
+}
+
+const createFilter = (queryString: string) => {
+    return (department: Department) => {
+        return (
+            department.name.indexOf(queryString) === 0
+        )
+    }
+}
+
+onMounted(async () => {
+    departmentList.value = await loadAll()
+})
+
+const loadAll = async () => {
+    const {
+        data: departments,
+    } = await useFetch('/api/getAllDepartment', {
+        method: 'GET',
+    })
+    return departments.value!
+}
+/************** */
+
 </script>
