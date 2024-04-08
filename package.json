@@ -17,7 +17,7 @@
     "@popperjs/core": "npm:@sxzz/popperjs-es@^2.11.7",
     "crypto-js": "^4.2.0",
     "element-plus": "^2.6.2",
-    "nuxt": "^3.11.1",
+    "nuxt": "^3.11.2",
     "nuxt-security": "^1.2.2"
   },
   "devDependencies": {
