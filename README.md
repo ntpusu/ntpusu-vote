@@ -15,13 +15,9 @@ https://ntpusu-vote.vercel.app/
 
 ## 開發
 
-使用 npm 或 bun 進行安裝，推薦使用 bun
+使用 [bun](https://bun.sh/) 進行安裝、開發、編譯等操作
 
 ### 安裝
-
-```bash
-npm install
-```
 
 ```bash
 bun install
@@ -30,18 +26,10 @@ bun install
 ### 開發
 
 ```bash
-npm run dev
-```
-
-```bash
 bun dev
 ```
 
 ### 編譯
-
-```bash
-npm run build
-```
 
 ```bash
 bun run build
@@ -59,18 +47,10 @@ bun run build
 #### 資料庫 Schema 同步
 
 ```bash
-npm run dbpush
-```
-
-```bash
 bun dbpush
 ```
 
 #### 資料庫預覽
-
-```bash
-npm run db
-```
 
 ```bash
 bun db
@@ -94,12 +74,9 @@ git update-index --no-skip-worktree .devcontainer/devcontainer.json
 
 #### 權限相關問題
 
-若執行上述 npm 或 bun 指令時，出現權限不足的問題，可以使用 sudo 進行執行
+若執行 bun 相關指令時，出現權限不足的問題，可以使用 sudo 進行執行
 
 #### 例子
-```bash
-sudo npm install
-```
 
 ```bash
 sudo bun install
