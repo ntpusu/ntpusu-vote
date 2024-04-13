@@ -3,10 +3,10 @@
     <ElCard class="m-auto w-full sm:w-5/6 md:w-3/4 lg:w-1/2 xl:w-1/3">
       <template #header>
         <ElPageHeader
-          @back="useRouter().push('/')"
           title="回首頁"
           content="登入"
           class="font-bold"
+          @back="useRouter().push('/')"
         />
       </template>
       <div class="flex w-full flex-col">

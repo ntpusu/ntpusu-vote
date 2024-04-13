@@ -114,7 +114,7 @@
             placeholder="請選擇投票項目"
             clearable
           >
-            <el-option
+            <ElOption
               v-for="item in voting"
               :key="item.id"
               :label="item.name"
@@ -133,7 +133,7 @@
             placeholder="請選擇投票範圍"
             clearable
           >
-            <el-option
+            <ElOption
               v-for="item in group"
               :key="item.id"
               :label="item.name"

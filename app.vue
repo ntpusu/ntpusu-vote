@@ -309,7 +309,7 @@ useSeoMeta({
     ogUrl: url,
     ogImage: url + '/ntpusu.jpg',
     ogImageAlt: '國立臺北大學三峽校區學生會的標誌',
-    ogImageType: 'image/jpg',
+    ogImageType: 'image/jpeg',
     ogImageSecureUrl: url,
     ogLocale: 'zh_TW',
     ogLocaleAlternate: 'zh_TW',

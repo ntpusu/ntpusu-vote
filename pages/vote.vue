@@ -16,7 +16,8 @@
           class="justify-center"
         >
           <ElSkeletonItem
-            v-for=" in rand(1, 4)"
+            v-for="index in rand(1, 4)"
+            :key="index"
             variant="rect"
             class="!w-[85vw] !rounded-xl sm:!w-[65vw] md:!w-[50vw] lg:!w-[40vw] xl:!w-[35vw] 2xl:!w-[28vw]"
             :style="{ height: rand(15, 25) + 'rem' }"
@@ -219,9 +220,9 @@
               <div v-else>
                 <ClientOnly>
                   <ElDialog
+                    v-model="voteVisible[votingitem.id]"
                     center
                     align-center
-                    v-model="voteVisible[votingitem.id]"
                     class="!w-fit min-w-[30%] max-w-[90%] !rounded-lg sm:max-w-[80%] md:max-w-[70%] lg:max-w-[50%]"
                     @open="voteLoading[votingitem.id] = true"
                     @close="voteLoading[votingitem.id] = false"
@@ -263,8 +264,8 @@
                         請選擇要投的候選人
                       </span>
                       <ElRadioGroup
-                        class="flex-col !items-stretch"
                         v-model="voteData[votingitem.id]"
+                        class="flex-col !items-stretch"
                       >
                         <ElRadio
                           v-for="candidate in votingitem.candidates.slice(
@@ -299,8 +300,8 @@
                       <ElButton
                         type="primary"
                         class="w-fit !rounded-md"
-                        @click="voteConfirm(votingitem.id)"
                         plain
+                        @click="voteConfirm(votingitem.id)"
                       >
                         <span class="font-bold"> 投 出 選 票 </span>
                       </ElButton>
@@ -314,9 +315,9 @@
                   <ElButton
                     type="success"
                     class="w-fit !rounded-md"
-                    @click="seeResult(votingitem.id)"
                     plain
                     :loading="resultLoading[votingitem.id]"
+                    @click="seeResult(votingitem.id)"
                   >
                     <span class="font-bold"> 結 果 </span>
                   </ElButton>
@@ -329,9 +330,9 @@
                     type="primary"
                     class="w-fit !rounded-md"
                     :disabled="data.tokens[votingitem.id] != undefined"
-                    @click="voteVisible[votingitem.id] = true"
                     plain
                     :loading="voteLoading[votingitem.id]"
+                    @click="voteVisible[votingitem.id] = true"
                   >
                     <span
                       v-if="data.tokens[votingitem.id] == undefined"
@@ -350,9 +351,9 @@
                     type="info"
                     class="w-fit !rounded-md"
                     :disabled="data.tokens[votingitem.id] == undefined"
-                    @click="seeToken(votingitem.id)"
                     plain
                     :loading="tokenLoading[votingitem.id]"
+                    @click="seeToken(votingitem.id)"
                   >
                     <span
                       v-if="data.tokens[votingitem.id] != undefined"
@@ -391,19 +392,19 @@
     </ElSkeleton>
     <ClientOnly>
       <ElDialog
-        align-center
         v-model="voteFail"
+        align-center
         class="!w-fit min-w-[30%] max-w-[90%] !rounded-lg sm:max-w-[80%] md:max-w-[70%] lg:max-w-[50%]"
       >
         <template #header>
           <div class="text-2xl font-bold text-red-500">投票失敗</div>
         </template>
         <div class="px-5 pb-3 text-lg">
-          可能原因：<br />
-          1. 未登入<br />
-          2. 網路連線斷了<br />
-          3. 未在投票時間內投票<br />
-          4. 操作過於頻繁<br />
+          可能原因：<br>
+          1. 未登入<br>
+          2. 網路連線斷了<br>
+          3. 未在投票時間內投票<br>
+          4. 操作過於頻繁<br>
           若有疑問請聯繫<NuxtLink
             to="https://www.facebook.com/NTPUSU"
             target="_blank"

@@ -4,9 +4,9 @@
       class="m-auto flex w-full justify-center rounded-xl border-4 border-green-200 p-5 sm:w-7/12 md:w-1/2 lg:w-5/12 xl:w-1/3 2xl:w-1/4"
     >
       <ElForm
+        ref="formRef"
         label-width="auto"
         label-suffix=":"
-        ref="formRef"
         :model="addVote"
         :rules="rules"
         hide-required-asterisk
@@ -35,7 +35,7 @@
               placeholder="請選擇投票範圍"
               clearable
             >
-              <el-option
+              <ElOption
                 v-for="item in groupOptions"
                 :key="item.value"
                 :label="item.label"
@@ -84,6 +84,7 @@
         </ElFormItem>
         <div
           v-for="(candidate, index) in addVote.candidates"
+          :key="index"
           class="flex items-center"
         >
           <ElFormItem
@@ -107,9 +108,9 @@
             type="danger"
             plain
             round
-            @click="removeDomain(candidate)"
-            class="ml-2"
             :class="{ invisible: index < 2 }"
+            class="ml-2"
+            @click="removeDomain(candidate)"
           >
             <span class="font-bold">X</span>
           </ElButton>
@@ -135,16 +136,16 @@
     <ElDivider />
     <div class="flex justify-center">
       <ElSwitch
-        class="mx-3 mb-8"
         v-model="showTime"
+        class="mx-3 mb-8"
         size="large"
         inline-prompt
         active-text="時間"
         inactive-text="時間"
       />
       <ElSwitch
-        class="mx-3 mb-8"
         v-model="showOption"
+        class="mx-3 mb-8"
         size="large"
         inline-prompt
         active-text="操作"
@@ -223,7 +224,7 @@
               <template #default="{ row }">
                 <ElPopconfirm
                   title="確定要封存嗎？"
-                  cancElButton-text="取消"
+                  canc-el-button-text="取消"
                   confirm-button-text="確定"
                   @confirm="handleArchive(row.id)"
                 >
@@ -296,7 +297,7 @@
               <template #default="{ row }">
                 <ElPopconfirm
                   title="確定要解封嗎？"
-                  cancElButton-text="取消"
+                  canc-el-button-text="取消"
                   confirm-button-text="確定"
                   @confirm="handleUnarchive(row.id)"
                 >
@@ -320,7 +321,7 @@
               <template #default="{ row }">
                 <ElPopconfirm
                   title="確定要刪除嗎？"
-                  cancElButton-text="取消"
+                  cancel-button-text="取消"
                   confirm-button-text="確定"
                   @confirm="handleDelete(row.id)"
                 >
@@ -343,7 +344,7 @@
     <div class="flex flex-col items-center">
       <ElPopconfirm
         title="確定要重設登入數量嗎？"
-        cancElButton-text="取消"
+        canc-el-button-text="取消"
         confirm-button-text="確定"
         @confirm="handleLoginReset"
       >
@@ -447,7 +448,7 @@ const rules = reactive<FormRules>({
 const submitForm = async (formRef: FormInstance | undefined) => {
   if (!formRef) return;
 
-  await formRef.validate(async (valid, fields) => {
+  await formRef.validate(async (valid, _fields) => {
     if (valid) {
       await useFetch("/api/addVoting", {
         method: "POST",

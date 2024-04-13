@@ -30,7 +30,8 @@ export default defineNuxtConfig({
         "@nuxtjs/tailwindcss",
         "@sidebase/nuxt-auth",
         "nuxt-security",
-        "@nuxt/fonts"
+        "@nuxt/fonts",
+        "@nuxt/eslint"
     ],
     plugins: [
         "~/plugins/vercel.client.ts",

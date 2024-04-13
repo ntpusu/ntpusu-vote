@@ -50,8 +50,8 @@
           <template v-if="voting.onlyOne">
             <ElCard
               v-for="(candidate, index) in findOther()"
-              shadow="hover"
               :key="index"
+              shadow="hover"
               class="max-w-[12rem] md:max-w-[15rem] xl:max-w-[18rem]"
             >
               <div class="px-6 text-center">
@@ -94,8 +94,8 @@
           <template v-else>
             <ElCard
               v-for="(candidate, index) in voting.candidates"
-              shadow="hover"
               :key="index"
+              shadow="hover"
               class="max-w-[12rem] md:max-w-[15rem] xl:max-w-[18rem]"
             >
               <div class="px-6 text-center">

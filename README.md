@@ -56,6 +56,16 @@ bun dbpush
 bun db
 ```
 
+### ESLint
+
+使用 vscode 需添加設定
+```
+{
+  // Enable ESlint flat config support
+  "eslint.experimental.useFlatConfig": true
+}
+```
+
 ### Dev Container
 
 有 VSCode 開發容器設定檔，可以在容器內進行開發\
