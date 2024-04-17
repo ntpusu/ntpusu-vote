@@ -47,14 +47,14 @@ export default defineEventHandler(async (event) => {
         const studentId = voter_table[i][0] as number
         const studentName = voter_table[i][1] as string
         const studentDepartment = (voter_table[i][2] as string).replace(/\d[AB]?/, "")
-        const departmentId = (await prisma.department.findUniqueOrThrow({
+        const department = await prisma.department.findUnique({
             where: {
-            },
                 name: studentDepartment,
+            },
             select: {
                 id: true,
             },
-        }))!
+        })
         if (department !== null) {
             await prisma.voter.upsert({
                 where: {

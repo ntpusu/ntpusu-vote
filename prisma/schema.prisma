@@ -104,5 +104,3 @@ model VotingFromGroup {
 model Admin {
   id Int @id
 }
-
-

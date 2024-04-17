@@ -11,7 +11,7 @@
 
 ## 網址
 
-TODO: 補上網址
+https://ntpusu-vote.vercel.app/
 
 ## 開發
 

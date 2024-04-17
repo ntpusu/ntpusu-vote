@@ -61,7 +61,11 @@
             <el-input v-model="queryInput" style="width: 240px" size="large" placeholder="請輸入學號" />
             <el-button :icon="Search" size="large" @click="queryStudentData">查詢</el-button>
             <br><br>
-            <template v-if="studentIdStatus == 1" :key= "studentIdStatus">
+            <template v-if="queryInputData !== ''" :key= "queryInputData">
+                <el-text class="mx-1" type="info">當前為學號{{queryInputData}}的資料</el-text>
+            </template>
+            <br><br>
+            <template v-if="studentIdStatus == studentIdStatusEnum.notFound" :key= "studentIdStatus">
                 <el-text class="mx-1" size="large" type="danger">
                     資料不存在
                 </el-text>
@@ -71,18 +75,11 @@
                     新增資料
                 </el-text>
                 <br>
-                <!--
-                <el-text class="mx-1" size="large">
-                    系別&nbsp :&nbsp
-                </el-text>
-                <el-input v-model="addNewDepartmentInput" style="width: 240px" size="small" placeholder="請輸入欲新增系別" />
-                -->
                 <el-autocomplete
-                    v-model="addNewDepartmentInput"
+                    v-model="departmentInput"
                     :fetch-suggestions="queryAllDepartment"
-                    clearable
                     class="inline-input w-50"
-                    placeholder="請輸入欲新增系別"
+                    :placeholder="`學號${queryInputData}的系別`"
                     value-key="name"
                 />
                 <br>
@@ -91,22 +88,18 @@
                     新增
                 </el-button>
             </template>
-            <template v-if="studentIdStatus == 2" :key= "studentIdStatus">
+            <template v-if="studentIdStatus == studentIdStatusEnum.Found" :key= "studentIdStatus">
                 <el-text class="mx-1" size="large">
-                    系別&nbsp : &nbsp{{voterData!.group}}  &nbsp&nbsp
+                    系別&nbsp : &nbsp{{voterData!.department}}  &nbsp&nbsp
                 </el-text>
-                <!--
-                <el-input v-model="modifydepartmentInput" style="width: 240px" size="small" placeholder="請輸入改動後系別" />
-                -->
                 <el-autocomplete
-                    v-model="modifydepartmentInput"
+                    v-model="departmentInput"
                     :fetch-suggestions="queryAllDepartment"
-                    clearable
                     class="inline-input w-50"
-                    placeholder="請輸入改動後系別"
+                    :placeholder="`改動學號${queryInputData}系別`"
                     value-key="name"
                 />
-                <el-button size="small" @click="modifyDepartment">修改</el-button>
+                <el-button @click="modifyDepartment">修改</el-button>
                 <br>
                 <br>
                 <el-button type="danger" @click="deleteVoterData">刪除此投票者資料</el-button>
@@ -135,18 +128,21 @@ import { Search } from '@element-plus/icons-vue'
 const dataChangedialogVisible = ref(false)
 const deleteAllVoterDialogVisible = ref(false)
 const queryInput = ref('')
-const modifydepartmentInput = ref('')
-const studentIdStatus = ref(0) /* 0: no input, 1 : not found, 2 : found data */
-const addNewDepartmentInput = ref('')
+const departmentInput = ref('')
 const queryInputData = ref('')
+
+enum studentIdStatusEnum {
+    noInput,
+    notFound,
+    Found,
+}
+
+const studentIdStatus = ref(studentIdStatusEnum.noInput) /* 0: no input, 1 : not found, 2 : found data */
+
 
 const voterData: Ref<{
     id: number
-    group: string
-    first: {
-        serNum: number | undefined
-        time: string | undefined
-    }
+    department: string
 } | null> = ref(null)
 
 definePageMeta({
@@ -163,7 +159,7 @@ const submitUpload = () => {
 const {
     data: voterCount,
     refresh: voterCountRefresh,
-} = await useLazyFetch('/api/getVoterCnt')
+} = await useFetch('/api/getVoterCnt')
 
 
 const uploadfunc = async (item : any) => {
@@ -213,16 +209,41 @@ const uploadfunc = async (item : any) => {
 
 const queryStudentData = async() => {
     queryInputData.value = queryInput.value
-    const res = await useFetch('/api/getVoter', {
+    const {
+        data: res,
+        error: getVoterError,
+    } = await useFetch('/api/getVoterAndDepartment', {
         method: 'GET',
         query: { voter: parseInt(queryInput.value)},
     })
-    if (res.error.value) {
-        studentIdStatus.value = 1;
+    if (getVoterError.value) {
+        studentIdStatus.value = studentIdStatusEnum.notFound;
         return;
     }
-    voterData.value = res.data.value
-    studentIdStatus.value = 2;
+    voterData.value = res.value
+    studentIdStatus.value = studentIdStatusEnum.Found;
+    departmentInput.value = ''
+}
+
+const refreshVoterData = async () => {
+    if (voterData.value) {
+        voterData.value.department = '等待刷新中'
+    }
+    const {
+        data: res,
+        error: getVoterError,
+    } = await useFetch('/api/getVoterAndDepartment', {
+        method: 'GET',
+        query: { voter: parseInt(queryInput.value)},
+    })
+    if (getVoterError.value) {
+        studentIdStatus.value = studentIdStatusEnum.notFound;
+        return;
+    }
+    voterData.value = res.value
+    studentIdStatus.value = studentIdStatusEnum.Found;
+    departmentInput.value = ''
+    voterCountRefresh()
 }
 
 const modifyDepartment = async () => {
@@ -232,7 +253,7 @@ const modifyDepartment = async () => {
         method: 'POST',
         body: {
             voterId: parseInt(queryInputData.value),
-            voterDepartment: modifydepartmentInput.value,
+            voterDepartment: departmentInput.value,
         },
     })
     if (modifyDepartmentError.value) {
@@ -241,6 +262,7 @@ const modifyDepartment = async () => {
     else {
         ElMessage.success('修改成功')
     }
+    refreshVoterData()
 }
 
 const deleteAllVoter = async () => {
@@ -264,10 +286,10 @@ const deleteVoterData = async () => {
         error: deleteVoterError,
     } = await useFetch('/api/delVoter', {
         method: 'DELETE',
-        query: { id: queryInputData },
+        query: { id: queryInputData.value },
     })
     queryInput.value = ''
-    studentIdStatus.value = 0
+    studentIdStatus.value = studentIdStatusEnum.noInput
     voterCountRefresh()
 
     if (deleteVoterError.value) {
@@ -283,8 +305,8 @@ const uploadSubmit = async () => {
 }
 
 const addNewVoter = async () => {
-    const addNewStudentId = queryInputData;
-    const addNewDepartment = addNewDepartmentInput.value;
+    const addNewStudentId = queryInputData.value;
+    const addNewDepartment = departmentInput.value;
     const {
         error: addNewVoterError,
     } = await useFetch('api/addVoter', {
@@ -300,8 +322,10 @@ const addNewVoter = async () => {
     else {
         ElMessage.success('新增成功')
     }
+    refreshVoterData()
 }
-/**************** */
+
+
 interface Department {
     id: number,
     name: string,
@@ -337,6 +361,7 @@ const loadAll = async () => {
     })
     return departments.value!
 }
-/************** */
+
+
 
 </script>

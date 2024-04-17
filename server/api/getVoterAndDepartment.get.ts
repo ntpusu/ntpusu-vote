@@ -1,15 +1,17 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const { id } = getQuery(event) as { id: string | undefined }
+    const { voter } = getQuery(event) as { voter: string | undefined }
 
-    if (!id || isNaN(parseInt(id))) {
+    if (!voter || !/^\d{8,9}$/.test(voter)) {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
-            message: 'Parameter "id" is required and should be a number.',
+            message: 'Parameter "voter" is required and must be a number',
         })
     }
+
+    const id = parseInt(voter)
 
     const session = await getServerSession(event) as { user: { email: string } } | null
 
@@ -33,22 +35,27 @@ export default defineEventHandler(async (event) => {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不在管理員名單中',
+            message: '不在管理員名單中'
         })
     }
-    /*
-    if (id == process.env.ADMIN) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Forbidden',
-            message: '無法刪除超級管理員',
-        })
-    }*/
 
-    await prisma.voter.delete({
-        where: { id: parseInt(id) },
-        select: null,
+    const voterData = await prisma.voter.findUniqueOrThrow({
+        where: { id },
+        select: {
+            id: true,
+            departmentId: true,
+        }
     })
 
-    return {}
+    const voterDepartment = await prisma.department.findUniqueOrThrow({
+        where: { id:voterData.departmentId },
+        select: {
+            name: true,
+        }
+    })
+
+    return {
+        id: voterData.id,
+        department: voterDepartment.name,
+    }
 })
