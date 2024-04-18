@@ -221,7 +221,6 @@
       <NuxtLink
         to="/privacy"
         class="font-bold hover:text-stone-600 hover:underline"
-        target="_blank"
         >Privacy Policy
       </NuxtLink>
       <span
