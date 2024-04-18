@@ -239,7 +239,12 @@
                     target="_blank"
                     >Open Source</NuxtLink
                 >|
-                </span>
+                <NuxtLink
+                    @click="useRouter().push('/privacy')"
+                    class="font-bold hover:text-stone-600 hover:underline"
+                    target="_blank"
+                    >Privacy Policy</NuxtLink
+                >|
                 <NuxtLink
                     to=""
                     class="font-bold hover:text-stone-600 hover:underline"
