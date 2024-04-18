@@ -45,6 +45,8 @@
             width="100"
         ></el-table-column>
         </el-table>
+        <!-- 刪除選區 -->
+        <el-button type="danger" @click="deleteGroupData">刪除選區</el-button>
     <el-dialog
             v-model="uploadDialogVisible"
             title="設定上傳模式"
@@ -180,7 +182,7 @@ const midifyDepartment = async () => {
 }
 //5. add api_delgroup
 const deleteGroupData = async () => {
-    await useFetch('/api/delgroup', {
+    await useFetch('/api/delAllGroup', {
         method: 'DELETE',
         query: { id: queryInputData },
     })
