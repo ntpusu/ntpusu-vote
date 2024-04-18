@@ -27,5 +27,5 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    return await prisma.group.count()
+    return await prisma.department.count()
 })

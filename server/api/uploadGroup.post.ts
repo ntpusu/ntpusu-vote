@@ -44,9 +44,8 @@ export default defineEventHandler(async (event) => {
 
     //await fs.writeFileSync(localFilePath, file, () => console.log('xlsx saved!'));
     let group_workbook = XLSX.read(file)
-    let name = group_workbook.SheetNames[0]
     let group_sheet = group_workbook.Sheets[group_workbook.SheetNames[0]]
-    const group_table : any[][] = XLSX.utils.sheet_to_json(group_sheet, { header: 1 })
+    const group_table: any[][] = XLSX.utils.sheet_to_json(group_sheet, { header: 1 })
     
     //const data = []
     let allGroups: string[] = []
@@ -55,7 +54,7 @@ export default defineEventHandler(async (event) => {
         const Group = group_table[i].slice(1,4) as string[]
 
         //data.push({ Group_Name})
-        allGroups.concat(Group)
+        allGroups = allGroups.concat(Group)
     }
 
     allGroups = Array.from(new Set(allGroups))
@@ -65,6 +64,7 @@ export default defineEventHandler(async (event) => {
                 name: group,
             }
         }),
+        skipDuplicates: true,
     })
 
     for (let i = 1; i < group_table.length; i++) {
@@ -102,7 +102,6 @@ export default defineEventHandler(async (event) => {
             }
         })
     }
-    await prisma
 
-    return await {}
+    return  {}
 })
