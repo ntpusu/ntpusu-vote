@@ -27,6 +27,8 @@ export default defineEventHandler(async (event) => {
             message: '不在管理員名單中',
         })
     }
+
+    await prisma.group.deleteMany({})
     await prisma.department.deleteMany({})
 
     return {}
