@@ -1,19 +1,19 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-let baseURL: string = 'http://localhost:3000/api/auth';
+let baseURL: string = "http://localhost:3000/api/auth";
 
 if (process.env.VERCEL) {
     switch (process.env.VERCEL_ENV) {
-        case 'production':
+        case "production":
             if (process.env.PRODUCTION_URL) {
-                baseURL = process.env.PRODUCTION_URL + '/api/auth';
+                baseURL = process.env.PRODUCTION_URL + "/api/auth";
             } else {
                 baseURL = `https://${process.env.VERCEL_GIT_REPO_SLUG}.vercel.app/api/auth`;
             }
             break;
-        case 'preview':
+        case "preview":
             baseURL = `https://${process.env.VERCEL_BRANCH_URL}/api/auth`;
             break;
-        case 'development':
+        case "development":
             baseURL = `https://${process.env.VERCEL_URL}/api/auth`;
     }
 }
@@ -25,23 +25,19 @@ export default defineNuxtConfig({
         },
     },
     modules: [
-        '@element-plus/nuxt',
-        '@nuxt/image',
-        '@nuxtjs/tailwindcss',
-        '@nuxtjs/google-fonts',
-        '@sidebase/nuxt-auth',
-        'nuxt-security',
+        "@element-plus/nuxt",
+        "@nuxt/image",
+        "@nuxtjs/tailwindcss",
+        "@sidebase/nuxt-auth",
+        "nuxt-security",
+        "@nuxt/fonts",
+        "@nuxt/eslint"
     ],
     plugins: [
-        '~/plugins/vercel.client.ts',
+        "~/plugins/vercel.client.ts",
     ],
     app: {
-        pageTransition: { name: 'page', mode: 'out-in' },
-    },
-    googleFonts: {
-        families: {
-            'Noto+Sans+TC': [400, 700],
-        },
+        pageTransition: { name: "page", mode: "out-in" },
     },
     auth: {
         /**
@@ -95,7 +91,7 @@ export default defineNuxtConfig({
              *
              * Read more here: https://sidebase.io/nuxt-auth/v0.6/getting-started
              */
-            type: 'authjs',
+            type: "authjs",
             /**
              * If set to `true`, `authjs` will use either the `x-forwarded-host` or `host` headers instead of `auth.baseURL`.
              *
@@ -165,7 +161,7 @@ export default defineNuxtConfig({
             isEnabled: true,
             /**
              * Whether to enforce authentication if the target-route does not exist. Per default the middleware redirects
-             * to Nuxts' default 404 page instead of forcing a sign-in if the target does not exist. This is to avoid a
+             * to Nuxts" default 404 page instead of forcing a sign-in if the target does not exist. This is to avoid a
              * user-experience and developer-experience of having to sign-in only to see a 404 page afterwards.
              *
              * Note: Setting this to `false` this may lead to `vue-router` + node related warnings like: "Error [ERR_HTTP_HEADERS_SENT] ...",
@@ -188,11 +184,11 @@ export default defineNuxtConfig({
     },
     security: {
         headers: {
-            crossOriginEmbedderPolicy: 'unsafe-none',
+            crossOriginEmbedderPolicy: "unsafe-none",
         },
         xssValidator: false,
         corsHandler: {
-            methods: ['GET', 'PUT', 'POST', 'DELETE'],
+            methods: ["GET", "PUT", "POST", "DELETE"],
         },
     },
     devtools: {
