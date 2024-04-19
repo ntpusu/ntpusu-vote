@@ -91,7 +91,7 @@ const submitUpload = () => {
   uploadRef.value!.submit();
 };
 
-// 使用 useLazyFetch 獲取選區數量
+// 使用 useFetch 獲取選區數量
 const {
   data: electorCount,
   //pending: adminPending,
@@ -125,11 +125,12 @@ const uploadfunc = async (item) => {
     method: "POST",
     body: formData,
   });
-  if (uploadingFileStatus.value) {
-    ElMessage.error("上傳失敗");
-  } else {
-    ElMessage.success("上傳成功");
-  }
+
+//   if (uploadingFileStatus ) {
+//     ElMessage.error("上傳失敗");
+//   } else {
+//     ElMessage.success("上傳成功");
+//   }
   //console.log(uploadingFileName)
   electorCountRefresh();
   uploadRef.value!.clearFiles();
@@ -154,11 +155,11 @@ const midifyDepartment = async () => {};
 //5. add api_delgroup
 const deleteGroupData = async () => {
   ElMessageBox.confirm(
-    "proxy will permanently delete the file. Continue?",
-    "Warning",
+    "確定要刪除所有選區嗎？",
+    "刪除選區",
     {
-      confirmButtonText: "OK",
-      cancelButtonText: "Cancel",
+      confirmButtonText: "刪除",
+      cancelButtonText: "取消",
       type: "warning",
     },
   )
@@ -176,13 +177,13 @@ const deleteGroupData = async () => {
         });
       ElMessage({
         type: "success",
-        message: "Delete completed",
+        message: "刪除成功",
       });
     })
     .catch(() => {
       ElMessage({
         type: "info",
-        message: "Delete canceled",
+        message: "取消刪除",
       });
     });
 };
