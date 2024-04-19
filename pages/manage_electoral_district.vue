@@ -1,11 +1,6 @@
 <template>
   <div style="text-align: -webkit-center">
-    <!-- 標題文字 -->
-    <el-text
-      class="mx-1"
-      size="large"
-      >編輯選舉區</el-text
-    >
+    <h1 class="my-5 text-center text-2xl font-bold">管理選舉區</h1>
     <!-- 檔案上傳元件 -->
     <el-upload
       ref="uploadRef"
@@ -36,8 +31,45 @@
         <div class="el-upload__tip">僅能上傳 .xlsx 文件</div>
       </template>
     </el-upload>
+    <br />
+    <div class="demo-progress">
+      <el-text
+        v-if="uploadDialogVisible"
+        class="mx-1"
+        size="large"
+        >上傳中...</el-text
+      >
+      <!-- 顯示上傳進度條 -->
+      <el-progress
+        v-if="uploadDialogVisible"
+        class="mt-3"
+        :percentage="100"
+        status="success"
+        :indeterminate="true"
+        :duration="2"
+      />
+    </div>
+    <!-- 刪除選區 -->
+    <div class="demo-progress">
+      <el-text
+        v-if="deletingDialogVisible"
+        class="mx-1"
+        size="large"
+        >刪除中...</el-text
+      >
+      <!-- 顯示刪除進度條 -->
+      <el-progress
+        v-if="deletingDialogVisible"
+        class="mt-3"
+        :percentage="100"
+        status="exception"
+        :indeterminate="true"
+        :duration="1"
+      />
+    </div>
     <!-- 顯示目前系統內的資料筆數 -->
     <el-text
+      v-if="!uploadDialogVisible&&!deletingDialogVisible"
       class="mx-1"
       size="large"
       >目前系統內有{{ electorCount }}筆資料</el-text
@@ -61,6 +93,7 @@ import { Search } from "@element-plus/icons-vue";
 
 const dataChangedialogVisible = ref(false);
 const uploadDialogVisible = ref(false);
+const deletingDialogVisible = ref(false);
 const queryInput = ref("");
 const modifydepartmentInput = ref("");
 const groupIdStatus = ref(0); /* 0: no input, 1 : not found, 2 : found data */
@@ -97,7 +130,11 @@ const {
   //pending: adminPending,
   refresh: electorCountRefresh,
 } = await useFetch("/api/getGroupCnt");
-//1. add api_getAllElectorCnt
+//1. add api_getAllGroupCnt
+
+const { data: electorDetail, refresh: electorDetailRefresh } = await useFetch(
+  "/api/getAlldepartmentCnt",
+);
 
 //const t = await useLazyFetch('/api/getAllVoter')
 
@@ -117,6 +154,7 @@ const uploadfunc = async (item) => {
   }
   let formData = new FormData();
 
+  uploadDialogVisible.value = true;
   formData.append("fileName", file.name);
   formData.append("file", file);
 
@@ -125,16 +163,13 @@ const uploadfunc = async (item) => {
     method: "POST",
     body: formData,
   });
-
-//   if (uploadingFileStatus ) {
-//     ElMessage.error("上傳失敗");
-//   } else {
-//     ElMessage.success("上傳成功");
-//   }
   //console.log(uploadingFileName)
+  uploadDialogVisible.value = false;
   electorCountRefresh();
+  electorDetailRefresh();
   uploadRef.value!.clearFiles();
 };
+
 //4. set api_getGroup
 const queryStudentData = async () => {
   const res = await useFetch("/api/getGroup", {
@@ -154,16 +189,13 @@ const midifyDepartment = async () => {};
 
 //5. add api_delgroup
 const deleteGroupData = async () => {
-  ElMessageBox.confirm(
-    "確定要刪除所有選區嗎？",
-    "刪除選區",
-    {
-      confirmButtonText: "刪除",
-      cancelButtonText: "取消",
-      type: "warning",
-    },
-  )
+  ElMessageBox.confirm("確定要刪除所有選區嗎？", "刪除選區", {
+    confirmButtonText: "刪除",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
     .then(async () => {
+      deletingDialogVisible.value = true;
       await $fetch("/api/delAllGroup", {
         method: "DELETE",
       })
@@ -174,7 +206,9 @@ const deleteGroupData = async () => {
           queryInput.value = "";
           groupIdStatus.value = 0;
           electorCountRefresh();
+          electorDetailRefresh();
         });
+      deletingDialogVisible.value = false;
       ElMessage({
         type: "success",
         message: "刪除成功",

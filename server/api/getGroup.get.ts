@@ -29,6 +29,5 @@ export default defineEventHandler(async (event) => {
 
     return await prisma.group.findMany({
         orderBy: { id: 'asc'},
-
     })
 })
