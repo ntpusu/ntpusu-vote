@@ -946,7 +946,6 @@ const {handleExecute, handleGetResponse, handleReset} = useRecaptcha()
 let widgetId:number;
 const handleWidgetId = (Id: number) => {
   widgetId = Id
-  console.log("ID: ", Id)
 }  
 function wait(milliseconds:number) {
     return new Promise(resolve => {
@@ -990,19 +989,14 @@ const voteConfirm = async (votingId: number) => {
     )
         .then(async () => {
             try{
-                console.log("Widget ID: ", widgetId)
                 await handleExecute(widgetId)
                 await wait(1000); 
                 const response = await handleGetResponse(widgetId)
-                console.log('response', response)
-
+                
                 const res = await $fetch('/api/recaptchaV2', {
                 method: 'POST',
                 body: JSON.stringify({response})
                 })
-                //.then(res => res.json());
-
-                console.log('Server Response: ', res);
 
                 handleReset(widgetId)
             } catch (error) {
