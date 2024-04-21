@@ -50,7 +50,7 @@ model Voter {
   login VoterLogin?
 
   departmentId Int
-  department   Department @relation(fields: [departmentId], references: [id])
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
 }
 
 model VoterLogin {
