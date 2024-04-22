@@ -5,6 +5,7 @@
       size="large"
       >上傳投票者名單</el-text
     >
+    <div class = "mx-30">
     <el-upload
       ref="uploadRef"
       class="upload-demo"
@@ -31,6 +32,7 @@
         <div class="el-upload__tip">僅能上傳 .xlsx 文件</div>
       </template>
     </el-upload>
+    </div>
     <el-text
       class="mx-1"
       size="large"
@@ -69,13 +71,13 @@
     <br>
     <el-button
       plain
-      @click="dataChangedialogVisible = true"
+      @click="dataChangeDialogVisible = true"
     >
       個別資料更動
     </el-button>
 
     <el-dialog
-      v-model="dataChangedialogVisible"
+      v-model="dataChangeDialogVisible"
       title="更動頁面"
       width="500"
     >
@@ -162,7 +164,7 @@
         <div class="dialog-footer">
           <el-button
             type="primary"
-            @click="dataChangedialogVisible = false"
+            @click="dataChangeDialogVisible = false"
           >
             關閉頁面
           </el-button>
@@ -177,7 +179,7 @@ import { ref, onMounted } from "vue";
 import type { UploadInstance } from "element-plus";
 import { Search } from "@element-plus/icons-vue";
 
-const dataChangedialogVisible = ref(false);
+const dataChangeDialogVisible = ref(false);
 const deleteAllVoterDialogVisible = ref(false);
 const queryInput = ref("");
 const departmentInput = ref("");
@@ -232,7 +234,7 @@ const uploadfunc = async (item: { file: File }) => {
   );
 
   if (uploadingFileError.value) {
-    ElMessage.error("上傳失敗");
+    ElMessage.error("上傳失敗 " + uploadingFileError.value.data?.message);
   } else {
     ElMessage.success("上傳成功");
   }
@@ -306,7 +308,7 @@ const modifyDepartment = async () => {
     },
   });
   if (modifyDepartmentError.value) {
-    ElMessage.error("修改失敗");
+    ElMessage.error("修改失敗 " + modifyDepartmentError.value.data?.message);
   } else {
     ElMessage.success("修改成功");
   }
@@ -320,7 +322,7 @@ const deleteAllVoter = async () => {
   deleteAllVoterDialogVisible.value = false;
   voterCountRefresh();
   if (delAllVoterError.value) {
-    ElMessage.error("刪除失敗");
+    ElMessage.error("刪除失敗 " + delAllVoterError.value.data?.message);
   } else {
     ElMessage.success("刪除成功");
   }
@@ -336,7 +338,7 @@ const deleteVoterData = async () => {
   voterCountRefresh();
 
   if (deleteVoterError.value) {
-    ElMessage.error("刪除失敗");
+    ElMessage.error("刪除失敗 " + deleteVoterError.value.data?.message);
   } else {
     ElMessage.success("刪除成功");
   }
@@ -357,7 +359,7 @@ const addNewVoter = async () => {
     },
   });
   if (addNewVoterError.value) {
-    ElMessage.error("新增失敗");
+    ElMessage.error("新增失敗" + ' ' + addNewVoterError.value.data?.message);
   } else {
     ElMessage.success("新增成功");
   }

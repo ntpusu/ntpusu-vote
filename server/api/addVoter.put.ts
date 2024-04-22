@@ -49,6 +49,10 @@ export default defineEventHandler(async (event) => {
         select: {
             id: true,
         },
+    }).catch(()=>{
+        throw createError({
+            message: `${department} 不在資料庫中`,
+        })
     })
 
     await prisma.voter.create({
