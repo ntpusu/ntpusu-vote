@@ -1,7 +1,7 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const { voterId, voterDepartment} = await readBody(event) as {
+    const { voterId, voterDepartment } = await readBody(event) as {
         voterId: number
         voterDepartment: string
     }
@@ -35,11 +35,11 @@ export default defineEventHandler(async (event) => {
     const {
         id: DepartmentId,
     } = await prisma.department.findUniqueOrThrow({
-            where: { name: voterDepartment,},
-            select: {
-                id: true
-            }
-        })
+        where: { name: voterDepartment, },
+        select: {
+            id: true
+        }
+    })
 
     await prisma.voter.update({
         where: {

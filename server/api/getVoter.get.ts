@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const id = parseInt(voter)
-
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {

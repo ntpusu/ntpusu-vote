@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const id = parseInt(voter)
-
     const session = await getServerSession(event) as { user: { email: string } } | null
 
     if (!session) {
@@ -48,7 +47,7 @@ export default defineEventHandler(async (event) => {
     })
 
     const voterDepartment = await prisma.department.findUniqueOrThrow({
-        where: { id:voterData.departmentId },
+        where: { id: voterData.departmentId },
         select: {
             name: true,
         }

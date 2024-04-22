@@ -67,6 +67,28 @@
         >
           <span class="text-sm font-bold sm:text-base md:text-lg"> 管理 </span>
         </ElMenuItem>
+        <!---->
+        <ElMenuItem
+          v-if="admin"
+          class="!px-3 sm:!px-4 md:!px-5"
+          index="/manage_voter"
+          @click="useRouter().push('/manage_voter')"
+        >
+          <span class="text-sm font-bold sm:text-base md:text-lg">
+            管理投票者
+          </span>
+        </ElMenuItem>
+        <ElMenuItem
+          v-if="admin"
+          class="!px-3 sm:!px-4 md:!px-5"
+          index="/manage_electoral_district"
+          @click="useRouter().push('/manage_electoral_district')"
+        >
+          <span class="text-sm font-bold sm:text-base md:text-lg">
+            管理選舉區
+          </span>
+        </ElMenuItem>
+        <!---->
         <ElMenuItem
           v-if="status === 'unauthenticated'"
           class="!px-3 sm:!px-4 md:!px-5"
@@ -196,27 +218,25 @@
     <div
       class="z-10 flex h-6 items-center justify-between bg-white px-2 sm:h-7 sm:px-3 md:h-8 md:px-4"
     >
-      <span>
-        <div
-          class="text-center text-xs font-bold tracking-tighter text-stone-700 sm:text-sm sm:tracking-tight md:text-base md:tracking-normal"
-        >
-          <span class="max-[400px]:hidden">
-            Made by
-            <NuxtLink
-              to="https://github.com/ntpusu/ntpusu-vote/graphs/contributors"
-              class="font-bold hover:text-stone-600 hover:underline"
-              target="_blank"
-              >contributors
-            </NuxtLink>
-            |
-          </span>
+      <span
+        class="text-center text-xs font-bold tracking-tighter text-stone-700 sm:text-sm sm:tracking-tight md:text-base md:tracking-normal"
+      >
+        <span class="max-[400px]:hidden">
+          Made by
           <NuxtLink
-            to="https://github.com/ntpusu/ntpusu-vote"
+            to="https://github.com/ntpusu/ntpusu-vote/graphs/contributors"
             class="font-bold hover:text-stone-600 hover:underline"
             target="_blank"
-            >Open Source</NuxtLink
+            >contributors</NuxtLink
           >
-        </div>
+          |
+        </span>
+        <NuxtLink
+          to="https://github.com/ntpusu/ntpusu-vote"
+          class="font-bold hover:text-stone-600 hover:underline"
+          target="_blank"
+          >Open Source</NuxtLink
+        >
       </span>
       <span
         class="text-center text-xs font-bold tracking-tighter text-stone-700 sm:text-sm sm:tracking-tight md:text-base md:tracking-normal"
@@ -251,15 +271,13 @@
       <div class="flex justify-center">
         <span
           class="w-11/12 whitespace-pre-wrap break-words text-xs sm:text-sm md:text-base"
-          >國立臺北大學三峽校區學生會投票網站（下稱「投票網站」）使用cookie來記錄您的登入狀態及增進您的使用體驗。這些Cookie僅限於投票網站使用，不會將Cookie用於商業目的。這些Cookie將在您使用投票網站時存儲在您的設備上，並在一定時間後過期。您可以在您的瀏覽器設置中管理和刪除cookie。如果您選擇禁用cookie，將會無法使用投票網站的登入功能。繼續使用投票網站即表示你同意我們使用Cookie。若您對此使用聲明有任何疑問，請隨時
-          <NuxtLink
+          >國立臺北大學三峽校區學生會投票網站（下稱「投票網站」）使用cookie來記錄您的登入狀態及增進您的使用體驗。這些Cookie僅限於投票網站使用，不會將Cookie用於商業目的。這些Cookie將在您使用投票網站時存儲在您的設備上，並在一定時間後過期。您可以在您的瀏覽器設置中管理和刪除cookie。如果您選擇禁用cookie，將會無法使用投票網站的登入功能。繼續使用投票網站即表示你同意我們使用Cookie。若您對此使用聲明有任何疑問，請隨時<NuxtLink
             to="https://www.facebook.com/NTPUSU"
             target="_blank"
             class="whitespace-pre-wrap break-all font-bold text-blue-400 hover:text-blue-500 hover:underline"
-          >
-            聯繫我們 </NuxtLink
-          >。
-        </span>
+            >聯繫我們</NuxtLink
+          >。</span
+        >
       </div>
     </ElCard>
   </ElContainer>

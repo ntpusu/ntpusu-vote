@@ -31,7 +31,6 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-
     const voter_workbook = XLSX.read(file)
     const voter_sheet = voter_workbook.Sheets[voter_workbook.SheetNames[0]]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
