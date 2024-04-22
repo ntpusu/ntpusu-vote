@@ -446,4 +446,9 @@ onBeforeMount(() => {
 .page-leave-to {
   @apply opacity-0 blur;
 }
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
 </style>
+
