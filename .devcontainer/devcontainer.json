@@ -18,7 +18,8 @@
 				"bradlc.vscode-tailwindcss",
 				"esbenp.prettier-vscode",
 				"Nuxtr.nuxtr-vscode",
-				"Prisma.prisma"
+				"Prisma.prisma",
+				"dbaeumer.vscode-eslint"
 			],
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "zsh",

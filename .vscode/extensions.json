@@ -6,5 +6,6 @@
         "esbenp.prettier-vscode",
         "Nuxtr.nuxtr-vscode",
         "prisma.prisma",
+        "dbaeumer.vscode-eslint",
     ]
 }
