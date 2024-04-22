@@ -238,9 +238,12 @@ const uploadfunc = async (item: { file: File }) => {
   }
 
   if (failAddingVoter.value && failAddingVoter.value.length != 0) {
-    let errorMessage = "無法新增以下投票者<br>";
+    let errorMessage = "無法新增以下投票者<br>學號列表:<br>";
     for (let i = 0; i < failAddingVoter.value.length; i++) {
-      errorMessage += `學號:${failAddingVoter.value[i].id} 姓名:${failAddingVoter.value[i].name} 系別:${failAddingVoter.value[i].department} <br>`;
+      errorMessage += `${failAddingVoter.value[i].id}`;
+      if(i != failAddingVoter.value.length - 1) {
+        errorMessage += '、'
+      }
     }
     ElMessage({
       dangerouslyUseHTMLString: true,

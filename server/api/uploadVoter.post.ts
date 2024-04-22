@@ -38,13 +38,11 @@ export default defineEventHandler(async (event) => {
 
     const failAddingVoter: {
         id: number,
-        name: string,
-        department: string,
     }[] = [];
 
     for (let i = 1; i < voter_table.length; i++) {
         const studentId = voter_table[i][0] as number
-        const studentName = voter_table[i][1] as string
+        //const studentName = voter_table[i][1] as string
         const studentDepartment = (voter_table[i][2] as string).replace(/\d[AB]?/, "")
         const department = await prisma.department.findUnique({
             where: {
@@ -71,8 +69,6 @@ export default defineEventHandler(async (event) => {
         else {
             failAddingVoter.push({
                 id: studentId,
-                name: studentName,
-                department: studentDepartment,
             })
         }
     }
