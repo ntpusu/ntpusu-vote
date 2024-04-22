@@ -1,6 +1,44 @@
 <template>
   <div style="text-align: -webkit-center">
     <h1 class="my-5 text-center text-2xl font-bold">管理選舉區</h1>
+    <div class="demo-collapse">
+      <el-collapse
+        v-model="activeNames"
+        class="w-fit border-2 px-4 py-2 rounded-xl border-blue-300"
+      >
+        <el-collapse-item
+          title="All department"
+          name="1"
+        >
+          <!-- 顯示目前系統內的資料筆數 -->
+          <el-table
+            :data="
+              departmentDetail!.map((d) => {
+                return {
+                  name: d.name,
+                  group: d.departmentInGroup
+                    .map((g) => g.group.name)
+                    .join(', '),
+                };
+              })
+            "
+            style="width: 100%"
+          >
+            <el-table-column
+              prop="name"
+              label="name"
+              width="200"
+            />
+            <el-table-column
+              prop="group"
+              label="Group"
+              width="200"
+            />
+          </el-table>
+        </el-collapse-item>
+      </el-collapse>
+    </div>
+
     <!-- 檔案上傳元件 -->
     <el-upload
       ref="uploadRef"
@@ -11,6 +49,7 @@
       :drag="true"
       :auto-upload="false"
       :limit="1"
+      v-if="electorCount == 0"
     >
       <!-- 上傳按鈕 -->
       <template #trigger>
@@ -31,6 +70,7 @@
         <div class="el-upload__tip">僅能上傳 .xlsx 文件</div>
       </template>
     </el-upload>
+
     <br />
     <div class="demo-progress">
       <el-text
@@ -69,7 +109,7 @@
     </div>
     <!-- 顯示目前系統內的資料筆數 -->
     <el-text
-      v-if="!uploadDialogVisible&&!deletingDialogVisible"
+      v-if="!uploadDialogVisible && !deletingDialogVisible"
       class="mx-1"
       size="large"
       >目前系統內有{{ electorCount }}筆資料</el-text
@@ -79,7 +119,8 @@
     <el-button
       type="danger"
       @click="deleteGroupData"
-      >刪除選區</el-button
+      v-if="electorCount != 0"
+      >刪除所有選區</el-button
     >
     <br />
   </div>
@@ -90,6 +131,7 @@
 import { ref } from "vue";
 import type { UploadInstance } from "element-plus";
 import { Search } from "@element-plus/icons-vue";
+import type { DepartmentInGroup } from "@prisma/client";
 
 const dataChangedialogVisible = ref(false);
 const uploadDialogVisible = ref(false);
@@ -100,10 +142,15 @@ const groupIdStatus = ref(0); /* 0: no input, 1 : not found, 2 : found data */
 const seletingUploadMode = ref("");
 let queryInputData = "";
 
-const GroupData: Ref<{
+const activeNames = ref(["1"]);
+// const handleChange = (val: string[]) => {
+//   console.log(val);
+// };
+
+const departmentData: Ref<{
   id: number;
-  Int: number;
   name: string;
+  DepartmentInGroup: DepartmentInGroup[];
   first: {
     serNum: number | null;
     time: number | null;
@@ -130,11 +177,10 @@ const {
   //pending: adminPending,
   refresh: electorCountRefresh,
 } = await useFetch("/api/getGroupCnt");
-//1. add api_getAllGroupCnt
 
-const { data: electorDetail, refresh: electorDetailRefresh } = await useFetch(
-  "/api/getAlldepartmentCnt",
-);
+//1. add api_getAllGroupCnt
+const { data: departmentDetail, refresh: electorDetailRefresh } =
+  await useFetch("/api/getAlldepartmentCnt");
 
 //const t = await useLazyFetch('/api/getAllVoter')
 
@@ -170,20 +216,20 @@ const uploadfunc = async (item) => {
   uploadRef.value!.clearFiles();
 };
 
-//4. set api_getGroup
-const queryStudentData = async () => {
-  const res = await useFetch("/api/getGroup", {
-    method: "GET",
-    query: { group: parseInt(queryInput.value) },
-  });
-  if (res.error.value) {
-    groupIdStatus.value = 1;
-    return;
-  }
-  GroupData.value = res.data.value;
-  queryInputData = queryInput.value;
-  groupIdStatus.value = 2;
-};
+// //4. set api_getGroup
+// const queryStudentData = async () => {
+//   const res = await useFetch("/api/getGroup", {
+//     method: "GET",
+//     query: { group: parseInt(queryInput.value) },
+//   });
+//   if (res.error.value) {
+//     groupIdStatus.value = 1;
+//     return;
+//   }
+//   GroupData.value = res.data.value;
+//   queryInputData = queryInput.value;
+//   groupIdStatus.value = 2;
+// };
 
 const midifyDepartment = async () => {};
 

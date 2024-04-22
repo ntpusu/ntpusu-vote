@@ -28,8 +28,18 @@ export default defineEventHandler(async (event) => {
     }
 
     //return department 名字和連結的 group 名字
-    return await prisma.department.findUnique({
-        where: { id: 1 },
-        select: { name: true, }
+    return await prisma.department.findMany({
+        select: {
+            name: true,
+            departmentInGroup: {
+                select: {
+                    group: {
+                        select: {
+                            name: true,
+                        }
+                    }
+                }
+            }
+        }
     })
 })
