@@ -14,11 +14,11 @@
         <template #trigger>
             <el-button type="primary">選擇檔案</el-button>
         </template>
-    
+
         <el-button class="ml-3" type="success" @click="uploadSubmit">
             上傳至伺服器端
         </el-button>
-    
+
         <template #tip>
             <div class="el-upload__tip">
                 僅能上傳 .xlsx 文件
@@ -61,11 +61,11 @@
             <el-input v-model="queryInput" style="width: 240px" size="large" placeholder="請輸入學號" />
             <el-button :icon="Search" size="large" @click="queryStudentData">查詢</el-button>
             <br><br>
-            <template v-if="queryInputData !== ''" :key= "queryInputData">
+            <template v-if="queryInputData !== ''">
                 <el-text class="mx-1" type="info">當前為學號{{queryInputData}}的資料</el-text>
             </template>
             <br><br>
-            <template v-if="studentIdStatus == studentIdStatusEnum.notFound" :key= "studentIdStatus">
+            <template v-if="studentIdStatus == studentIdStatusEnum.notFound">
                 <el-text class="mx-1" size="large" type="danger">
                     資料不存在
                 </el-text>
@@ -88,9 +88,9 @@
                     新增
                 </el-button>
             </template>
-            <template v-if="studentIdStatus == studentIdStatusEnum.Found" :key= "studentIdStatus">
+            <template v-if="studentIdStatus == studentIdStatusEnum.Found">
                 <el-text class="mx-1" size="large">
-                    系別&nbsp : &nbsp{{voterData!.department}}  &nbsp&nbsp
+                    系別&nbsp; : &nbsp;{{voterData!.department}}  &nbsp;&nbsp;
                 </el-text>
                 <el-autocomplete
                     v-model="departmentInput"
@@ -114,15 +114,15 @@
             </template>
         </el-dialog>
     </div>
-    
+
 </template>
 
-  
+
 
 <script setup lang="ts">
 
 import { ref, onMounted } from 'vue'
-import type { UploadInstance, ElMessageBox } from 'element-plus'
+import type { UploadInstance } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 
 const dataChangedialogVisible = ref(false)
@@ -162,15 +162,15 @@ const {
 } = await useFetch('/api/getVoterCnt')
 
 
-const uploadfunc = async (item : any) => {
-    const file = item.file as File
+const uploadfunc = async (item : { file: File}) => {
+    const file = item.file
     const fileType = file.name.substring(file.name.lastIndexOf('.'))
     if (fileType !== '.xlsx') {
         ElMessage.error('錯誤:僅能上傳.xlsx文件')
         uploadRef.value!.clearFiles()
         return false
     }
-    let formData = new FormData()
+    const formData = new FormData()
 
     formData.append("file", file)
     const {
@@ -311,7 +311,7 @@ const addNewVoter = async () => {
         error: addNewVoterError,
     } = await useFetch('api/addVoter', {
         method: 'PUT',
-        query: { 
+        query: {
             id: addNewStudentId,
             department: addNewDepartment,
         },
@@ -333,7 +333,7 @@ interface Department {
 
 const departmentList = ref<Department[]>([])
 
-const queryAllDepartment = (queryString: string, cb: any) => {
+const queryAllDepartment = (queryString: string, cb: (results: {id: number;name: string;}[]) => void) => {
     const results = queryString
         ? departmentList.value.filter(createFilter(queryString))
         : departmentList.value

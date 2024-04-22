@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
             message: '不在管理員名單中',
         })
     }
-    //let superAdmin = parseInt(process.env.ADMIN!)
+
     await prisma.voter.deleteMany({})
 
     return {}

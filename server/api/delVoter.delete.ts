@@ -36,14 +36,6 @@ export default defineEventHandler(async (event) => {
             message: '不在管理員名單中',
         })
     }
-    /*
-    if (id == process.env.ADMIN) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Forbidden',
-            message: '無法刪除超級管理員',
-        })
-    }*/
 
     await prisma.voter.delete({
         where: { id: parseInt(id) },

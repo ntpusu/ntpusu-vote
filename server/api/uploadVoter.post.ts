@@ -5,7 +5,7 @@ import * as XLSX from 'xlsx';
 export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
     const formData = (await readMultipartFormData(event))!
-    let file = formData[0].data
+    const file = formData[0].data
 
     if (!session) {
         throw createError({
@@ -32,17 +32,17 @@ export default defineEventHandler(async (event) => {
     }
 
 
-    let voter_workbook = XLSX.read(file)
-    let name = voter_workbook.SheetNames[0]
-    let voter_sheet = voter_workbook.Sheets[voter_workbook.SheetNames[0]]
+    const voter_workbook = XLSX.read(file)
+    const voter_sheet = voter_workbook.Sheets[voter_workbook.SheetNames[0]]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const voter_table: any[][] = XLSX.utils.sheet_to_json(voter_sheet, { header: 1 })
-    
-    let failAddingVoter: {
+
+    const failAddingVoter: {
         id: number,
         name: string,
         department: string,
     }[] = [];
-    
+
     for (let i = 1; i < voter_table.length; i++) {
         const studentId = voter_table[i][0] as number
         const studentName = voter_table[i][1] as string
