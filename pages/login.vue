@@ -30,6 +30,14 @@
         <span class="m-auto text-xs text-gray-600">
           (s+學號@gm.ntpu.edu.tw 或 s+學號@ms.ntpu.edu.tw)
         </span>
+        <br>
+        <span class="m-auto text-xs text-gray-600">
+          <NuxtLink
+            to="/privacy"
+            class="font-bold hover:text-stone-600 hover:underline"
+            >Privacy Policy
+          </NuxtLink>
+        </span>
       </div>
     </ElCard>
   </div>

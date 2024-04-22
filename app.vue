@@ -215,14 +215,9 @@
             class="font-bold hover:text-stone-600 hover:underline"
             target="_blank"
             >Open Source</NuxtLink
-          >|
+          >
         </div>
       </span>
-      <NuxtLink
-        to="/privacy"
-        class="font-bold hover:text-stone-600 hover:underline"
-        >Privacy Policy
-      </NuxtLink>
       <span
         class="text-center text-xs font-bold tracking-tighter text-stone-700 sm:text-sm sm:tracking-tight md:text-base md:tracking-normal"
       >
