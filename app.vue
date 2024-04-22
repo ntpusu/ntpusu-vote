@@ -149,7 +149,7 @@
           >
             <template #content>
               <div class="text-center">
-                投票開始前每日重置<br />投票開始後不再重置
+                投票開始前每日重置<br>投票開始後不再重置
               </div>
             </template>
             <div class="m-3 text-center">
@@ -172,7 +172,7 @@
           >
             <template #content>
               <div class="text-center">
-                投票期間為<br />2023年5月24日<br />00:00 ~ 23:59
+                投票期間為<br>2023年5月24日<br>00:00 ~ 23:59
               </div>
             </template>
             <div class="m-3 text-center">
