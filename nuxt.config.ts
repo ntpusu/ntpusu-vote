@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             productionUrl: process.env.PRODUCTION_URL,
+            recaptchaSiteKey: process.env.RECAPTCHA_V2_INVISIBLE_SITE_KEY,
         },
     },
     modules: [
