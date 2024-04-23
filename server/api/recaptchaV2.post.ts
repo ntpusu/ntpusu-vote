@@ -1,4 +1,3 @@
-const SECRET_KEY = process.env.RECAPTCHA_V2_INVISIBLE_SECRET_KEY
 export default defineEventHandler(async (event) => {
   const { response } = await readBody(event) as { response: string | undefined }
   if (!response) {
