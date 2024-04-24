@@ -4,10 +4,10 @@
     <div class="demo-collapse">
       <el-collapse
         v-model="activeNames"
-        class="w-fit border-2 px-4 py-2 rounded-xl border-blue-300"
+        class="w-2/3 border-2 px-4 py-2 rounded-xl border-blue-300 max-w-md"
       >
         <el-collapse-item
-          title="All department"
+          title="所有科系名稱及投票區"
           name="1"
         >
           <!-- 顯示目前系統內的資料筆數 -->
@@ -82,7 +82,7 @@
       <!-- 顯示上傳進度條 -->
       <el-progress
         v-if="uploadDialogVisible"
-        class="mt-3"
+        class="mt-3 w-2/3"
         :percentage="100"
         status="success"
         :indeterminate="true"
@@ -100,7 +100,7 @@
       <!-- 顯示刪除進度條 -->
       <el-progress
         v-if="deletingDialogVisible"
-        class="mt-3"
+        class="mt-3 w-2/3"
         :percentage="100"
         status="exception"
         :indeterminate="true"
@@ -126,63 +126,36 @@
   </div>
 </template>
 
+
 <script setup lang="ts">
-// 引入 vue 和 element-plus 的 UploadInstance
 import { ref } from "vue";
 import type { UploadInstance } from "element-plus";
-import { Search } from "@element-plus/icons-vue";
-import type { DepartmentInGroup } from "@prisma/client";
 
-const dataChangedialogVisible = ref(false);
 const uploadDialogVisible = ref(false);
 const deletingDialogVisible = ref(false);
 const queryInput = ref("");
-const modifydepartmentInput = ref("");
 const groupIdStatus = ref(0); /* 0: no input, 1 : not found, 2 : found data */
 const seletingUploadMode = ref("");
-let queryInputData = "";
 
 const activeNames = ref(["1"]);
-// const handleChange = (val: string[]) => {
-//   console.log(val);
-// };
 
-const departmentData: Ref<{
-  id: number;
-  name: string;
-  DepartmentInGroup: DepartmentInGroup[];
-  first: {
-    serNum: number | null;
-    time: number | null;
-  };
-} | null> = ref(null);
-
-// 定義頁面元資訊
 definePageMeta({
-  middleware: ["admin"], // 中介軟體
-  title: "管理選舉區", // 標題
+  middleware: ["admin"], 
+  title: "管理選舉區", 
 });
 
-// 建立上傳元件的 ref
 const uploadRef = ref<UploadInstance>();
 
-// 定義提交上傳的方法
 const submitUpload = () => {
   uploadRef.value!.submit();
 };
-
-// 使用 useFetch 獲取選區數量
 const {
   data: electorCount,
-  //pending: adminPending,
   refresh: electorCountRefresh,
 } = await useFetch("/api/getGroupCnt");
 
-//1. add api_getAllGroupCnt
 const { data: departmentDetail, refresh: electorDetailRefresh } =
   await useFetch("/api/getAlldepartmentCnt");
-
-//const t = await useLazyFetch('/api/getAllVoter')
 
 const uploadfunc = async (item) => {
   const file = item.file as File;
@@ -192,19 +165,17 @@ const uploadfunc = async (item) => {
     uploadRef.value!.clearFiles();
     return false;
   }
-  //2. add api_deleteAllgroup  ok
+
   if (seletingUploadMode.value == "override") {
     await useFetch("/api/delAllGroup", {
       method: "DELETE",
     });
   }
   let formData = new FormData();
-
   uploadDialogVisible.value = true;
   formData.append("fileName", file.name);
   formData.append("file", file);
 
-  //3. add api_upload  ok
   const { error: uploadingFileStatus } = await useFetch("/api/uploadGroup", {
     method: "POST",
     body: formData,
@@ -216,24 +187,6 @@ const uploadfunc = async (item) => {
   uploadRef.value!.clearFiles();
 };
 
-// //4. set api_getGroup
-// const queryStudentData = async () => {
-//   const res = await useFetch("/api/getGroup", {
-//     method: "GET",
-//     query: { group: parseInt(queryInput.value) },
-//   });
-//   if (res.error.value) {
-//     groupIdStatus.value = 1;
-//     return;
-//   }
-//   GroupData.value = res.data.value;
-//   queryInputData = queryInput.value;
-//   groupIdStatus.value = 2;
-// };
-
-const midifyDepartment = async () => {};
-
-//5. add api_delgroup
 const deleteGroupData = async () => {
   ElMessageBox.confirm("確定要刪除所有選區嗎？", "刪除選區", {
     confirmButtonText: "刪除",
@@ -267,10 +220,4 @@ const deleteGroupData = async () => {
       });
     });
 };
-
-const uploadSubmit = async () => {
-  submitUpload();
-  uploadDialogVisible.value = false;
-};
-//
 </script>
