@@ -234,7 +234,11 @@ const uploadfunc = async (item: { file: File }) => {
     return false;
   }
   const formData = new FormData();
-
+  const infoMessage = ElMessage({
+      message: '上傳檔案中',
+      type: "info",
+      duration: 0,
+    });
   formData.append("file", file);
   const { data: failAddingVoter, error: uploadingFileError } = await useFetch(
     "/api/uploadVoter",
@@ -243,6 +247,8 @@ const uploadfunc = async (item: { file: File }) => {
       body: formData,
     },
   );
+  
+  infoMessage.close()
   if (uploadingFileError.value) {
     ElMessage.error("上傳失敗 " + uploadingFileError.value.data?.message);
   } else {
@@ -260,7 +266,7 @@ const uploadfunc = async (item: { file: File }) => {
     ElMessage({
       dangerouslyUseHTMLString: true,
       showClose: true,
-      message: errorMessage, //'無法新增以下投票者' + (failAddingVoter.value as failAddingVoterType[]).toString(),
+      message: errorMessage,
       type: "warning",
       duration: 0,
     });
