@@ -240,7 +240,7 @@ const uploadfunc = async (item: { file: File }) => {
       duration: 0,
     });
   formData.append("file", file);
-  const { data: failAddingVoter, error: uploadingFileError } = await useFetch(
+  const { data: failAddingVoter, error} = await useFetch(
     "/api/uploadVoter",
     {
       method: "POST",
@@ -249,8 +249,8 @@ const uploadfunc = async (item: { file: File }) => {
   );
   
   infoMessage.close()
-  if (uploadingFileError.value) {
-    ElMessage.error("上傳失敗 " + uploadingFileError.value.data?.message);
+  if (error.value) {
+    ElMessage.error("上傳失敗" + errHandle(error));
   } else {
     ElMessage.success("上傳成功");
   }
