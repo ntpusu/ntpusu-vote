@@ -38,44 +38,23 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const item = await prisma.voter.findUniqueOrThrow({
+    const voterData = await prisma.voter.findUniqueOrThrow({
         where: { id },
         select: {
-            login: {
-                select: {
-                    id: true,
-                    time: true,
-                },
-            },
-            department: {
-                select: {
-                    departmentInGroup: {
-                        select: {
-                            group: {
-                                select: {
-                                    name: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
+            id: true,
+            departmentId: true,
+        }
     })
 
-    let group = ''
-    for (const i of item.department.departmentInGroup) {
-        group += i.group.name + ', '
-    }
-
-    group = group.slice(0, -2)
+    const voterDepartment = await prisma.department.findUniqueOrThrow({
+        where: { id: voterData.departmentId },
+        select: {
+            name: true,
+        }
+    })
 
     return {
-        id,
-        group,
-        first: {
-            serNum: item.login?.id,
-            time: item.login?.time,
-        },
+        id: voterData.id,
+        department: voterDepartment.name,
     }
 })
