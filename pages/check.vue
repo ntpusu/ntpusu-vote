@@ -4,7 +4,7 @@
       label-width="auto"
       label-suffix=":"
       hide-required-asterisk
-      class="m-auto flex w-full flex-col items-center justify-center py-10"
+      class="m-auto flex flex-col items-center justify-center py-10"
     >
       <ElFormItem
         label="學號"
@@ -59,7 +59,7 @@
       label-width="auto"
       label-suffix=":"
       hide-required-asterisk
-      class="m-auto flex w-full flex-col items-center justify-center py-10"
+      class="m-auto flex flex-col items-center justify-center py-10"
     >
       <ElFormItem
         label="憑證"
@@ -102,7 +102,7 @@
       label-width="auto"
       label-suffix=":"
       hide-required-asterisk
-      class="m-auto flex w-full flex-col items-center justify-center py-10"
+      class="m-auto flex w-64 flex-col items-center justify-center py-10"
     >
       <ElFormItem
         label="投票"
@@ -113,6 +113,7 @@
             v-model="VG.votingId"
             placeholder="請選擇投票項目"
             clearable
+            class = "!w-36"
           >
             <ElOption
               v-for="item in voting"
@@ -132,6 +133,7 @@
             v-model="VG.groupId"
             placeholder="請選擇投票範圍"
             clearable
+            class = "!w-36"
           >
             <ElOption
               v-for="item in group"
