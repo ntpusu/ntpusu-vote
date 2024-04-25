@@ -4,7 +4,7 @@
     <div class="demo-collapse">
       <el-collapse
         v-model="activeNames"
-        class="w-2/3 border-2 px-4 py-2 rounded-xl border-blue-300 max-w-md"
+        class="w-2/3 max-w-md rounded-xl border-2 border-blue-300 px-4 py-2"
       >
         <el-collapse-item
           title="所有科系名稱及投票區"
@@ -38,9 +38,9 @@
         </el-collapse-item>
       </el-collapse>
     </div>
-
     <!-- 檔案上傳元件 -->
     <el-upload
+      v-if="electorCount == 0"
       ref="uploadRef"
       class="upload-demo"
       action="none"
@@ -49,13 +49,11 @@
       :drag="true"
       :auto-upload="false"
       :limit="1"
-      v-if="electorCount == 0"
     >
       <!-- 上傳按鈕 -->
       <template #trigger>
         <el-button type="primary">選擇檔案</el-button>
       </template>
-
       <!-- 提交按鈕 -->
       <el-button
         class="ml-3"
@@ -64,14 +62,12 @@
       >
         上傳至伺服器端
       </el-button>
-
       <!-- 上傳提示 -->
       <template #tip>
         <div class="el-upload__tip">僅能上傳 .xlsx 文件</div>
       </template>
     </el-upload>
-
-    <br />
+    <br>
     <div class="demo-progress">
       <el-text
         v-if="uploadDialogVisible"
@@ -114,22 +110,24 @@
       size="large"
       >目前系統內有{{ electorCount }}筆資料</el-text
     >
-    <br />
+    <br>
     <!-- 刪除選區 -->
     <el-button
+      v-if="electorCount != 0"
       type="danger"
       @click="deleteGroupData"
-      v-if="electorCount != 0"
       >刪除所有選區</el-button
     >
-    <br />
+    <br>
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { ref } from "vue";
 import type { UploadInstance } from "element-plus";
+definePageMeta({
+  middleware: ["admin"],
+  title: "管理選舉區",
+});
 
 const uploadDialogVisible = ref(false);
 const deletingDialogVisible = ref(false);
@@ -139,25 +137,18 @@ const seletingUploadMode = ref("");
 
 const activeNames = ref(["1"]);
 
-definePageMeta({
-  middleware: ["admin"], 
-  title: "管理選舉區", 
-});
-
 const uploadRef = ref<UploadInstance>();
 
 const submitUpload = () => {
   uploadRef.value!.submit();
 };
-const {
-  data: electorCount,
-  refresh: electorCountRefresh,
-} = await useFetch("/api/getGroupCnt");
+const { data: electorCount, refresh: electorCountRefresh } =
+  await useFetch("/api/getGroupCnt");
 
 const { data: departmentDetail, refresh: electorDetailRefresh } =
   await useFetch("/api/getAlldepartmentCnt");
 
-const uploadfunc = async (item) => {
+const uploadfunc = async (item: { file: File; }) => {
   const file = item.file as File;
   const fileType = file.name.substring(file.name.lastIndexOf("."));
   if (fileType !== ".xlsx") {
@@ -171,16 +162,16 @@ const uploadfunc = async (item) => {
       method: "DELETE",
     });
   }
-  let formData = new FormData();
+  const formData = new FormData();
   uploadDialogVisible.value = true;
   formData.append("fileName", file.name);
   formData.append("file", file);
 
-  const { error: uploadingFileStatus } = await useFetch("/api/uploadGroup", {
+  await useFetch("/api/uploadGroup", {
     method: "POST",
     body: formData,
   });
-  //console.log(uploadingFileName)
+
   uploadDialogVisible.value = false;
   electorCountRefresh();
   electorDetailRefresh();

@@ -1,19 +1,10 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
-//import { createRequire } from 'module';
-//const require = createRequire(import.meta.url);
-//const fs = require("fs");
 import * as XLSX from 'xlsx';
-//import * as fs from 'fs'
-//var XLSX = require("xlsx");
-//XLSX.set_fs(fs);
 export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
-    //const formData = await readBody(event) as string
-    const formData = (await readMultipartFormData(event))!// as MultiPartData[]
-    let fileName = formData[0].data.toString("utf8") as string
-    let file = formData[1].data
-    //const formData = await readFormData(event)
+    const formData = (await readMultipartFormData(event))!
+    const file = formData[1].data
 
     if (!session) {
         throw createError({
@@ -38,22 +29,15 @@ export default defineEventHandler(async (event) => {
             message: '不在管理員名單中',
         })
     }
-    //let localFilePath = '/tmp/voterData' + Date.now() + ".xlsx";
-    
-    //const buffer = Buffer.from(fileHex, 'hex');
 
-    //await fs.writeFileSync(localFilePath, file, () => console.log('xlsx saved!'));
-    let group_workbook = XLSX.read(file)
-    let group_sheet = group_workbook.Sheets[group_workbook.SheetNames[0]]
+    const group_workbook = XLSX.read(file)
+    const group_sheet = group_workbook.Sheets[group_workbook.SheetNames[0]]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const group_table: any[][] = XLSX.utils.sheet_to_json(group_sheet, { header: 1 })
-    
-    //const data = []
+
     let allGroups: string[] = []
     for (let i = 1; i < group_table.length; i++) {
-        //const Department_Name = group_table[i][0] as string
         const Group = group_table[i].slice(1,4) as string[]
-
-        //data.push({ Group_Name})
         allGroups = allGroups.concat(Group)
     }
 
