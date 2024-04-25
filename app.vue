@@ -81,8 +81,8 @@
         <ElMenuItem
           v-if="admin"
           class="!px-3 sm:!px-4 md:!px-5"
-          index="/manage_electoral_district"
-          @click="useRouter().push('/manage_electoral_district')"
+          index="/manageDepartment"
+          @click="useRouter().push('/manageDepartment')"
         >
           <span class="text-sm font-bold sm:text-base md:text-lg">
             管理選舉區
