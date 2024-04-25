@@ -55,7 +55,6 @@
 </template>
 
 <script setup lang="ts">
-
 definePageMeta({
   auth: false,
   title: "首頁",

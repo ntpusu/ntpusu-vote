@@ -406,11 +406,11 @@
           <div class="text-2xl font-bold text-red-500">投票失敗</div>
         </template>
         <div class="px-5 pb-3 text-lg">
-          可能原因：<br >
-          1. 未登入<br >
-          2. 網路連線斷了<br >
-          3. 未在投票時間內投票<br >
-          4. 操作過於頻繁<br >
+          可能原因：<br>
+          1. 未登入<br>
+          2. 網路連線斷了<br>
+          3. 未在投票時間內投票<br>
+          4. 操作過於頻繁<br>
           若有疑問請聯繫<NuxtLink
             to="https://www.facebook.com/NTPUSU"
             target="_blank"
