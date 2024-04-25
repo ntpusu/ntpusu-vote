@@ -27,7 +27,8 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    return await prisma.group.findMany({
-        orderBy: { id: 'asc' },
-    })
+    await prisma.group.deleteMany({})
+    await prisma.department.deleteMany({})
+
+    return {}
 })

@@ -27,7 +27,19 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    return await prisma.group.findMany({
-        orderBy: { id: 'asc' },
+    // return department 名字和連結的 group 名字
+    return await prisma.department.findMany({
+        select: {
+            name: true,
+            departmentInGroup: {
+                select: {
+                    group: {
+                        select: {
+                            name: true,
+                        }
+                    }
+                }
+            }
+        }
     })
 })

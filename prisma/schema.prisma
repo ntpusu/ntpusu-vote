@@ -72,7 +72,7 @@ model Department {
 
 model Group {
   id   Int    @id @default(autoincrement())
-  name String
+  name String @unique
 
   votings           Voting[]
   departmentInGroup DepartmentInGroup[]
