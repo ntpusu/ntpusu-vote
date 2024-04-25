@@ -26,10 +26,10 @@
       <ClientOnly>
         <ElDialog
           v-if="voterData"
+          v-model="voterShow"
           title="選舉人資訊"
           center
           align-center
-          v-model="voterShow"
           class="!w-fit !rounded-lg px-5"
         >
           <div class="flex flex-col flex-wrap items-start justify-center">
@@ -81,10 +81,10 @@
       <ClientOnly>
         <ElDialog
           v-if="tokenData"
+          v-model="tokenShow"
           title="選票資訊"
           center
           align-center
-          v-model="tokenShow"
           class="!w-fit !rounded-lg px-5"
         >
           <div class="flex flex-col flex-wrap items-start justify-center">
@@ -152,9 +152,9 @@
       <ClientOnly>
         <ElDialog
           v-if="VGData"
+          v-model="VGShow"
           title="投票範圍資訊"
           align-center
-          v-model="VGShow"
           class="!w-fit !rounded-lg px-5"
         >
           <div class="flex flex-col flex-wrap items-start justify-center">
