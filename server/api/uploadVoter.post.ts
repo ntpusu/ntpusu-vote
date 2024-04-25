@@ -38,12 +38,63 @@ export default defineEventHandler(async (event) => {
 
     const tasks: Promise<void>[] = []
     for(let i = 1; i < voter_table.length; i += 100) {
-        tasks.push(task(voter_table.slice(i, min(voter_table.length, i + 100))));
+        tasks.push(task(voter_table.slice(i, Math.min(voter_table.length, i + 100))));
     }
 
     await Promise.all(tasks)
 
-    return failAddingVoter;
+    return noExistDepartment;
+    
+})
+
+const departmentMp = new Map<string, number>()
+
+const noExistDepartment: string[] = []
+
+
+async function task(data:any[][]) {
+    for (let i = 0; i < data.length; i++) {
+        const studentId = data[i][0] as number
+        if (studentId <= 100000000) {
+            continue;
+        }
+        const studentDepartment = (data[i][2] as string).replace(/\d[AB]?/, "")
+        let departmentId = departmentMp.get(studentDepartment)
+        if (departmentId === undefined) {
+            departmentId = (await prisma.department.findUnique({
+                where: {
+                    name: studentDepartment,
+                },
+                select: {
+                    id: true,
+                },
+            }))?.id
+            if (departmentId === undefined) {
+                noExistDepartment.push(studentDepartment)
+                departmentMp.set(studentDepartment, NaN)
+                continue;
+            }
+            departmentMp.set(studentDepartment, departmentId)
+        }
+        if (isNaN(departmentId)) {
+            continue;
+        }
+        await prisma.voter.upsert({
+            where: {
+                id: studentId,
+            },
+            update: {
+                departmentId: departmentId,
+            },
+            create: {
+                id: studentId,
+                departmentId: departmentId,
+            },
+        })
+        //console.log(studentId);
+    }
+}
+
 /*
     const tasks = [
         task(voter_table),
@@ -90,48 +141,3 @@ export default defineEventHandler(async (event) => {
         }
     }
 */
-    
-})
-
-const min = (a, b) => {
-    return a > b ? b : a;
-}
-
-const failAddingVoter: {
-    id: number,
-}[] = [];
-
-async function task(data:any[][]) {
-    for (let i = 1; i < data.length; i++) {
-        const studentId = data[i][0] as number
-        //const studentName = data[i][1] as string
-        const studentDepartment = (data[i][2] as string).replace(/\d[AB]?/, "")
-        const department = await prisma.department.findUnique({
-            where: {
-                name: studentDepartment,
-            },
-            select: {
-                id: true,
-            },
-        })
-        if (department !== null) {
-            await prisma.voter.upsert({
-                where: {
-                    id: studentId,
-                },
-                update: {
-                    departmentId: department.id,
-                },
-                create: {
-                    id: studentId,
-                    departmentId: department.id,
-                },
-            })
-        }
-        else {
-            failAddingVoter.push({
-                id: studentId,
-            })
-        }
-    }
-}

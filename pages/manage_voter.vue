@@ -241,7 +241,7 @@ const uploadfunc = async (item: { file: File }) => {
       duration: 0,
     });
   formData.append("file", file);
-  const { data: failAddingVoter, error} = await useFetch(
+  const { data: noExistDepartment, error} = await useFetch(
     "/api/uploadVoter",
     {
       method: "POST",
@@ -256,13 +256,10 @@ const uploadfunc = async (item: { file: File }) => {
     ElMessage.success("上傳成功");
   }
 
-  if (failAddingVoter.value && failAddingVoter.value.length != 0) {
-    let errorMessage = "無法新增以下投票者<br>學號列表:<br>";
-    for (let i = 0; i < failAddingVoter.value.length; i++) {
-      errorMessage += `${failAddingVoter.value[i].id}`;
-      if(i != failAddingVoter.value.length - 1) {
-        errorMessage += '、'
-      }
+  if (noExistDepartment.value && noExistDepartment.value.length != 0) {
+    let errorMessage = "無法新增下列系所投票者: 系所不存在<br>系所列表<br>";
+    for (let i = 0; i < noExistDepartment.value.length; i++) {
+      errorMessage += `${noExistDepartment.value[i]} <br>`;
     }
     ElMessage({
       dangerouslyUseHTMLString: true,
