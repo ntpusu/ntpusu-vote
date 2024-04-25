@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             productionUrl: process.env.PRODUCTION_URL,
+            recaptchaSiteKey: process.env.RECAPTCHA_V2_INVISIBLE_SITE_KEY,
         },
     },
     modules: [
@@ -34,7 +35,8 @@ export default defineNuxtConfig({
         "@nuxt/eslint"
     ],
     plugins: [
-        "~/plugins/vercel.client.ts",
+        '~/plugins/vercel.client.ts',
+        '~/plugins/recaptcha.client.ts',
     ],
     app: {
         pageTransition: { name: "page", mode: "out-in" },
@@ -190,6 +192,7 @@ export default defineNuxtConfig({
         corsHandler: {
             methods: ["GET", "PUT", "POST", "DELETE"],
         },
+        removeLoggers: false
     },
     devtools: {
         enabled: true,

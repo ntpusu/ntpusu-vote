@@ -30,7 +30,8 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "prisma": "^5.13.0",
-    "vite-plugin-eslint2": "^4.4.0"
+    "vite-plugin-eslint2": "^4.4.0",
+    "vue3-recaptcha-v2": "^2.0.2"
   },
   "trustedDependencies": [
     "@prisma/client",

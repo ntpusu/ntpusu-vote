@@ -16,8 +16,8 @@
           class="justify-center"
         >
           <ElSkeletonItem
-            v-for="index in rand(1, 4)"
-            :key="index"
+            v-for="key in rand(1, 4)"
+            :key="key"
             variant="rect"
             class="!w-[85vw] !rounded-xl sm:!w-[65vw] md:!w-[50vw] lg:!w-[40vw] xl:!w-[35vw] 2xl:!w-[28vw]"
             :style="{ height: rand(15, 25) + 'rem' }"
@@ -304,6 +304,12 @@
                         @click="voteConfirm(votingitem.id)"
                       >
                         <span class="font-bold"> 投 出 選 票 </span>
+                        <RecaptchaV2
+                          size="invisible"
+                          @error-callback="handleErrorCalback"
+                          @expired-callback="handleExpiredCallback"
+                          @widget-id="handleWidgetId"
+                        />
                       </ElButton>
                     </div>
                   </ElDialog>
@@ -420,6 +426,7 @@
 <script setup lang="ts">
 import { rand } from "@vueuse/shared";
 import type { Action } from "element-plus";
+import { RecaptchaV2, useRecaptcha } from "vue3-recaptcha-v2";
 
 definePageMeta({
   title: "投票",
@@ -464,6 +471,24 @@ const voteLoading: Ref<boolean[]> = ref([]);
 const tokenLoading: Ref<boolean[]> = ref([]);
 const resultLoading: Ref<boolean[]> = ref([]);
 
+const { handleExecute, handleGetResponse, handleReset } = useRecaptcha();
+
+let widgetId: number;
+const handleWidgetId = (Id: number) => {
+  widgetId = Id;
+};
+function wait(milliseconds: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+}
+const handleErrorCalback = () => {
+  console.log("Error callback");
+};
+const handleExpiredCallback = () => {
+  console.log("Expired callback");
+};
+
 const voteConfirm = async (votingId: number) => {
   if (!voteData.value[votingId]) {
     ElMessage({
@@ -493,7 +518,25 @@ const voteConfirm = async (votingId: number) => {
     },
   )
     .then(async () => {
-      // Add recaptcha
+      try {
+        handleExecute(widgetId);
+        await wait(1000);
+        const response = handleGetResponse(widgetId);
+
+        await $fetch("/api/recaptchaV2", {
+          method: "POST",
+          body: JSON.stringify({ response }),
+        });
+
+        handleReset(widgetId);
+      } catch (error) {
+        console.log("Login error:", error);
+        ElMessage.error("ReCaptCha驗證失敗");
+        setTimeout(() => {
+          ElMessage.info("請稍後或更換裝置再試");
+        }, 1500);
+        return;
+      }
 
       await useFetch("/api/vote", {
         method: "POST",
