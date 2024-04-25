@@ -21,7 +21,8 @@
 				"Prisma.prisma"
 			],
 			"settings": {
-				"terminal.integrated.defaultProfile.linux": "zsh"
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"eslint.experimental.useFlatConfig": true
 			}
 		}
 	},
