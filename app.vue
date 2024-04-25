@@ -17,8 +17,8 @@
         mode="horizontal"
         :ellipsis="false"
         :active-index="curIndex"
-        @select="handleSelect"
         class="h-14 sm:h-[3.75rem] md:h-16"
+        @select="handleSelect"
       >
         <span
           class="m-auto ml-3 cursor-pointer text-xl font-bold sm:ml-4 sm:text-2xl md:ml-5 md:text-3xl"
@@ -137,8 +137,8 @@
         align-center
         :show-close="false"
         width="30%"
-        @click="showTodayBadge = false"
         class="-py-4 min-w-fit !rounded-lg"
+        @click="showTodayBadge = false"
       >
         <div
           class="-mt-7 flex flex-col items-center justify-center md:flex-row"
