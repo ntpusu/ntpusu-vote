@@ -103,3 +103,13 @@ model VotingFromGroup {
 model Admin {
   id Int @id
 }
+
+model VotingTimeLine {
+  id Int @id @default(autoincrement())
+  start DateTime
+  end DateTime
+  finish DateTime
+  content String
+  name String
+  maybe Boolean
+}
