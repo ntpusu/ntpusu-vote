@@ -334,8 +334,8 @@ useHead({
   link: [
     {
       rel: "icon",
-      type: "image/png",
-      href: "/favicon.png",
+      type: "image/jpeg",
+      href: "/ntpusu.jpg",
     },
     {
       rel: "favicon icon",

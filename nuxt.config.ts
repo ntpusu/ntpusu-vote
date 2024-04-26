@@ -191,12 +191,10 @@ export default defineNuxtConfig({
         xssValidator: false,
         corsHandler: {
             methods: ["GET", "PUT", "POST", "DELETE"],
-        },
-        removeLoggers: false
+        }
     },
     devtools: {
         enabled: true,
-
         timeline: {
             enabled: true,
         },
