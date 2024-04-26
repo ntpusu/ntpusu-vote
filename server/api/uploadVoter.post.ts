@@ -1,6 +1,7 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
 import * as XLSX from 'xlsx';
+import type { Prisma } from '@prisma/client';
 
 export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
@@ -36,108 +37,72 @@ export default defineEventHandler(async (event) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const voter_table: any[][] = XLSX.utils.sheet_to_json(voter_sheet, { header: 1 })
 
-    const tasks: Promise<void>[] = []
-    for(let i = 1; i < voter_table.length; i += 100) {
-        tasks.push(task(voter_table.slice(i, Math.min(voter_table.length, i + 100))));
-    }
-
-    await Promise.all(tasks)
-
-    return noExistDepartment;
-    
-})
-
-const departmentMp = new Map<string, number>()
-
-const noExistDepartment: string[] = []
-
-
-async function task(data:any[][]) {
-    for (let i = 0; i < data.length; i++) {
-        const studentId = data[i][0] as number
-        if (studentId <= 100000000) {
-            continue;
-        }
-        const studentDepartment = (data[i][2] as string).replace(/\d[AB]?/, "")
-        let departmentId = departmentMp.get(studentDepartment)
-        if (departmentId === undefined) {
-            departmentId = (await prisma.department.findUnique({
-                where: {
-                    name: studentDepartment,
-                },
-                select: {
-                    id: true,
-                },
-            }))?.id
-            if (departmentId === undefined) {
-                noExistDepartment.push(studentDepartment)
-                departmentMp.set(studentDepartment, NaN)
-                continue;
-            }
-            departmentMp.set(studentDepartment, departmentId)
-        }
-        if (isNaN(departmentId)) {
-            continue;
-        }
-        await prisma.voter.upsert({
-            where: {
-                id: studentId,
-            },
-            update: {
-                departmentId: departmentId,
-            },
-            create: {
-                id: studentId,
-                departmentId: departmentId,
-            },
+    const departmentMp = new Map<string, number>()
+    await prisma.department.findMany({
+        select: {
+            id: true,
+            name: true,
+        },
+    }).then((departments) => {
+        departments.forEach((department) => {
+            departmentMp.set(department.name, department.id)
         })
-        //console.log(studentId);
-    }
-}
-
-/*
-    const tasks = [
-        task(voter_table),
-        task(voter_table),
-        task(voter_table),
-        task(voter_table),
-        task(voter_table)
-    ]
-
-    await Promise.all(tasks)
+    })
     
-    await task(voter_table)
+    const failAddingVoter: {
+        id: number,
+        reason: number,
+    }[] = []
 
-    for (let i = 1; i < voter_table.length; i++) {
+    const students: Prisma.VoterCreateManyInput[] = [];
+
+    const studentIdSet = new Map<number, number>()
+
+    for(let i = 1; i < voter_table.length; i++ ) {
         const studentId = voter_table[i][0] as number
-        //const studentName = voter_table[i][1] as string
-        const studentDepartment = (voter_table[i][2] as string).replace(/\d[AB]?/, "")
-        const department = await prisma.department.findUnique({
-            where: {
-                name: studentDepartment,
-            },
-            select: {
-                id: true,
-            },
-        })
-        if (department !== null) {
-            await prisma.voter.upsert({
-                where: {
+        if (studentIdSet.has(studentId)) {
+            if (studentIdSet.get(studentId) === 1) {
+                failAddingVoter.push({
                     id: studentId,
-                },
-                update: {
-                    departmentId: department.id,
-                },
-                create: {
-                    id: studentId,
-                    departmentId: department.id,
-                },
-            })
+                    reason: 1//'此資料表中有重複學號 將只會新增第一筆投票者資料'
+                })
+                studentIdSet.set(studentId, 2)
+            }
+            continue;
         }
         else {
+            studentIdSet.set(studentId, 1)
+        }
+        if(isNaN(studentId) || (studentId <= 100000000 || studentId >= 1000000000) ) {
+            continue;
+        }
+        const studentDepartment = (voter_table[i][2] as string).replace(/\d[AB]?/, "")
+        const departmentId = departmentMp.get(studentDepartment);
+        if (departmentId === undefined) {
             failAddingVoter.push({
                 id: studentId,
+                reason: 2,//'系所不存在'
             })
+            departmentMp.set(studentDepartment, NaN)
+            continue;
         }
+        if (isNaN(departmentId)) {
+            failAddingVoter.push({
+                id: studentId,
+                reason: 2,//'系所不存在'
+            })
+            continue;
+        }
+
+        students.push({
+            id: studentId,
+            departmentId: departmentId,
+        })
     }
-*/
+
+    await prisma.voter.createMany({
+        data: students,
+    })
+
+    return failAddingVoter;
+})

@@ -195,7 +195,7 @@ enum studentIdStatusEnum {
 
 const studentIdStatus = ref(
   studentIdStatusEnum.noInput,
-); /* 0: no input, 1 : not found, 2 : found data */
+);
 
 const voterData: Ref<{
   id: number;
@@ -241,14 +241,14 @@ const uploadfunc = async (item: { file: File }) => {
       duration: 0,
     });
   formData.append("file", file);
-  const { data: noExistDepartment, error} = await useFetch(
+  const { data: failAddingVoter, error} = await useFetch(
     "/api/uploadVoter",
     {
       method: "POST",
       body: formData,
     },
   );
-
+  
   infoMessage.close()
   if (error.value) {
     ElMessage.error("上傳失敗" + errHandle(error));
@@ -256,10 +256,19 @@ const uploadfunc = async (item: { file: File }) => {
     ElMessage.success("上傳成功");
   }
 
-  if (noExistDepartment.value && noExistDepartment.value.length != 0) {
-    let errorMessage = "無法新增下列系所投票者: 系所不存在<br>系所列表<br>";
-    for (let i = 0; i < noExistDepartment.value.length; i++) {
-      errorMessage += `${noExistDepartment.value[i]} <br>`;
+  if (failAddingVoter.value && failAddingVoter.value.length != 0) {
+    let errorMessage = "無法新增下列投票者:<br>";
+    for (let i = 0; i < failAddingVoter.value.length; i++) {
+      errorMessage += `學號: ${failAddingVoter.value[i].id} 原因: `
+      if (failAddingVoter.value[i].reason === 1) {
+        errorMessage += "此名單學號重複<br>";
+      }
+      else if (failAddingVoter.value[i].reason === 2) {
+        errorMessage += "系所不存在<br>";
+      }
+      else {
+        errorMessage += "未知錯誤<br>";
+      }
     }
     ElMessage({
       dangerouslyUseHTMLString: true,
