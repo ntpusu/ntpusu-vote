@@ -161,7 +161,7 @@ definePageMeta({
 const { id } = useRoute().params as { id: string };
 
 const { data: voting, pending: votingPending } = await useLazyFetch(
-  "/api/getResult",
+  "/api/vote/getResult",
   {
     key: id,
     query: { id },

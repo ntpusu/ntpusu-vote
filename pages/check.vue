@@ -176,8 +176,8 @@ definePageMeta({
   title: "查詢",
 });
 
-const { data: voting } = await useFetch("/api/getVoting");
-const { data: group } = await useFetch("/api/getGroup");
+const { data: voting } = await useFetch("/api/voting/getAll");
+const { data: group } = await useFetch("/api/department/getAllGroup");
 
 const voter = ref("");
 const token = ref("");
@@ -223,7 +223,7 @@ const searchVoter = async () => {
     return;
   }
 
-  const res = await useFetch("/api/getVoter", {
+  const res = await useFetch("/api/voter/get", {
     query: { voter: voter.value },
   });
 
@@ -249,7 +249,7 @@ const searchToken = async () => {
     return;
   }
 
-  const res = await useFetch("/api/getBallot", {
+  const res = await useFetch("/api/vote/getBallot", {
     query: { token: token.value },
   });
 
@@ -275,7 +275,7 @@ const searchVG = async () => {
     return;
   }
 
-  const res = await useFetch("/api/getVotingGroupCnt", {
+  const res = await useFetch("/api/voting/getVotingGroupCnt", {
     query: { votingId: VG.votingId, groupId: VG.groupId },
   });
 

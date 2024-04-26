@@ -442,7 +442,7 @@ const {
   data,
   pending: votingPending,
   refresh: votingRefresh,
-} = await useLazyFetch("/api/voterSession");
+} = await useLazyFetch("/api/vote/voterSession");
 
 const freshTime = ref(Date.now());
 
@@ -549,11 +549,11 @@ const vote = async (votingId: number) => {
           cname: voteData.value[votingId],
         }),
       })
-        .then(async ({ data: res }) => {
-          if (res.value) {
-            if (res.value.vote) {
+        .then(async (res) => {
+          if (res) {
+            if (res.vote) {
               await ElMessageBox.confirm(
-                "憑證：" + res.value.token,
+                "憑證：" + res.token,
                 "投票成功",
                 {
                   cancelButtonText: "複製憑證",
@@ -570,7 +570,7 @@ const vote = async (votingId: number) => {
                 },
               ).catch(async (action: Action) => {
                 if (action === "cancel") {
-                  await navigator.clipboard.writeText(res.value!.token);
+                  await navigator.clipboard.writeText(res.token);
                   ElMessage({
                     type: "success",
                     message: "已複製",
@@ -579,7 +579,7 @@ const vote = async (votingId: number) => {
               });
             } else {
               await ElMessageBox.confirm(
-                "憑證：" + res.value.token,
+                "憑證：" + res.token,
                 "不可重複投票",
                 {
                   cancelButtonText: "複製憑證",
@@ -596,7 +596,7 @@ const vote = async (votingId: number) => {
                 },
               ).catch(async (action: Action) => {
                 if (action === "cancel") {
-                  await navigator.clipboard.writeText(res.value!.token);
+                  await navigator.clipboard.writeText(res.token);
                   ElMessage({
                     type: "success",
                     message: "已複製",

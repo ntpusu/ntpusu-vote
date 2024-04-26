@@ -142,13 +142,14 @@ const uploadRef = ref<UploadInstance>();
 const submitUpload = () => {
   uploadRef.value!.submit();
 };
-const { data: electorCount, refresh: electorCountRefresh } =
-  await useFetch("/api/getGroupCnt");
+const { data: electorCount, refresh: electorCountRefresh } = await useFetch(
+  "/api/department/getCnt",
+);
 
 const { data: departmentDetail, refresh: electorDetailRefresh } =
-  await useFetch("/api/getAlldepartmentCnt");
+  await useFetch("/api/department/getAllWithGroupName");
 
-const uploadfunc = async (item: { file: File; }) => {
+const uploadfunc = async (item: { file: File }) => {
   const file = item.file as File;
   const fileType = file.name.substring(file.name.lastIndexOf("."));
   if (fileType !== ".xlsx") {
@@ -158,7 +159,7 @@ const uploadfunc = async (item: { file: File; }) => {
   }
 
   if (seletingUploadMode.value == "override") {
-    await useFetch("/api/delAllGroup", {
+    await $fetch("/api/department/delAll", {
       method: "DELETE",
     });
   }
@@ -167,7 +168,7 @@ const uploadfunc = async (item: { file: File; }) => {
   formData.append("fileName", file.name);
   formData.append("file", file);
 
-  await useFetch("/api/uploadGroup", {
+  await $fetch("/api/department/upload", {
     method: "POST",
     body: formData,
   });
@@ -186,7 +187,7 @@ const deleteGroupData = async () => {
   })
     .then(async () => {
       deletingDialogVisible.value = true;
-      await $fetch("/api/delAllGroup", {
+      await $fetch("/api/department/delAll", {
         method: "DELETE",
       })
         .catch(() => {

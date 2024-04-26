@@ -171,7 +171,7 @@
           >
             <template #content>
               <div class="text-center">
-                投票開始前每日重置<br>投票開始後不再重置
+                投票開始前每日重置<br />投票開始後不再重置
               </div>
             </template>
             <div class="m-3 text-center">
@@ -194,7 +194,7 @@
           >
             <template #content>
               <div class="text-center">
-                投票期間為<br>2023年5月24日<br>00:00 ~ 23:59
+                投票期間為<br />2023年5月24日<br />00:00 ~ 23:59
               </div>
             </template>
             <div class="m-3 text-center">
@@ -353,7 +353,7 @@ useHead({
 
 const curIndex = ref(useRoute().path);
 
-const { data: admin } = await useFetch("/api/checkAdmin");
+const { data: admin } = await useFetch("/api/check/admin");
 
 const { status, signOut } = useAuth();
 
@@ -398,7 +398,11 @@ const checkLogin = () => {
   setTimeout(async () => {
     if (status.value) {
       if (status.value === "authenticated") {
-        const { data: res, refresh, error } = await useFetch("/api/checkLogin");
+        const {
+          data: res,
+          refresh,
+          error,
+        } = await useFetch("/api/check/login");
 
         while (!res.value) {
           if (error.value) {
@@ -422,9 +426,9 @@ const checkLogin = () => {
   }, 250);
 };
 
-const { data: totalCnt } = await useFetch("/api/getLoginCnt");
+const { data: totalCnt } = await useFetch("/api/loginCnt/get");
 
-const { data: realCnt } = await useFetch("/api/getLoginCnt", {
+const { data: realCnt } = await useFetch("/api/loginCnt/get", {
   params: {
     startTime: new Date(2023, 4, 24).getTime(),
     endTime: new Date(2023, 4, 24, 23, 59, 59).getTime(),
