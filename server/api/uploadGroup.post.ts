@@ -36,12 +36,22 @@ export default defineEventHandler(async (event) => {
     const group_table: any[][] = XLSX.utils.sheet_to_json(group_sheet, { header: 1 })
 
     let allGroups: string[] = []
+
+    // for (let i = 1; i < group_table.length; i++) {
+    //     const Group = group_table[i].slice(1,4) as string[]
+    //     allGroups = allGroups.concat(Group)
+    // }
+
     for (let i = 1; i < group_table.length; i++) {
-        const Group = group_table[i].slice(1,4) as string[]
-        allGroups = allGroups.concat(Group)
+        for (let j = 1; j < 4; j++) {
+            if (group_table[i][j] !== undefined) {
+                allGroups.push(group_table[i][j])
+            }
+        }
     }
 
     allGroups = Array.from(new Set(allGroups))
+
     await prisma.group.createMany({
         data: allGroups.map((group) => {
             return {
@@ -52,36 +62,32 @@ export default defineEventHandler(async (event) => {
     })
 
     for (let i = 1; i < group_table.length; i++) {
+        //const department = group_table[i][0] as string
+        //const groups = group_table[i].slice(1,4) as string[]
+        if (group_table[i][0] === undefined) {
+            continue
+        }
         const department = group_table[i][0] as string
-        const groups = group_table[i].slice(1,4) as string[]
-
+        const groups = []
+        for (let j = 1; j < 4; j++) {
+            if (group_table[i][j] !== undefined) {
+                groups.push(group_table[i][j])
+            }
+        }
+        
         await prisma.department.create({
             data: {
                 name: department,
                 departmentInGroup: {
-                    create:[
-                        {
+                    create: groups.map((group) => {
+                        return {
                             group: {
                                 connect: {
-                                    name: groups[0],
-                                }
-                            }
-                        },
-                        {
-                            group: {
-                                connect: {
-                                    name: groups[1],
-                                }
-                            }
-                        },
-                        {
-                            group: {
-                                connect: {
-                                    name: groups[2],
+                                    name: group,
                                 }
                             }
                         }
-                    ]
+                    })
                 }
             }
         })
