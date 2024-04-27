@@ -24,6 +24,12 @@
           class="m-auto my-2 w-64 cursor-pointer sm:w-72"
           @click="signIn('azure-ad', { callbackUrl: '/vote' })"
         />
+        <span
+          v-if="isEmbedded"
+          class="m-auto pt-5 text-base text-red-600"
+        >
+          內嵌瀏覽器有可能無法登入<br>盡量使用其他瀏覽器開啟網頁
+        </span>
         <span class="m-auto pt-5 text-sm text-gray-600">
           請使用學校 Google 或 Microsoft 帳號進行登錄
         </span>
@@ -53,4 +59,9 @@ definePageMeta({
 });
 
 const { signIn } = useAuth();
+const isEmbedded = ref(false);
+
+onMounted(() => {
+  isEmbedded.value = navigator === undefined || navigator.share === undefined;
+});
 </script>
