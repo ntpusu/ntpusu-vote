@@ -1,5 +1,5 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
-    if (process.client) {
+export default defineNuxtRouteMiddleware(async (_to, _from) => {
+    if (import.meta.client) {
         const isAdmin = await $fetch('/api/checkAdmin')
 
         if (!isAdmin) {
