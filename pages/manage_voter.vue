@@ -213,6 +213,7 @@ const submitUpload = () => {
   uploadRef.value!.submit();
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const errHandle = (err: any) => {
   if (err.value.data == null || '' + err.value.data.message == 'undefined') {
     return ' 發生未知錯誤'
@@ -247,7 +248,7 @@ const uploadfunc = async (item: { file: File }) => {
       body: formData,
     },
   );
-  
+
   infoMessage.close()
   if (error.value) {
     ElMessage.error("上傳失敗" + errHandle(error));
