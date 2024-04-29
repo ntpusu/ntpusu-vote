@@ -72,6 +72,9 @@ export default defineEventHandler(async (event) => {
             })
             continue;
         }
+        else {
+            studentIdSet.add(studentId)
+        }
         if(isNaN(studentId) || (studentId <= 100000000 || studentId >= 1000000000) ) {
             continue;
         }
