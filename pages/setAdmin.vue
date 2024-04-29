@@ -17,17 +17,6 @@
             <span class="font-bold">刷 新</span>
         </ElButton>
         <ElDivider />
-        <div class="flex">
-            <div class="mb-4  w-[500px]"> 
-                <div class="flex items-center">
-                    <div class="flex-1 mr-2">
-                        <ElInput
-                            v-model="addId"
-                            placeholder="請輸入ID"
-                            clearable
-                        />
-                    </div>
-                </div>
         <div class="flex justify-center">
             <div class="mb-4 w-[500px]">   
                 <ElInput
@@ -45,17 +34,6 @@
             </ElButton>
         </div>
         <ElDivider />
-        <div class="flex">
-            <div class="mb-4  w-[500px]"> 
-                <div class="flex items-center">
-                    <div class="flex-1 mr-2">
-                        <ElInput
-                            v-model="addId"
-                            placeholder="請輸入ID"
-                            clearable
-                        />
-                    </div>
-                </div>
         <div class="flex justify-center">
             <div class="mb-4 w-[500px]">   
                 <ElInput
@@ -73,22 +51,6 @@
             </ElButton>
         </div>
     </div>
-    <ElDivider />
-    <div class="flex">
-      <ElInput
-        v-model="delId"
-        placeholder="請輸入ID"
-        clearable
-      />
-      <ElButton
-        v-if="!adminPending"
-        type="primary"
-        @click="delAdmin"
-      >
-        <span class="font-bold">刪 除</span>
-      </ElButton>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
