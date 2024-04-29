@@ -52,6 +52,7 @@ export default defineEventHandler(async (event) => {
     enum FailReason {
         DuplicateStudentId = 1,
         DepartmentNotExist = 2,
+        InvalidStudentId = 3,
     }
     
     const failAddingVoter: {
@@ -76,6 +77,10 @@ export default defineEventHandler(async (event) => {
             studentIdSet.add(studentId)
         }
         if(isNaN(studentId) || (studentId <= 100000000 || studentId >= 1000000000) ) {
+            failAddingVoter.push({
+                id: studentId,
+                reason: FailReason.InvalidStudentId,//'學號格式錯誤'
+            })
             continue;
         }
         const studentDepartment = (voter_table[i][2] as string).replace(/\d[AB]?/, "")

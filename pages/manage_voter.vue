@@ -266,6 +266,12 @@ const uploadfunc = async (item: { file: File }) => {
       else if (failAddingVoter.value[i].reason == FailReason.DepartmentNotExist) {
         errorMessage += "系所不存在<br>";
       }
+      else if(failAddingVoter.value[i].reason == FailReason.InvalidStudentId) {
+        errorMessage += "學號格式錯誤<br>";
+      }
+      else {
+        errorMessage += "未知錯誤<br>";
+      }
     }
     ElMessage({
       dangerouslyUseHTMLString: true,
@@ -427,5 +433,6 @@ const loadAll = async () => {
 enum FailReason {
   DuplicateStudentId = 1,
   DepartmentNotExist = 2,
+  InvalidStudentId = 3,
 }
 </script>
