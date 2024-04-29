@@ -27,68 +27,60 @@
           選舉委員會
         </span>
         <div class="flex-grow" />
-        <ElMenuItem
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/"
-          @click="useRouter().push('/')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg"> 首頁 </span>
-        </ElMenuItem>
-        <ElMenuItem
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/bulletin"
-          @click="useRouter().push('/bulletin')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg">
-            選舉資訊
-          </span>
-        </ElMenuItem>
-        <ElMenuItem
-          v-if="status === 'authenticated'"
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/vote"
-          @click="useRouter().push('/vote')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg"> 投票 </span>
-        </ElMenuItem>
-        <ElMenuItem
-          v-if="admin"
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/check"
-          @click="useRouter().push('/check')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg"> 查詢 </span>
-        </ElMenuItem>
-        <ElMenuItem
-          v-if="admin"
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/admin"
-          @click="useRouter().push('/admin')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg"> 管理 </span>
-        </ElMenuItem>
-        <!---->
-        <ElMenuItem
-          v-if="admin"
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/manage_voter"
-          @click="useRouter().push('/manage_voter')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg">
-            管理投票者
-          </span>
-        </ElMenuItem>
-        <ElMenuItem
-          v-if="admin"
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/manageDepartment"
-          @click="useRouter().push('/manageDepartment')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg">
-            管理選舉區
-          </span>
-        </ElMenuItem>
-        <!---->
+        <template v-if="screenWidth >= 648">
+          <ElMenuItem
+            v-for="(item, index) in getMenuItems()" 
+            :key="index" 
+            :class="['!px-3 sm:!px-4 md:!px-5']" 
+            :index="item.index"
+            @click="item.click"
+          >
+            <span class="text-sm font-bold sm:text-base md:text-lg">{{ item.text }}</span>
+          </ElMenuItem>
+          <ElSubMenu index="/totalAdmin">
+            <template v-if = 'admin' #title>
+              <span class="text-sm font-bold sm:text-base md:text-lg">管理</span>
+            </template>
+            <ElMenuItem 
+              v-for="(item, index) in getAdminMenuItems()" 
+              :key="index" 
+              :class="['!px-3 sm:!px-4 md:!px-5']" 
+              :index="item.index" @click="item.click"
+            >
+              <span class="text-sm font-bold sm:text-base md:text-lg">{{ item.text }}</span>
+            </ElMenuItem>
+          </ElSubMenu>
+        </template>
+        <template v-else>
+          <ElSubMenu index="/menu">
+            <template #title>
+              <span class="text-sm font-bold sm:text-base md:text-lg">選單</span>
+            </template>
+            <ElMenuItem 
+              v-for="(item, index) in getMenuItems()" 
+              :key="index" 
+              :class="['!px-3 sm:!px-4 md:!px-5']" 
+              :index="item.index" 
+              @click="item.click"
+            >
+              <span class="text-sm font-bold sm:text-base md:text-lg">{{ item.text }}</span>
+            </ElMenuItem>
+            <ElSubMenu index="/totalAdmin">
+              <template v-if = 'admin' #title>
+                <span class="text-sm font-bold sm:text-base md:text-lg">管理</span>
+              </template>
+              <ElMenuItem 
+                v-for="(item, index) in getAdminMenuItems()" 
+                :key="index" 
+                :class="['!px-3 sm:!px-4 md:!px-5']" 
+                :index="item.index" 
+                @click="item.click"
+              >
+                <span class="text-sm font-bold sm:text-base md:text-lg">{{ item.text }}</span>
+              </ElMenuItem>
+            </ElSubmenu>
+          </ElSubMenu>
+        </template>
         <ElMenuItem
           v-if="status === 'unauthenticated'"
           class="!px-3 sm:!px-4 md:!px-5"
@@ -286,9 +278,15 @@
 
 <script setup lang="ts">
 import { SpeedInsights } from "@vercel/speed-insights/vue";
+import { ref, onMounted } from "vue"
 
 const route = useRoute();
 const url = useRuntimeConfig().public.productionUrl as string;
+const screenWidth = ref(0)
+
+onMounted(() => {
+    screenWidth.value = window.innerWidth
+})
 
 useSeoMeta({
   title: "學生會投票網站",
@@ -360,6 +358,58 @@ const { status, signOut } = useAuth();
 const handleSelect = (key: string) => {
   curIndex.value = key;
 };
+
+const getMenuItems = () => {
+  const menuItems = [
+    {
+      index: '/',
+      text: '首頁',
+      click: () => useRouter().push('/')
+    },
+    {
+      index: '/bulletin',
+      text: '選舉資訊',
+      click: () => useRouter().push('/bulletin')
+    }
+  ];
+  if (status.value === "authenticated") {
+    menuItems.push({
+      index: '/vote',
+      text: '投票',
+      click: () => useRouter().push('/vote')
+    });
+  }
+  return menuItems;
+}
+
+const getAdminMenuItems = () => {
+  const adminMenuItems =[]
+  if (admin) {
+    adminMenuItems.push(
+      {
+        index: '/admin',
+        text: '建立投票',
+        click: () => useRouter().push('/admin')
+      },
+      {
+        index: '/check',
+        text: '查詢',
+        click: () => useRouter().push('/check')
+      },
+      {
+        index: '/manage_voter',
+        text: '管理投票者',
+        click: () => useRouter().push('/manage_voter')
+      },
+      {
+        index: '/manageDepartment',
+        text: '管理選舉區',
+        click: () => useRouter().push('/manageDepartment')
+      }
+    );
+  }
+  return adminMenuItems
+}
 
 const cookie = useCookie("cookie", {
   sameSite: "lax",
@@ -446,9 +496,6 @@ onBeforeMount(() => {
 .page-leave-to {
   @apply opacity-0 blur;
 }
-.el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
-  min-height: 400px;
-}
+
 </style>
 
