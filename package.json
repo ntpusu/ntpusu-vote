@@ -21,7 +21,7 @@
     "@vercel/speed-insights": "^1.0.10",
     "crypto-js": "^4.2.0",
     "nuxt": "^3.11.2",
-    "nuxt-security": "^1.4.2",
+    "nuxt-security": "^1.4.3",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz"
   },
   "devDependencies": {
