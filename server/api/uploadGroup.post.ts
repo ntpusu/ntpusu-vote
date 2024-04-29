@@ -32,15 +32,9 @@ export default defineEventHandler(async (event) => {
 
     const group_workbook = XLSX.read(file)
     const group_sheet = group_workbook.Sheets[group_workbook.SheetNames[0]]
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const group_table: any[][] = XLSX.utils.sheet_to_json(group_sheet, { header: 1 })
 
     let allGroups: string[] = []
-
-    // for (let i = 1; i < group_table.length; i++) {
-    //     const Group = group_table[i].slice(1,4) as string[]
-    //     allGroups = allGroups.concat(Group)
-    // }
 
     for (let i = 1; i < group_table.length; i++) {
         for (let j = 1; j < 4; j++) {
@@ -62,8 +56,6 @@ export default defineEventHandler(async (event) => {
     })
 
     for (let i = 1; i < group_table.length; i++) {
-        //const department = group_table[i][0] as string
-        //const groups = group_table[i].slice(1,4) as string[]
         if (group_table[i][0] === undefined) {
             continue
         }
