@@ -60,7 +60,7 @@ definePageMeta({
   title: "首頁",
 });
 
-const { status } = useAuth();
+const { status } = useAuthState();
 
 const style = (start: Date, end: Date) => {
   return Date.now() < start.getTime()

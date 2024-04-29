@@ -294,7 +294,7 @@
                         class="-mt-2 mb-3 cursor-default text-sm text-gray-600"
                       >
                         目前登入的學號是：{{
-                          useAuth().data.value?.user?.email?.substring(1, 10)
+                          authDate?.user?.email?.substring(1, 10)
                         }}
                       </span>
                       <ElButton
@@ -431,6 +431,8 @@ import { RecaptchaV2, useRecaptcha } from "vue3-recaptcha-v2";
 definePageMeta({
   title: "投票",
 });
+
+const { data: authDate } = useAuth();
 
 const {
   data,
