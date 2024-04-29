@@ -260,14 +260,11 @@ const uploadfunc = async (item: { file: File }) => {
     let errorMessage = "無法新增下列投票者:<br>";
     for (let i = 0; i < failAddingVoter.value.length; i++) {
       errorMessage += `學號: ${failAddingVoter.value[i].id} 原因: `
-      if (failAddingVoter.value[i].reason === 1) {
+      if (failAddingVoter.value[i].reason == FailReason.DuplicateStudentId) {
         errorMessage += "此名單學號重複<br>";
       }
-      else if (failAddingVoter.value[i].reason === 2) {
+      else if (failAddingVoter.value[i].reason == FailReason.DepartmentNotExist) {
         errorMessage += "系所不存在<br>";
-      }
-      else {
-        errorMessage += "未知錯誤<br>";
       }
     }
     ElMessage({
@@ -426,4 +423,9 @@ const loadAll = async () => {
   }
   return departments.value!;
 };
+
+enum FailReason {
+  DuplicateStudentId = 1,
+  DepartmentNotExist = 2,
+}
 </script>

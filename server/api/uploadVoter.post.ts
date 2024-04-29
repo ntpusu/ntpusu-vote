@@ -48,30 +48,29 @@ export default defineEventHandler(async (event) => {
             departmentMp.set(department.name, department.id)
         })
     })
+
+    enum FailReason {
+        DuplicateStudentId = 1,
+        DepartmentNotExist = 2,
+    }
     
     const failAddingVoter: {
         id: number,
-        reason: number,
+        reason: FailReason,
     }[] = []
 
     const students: Prisma.VoterCreateManyInput[] = [];
 
-    const studentIdSet = new Map<number, number>()
+    const studentIdSet = new Set<number>()
 
     for(let i = 1; i < voter_table.length; i++ ) {
         const studentId = voter_table[i][0] as number
         if (studentIdSet.has(studentId)) {
-            if (studentIdSet.get(studentId) === 1) {
-                failAddingVoter.push({
-                    id: studentId,
-                    reason: 1//'此資料表中有重複學號 將只會新增第一筆投票者資料'
-                })
-                studentIdSet.set(studentId, 2)
-            }
+            failAddingVoter.push({
+                id: studentId,
+                reason: FailReason.DuplicateStudentId//'此資料表中有重複學號 將只會新增第一筆投票者資料'
+            })
             continue;
-        }
-        else {
-            studentIdSet.set(studentId, 1)
         }
         if(isNaN(studentId) || (studentId <= 100000000 || studentId >= 1000000000) ) {
             continue;
@@ -81,15 +80,7 @@ export default defineEventHandler(async (event) => {
         if (departmentId === undefined) {
             failAddingVoter.push({
                 id: studentId,
-                reason: 2,//'系所不存在'
-            })
-            departmentMp.set(studentDepartment, NaN)
-            continue;
-        }
-        if (isNaN(departmentId)) {
-            failAddingVoter.push({
-                id: studentId,
-                reason: 2,//'系所不存在'
+                reason: FailReason.DepartmentNotExist,//'系所不存在'
             })
             continue;
         }
