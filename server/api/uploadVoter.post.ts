@@ -44,6 +44,13 @@ export default defineEventHandler(async (event) => {
             name: true,
         },
     }).then((departments) => {
+        if(!departments) {
+            throw createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                message: '系所資料庫錯誤',
+            })
+        }
         departments.forEach((department) => {
             departmentMp.set(department.name, department.id)
         })
