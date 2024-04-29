@@ -272,7 +272,7 @@
                             votingItem.onlyOne ? 1 : 0,
                           )"
                           :key="candidate.name"
-                          :label="candidate.name"
+                          :value="candidate.name"
                           border
                           size="large"
                           class="my-1 !mr-0 max-w-[75vw]"
