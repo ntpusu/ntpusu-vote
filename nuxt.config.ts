@@ -31,15 +31,20 @@ export default defineNuxtConfig({
         "@nuxtjs/tailwindcss",
         "@sidebase/nuxt-auth",
         "nuxt-security",
-        "@nuxt/fonts",
+        "@nuxtjs/google-fonts",
         "@nuxt/eslint"
     ],
     plugins: [
-        '~/plugins/vercel.client.ts',
-        '~/plugins/recaptcha.client.ts',
+        "~/plugins/vercel.client.ts",
+        "~/plugins/recaptcha.client.ts",
     ],
     app: {
         pageTransition: { name: "page", mode: "out-in" },
+    },
+    googleFonts: {
+        families: {
+            "Noto Sans TC": [400, 700],
+        },
     },
     auth: {
         /**

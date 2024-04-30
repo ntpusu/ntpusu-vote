@@ -385,8 +385,7 @@ const showLoginInfo = async () => {
       type: "success",
       roundButton: true,
       customStyle: {
-        fontFamily:
-          '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+        fontFamily: '"Noto Sans TC", sans-serif',
       },
     },
   ).catch(() => {});
