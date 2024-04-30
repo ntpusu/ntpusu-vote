@@ -1,5 +1,5 @@
 import prisma from '~/lib/prisma'
-import HS1 from 'crypto-js/hmac-sha1'
+import HS1 from 'crypto-js/hmac-sha1.js'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
