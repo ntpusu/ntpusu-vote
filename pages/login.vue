@@ -14,8 +14,15 @@
           src="/login/google.png"
           format="png"
           preload
-          class="m-auto my-2 w-64 cursor-pointer sm:w-72"
-          @click="signIn('google', { callbackUrl: '/vote' })"
+          class="m-auto my-2 w-64 sm:w-72"
+          :class="
+            isEmbedded ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+          "
+          @click="
+            isEmbedded
+              ? googleLoginInEmbedded()
+              : signIn('google', { callbackUrl: '/vote' })
+          "
         />
         <NuxtImg
           src="/login/microsoft.svg"
@@ -24,12 +31,6 @@
           class="m-auto my-2 w-64 cursor-pointer sm:w-72"
           @click="signIn('azure-ad', { callbackUrl: '/vote' })"
         />
-        <span
-          v-if="isEmbedded"
-          class="m-auto pt-5 text-base text-red-600"
-        >
-          內嵌瀏覽器有可能無法登入<br>盡量使用其他瀏覽器開啟網頁
-        </span>
         <span class="m-auto pt-5 text-sm text-gray-600">
           請使用學校 Google 或 Microsoft 帳號進行登錄
         </span>
@@ -60,6 +61,18 @@ definePageMeta({
 
 const { signIn } = useAuth();
 const isEmbedded = ref(false);
+
+const googleLoginInEmbedded = () => {
+  ElMessageBox.alert(
+    "Google 登入無法在內嵌瀏覽器中使用",
+    "請使用其他瀏覽器開啟",
+    {
+      confirmButtonText: "確定",
+      type: "warning",
+      roundButton: true,
+    },
+  );
+};
 
 onMounted(() => {
   isEmbedded.value = navigator === undefined || navigator.share === undefined;
