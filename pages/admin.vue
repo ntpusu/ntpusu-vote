@@ -365,7 +365,7 @@
       </div>
     </div>
     <ElDivider />
-    <div class="flex justify-center">
+    <!-- <div class="flex justify-center">
       <ElButton
         type="primary"
         title="設定管理員"
@@ -374,7 +374,7 @@
       >
         <span class="font-bold">設定管理員</span>
       </ElButton>
-    </div>
+    </div> -->
   </div>
 </template>
 

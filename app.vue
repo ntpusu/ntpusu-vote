@@ -405,6 +405,11 @@ const getAdminMenuItems = () => {
         index: '/manageDepartment',
         text: '管理選舉區',
         click: () => useRouter().push('/manageDepartment')
+      },
+      {
+        index: '/setAdmin',
+        text: '設定管理員',
+        click: () => useRouter().push('/setAdmin')
       }
     );
   }
