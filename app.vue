@@ -37,8 +37,8 @@
           >
             <span class="text-sm font-bold sm:text-base md:text-lg">{{ item.text }}</span>
           </ElMenuItem>
-          <ElSubMenu index="/totalAdmin">
-            <template v-if = 'admin' #title>
+          <ElSubMenu v-if = 'admin' index="/totalAdmin" >
+            <template #title>
               <span class="text-sm font-bold sm:text-base md:text-lg">管理</span>
             </template>
             <ElMenuItem 
@@ -65,8 +65,8 @@
             >
               <span class="text-sm font-bold sm:text-base md:text-lg">{{ item.text }}</span>
             </ElMenuItem>
-            <ElSubMenu index="/totalAdmin">
-              <template v-if = 'admin' #title>
+            <ElSubMenu v-if = 'admin' index="/totalAdmin">
+              <template #title>
                 <span class="text-sm font-bold sm:text-base md:text-lg">管理</span>
               </template>
               <ElMenuItem 
