@@ -51,8 +51,8 @@
             class="justify-center"
           >
             <ElCard
-              v-for="votingitem in data.voting"
-              :key="votingitem.id"
+              v-for="votingItem in data.voting"
+              :key="votingItem.id"
               shadow="hover"
               class="w-[85vw] !rounded-xl sm:w-[65vw] md:w-[50vw] lg:w-[40vw] xl:w-[35vw] 2xl:w-[28vw]"
             >
@@ -61,7 +61,7 @@
                   <div
                     class="cursor-default text-lg font-bold sm:text-xl md:text-2xl"
                   >
-                    {{ votingitem.name }}
+                    {{ votingItem.name }}
                   </div>
                   <div
                     class="flex flex-col justify-end align-middle text-xs sm:text-sm"
@@ -69,14 +69,14 @@
                     <ClientOnly>
                       <ElTooltip
                         placement="right"
-                        :disabled="Date.now() > timeCnt(votingitem.endTime)"
+                        :disabled="Date.now() > timeCnt(votingItem.endTime)"
                       >
                         <template #content>
                           <ElCountdown
-                            v-if="Date.now() < timeCnt(votingitem.startTime)"
+                            v-if="Date.now() < timeCnt(votingItem.startTime)"
                             class="text-center"
-                            :format="chooseFormat(votingitem.startTime)"
-                            :value="timeCnt(votingitem.startTime)"
+                            :format="chooseFormat(votingItem.startTime)"
+                            :value="timeCnt(votingItem.startTime)"
                             value-style="color: white;"
                             @finish="votingRefresh()"
                           >
@@ -96,13 +96,13 @@
                           effect="plain"
                           :class="{
                             'cursor-help':
-                              Date.now() <= timeCnt(votingitem.endTime),
+                              Date.now() <= timeCnt(votingItem.endTime),
                             'cursor-default':
-                              Date.now() > timeCnt(votingitem.endTime),
+                              Date.now() > timeCnt(votingItem.endTime),
                           }"
                         >
                           開始:
-                          {{ viewDate(votingitem.startTime) }}
+                          {{ viewDate(votingItem.startTime) }}
                         </ElTag>
                       </ElTooltip>
                     </ClientOnly>
@@ -110,14 +110,14 @@
                     <ClientOnly>
                       <ElTooltip
                         placement="right"
-                        :disabled="Date.now() < timeCnt(votingitem.startTime)"
+                        :disabled="Date.now() < timeCnt(votingItem.startTime)"
                       >
                         <template #content>
                           <ElCountdown
-                            v-if="Date.now() <= timeCnt(votingitem.endTime)"
+                            v-if="Date.now() <= timeCnt(votingItem.endTime)"
                             class="text-center"
-                            :format="chooseFormat(votingitem.endTime)"
-                            :value="timeCnt(votingitem.endTime)"
+                            :format="chooseFormat(votingItem.endTime)"
+                            :value="timeCnt(votingItem.endTime)"
                             value-style="color: white;"
                             @finish="votingRefresh()"
                           >
@@ -137,13 +137,13 @@
                           effect="plain"
                           :class="{
                             'cursor-help':
-                              Date.now() >= timeCnt(votingitem.startTime),
+                              Date.now() >= timeCnt(votingItem.startTime),
                             'cursor-default':
-                              Date.now() < timeCnt(votingitem.startTime),
+                              Date.now() < timeCnt(votingItem.startTime),
                           }"
                         >
                           結束:
-                          {{ viewDate(votingitem.endTime) }}
+                          {{ viewDate(votingItem.endTime) }}
                         </ElTag>
                       </ElTooltip>
                     </ClientOnly>
@@ -162,7 +162,7 @@
                   alignment="flex-start"
                 >
                   <div
-                    v-if="votingitem.onlyOne"
+                    v-if="votingItem.onlyOne"
                     class="flex items-center text-sm sm:text-base md:text-lg"
                   >
                     <ElTag
@@ -175,12 +175,12 @@
                       1
                     </ElTag>
                     <div class="text-b mx-2">
-                      {{ votingitem.candidates[0].name }}
+                      {{ votingItem.candidates[0].name }}
                     </div>
                   </div>
                   <template v-else>
                     <div
-                      v-for="itemIndex in votingitem.candidates.length - 1"
+                      v-for="itemIndex in votingItem.candidates.length - 1"
                       :key="itemIndex"
                       class="flex items-center text-sm sm:text-base md:text-lg"
                     >
@@ -194,7 +194,7 @@
                         {{ itemIndex }}
                       </ElTag>
                       <div class="mx-2">
-                        {{ votingitem.candidates[itemIndex - 1].name }}
+                        {{ votingItem.candidates[itemIndex - 1].name }}
                       </div>
                     </div>
                   </template>
@@ -205,7 +205,7 @@
                 class="!border-t-2"
               />
               <div
-                v-if="Date.now() < timeCnt(votingitem.startTime)"
+                v-if="Date.now() < timeCnt(votingItem.startTime)"
                 class="flex justify-center"
               >
                 <ElButton
@@ -220,23 +220,23 @@
               <div v-else>
                 <ClientOnly>
                   <ElDialog
-                    v-model="voteVisible[votingitem.id]"
+                    v-model="voteVisible[votingItem.id]"
                     center
                     align-center
-                    class="!w-fit min-w-[30%] max-w-[90%] !rounded-lg sm:max-w-[80%] md:max-w-[70%] lg:max-w-[50%]"
-                    @open="voteLoading[votingitem.id] = true"
-                    @close="voteLoading[votingitem.id] = false"
+                    class="!w-fit min-w-[50%] max-w-[90%] !rounded-lg sm:max-w-[80%] md:min-w-[40%] md:max-w-[70%] lg:min-w-[30%] lg:max-w-[50%]"
+                    @open="voteLoading[votingItem.id] = true"
+                    @close="voteLoading[votingItem.id] = false"
                   >
                     <template #header>
-                      <div class="flex">
+                      <div class="flex h-12 *:px-2 md:h-14">
                         <div
                           class="m-auto flex cursor-default text-lg font-bold sm:text-xl md:text-2xl"
                         >
-                          {{ votingitem.name }}
+                          {{ votingItem.name }}
                         </div>
                         <div class="flex-grow" />
                         <div
-                          class="m-auto flex cursor-default flex-col items-end pl-10 pr-3 text-xs text-gray-500 md:pl-14 md:pr-6 md:text-sm"
+                          class="m-auto flex cursor-default flex-col items-end text-xs text-gray-500 md:text-sm"
                         >
                           <span class="text-gray-500">
                             請在下方選擇您要投的選項
@@ -250,11 +250,11 @@
                     <ElDivider class="!-mt-5 !mb-0 !border-t-[1.5px]" />
                     <div class="mx-5 flex flex-col items-center align-middle">
                       <span
-                        v-if="votingitem.onlyOne"
+                        v-if="votingItem.onlyOne"
                         class="my-2 cursor-default text-base font-bold text-black sm:my-3 sm:text-lg md:my-4 md:text-xl"
                       >
                         同意
-                        {{ votingitem.candidates[0].name }}
+                        {{ votingItem.candidates[0].name }}
                         當選嗎？
                       </span>
                       <span
@@ -264,15 +264,15 @@
                         請選擇要投的候選人
                       </span>
                       <ElRadioGroup
-                        v-model="voteData[votingitem.id]"
+                        v-model="voteData[votingItem.id]"
                         class="flex-col !items-stretch"
                       >
                         <ElRadio
-                          v-for="candidate in votingitem.candidates.slice(
-                            votingitem.onlyOne ? 1 : 0,
+                          v-for="candidate in votingItem.candidates.slice(
+                            votingItem.onlyOne ? 1 : 0,
                           )"
                           :key="candidate.name"
-                          :label="candidate.name"
+                          :value="candidate.name"
                           border
                           size="large"
                           class="my-1 !mr-0 max-w-[75vw]"
@@ -297,33 +297,37 @@
                           authDate?.user?.email?.substring(1, 10)
                         }}
                       </span>
+                      <RecaptchaV2
+                        size="invisible"
+                        @widget-id="handleWidgetId"
+                        @error-callback="$router.go(0)"
+                        @expired-callback="handleReset(widgetId)"
+                        @load-callback="handleLoad"
+                      />
                       <ElButton
                         type="primary"
                         class="w-fit !rounded-md"
                         plain
-                        @click="voteConfirm(votingitem.id)"
+                        @click="
+                          curVoteId = votingItem.id;
+                          handleExecute(widgetId);
+                        "
                       >
                         <span class="font-bold"> 投 出 選 票 </span>
-                        <RecaptchaV2
-                          size="invisible"
-                          @error-callback="handleErrorCalback"
-                          @expired-callback="handleExpiredCallback"
-                          @widget-id="handleWidgetId"
-                        />
                       </ElButton>
                     </div>
                   </ElDialog>
                 </ClientOnly>
                 <div
-                  v-if="Date.now() > timeCnt(votingitem.endTime)"
+                  v-if="Date.now() > timeCnt(votingItem.endTime)"
                   class="flex justify-center"
                 >
                   <ElButton
                     type="success"
                     class="w-fit !rounded-md"
                     plain
-                    :loading="resultLoading[votingitem.id]"
-                    @click="seeResult(votingitem.id)"
+                    :loading="resultLoading[votingItem.id]"
+                    @click="seeResult(votingItem.id)"
                   >
                     <span class="font-bold"> 結 果 </span>
                   </ElButton>
@@ -335,13 +339,13 @@
                   <ElButton
                     type="primary"
                     class="w-fit !rounded-md"
-                    :disabled="data.tokens[votingitem.id] != undefined"
+                    :disabled="data.tokens[votingItem.id] != undefined"
                     plain
-                    :loading="voteLoading[votingitem.id]"
-                    @click="voteVisible[votingitem.id] = true"
+                    :loading="voteLoading[votingItem.id]"
+                    @click="voteVisible[votingItem.id] = true"
                   >
                     <span
-                      v-if="data.tokens[votingitem.id] == undefined"
+                      v-if="data.tokens[votingItem.id] == undefined"
                       class="font-bold"
                     >
                       投 票
@@ -356,13 +360,13 @@
                   <ElButton
                     type="info"
                     class="w-fit !rounded-md"
-                    :disabled="data.tokens[votingitem.id] == undefined"
+                    :disabled="data.tokens[votingItem.id] == undefined"
                     plain
-                    :loading="tokenLoading[votingitem.id]"
-                    @click="seeToken(votingitem.id)"
+                    :loading="tokenLoading[votingItem.id]"
+                    @click="seeToken(votingItem.id)"
                   >
                     <span
-                      v-if="data.tokens[votingitem.id] != undefined"
+                      v-if="data.tokens[votingItem.id] != undefined"
                       class="font-bold"
                     >
                       查 看 憑 證
@@ -465,6 +469,7 @@ const chooseFormat = (time: string | number | Date) => {
   else return "s 秒";
 };
 
+const curVoteId = ref(0);
 const voteFail = ref(false);
 
 const voteVisible: Ref<boolean[]> = ref([]);
@@ -473,22 +478,29 @@ const voteLoading: Ref<boolean[]> = ref([]);
 const tokenLoading: Ref<boolean[]> = ref([]);
 const resultLoading: Ref<boolean[]> = ref([]);
 
-const { handleExecute, handleGetResponse, handleReset } = useRecaptcha();
+const { handleExecute, handleReset } = useRecaptcha();
 
-let widgetId: number;
-const handleWidgetId = (Id: number) => {
-  widgetId = Id;
+const widgetId = ref(0);
+const handleWidgetId = (id: number) => {
+  widgetId.value = id;
 };
-function wait(milliseconds: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, milliseconds);
+
+const handleLoad = async (response: unknown) => {
+  const res: {
+    success: boolean;
+  } = await $fetch("/api/recaptchaV2", {
+    method: "POST",
+    body: JSON.stringify({ response }),
   });
-}
-const handleErrorCalback = () => {
-  console.log("Error callback");
-};
-const handleExpiredCallback = () => {
-  console.log("Expired callback");
+
+  if (res.success) {
+    voteConfirm(curVoteId.value);
+  } else {
+    handleReset(widgetId.value);
+    setTimeout(() => {
+      handleExecute(widgetId.value);
+    }, 200);
+  }
 };
 
 const voteConfirm = async (votingId: number) => {
@@ -520,26 +532,6 @@ const voteConfirm = async (votingId: number) => {
     },
   )
     .then(async () => {
-      try {
-        handleExecute(widgetId);
-        await wait(1000);
-        const response = handleGetResponse(widgetId);
-
-        await $fetch("/api/recaptchaV2", {
-          method: "POST",
-          body: JSON.stringify({ response }),
-        });
-
-        handleReset(widgetId);
-      } catch (error) {
-        console.log("Login error:", error);
-        ElMessage.error("ReCaptCha驗證失敗");
-        setTimeout(() => {
-          ElMessage.info("請稍後或更換裝置再試");
-        }, 1500);
-        return;
-      }
-
       await useFetch("/api/vote", {
         method: "POST",
         body: JSON.stringify({
@@ -564,6 +556,7 @@ const voteConfirm = async (votingId: number) => {
                   customStyle: {
                     fontFamily:
                       '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                    overflow: "auto",
                   },
                 },
               ).catch(async (action: Action) => {
@@ -614,10 +607,8 @@ const voteConfirm = async (votingId: number) => {
         });
     })
     .catch(() => {
-      ElMessage({
-        type: "info",
-        message: "取消投票",
-      });
+      voteVisible.value[votingId] = true;
+      handleReset(widgetId.value);
     });
 
   voteLoading.value[votingId] = false;
@@ -674,22 +665,27 @@ const seeResult = async (index: number) => {
           type: "success",
           message: "已複製",
         });
+      } else {
+        resultLoading.value[index] = false;
+        return;
       }
     });
   } else {
     await ElMessageBox.alert("無投票憑證", "未投票", {
-      showClose: false,
       confirmButtonText: "確 定",
       autofocus: false,
       type: "warning",
+      roundButton: true,
       customStyle: {
         fontFamily:
           '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
       },
-    }).catch(() => {});
+    }).catch(() => {
+      resultLoading.value[index] = false;
+      return;
+    });
   }
 
-  resultLoading.value[index] = false;
   await useRouter().push("/result/" + index);
 };
 
@@ -729,3 +725,9 @@ onActivated(async () => {
   checkData();
 });
 </script>
+
+<!-- <style>
+.grecaptcha-badge {
+  @apply z-20;
+}
+</style> -->

@@ -1,5 +1,5 @@
 import prisma from '~/lib/prisma'
-import HS256 from 'crypto-js/hmac-sha256.js'
+import HS1 from 'crypto-js/hmac-sha1'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
     const { votingId, cname } = await readBody(event) as {
@@ -108,7 +108,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const token = HS256(studentId.toString() + votingId.toString(), process.env.AUTH_SECRET as string).toString()
+    const token = HS1(studentId.toString() + votingId.toString(), process.env.AUTH_SECRET as string).toString()
 
     try {
         await prisma.$transaction([

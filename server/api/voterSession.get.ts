@@ -1,5 +1,5 @@
 import prisma from '~/lib/prisma'
-import HS256 from 'crypto-js/hmac-sha256.js'
+import HS1 from 'crypto-js/hmac-sha1'
 import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
 
     const tokens: string[] = []
     for (const votingItem of voting) {
-        const token = HS256(studentId.toString() + votingItem.id.toString(), process.env.AUTH_SECRET as string).toString()
+        const token = HS1(studentId.toString() + votingItem.id.toString(), process.env.AUTH_SECRET as string).toString()
 
         const ballot = await prisma.ballot.findUnique({
             where: { token },

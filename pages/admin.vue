@@ -20,7 +20,6 @@
             <ElInput
               v-model="addVote.voteName"
               placeholder="請輸入名稱"
-              clearable
             />
             <ElButton class="invisible ml-2" />
           </ElSpace>
@@ -34,6 +33,7 @@
               v-model="addVote.voteGroup"
               placeholder="請選擇投票範圍"
               clearable
+              class="!w-52"
             >
               <ElOption
                 v-for="item in groupOptions"
@@ -54,6 +54,7 @@
               type="datetime"
               placeholder="請選擇開始時間"
               format="YYYY/MM/DD HH:mm:ss"
+              class="!w-52"
             />
           </ClientOnly>
         </ElFormItem>
@@ -67,6 +68,7 @@
               type="datetime"
               placeholder="請選擇結束時間"
               format="YYYY/MM/DD HH:mm:ss"
+              class="!w-52"
             />
           </ClientOnly>
         </ElFormItem>
@@ -90,7 +92,7 @@
           <ElFormItem
             :key="index"
             :prop="'candidates.' + index + '.name'"
-            :label="index + 1 + '號名稱'"
+            :label="addVote.onlyOne ? '候選人名稱' : index + 1 + '號名稱'"
             :rules="{
               required: true,
               message: '選項為必填',
@@ -101,7 +103,6 @@
             <ElInput
               v-model="candidate.name"
               placeholder="請輸入選項名稱"
-              clearable
             />
           </ElFormItem>
           <ElButton
@@ -109,13 +110,13 @@
             plain
             round
             :class="{ invisible: index < 2 }"
-            class="ml-2"
+            class="ml-2 mb-4"
             @click="removeDomain(candidate)"
           >
             <span class="font-bold">X</span>
           </ElButton>
         </div>
-        <ElFormItem>
+        <ElFormItem class="mt-3">
           <ElSpace class="m-auto">
             <ElButton
               v-if="!addVote.onlyOne"
@@ -224,7 +225,7 @@
               <template #default="{ row }">
                 <ElPopconfirm
                   title="確定要封存嗎？"
-                  canc-el-button-text="取消"
+                  cancel-button-text="取消"
                   confirm-button-text="確定"
                   @confirm="handleArchive(row.id)"
                 >
@@ -297,7 +298,7 @@
               <template #default="{ row }">
                 <ElPopconfirm
                   title="確定要解封嗎？"
-                  canc-el-button-text="取消"
+                  cancel-button-text="取消"
                   confirm-button-text="確定"
                   @confirm="handleUnarchive(row.id)"
                 >
@@ -344,7 +345,7 @@
     <div class="flex flex-col items-center">
       <ElPopconfirm
         title="確定要重設登入數量嗎？"
-        canc-el-button-text="取消"
+        cancel-button-text="取消"
         confirm-button-text="確定"
         @confirm="handleLoginReset"
       >
