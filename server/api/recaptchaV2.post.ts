@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
       message: 'Invalid token.',
     })
   }
-  
+
   return await $fetch('https://www.google.com/recaptcha/api/siteverify', {
     method: 'POST',
     params: {

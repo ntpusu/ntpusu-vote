@@ -297,19 +297,23 @@
                           authDate?.user?.email?.substring(1, 10)
                         }}
                       </span>
+                      <RecaptchaV2
+                        size="invisible"
+                        @widget-id="handleWidgetId"
+                        @error-callback="$router.go(0)"
+                        @expired-callback="handleReset(widgetId)"
+                        @load-callback="handleLoad"
+                      />
                       <ElButton
                         type="primary"
                         class="w-fit !rounded-md"
                         plain
-                        @click="voteConfirm(votingItem.id)"
+                        @click="
+                          curVoteId = votingItem.id;
+                          handleExecute(widgetId);
+                        "
                       >
                         <span class="font-bold"> 投 出 選 票 </span>
-                        <RecaptchaV2
-                          size="invisible"
-                          @error-callback="handleErrorCalback"
-                          @expired-callback="handleExpiredCallback"
-                          @widget-id="handleWidgetId"
-                        />
                       </ElButton>
                     </div>
                   </ElDialog>
@@ -465,6 +469,7 @@ const chooseFormat = (time: string | number | Date) => {
   else return "s 秒";
 };
 
+const curVoteId = ref(0);
 const voteFail = ref(false);
 
 const voteVisible: Ref<boolean[]> = ref([]);
@@ -473,22 +478,29 @@ const voteLoading: Ref<boolean[]> = ref([]);
 const tokenLoading: Ref<boolean[]> = ref([]);
 const resultLoading: Ref<boolean[]> = ref([]);
 
-const { handleExecute, handleGetResponse, handleReset } = useRecaptcha();
+const { handleExecute, handleReset } = useRecaptcha();
 
-let widgetId: number;
-const handleWidgetId = (Id: number) => {
-  widgetId = Id;
+const widgetId = ref(0);
+const handleWidgetId = (id: number) => {
+  widgetId.value = id;
 };
-function wait(milliseconds: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, milliseconds);
+
+const handleLoad = async (response: unknown) => {
+  const res: {
+    success: boolean;
+  } = await $fetch("/api/recaptchaV2", {
+    method: "POST",
+    body: JSON.stringify({ response }),
   });
-}
-const handleErrorCalback = () => {
-  console.log("Error callback");
-};
-const handleExpiredCallback = () => {
-  console.log("Expired callback");
+
+  if (res.success) {
+    voteConfirm(curVoteId.value);
+  } else {
+    handleReset(widgetId.value);
+    setTimeout(() => {
+      handleExecute(widgetId.value);
+    }, 200);
+  }
 };
 
 const voteConfirm = async (votingId: number) => {
@@ -520,26 +532,6 @@ const voteConfirm = async (votingId: number) => {
     },
   )
     .then(async () => {
-      try {
-        handleExecute(widgetId);
-        await wait(1000);
-        const response = handleGetResponse(widgetId);
-
-        await $fetch("/api/recaptchaV2", {
-          method: "POST",
-          body: JSON.stringify({ response }),
-        });
-
-        handleReset(widgetId);
-      } catch (error) {
-        console.log("Login error:", error);
-        ElMessage.error("ReCaptCha驗證失敗");
-        setTimeout(() => {
-          ElMessage.info("請稍後或更換裝置再試");
-        }, 1500);
-        return;
-      }
-
       await useFetch("/api/vote", {
         method: "POST",
         body: JSON.stringify({
@@ -564,7 +556,7 @@ const voteConfirm = async (votingId: number) => {
                   customStyle: {
                     fontFamily:
                       '"Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-                      overflow: "auto",
+                    overflow: "auto",
                   },
                 },
               ).catch(async (action: Action) => {
@@ -616,6 +608,7 @@ const voteConfirm = async (votingId: number) => {
     })
     .catch(() => {
       voteVisible.value[votingId] = true;
+      handleReset(widgetId.value);
     });
 
   voteLoading.value[votingId] = false;
@@ -732,3 +725,9 @@ onActivated(async () => {
   checkData();
 });
 </script>
+
+<!-- <style>
+.grecaptcha-badge {
+  @apply z-20;
+}
+</style> -->
