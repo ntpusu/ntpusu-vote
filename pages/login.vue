@@ -74,7 +74,19 @@ const googleLoginInEmbedded = () => {
   );
 };
 
+const isWebview = () => {
+  const userAgent = navigator.userAgent;
+  const rules = [
+    "WebView",
+    "(iPhone|iPod|iPad)(?!.*Safari)",
+    "Android.*(;\\s+wv|Version/\\d.\\d\\s+Chrome/\\d+(\\.0){3})",
+    "Linux; U; Android",
+  ];
+  const regex = new RegExp(`(${rules.join("|")})`, "ig");
+  return Boolean(userAgent.match(regex));
+};
+
 onMounted(() => {
-  isEmbedded.value = navigator === undefined || navigator.share === undefined;
+  isEmbedded.value = isWebview();
 });
 </script>
