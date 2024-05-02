@@ -32,13 +32,13 @@ export default defineEventHandler(async (event) => {
 
     const group_workbook = XLSX.read(file)
     const group_sheet = group_workbook.Sheets[group_workbook.SheetNames[0]]
-    const group_table: any[][] = XLSX.utils.sheet_to_json(group_sheet, { header: 1 })
+    const group_table: string[][] = XLSX.utils.sheet_to_json(group_sheet, { header: 1 })
 
     let allGroups: string[] = []
 
     for (let i = 1; i < group_table.length; i++) {
         for (let j = 1; j < 4; j++) {
-            if (group_table[i][j] !== undefined) {
+            if (group_table[i][j] !== undefined && group_table[i][j].trim() !== "") {
                 allGroups.push(group_table[i][j])
             }
         }
@@ -56,17 +56,17 @@ export default defineEventHandler(async (event) => {
     })
 
     for (let i = 1; i < group_table.length; i++) {
-        if (group_table[i][0] === undefined) {
+        if (group_table[i][0] === undefined || group_table[i][0].trim() === "") {
             continue
         }
         const department = group_table[i][0] as string
         const groups = []
         for (let j = 1; j < 4; j++) {
-            if (group_table[i][j] !== undefined) {
+            if (group_table[i][j] !== undefined && group_table[i][j].trim() !== "") {
                 groups.push(group_table[i][j])
             }
         }
-        
+
         await prisma.department.create({
             data: {
                 name: department,
@@ -85,5 +85,5 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    return  {}
+    return {}
 })
