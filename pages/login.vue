@@ -37,7 +37,7 @@
         <span class="m-auto text-xs text-gray-600">
           (s+學號@gm.ntpu.edu.tw 或 s+學號@ms.ntpu.edu.tw)
         </span>
-        <br>
+        <br />
         <span class="m-auto text-xs text-gray-600">
           <NuxtLink
             to="/privacy"
@@ -74,7 +74,18 @@ const googleLoginInEmbedded = () => {
   );
 };
 
+const isWebview = () => {
+  const useragent = navigator.userAgent;
+  const rules = [
+    "WebView",
+    "(iPhone|iPod|iPad)(?!.*Safari\/)",
+    "Android.*(Instagram|Line|FBAN|FBAV)",
+  ];
+  const regex = new RegExp(`(${rules.join("|")})`, "ig");
+  return Boolean(useragent.match(regex));
+};
+
 onMounted(() => {
-  isEmbedded.value = navigator === undefined || navigator.share === undefined;
+  isEmbedded.value = isWebview();
 });
 </script>
