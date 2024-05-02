@@ -18,7 +18,7 @@
     </ElButton>
     <ElDivider />
     <div class="flex justify-center">
-      <div class="mb-4 w-[500px]">
+      <div class="m-4 w-[500px]">
         <ElInput
           v-model="addId"
           placeholder="請輸入ID"
@@ -35,7 +35,7 @@
     </div>
     <ElDivider />
     <div class="flex justify-center">
-      <div class="mb-4 w-[500px]">
+      <div class="m-4 w-[500px]">
         <ElInput
           v-model="addId"
           placeholder="請輸入ID"
