@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
             name: true,
         },
     }).then((departments) => {
-        if(!departments) {
+        if (!departments) {
             throw createError({
                 statusCode: 500,
                 statusMessage: 'Internal Server Error',
@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
         DepartmentNotExist = 2,
         InvalidStudentId = 3,
     }
-    
+
     const failAddingVoter: {
         id: number,
         reason: FailReason,
@@ -71,22 +71,22 @@ export default defineEventHandler(async (event) => {
 
     const studentIdSet = new Set<number>()
 
-    for(let i = 1; i < voter_table.length; i++ ) {
+    for (let i = 1; i < voter_table.length; i++) {
         const studentId = voter_table[i][0] as number
         if (studentIdSet.has(studentId)) {
             failAddingVoter.push({
                 id: studentId,
-                reason: FailReason.DuplicateStudentId//'此資料表中有重複學號 將只會新增第一筆投票者資料'
+                reason: FailReason.DuplicateStudentId,
             })
             continue;
         }
         else {
             studentIdSet.add(studentId)
         }
-        if(isNaN(studentId) || (studentId <= 100000000 || studentId >= 1000000000) ) {
+        if (isNaN(studentId) || (studentId <= 100000000 || studentId >= 1000000000)) {
             failAddingVoter.push({
                 id: studentId,
-                reason: FailReason.InvalidStudentId,//'學號格式錯誤'
+                reason: FailReason.InvalidStudentId,
             })
             continue;
         }
@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
         if (departmentId === undefined) {
             failAddingVoter.push({
                 id: studentId,
-                reason: FailReason.DepartmentNotExist,//'系所不存在'
+                reason: FailReason.DepartmentNotExist,
             })
             continue;
         }
