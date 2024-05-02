@@ -16,10 +16,10 @@
           preload
           class="m-auto my-2 w-64 sm:w-72"
           :class="
-            isEmbedded ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+            isInAppBrowser ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
           "
           @click="
-            isEmbedded
+            isInAppBrowser
               ? googleLoginInEmbedded()
               : signIn('google', { callbackUrl: '/vote' })
           "
@@ -60,7 +60,7 @@ definePageMeta({
 });
 
 const { signIn } = useAuth();
-const isEmbedded = ref(false);
+const isInAppBrowser = ref(false);
 
 const googleLoginInEmbedded = () => {
   ElMessageBox.alert(
@@ -75,18 +75,19 @@ const googleLoginInEmbedded = () => {
 };
 
 const isWebview = () => {
-  const userAgent = navigator.userAgent;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
   const rules = [
     "WebView",
-    "(iPhone|iPod|iPad)(?!.*Safari)",
+    "(iPhone|iPod|iPad)(.*Line|(?!.*Safari))",
     "Android.*(;\\s+wv|Version/\\d.\\d\\s+Chrome/\\d+(\\.0){3})",
     "Linux; U; Android",
   ];
   const regex = new RegExp(`(${rules.join("|")})`, "ig");
-  return Boolean(userAgent.match(regex));
+  return Boolean(ua.match(regex));
 };
 
 onMounted(() => {
-  isEmbedded.value = isWebview();
+  isInAppBrowser.value = isWebview();
 });
 </script>
