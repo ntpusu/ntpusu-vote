@@ -106,10 +106,10 @@ model Admin {
 
 model VotingTimeLine {
   id Int @id @default(autoincrement())
+  content String
   start DateTime
   end DateTime
-  finish DateTime
-  content String
-  name String
-  maybe Boolean
+  showEnd Boolean
+  showTime Boolean
 }
+

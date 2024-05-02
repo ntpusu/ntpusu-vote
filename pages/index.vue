@@ -82,7 +82,32 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
-const { data:activities } = await useFetch("/api/getTimeLine", { method: "GET" });
+const activities: Activity[] = [];
 
+const parseActivities = async () => {
+  const { data: activities_origin } = await useFetch("/api/getTimeLine", { method: "GET", });
+  
+  if (activities_origin.value == null) {
+    return;
+  }
+  for (const activity of activities_origin.value) {
+    activities.push({
+      content: activity.content,
+      start: new Date(activity.start),
+      end: new Date(activity.end),
+      showEnd: activity.showEnd,
+      showTime: activity.showTime,
+    });
+  }
+};
 
+await parseActivities();
+
+interface Activity {
+  content: string,
+  start: Date,
+  end:   Date,
+  showEnd: boolean,
+  showTime: boolean,
+}
 </script>
