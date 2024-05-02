@@ -5,7 +5,7 @@
       <div
         class="items-cente custom-style my-5 flex justify-center text-center text-2xl font-bold"
       >
-        <el-segmented
+        <ElSegmented
           v-model="state"
           :options="options"
           size="large"
@@ -308,13 +308,13 @@
 </template>
 
 <script setup lang="ts">
-const state = ref("選舉公報");
-
-const options = ["選舉公報", "操作說明"];
 definePageMeta({
   auth: false,
   title: "選舉資訊",
 });
+
+const state = ref("選舉公報");
+const options = ["選舉公報", "操作說明"];
 
 const load = () => {
   setTimeout(() => {
