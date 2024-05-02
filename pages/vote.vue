@@ -310,7 +310,7 @@
                         plain
                         @click="
                           curVoteId = votingItem.id;
-                          handleExecute(widgetId);
+                          voteConfirm(votingItem.id);
                         "
                       >
                         <span class="font-bold"> 投 出 選 票 </span>
@@ -494,7 +494,7 @@ const handleLoad = async (response: unknown) => {
   });
 
   if (res.success) {
-    voteConfirm(curVoteId.value);
+    vote(curVoteId.value);
   } else {
     handleReset(widgetId.value);
     setTimeout(() => {
@@ -531,7 +531,18 @@ const voteConfirm = async (votingId: number) => {
     },
   )
     .then(async () => {
-      await useFetch("/api/vote", {
+      handleExecute(widgetId.value);
+    })
+    .catch(() => {
+      voteVisible.value[votingId] = true;
+      handleReset(widgetId.value);
+    });
+
+  voteLoading.value[votingId] = false;
+};
+
+const vote = async (votingId: number) => {
+  await useFetch("/api/vote", {
         method: "POST",
         body: JSON.stringify({
           votingId,
@@ -602,14 +613,7 @@ const voteConfirm = async (votingId: number) => {
           await votingRefresh();
           freshTime.value = Date.now();
         });
-    })
-    .catch(() => {
-      voteVisible.value[votingId] = true;
-      handleReset(widgetId.value);
-    });
-
-  voteLoading.value[votingId] = false;
-};
+}
 
 const seeToken = async (index: number) => {
   tokenLoading.value[index] = true;
