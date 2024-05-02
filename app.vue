@@ -1,12 +1,12 @@
 <template>
   <ElContainer
     direction="vertical"
-    class="h-[100vh] font-sansTC"
+    class="h-[100dvh] font-sansTC"
   >
     <NuxtLoadingIndicator />
     <ClientOnly>
       <template #fallback>
-        <div class="flex h-12 items-center justify-center sm:h-14 md:h-16">
+        <div class="flex items-center justify-center">
           <span class="margin text-gray-400"> Loading menu...... </span>
         </div>
         <ElDivider class="!m-0" />
@@ -18,7 +18,7 @@
         :ellipsis="false"
         :active-index="curIndex"
         :popper-offset="16"
-        class="h-14 items-center sm:h-[3.75rem] md:h-16"
+        class="items-center"
         @select="handleSelect"
       >
         <span
@@ -32,7 +32,7 @@
           v-for="(item, index) in getMenuItems()"
           :key="index"
           :index="item.index"
-          class="!hidden sm:!inline-flex"
+          class="!hidden md:!inline-flex"
           @click="item.click"
         >
           <span class="text-sm font-bold sm:text-base md:text-lg">{{
@@ -41,7 +41,7 @@
         </ElMenuItem>
         <ElSubMenu
           v-if="admin"
-          class="!hidden sm:!block"
+          class="!hidden md:!inline-flex h-full"
           index="/admin"
         >
           <template #title>
@@ -53,7 +53,7 @@
             v-for="(item, index) in getAdminMenuItems()"
             :key="index"
             :index="item.index"
-            class="!hidden sm:!block"
+            class="!hidden md:!block"
             @click="item.click"
           >
             <span class="text-sm font-bold sm:text-base md:text-lg">{{
@@ -64,19 +64,20 @@
         <ElMenuItem
           v-if="status === 'unauthenticated'"
           index="/login"
-          class="!hidden sm:!inline-flex"
+          class="!hidden md:!inline-flex"
           @click="useRouter().push('/login')"
         >
           <span class="text-sm font-bold sm:text-base md:text-lg"> 登入 </span>
         </ElMenuItem>
         <ElMenuItem
+          v-if="status === 'authenticated'"
           index="/logout"
-          class="!hidden sm:!inline-flex"
+          class="!hidden md:!inline-flex"
           @click="signOut({ callbackUrl: '/' })"
         >
           <span class="text-sm font-bold sm:text-base md:text-lg"> 登出 </span>
         </ElMenuItem>
-        <div class="sm:hidden">
+        <div class="md:hidden">
           <ElButton
             style="margin-right: 12px"
             plain
@@ -107,7 +108,7 @@
           </ElButton>
         </div>
       </ElMenu>
-      <div class="sm:hidden">
+      <div class="md:hidden">
         <div
           v-if="show"
           class="fixed bottom-0 left-0 right-0 top-[3.3rem] z-40 bg-gray-500 bg-opacity-40"
@@ -168,6 +169,7 @@
                   </ElMenuItem>
                 </ElSubMenu>
                 <ElMenuItem
+                  v-if="status === 'authenticated'"
                   index="/logout"
                   @click="signOut({ callbackUrl: '/' })"
                 >
@@ -246,7 +248,7 @@
           >
             <template #content>
               <div class="text-center">
-                投票開始前每日重置<br>投票開始後不再重置
+                投票開始前每日重置<br />投票開始後不再重置
               </div>
             </template>
             <div class="m-3 text-center">
@@ -269,7 +271,7 @@
           >
             <template #content>
               <div class="text-center">
-                投票期間為<br>2023年5月24日<br>00:00 ~ 23:59
+                投票期間為<br />2023年5月24日<br />00:00 ~ 23:59
               </div>
             </template>
             <div class="m-3 text-center">
@@ -474,38 +476,43 @@ const getAdminMenuItems = () =>
   admin.value
     ? [
         {
-          index: "/admin",
+          index: "/admin/editVoting",
           text: "建立投票",
           click: () => {
-            useRouter().push("/admin"), (show.value = false);
+            show.value = false;
+            useRouter().push("/admin/editVoting");
           },
         },
         {
-          index: "/check",
+          index: "/admin/search",
           text: "查詢",
           click: () => {
-            useRouter().push("/check"), (show.value = false);
+            show.value = false;
+            useRouter().push("/admin/search");
           },
         },
         {
-          index: "/manage_voter",
+          index: "/admin/editVoter",
           text: "管理投票者",
           click: () => {
-            useRouter().push("/manage_voter"), (show.value = false);
+            show.value = false;
+            useRouter().push("/admin/editVoter");
           },
         },
         {
-          index: "/manageDepartment",
+          index: "/admin/editDepartment",
           text: "管理選舉區",
           click: () => {
-            useRouter().push("/manageDepartment"), (show.value = false);
+            show.value = false;
+            useRouter().push("/admin/editDepartment");
           },
         },
         {
-          index: "/setAdmin",
+          index: "/admin/setAdmin",
           text: "設定管理員",
           click: () => {
-            useRouter().push("/setAdmin"), (show.value = false);
+            show.value = false;
+            useRouter().push("/admin/setAdmin");
           },
         },
       ]
