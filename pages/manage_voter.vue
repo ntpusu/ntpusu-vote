@@ -195,7 +195,7 @@ enum studentIdStatusEnum {
 
 const studentIdStatus = ref(
   studentIdStatusEnum.noInput,
-); /* 0: no input, 1 : not found, 2 : found data */
+);
 
 const voterData: Ref<{
   id: number;
@@ -248,7 +248,7 @@ const uploadfunc = async (item: { file: File }) => {
       body: formData,
     },
   );
-
+  
   infoMessage.close()
   if (error.value) {
     ElMessage.error("上傳失敗" + errHandle(error));
@@ -257,11 +257,20 @@ const uploadfunc = async (item: { file: File }) => {
   }
 
   if (failAddingVoter.value && failAddingVoter.value.length != 0) {
-    let errorMessage = "無法新增以下投票者<br>學號列表:<br>";
+    let errorMessage = "無法新增下列投票者:<br>";
     for (let i = 0; i < failAddingVoter.value.length; i++) {
-      errorMessage += `${failAddingVoter.value[i].id}`;
-      if(i != failAddingVoter.value.length - 1) {
-        errorMessage += '、'
+      errorMessage += `學號: ${failAddingVoter.value[i].id} 原因: `
+      if (failAddingVoter.value[i].reason == FailReason.DuplicateStudentId) {
+        errorMessage += "此名單學號重複<br>";
+      }
+      else if (failAddingVoter.value[i].reason == FailReason.DepartmentNotExist) {
+        errorMessage += "系所不存在<br>";
+      }
+      else if(failAddingVoter.value[i].reason == FailReason.InvalidStudentId) {
+        errorMessage += "學號格式錯誤<br>";
+      }
+      else {
+        errorMessage += "未知錯誤<br>";
       }
     }
     ElMessage({
@@ -420,4 +429,10 @@ const loadAll = async () => {
   }
   return departments.value!;
 };
+
+enum FailReason {
+  DuplicateStudentId = 1,
+  DepartmentNotExist = 2,
+  InvalidStudentId = 3,
+}
 </script>
