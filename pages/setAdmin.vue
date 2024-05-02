@@ -1,56 +1,56 @@
 <template>
-    <div>
-        <template v-if="!adminPending">
-            <div
-                v-for="(adminItem, index) in admin"
-                :key="index"
-                class="flex justify-center"
-            >
-                {{ adminItem.id }}
-            </div>
-        </template>
-        <ElSkeleton
-            v-else
-            animated
+  <div>
+    <template v-if="!adminPending">
+      <div
+        v-for="(adminItem, index) in admin"
+        :key="index"
+        class="flex justify-center"
+      >
+        {{ adminItem.id }}
+      </div>
+    </template>
+    <ElSkeleton
+      v-else
+      animated
+    />
+    <ElButton @click="adminRefresh()">
+      <span class="font-bold">刷 新</span>
+    </ElButton>
+    <ElDivider />
+    <div class="flex justify-center">
+      <div class="mb-4 w-[500px]">
+        <ElInput
+          v-model="addId"
+          placeholder="請輸入ID"
+          clearable
         />
-        <ElButton @click="adminRefresh()">
-            <span class="font-bold">刷 新</span>
-        </ElButton>
-        <ElDivider />
-        <div class="flex justify-center">
-            <div class="mb-4 w-[500px]">   
-                <ElInput
-                  v-model="addId"
-                  placeholder="請輸入ID"
-                  clearable
-                />
-            </div>
-            <ElButton
-                v-if="!adminPending"
-                type="primary"
-                @click="addAdmin"
-            >
-                <span class="font-bold">新 增</span>
-            </ElButton>
-        </div>
-        <ElDivider />
-        <div class="flex justify-center">
-            <div class="mb-4 w-[500px]">   
-                <ElInput
-                  v-model="addId"
-                  placeholder="請輸入ID"
-                  clearable
-                />
-            </div>
-           <ElButton
-                v-if="!adminPending"
-                type="primary"
-                @click="delAdmin"
-            >
-                <span class="font-bold">刪 除</span>
-            </ElButton>
-        </div>
+      </div>
+      <ElButton
+        v-if="!adminPending"
+        type="primary"
+        @click="addAdmin"
+      >
+        <span class="font-bold">新 增</span>
+      </ElButton>
     </div>
+    <ElDivider />
+    <div class="flex justify-center">
+      <div class="mb-4 w-[500px]">
+        <ElInput
+          v-model="addId"
+          placeholder="請輸入ID"
+          clearable
+        />
+      </div>
+      <ElButton
+        v-if="!adminPending"
+        type="primary"
+        @click="delAdmin"
+      >
+        <span class="font-bold">刪 除</span>
+      </ElButton>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

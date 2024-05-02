@@ -110,7 +110,7 @@
             plain
             round
             :class="{ invisible: index < 2 }"
-            class="ml-2 mb-4"
+            class="mb-4 ml-2"
             @click="removeDomain(candidate)"
           >
             <span class="font-bold">X</span>
@@ -364,17 +364,6 @@
         <ElTag>{{ loginCnt }}</ElTag>
       </div>
     </div>
-    <ElDivider />
-    <!-- <div class="flex justify-center">
-      <ElButton
-        type="primary"
-        title="設定管理員"
-        plain
-        @click="useRouter().push('/setAdmin')"
-      >
-        <span class="font-bold">設定管理員</span>
-      </ElButton>
-    </div> -->
   </div>
 </template>
 
