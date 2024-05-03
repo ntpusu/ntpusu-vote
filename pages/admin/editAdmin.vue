@@ -63,13 +63,13 @@ const {
   data: admin,
   pending: adminPending,
   refresh: adminRefresh,
-} = await useLazyFetch("/api/getAdmin");
+} = await useLazyFetch("/api/admin/getAll");
 
 const addId = ref("");
 const delId = ref("");
 
 const addAdmin = async () => {
-  await useFetch("/api/addAdmin", {
+  await $fetch("/api/admin/add", {
     method: "PUT",
     query: { id: addId.value },
   })
@@ -86,7 +86,7 @@ const addAdmin = async () => {
 };
 
 const delAdmin = async () => {
-  await useFetch("/api/delAdmin", {
+  await $fetch("/api/admin/del", {
     method: "DELETE",
     query: { id: delId.value },
   })

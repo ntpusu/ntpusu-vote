@@ -113,7 +113,7 @@
             v-model="VG.votingId"
             placeholder="請選擇投票項目"
             clearable
-            class = "!w-36"
+            class="!w-36"
           >
             <ElOption
               v-for="item in voting"
@@ -133,7 +133,7 @@
             v-model="VG.groupId"
             placeholder="請選擇投票範圍"
             clearable
-            class = "!w-36"
+            class="!w-36"
           >
             <ElOption
               v-for="item in group"
@@ -176,8 +176,8 @@ definePageMeta({
   title: "查詢",
 });
 
-const { data: voting } = await useFetch("/api/getVoting");
-const { data: group } = await useFetch("/api/getGroup");
+const { data: voting } = await useFetch("/api/voting/getAll");
+const { data: group } = await useFetch("/api/department/getAllGroup");
 
 const voter = ref("");
 const token = ref("");
@@ -223,21 +223,20 @@ const searchVoter = async () => {
     return;
   }
 
-  const res = await useFetch("/api/getVoter", {
+  await $fetch("/api/voter/get", {
     query: { voter: voter.value },
-  });
-
-  if (res.error.value) {
-    ElMessage({
-      message: "查無此人",
-      type: "warning",
+  })
+    .then((res) => {
+      voterData.value = res;
+      voterShow.value = true;
+    })
+    .catch(() => {
+      ElMessage({
+        message: "查無此人",
+        type: "warning",
+      });
+      return;
     });
-    return;
-  }
-
-  voterData.value = res.data.value;
-
-  voterShow.value = true;
 };
 
 const searchToken = async () => {
@@ -249,21 +248,20 @@ const searchToken = async () => {
     return;
   }
 
-  const res = await useFetch("/api/getBallot", {
+  await $fetch("/api/vote/getBallot", {
     query: { token: token.value },
-  });
-
-  if (res.error.value) {
-    ElMessage({
-      message: "無此憑證或投票尚未結束",
-      type: "warning",
+  })
+    .then((res) => {
+      tokenData.value = res;
+      tokenShow.value = true;
+    })
+    .catch(() => {
+      ElMessage({
+        message: "無此憑證或投票尚未結束",
+        type: "warning",
+      });
+      return;
     });
-    return;
-  }
-
-  tokenData.value = res.data.value;
-
-  tokenShow.value = true;
 };
 
 const searchVG = async () => {
@@ -275,20 +273,19 @@ const searchVG = async () => {
     return;
   }
 
-  const res = await useFetch("/api/getVotingGroupCnt", {
+  await $fetch("/api/voting/getVotingGroupCnt", {
     query: { votingId: VG.votingId, groupId: VG.groupId },
-  });
-
-  if (res.error.value) {
-    ElMessage({
-      message: "投票尚未結束",
-      type: "warning",
+  })
+    .then((res) => {
+      VGData.value = res;
+      VGShow.value = true;
+    })
+    .catch(() => {
+      ElMessage({
+        message: "投票尚未結束",
+        type: "warning",
+      });
+      return;
     });
-    return;
-  }
-
-  VGData.value = res.data.value;
-
-  VGShow.value = true;
 };
 </script>

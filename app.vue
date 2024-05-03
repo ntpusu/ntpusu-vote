@@ -224,9 +224,7 @@
             placement="top"
           >
             <template #content>
-              <div class="text-center">
-                投票開始前每日重置<br>投票開始後不再重置
-              </div>
+              <div class="text-center">投票開始時會重置一次</div>
             </template>
             <div class="m-3 text-center">
               <div class="text-lg text-black">累計已登入人數</div>
@@ -248,7 +246,7 @@
           >
             <template #content>
               <div class="text-center">
-                投票期間為<br>2023年5月24日<br>00:00 ~ 23:59
+                投票期間為<br>2024年5月23日<br>00:00 ~ 23:59
               </div>
             </template>
             <div class="m-3 text-center">
@@ -408,8 +406,8 @@ useHead({
 
 const curIndex = ref(useRoute().path);
 
-const { data: admin } = await useFetch("/api/checkAdmin");
-const { data: superAdmin } = await useFetch("/api/checkSuperAdmin");
+const { data: admin } = await useFetch("/api/check/admin");
+const { data: superAdmin } = await useFetch("/api/check/superAdmin");
 
 const { status, signOut } = useAuth();
 
@@ -542,40 +540,28 @@ const checkLogin = () => {
   setTimeout(async () => {
     if (status.value) {
       if (status.value === "authenticated") {
-        const { data: res, refresh, error } = await useFetch("/api/checkLogin");
+        await $fetch("/api/check/login").then(async (res) => {
+          loginInfo.value = res.login;
+          showLoginBadge.value = true;
 
-        while (!res.value) {
-          if (error.value) {
-            ElMessage.error("操作過於頻繁，無法獲得登入序號");
-            return;
+          if (res.firstLogin) {
+            await showLoginInfo();
           }
-
-          await refresh();
-
-          setTimeout(() => {}, 500);
-        }
-
-        loginInfo.value = res.value.login;
-        showLoginBadge.value = true;
-
-        if (res.value.firstLogin) {
-          await showLoginInfo();
-        }
+        });
       }
     } else checkLogin();
   }, 250);
 };
 
-const { data: totalCnt } = await useFetch("/api/getLoginCnt");
-
-const { data: realCnt } = await useFetch("/api/getLoginCnt", {
+const { data: totalCnt } = await useFetch("/api/loginCnt/get");
+const { data: realCnt } = await useFetch("/api/loginCnt/get", {
   params: {
-    startTime: new Date(2023, 4, 24).getTime(),
-    endTime: new Date(2023, 4, 24, 23, 59, 59).getTime(),
+    startTime: new Date(2024, 4, 23).getTime(),
+    endTime: new Date(2024, 4, 23, 23, 59, 59, 999).getTime(),
   },
 });
 
-onBeforeMount(() => {
+onMounted(() => {
   checkLogin();
 });
 </script>

@@ -1,53 +1,52 @@
 <template>
   <div style="text-align: -webkit-center">
-    <el-text
+    <ElText
       class="mx-1"
       size="large"
-      >上傳投票者名單</el-text
+      >上傳投票者名單</ElText
     >
-    <div class = "mx-30">
-    <el-upload
-      ref="uploadRef"
-      class="upload-demo"
-      action="none"
-      accept=".xlsx"
-      :http-request="uploadfunc"
-      :drag="true"
-      :auto-upload="false"
-      :limit="1"
-    >
-      <template #trigger>
-        <el-button type="primary">選擇檔案</el-button>
-      </template>
-
-      <el-button
-        class="ml-3"
-        type="success"
-        @click="uploadSubmit"
+    <div class="mx-30">
+      <ElUpload
+        ref="uploadRef"
+        action="none"
+        accept=".xlsx"
+        :http-request="uploadFunc"
+        :drag="true"
+        :auto-upload="false"
+        :limit="1"
       >
-        上傳至伺服器端
-      </el-button>
+        <template #trigger>
+          <ElButton type="primary">選擇檔案</ElButton>
+        </template>
 
-      <template #tip>
-        <div class="el-upload__tip">僅能上傳 .xlsx 文件</div>
-      </template>
-    </el-upload>
+        <ElButton
+          class="ml-3"
+          type="success"
+          @click="uploadSubmit"
+        >
+          上傳至伺服器端
+        </ElButton>
+
+        <template #tip>
+          <div class="el-upload__tip">僅能上傳 .xlsx 文件</div>
+        </template>
+      </ElUpload>
     </div>
-    <el-text
+    <ElText
       class="mx-1"
       size="large"
-      >目前系統內已有{{ voterCount }}筆投票者資料</el-text
+      >目前系統內已有{{ voterCount }}筆投票者資料</ElText
     >
     <br>
     <br>
-    <el-button
+    <ElButton
       type="danger"
       round
       @click="deleteAllVoterDialogVisible = true"
     >
       刪除所有投票者資料
-    </el-button>
-    <el-dialog
+    </ElButton>
+    <ElDialog
       v-model="deleteAllVoterDialogVisible"
       :z-index="1000"
       title="確認要刪除所有投票者嗎?"
@@ -56,73 +55,71 @@
       <span>刪除後將無法復原</span>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="deleteAllVoterDialogVisible = false"
-            >取消</el-button
-          >
-          <el-button
+          <ElButton @click="deleteAllVoterDialogVisible = false">取消</ElButton>
+          <ElButton
             type="danger"
             @click="deleteAllVoter"
           >
             確認刪除
-          </el-button>
+          </ElButton>
         </div>
       </template>
-    </el-dialog>
+    </ElDialog>
     <br>
     <br>
-    <el-button
+    <ElButton
       plain
       @click="dataChangeDialogVisible = true"
     >
       個別資料更動
-    </el-button>
+    </ElButton>
 
-    <el-dialog
+    <ElDialog
       v-model="dataChangeDialogVisible"
       :z-index="1000"
       title="更動頁面"
       width="500"
     >
       <div style="text-align: -webkit-center">
-        <el-input
+        <ElInput
           v-model="queryInput"
           style="width: 240px"
           size="large"
           placeholder="請輸入學號"
         />
-        <el-button
+        <ElButton
           :icon="Search"
           size="large"
           @click="queryStudentData"
-          >查詢</el-button
+          >查詢</ElButton
         >
         <br><br>
         <template v-if="queryInputData !== ''">
-          <el-text
+          <ElText
             class="mx-1"
             type="info"
-            >當前為學號{{ queryInputData }}的資料</el-text
+            >當前為學號{{ queryInputData }}的資料</ElText
           >
         </template>
         <br><br>
         <template v-if="studentIdStatus == studentIdStatusEnum.notFound">
-          <el-text
+          <ElText
             class="mx-1"
             size="large"
             type="danger"
           >
             資料不存在
-          </el-text>
+          </ElText>
           <br>
           <br>
-          <el-text
+          <ElText
             class="mx-1"
             size="large"
           >
             新增資料
-          </el-text>
+          </ElText>
           <br>
-          <el-autocomplete
+          <ElAutocomplete
             v-model="departmentInput"
             :fetch-suggestions="queryAllDepartment"
             class="inline-input w-50"
@@ -131,55 +128,59 @@
           />
           <br>
           <br>
-          <el-button
+          <ElButton
             plain
             @click="addNewVoter"
           >
             新增
-          </el-button>
+          </ElButton>
         </template>
         <template v-if="studentIdStatus == studentIdStatusEnum.Found">
-          <el-text
+          <ElText
             class="mx-1"
             size="large"
           >
             系別&nbsp; : &nbsp;{{ voterData!.department }} &nbsp;&nbsp;
-          </el-text>
-          <el-autocomplete
+          </ElText>
+          <ElAutocomplete
             v-model="departmentInput"
             :fetch-suggestions="queryAllDepartment"
             class="inline-input w-50"
             :placeholder="`改動學號${queryInputData}系別`"
             value-key="name"
           />
-          <el-button @click="modifyDepartment">修改</el-button>
+          <ElButton @click="modifyDepartment">修改</ElButton>
           <br>
           <br>
-          <el-button
+          <ElButton
             type="danger"
             @click="deleteVoterData"
-            >刪除此投票者資料</el-button
+            >刪除此投票者資料</ElButton
           >
         </template>
       </div>
       <template #footer>
         <div class="dialog-footer">
-          <el-button
+          <ElButton
             type="primary"
             @click="dataChangeDialogVisible = false"
           >
             關閉頁面
-          </el-button>
+          </ElButton>
         </div>
       </template>
-    </el-dialog>
+    </ElDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
 import type { UploadInstance } from "element-plus";
 import { Search } from "@element-plus/icons-vue";
+
+definePageMeta({
+  middleware: ["admin"],
+  title: "管理投票者",
+});
 
 const dataChangeDialogVisible = ref(false);
 const deleteAllVoterDialogVisible = ref(false);
@@ -193,19 +194,18 @@ enum studentIdStatusEnum {
   Found,
 }
 
-const studentIdStatus = ref(
-  studentIdStatusEnum.noInput,
-);
+enum FailReason {
+  DuplicateStudentId = 1,
+  DepartmentNotExist = 2,
+  InvalidStudentId = 3,
+}
+
+const studentIdStatus = ref(studentIdStatusEnum.noInput);
 
 const voterData: Ref<{
   id: number;
   department: string;
 } | null> = ref(null);
-
-definePageMeta({
-  middleware: ["admin"],
-  title: "管理投票者",
-});
 
 const uploadRef = ref<UploadInstance>();
 
@@ -215,18 +215,17 @@ const submitUpload = () => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const errHandle = (err: any) => {
-  if (err.value.data == null || '' + err.value.data.message == 'undefined') {
-    return ' 發生未知錯誤'
+  if (err.value.data == null || "" + err.value.data.message == "undefined") {
+    return " 發生未知錯誤";
+  } else {
+    return " " + err.value.data.message;
   }
-  else {
-    return ' ' + err.value.data.message
-  }
-}
+};
 
 const { data: voterCount, refresh: voterCountRefresh } =
-  await useFetch("/api/getVoterCnt");
+  await useFetch("/api/voter/getCnt");
 
-const uploadfunc = async (item: { file: File }) => {
+const uploadFunc = async (item: { file: File }) => {
   const file = item.file;
   const fileType = file.name.substring(file.name.lastIndexOf("."));
   if (fileType !== ".xlsx") {
@@ -236,20 +235,17 @@ const uploadfunc = async (item: { file: File }) => {
   }
   const formData = new FormData();
   const infoMessage = ElMessage({
-      message: '上傳檔案中',
-      type: "info",
-      duration: 0,
-    });
+    message: "上傳檔案中",
+    type: "info",
+    duration: 0,
+  });
   formData.append("file", file);
-  const { data: failAddingVoter, error} = await useFetch(
-    "/api/uploadVoter",
-    {
-      method: "POST",
-      body: formData,
-    },
-  );
+  const { data: failAddingVoter, error } = await useFetch("/api/voter/upload", {
+    method: "POST",
+    body: formData,
+  });
 
-  infoMessage.close()
+  infoMessage.close();
   if (error.value) {
     ElMessage.error("上傳失敗" + errHandle(error));
   } else {
@@ -259,17 +255,18 @@ const uploadfunc = async (item: { file: File }) => {
   if (failAddingVoter.value && failAddingVoter.value.length != 0) {
     let errorMessage = "無法新增下列投票者:<br>";
     for (let i = 0; i < failAddingVoter.value.length; i++) {
-      errorMessage += `學號: ${failAddingVoter.value[i].id} 原因: `
+      errorMessage += `學號: ${failAddingVoter.value[i].id} 原因: `;
       if (failAddingVoter.value[i].reason == FailReason.DuplicateStudentId) {
         errorMessage += "此名單學號重複<br>";
-      }
-      else if (failAddingVoter.value[i].reason == FailReason.DepartmentNotExist) {
+      } else if (
+        failAddingVoter.value[i].reason == FailReason.DepartmentNotExist
+      ) {
         errorMessage += "系所不存在<br>";
-      }
-      else if(failAddingVoter.value[i].reason == FailReason.InvalidStudentId) {
+      } else if (
+        failAddingVoter.value[i].reason == FailReason.InvalidStudentId
+      ) {
         errorMessage += "學號格式錯誤<br>";
-      }
-      else {
+      } else {
         errorMessage += "未知錯誤<br>";
       }
     }
@@ -289,9 +286,8 @@ const uploadfunc = async (item: { file: File }) => {
 const queryStudentData = async () => {
   queryInputData.value = queryInput.value;
   const { data: res, error } = await useFetch(
-    "/api/getVoterAndDepartment",
+    "/api/voter/getVoterAndDepartment",
     {
-      method: "GET",
       query: { voter: parseInt(queryInput.value) },
     },
   );
@@ -308,10 +304,9 @@ const refreshVoterData = async () => {
   if (voterData.value) {
     voterData.value.department = "等待刷新中";
   }
-  const { data: res, error} = await useFetch(
-    "/api/getVoterAndDepartment",
+  const { data: res, error } = await useFetch(
+    "/api/voter/getVoterAndDepartment",
     {
-      method: "GET",
       query: { voter: parseInt(queryInput.value) },
     },
   );
@@ -326,7 +321,7 @@ const refreshVoterData = async () => {
 };
 
 const modifyDepartment = async () => {
-  const { error } = await useFetch("/api/modifyVoter", {
+  const { error } = await useFetch("/api/voter/modify", {
     method: "POST",
     body: {
       voterId: parseInt(queryInputData.value),
@@ -342,7 +337,7 @@ const modifyDepartment = async () => {
 };
 
 const deleteAllVoter = async () => {
-  const { error } = await useFetch("/api/delAllVoter", {
+  const { error } = await useFetch("/api/voter/delAll", {
     method: "DELETE",
   });
   deleteAllVoterDialogVisible.value = false;
@@ -355,7 +350,7 @@ const deleteAllVoter = async () => {
 };
 
 const deleteVoterData = async () => {
-  const { error } = await useFetch("/api/delVoter", {
+  const { error } = await useFetch("/api/voter/del", {
     method: "DELETE",
     query: { id: queryInputData.value },
   });
@@ -377,7 +372,7 @@ const uploadSubmit = async () => {
 const addNewVoter = async () => {
   const addNewStudentId = queryInputData.value;
   const addNewDepartment = departmentInput.value;
-  const { error } = await useFetch("api/addVoter", {
+  const { error } = await useFetch("/api/voter/add", {
     method: "PUT",
     query: {
       id: addNewStudentId,
@@ -406,7 +401,6 @@ const queryAllDepartment = (
   const results = queryString
     ? departmentList.value.filter(createFilter(queryString))
     : departmentList.value;
-  // call callback function to return suggestions
   cb(results);
 };
 
@@ -421,18 +415,12 @@ onMounted(async () => {
 });
 
 const loadAll = async () => {
-  const { data: departments, error } = await useFetch("/api/getAllDepartment", {
-    method: "GET",
-  });
+  const { data: departments, error } = await useFetch(
+    "/api/department/getAll"
+  );
   if (error.value) {
     ElMessage.error("獲取系所列表失敗" + errHandle(error));
   }
   return departments.value!;
 };
-
-enum FailReason {
-  DuplicateStudentId = 1,
-  DepartmentNotExist = 2,
-  InvalidStudentId = 3,
-}
 </script>
