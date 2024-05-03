@@ -414,7 +414,6 @@
           1. 未登入<br>
           2. 網路連線斷了<br>
           3. 未在投票時間內投票<br>
-          4. 操作過於頻繁<br>
           若有疑問請聯繫<NuxtLink
             to="https://www.facebook.com/NTPUSU"
             target="_blank"
@@ -442,7 +441,7 @@ const {
   data,
   pending: votingPending,
   refresh: votingRefresh,
-} = await useLazyFetch("/api/voterSession");
+} = await useLazyFetch("/api/vote/voterSession");
 
 const freshTime = ref(Date.now());
 
@@ -488,7 +487,7 @@ const handleWidgetId = (id: number) => {
 const handleLoad = async (response: unknown) => {
   const res: {
     success: boolean;
-  } = await $fetch("/api/recaptchaV2", {
+  } = await $fetch("/api/recaptcha/recaptchaV2", {
     method: "POST",
     body: JSON.stringify({ response }),
   });
@@ -542,78 +541,70 @@ const voteConfirm = async (votingId: number) => {
 };
 
 const vote = async (votingId: number) => {
-  await useFetch("/api/vote", {
-        method: "POST",
-        body: JSON.stringify({
-          votingId,
-          cname: voteData.value[votingId],
-        }),
-      })
-        .then(async ({ data: res }) => {
-          if (res.value) {
-            if (res.value.vote) {
-              await ElMessageBox.confirm(
-                "憑證：" + res.value.token,
-                "投票成功",
-                {
-                  cancelButtonText: "複製憑證",
-                  cancelButtonClass: "el-button--success",
-                  confirmButtonText: "確 定",
-                  distinguishCancelAndClose: true,
-                  autofocus: false,
-                  type: "success",
-                  roundButton: true,
-                  customStyle: {
-                    fontFamily: '"Noto Sans TC", sans-serif',
-                    overflow: "auto",
-                  },
-                },
-              ).catch(async (action: Action) => {
-                if (action === "cancel") {
-                  await navigator.clipboard.writeText(res.value!.token);
-                  ElMessage({
-                    type: "success",
-                    message: "已複製",
-                  });
-                }
-              });
-            } else {
-              await ElMessageBox.confirm(
-                "憑證：" + res.value.token,
-                "不可重複投票",
-                {
-                  cancelButtonText: "複製憑證",
-                  cancelButtonClass: "el-button--success",
-                  confirmButtonText: "確 定",
-                  confirmButtonClass: "el-button--warning",
-                  distinguishCancelAndClose: true,
-                  autofocus: false,
-                  type: "error",
-                  roundButton: true,
-                  customStyle: {
-                    fontFamily: '"Noto Sans TC", sans-serif',
-                  },
-                },
-              ).catch(async (action: Action) => {
-                if (action === "cancel") {
-                  await navigator.clipboard.writeText(res.value!.token);
-                  ElMessage({
-                    type: "success",
-                    message: "已複製",
-                  });
-                }
+  await $fetch("/api/vote/vote", {
+    method: "POST",
+    body: JSON.stringify({
+      votingId,
+      cname: voteData.value[votingId],
+    }),
+  })
+    .then(async (res) => {
+      if (res) {
+        if (res.vote) {
+          await ElMessageBox.confirm("憑證：" + res.token, "投票成功", {
+            cancelButtonText: "複製憑證",
+            cancelButtonClass: "el-button--success",
+            confirmButtonText: "確 定",
+            distinguishCancelAndClose: true,
+            autofocus: false,
+            type: "success",
+            roundButton: true,
+            customStyle: {
+              fontFamily: '"Noto Sans TC", sans-serif',
+              overflow: "auto",
+            },
+          }).catch(async (action: Action) => {
+            if (action === "cancel") {
+              await navigator.clipboard.writeText(res.token);
+              ElMessage({
+                type: "success",
+                message: "已複製",
               });
             }
-          }
-        })
-        .catch(() => {
-          voteFail.value = true;
-        })
-        .finally(async () => {
-          await votingRefresh();
-          freshTime.value = Date.now();
-        });
-}
+          });
+        } else {
+          await ElMessageBox.confirm("憑證：" + res.token, "不可重複投票", {
+            cancelButtonText: "複製憑證",
+            cancelButtonClass: "el-button--success",
+            confirmButtonText: "確 定",
+            confirmButtonClass: "el-button--warning",
+            distinguishCancelAndClose: true,
+            autofocus: false,
+            type: "error",
+            roundButton: true,
+            customStyle: {
+              fontFamily: '"Noto Sans TC", sans-serif',
+            },
+          }).catch(async (action: Action) => {
+            if (action === "cancel") {
+              await navigator.clipboard.writeText(res.token);
+              ElMessage({
+                type: "success",
+                message: "已複製",
+              });
+            }
+          });
+        }
+      }
+    })
+    .catch(() => {
+      voteFail.value = true;
+    })
+    .finally(async () => {
+      await votingRefresh();
+      freshTime.value = Date.now();
+    });
+};
 
 const seeToken = async (index: number) => {
   tokenLoading.value[index] = true;
@@ -693,7 +684,7 @@ const checkData = () => {
     else if (!data.value && useRoute().path == "/vote") {
       ElMessage({
         type: "error",
-        message: "操作過於頻繁或不在選舉人名單內",
+        message: "不在選舉人名單內",
       });
 
       setTimeout(() => {

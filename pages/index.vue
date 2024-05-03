@@ -9,7 +9,7 @@
       <ElStep
         v-for="(activity, index) in activities"
         :key="index"
-        :status="style(activity.start, activity.finish)"
+        :status="style(activity.start, activity.end)"
         class="tracking-[1.5px]"
       >
         <template #title>
@@ -19,18 +19,30 @@
         </template>
         <template #description>
           <div class="min-w-max sm:text-base">
-            {{
+            <span>{{
               activity.start.toLocaleString(undefined, {
                 dateStyle: "long",
-              }) +
-              (activity.end
-                ? "〜" +
-                  activity.end.toLocaleString(undefined, {
-                    dateStyle: "long",
-                  })
-                : "")
+                timeStyle: activity.showTime ? "medium" : undefined,
+              })
+            }}</span>
+            <span v-if="activity.showEnd"> 〜 </span>
+            <span v-if="activity.showEnd && !activity.showTime">{{
+              activity.end.toLocaleString(undefined, {
+                dateStyle: "long",
+                timeStyle: activity.showTime ? "medium" : undefined,
+              })
+            }}</span>
+          </div>
+          <div
+            v-if="activity.showEnd && activity.showTime"
+            class="min-w-max sm:text-base"
+          >
+            {{
+              activity.end.toLocaleString(undefined, {
+                dateStyle: "long",
+                timeStyle: activity.showTime ? "medium" : undefined,
+              })
             }}
-            {{ activity.maybe ? "(預定)" : "" }}
           </div>
         </template>
       </ElStep>
@@ -38,7 +50,7 @@
     <ElButton
       v-if="status === 'authenticated'"
       type="success"
-      class="my-5 animate-bounce hover:animate-none"
+      class="my-6"
       @click="useRouter().push('/vote')"
     >
       <span class="font-bold">前 往 投 票 頁 面</span>
@@ -46,7 +58,7 @@
     <ElButton
       v-else
       type="primary"
-      class="my-5 animate-bounce hover:animate-none"
+      class="my-6"
       @click="useRouter().push('/login')"
     >
       <span class="font-bold">前 往 登 入 頁 面</span>
@@ -73,65 +85,45 @@ const style = (start: Date, end: Date) => {
 const activities = [
   {
     content: "登記參選",
-    start: new Date(2023, 4, 1),
-    end: new Date(2023, 4, 12),
-    finish: new Date(2023, 4, 13),
-    maybe: false,
+    start: new Date(2024, 3, 25),
+    end: new Date(2024, 4, 6, 23, 59, 59),
+    showEnd: true,
+    showTime: false,
   },
   {
     content: "候選人名單公告",
-    start: new Date(2023, 4, 15),
-    finish: new Date(2023, 4, 16),
-    maybe: false,
+    start: new Date(2024, 4, 10),
+    end: new Date(2024, 4, 11),
+    showEnd: false,
+    showTime: false,
   },
   {
     content: "選舉公報",
-    start: new Date(2023, 4, 17),
-    finish: new Date(2023, 4, 18),
-    maybe: false,
+    start: new Date(2024, 4, 16),
+    end: new Date(2024, 4, 17),
+    showEnd: false,
+    showTime: false,
   },
   {
     content: "候選人政見發表會",
-    start: new Date(2023, 4, 22),
-    finish: new Date(2023, 4, 23),
-    maybe: false,
+    start: new Date(2024, 4, 21),
+    end: new Date(2024, 4, 22),
+    showEnd: false,
+    showTime: false,
   },
   {
     content: "線上投票",
-    start: new Date(2023, 4, 24),
-    finish: new Date(2023, 4, 25),
-    maybe: false,
+    start: new Date(2024, 4, 23),
+    end: new Date(2024, 4, 24),
+    showEnd: false,
+    showTime: false,
   },
   {
     content: "當選名單公告",
-    start: new Date(2023, 4, 25),
-    finish: new Date(2023, 4, 26),
-    maybe: false,
-  },
-  {
-    content: "(補選)登記參選",
-    start: new Date(2023, 4, 26),
-    end: new Date(2023, 5, 1),
-    finish: new Date(2023, 5, 2),
-    maybe: false,
-  },
-  {
-    content: "(補選)候選人名單公告 + 選舉公報",
-    start: new Date(2023, 5, 3),
-    finish: new Date(2023, 5, 4),
-    maybe: false,
-  },
-  {
-    content: "(補選)線上投票",
-    start: new Date(2023, 5, 12),
-    finish: new Date(2023, 5, 13),
-    maybe: false,
-  },
-  {
-    content: "(補選)當選名單公告",
-    start: new Date(2023, 5, 13),
-    finish: new Date(2023, 5, 14),
-    maybe: false,
+    start: new Date(2024, 4, 24),
+    end: new Date(2024, 4, 25),
+    showEnd: false,
+    showTime: false,
   },
 ];
 </script>

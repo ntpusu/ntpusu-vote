@@ -1,6 +1,5 @@
 import prisma from '~/lib/prisma'
 import { getServerSession } from '#auth'
-
 export default defineEventHandler(async (event) => {
     const session = await getServerSession(event) as { user: { email: string } } | null
 
@@ -28,5 +27,5 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    return await prisma.department.findMany();
+    return await prisma.department.findMany({})
 })

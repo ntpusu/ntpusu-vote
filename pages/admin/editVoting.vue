@@ -379,10 +379,10 @@ const {
   data: voting,
   pending: votingPending,
   refresh: votingRefresh,
-} = await useLazyFetch("/api/getVoting");
-const { data: Group } = await useFetch("/api/getGroup");
+} = await useLazyFetch("/api/voting/getAll");
+const { data: Group } = await useFetch("/api/department/getAllGroup");
 const { data: loginCnt, refresh: loginCntRefresh } =
-  await useFetch("/api/getLoginCnt");
+  await useFetch("/api/loginCnt/get");
 
 const showTime = ref(false);
 const showOption = ref(true);
@@ -440,7 +440,7 @@ const submitForm = async (formRef: FormInstance | undefined) => {
 
   await formRef.validate(async (valid, _fields) => {
     if (valid) {
-      await useFetch("/api/addVoting", {
+      await $fetch("/api/voting/add", {
         method: "POST",
         body: JSON.stringify(addVote),
       })
@@ -501,7 +501,7 @@ const archiveData = () => {
 };
 
 const handleArchive = async (id: number) => {
-  await useFetch("/api/archiveVoting", {
+  await $fetch("/api/voting/archive", {
     method: "POST",
     body: JSON.stringify({ id }),
   })
@@ -515,7 +515,7 @@ const handleArchive = async (id: number) => {
 };
 
 const handleUnarchive = async (id: number) => {
-  await useFetch("/api/unarchiveVoting", {
+  await $fetch("/api/voting/unarchive", {
     method: "POST",
     body: JSON.stringify({ id }),
   })
@@ -529,7 +529,7 @@ const handleUnarchive = async (id: number) => {
 };
 
 const handleDelete = async (id: number) => {
-  await useFetch("/api/delVoting", {
+  await $fetch("/api/voting/del", {
     method: "DELETE",
     query: { id },
   })
@@ -544,7 +544,7 @@ const handleDelete = async (id: number) => {
 };
 
 const handleLoginReset = async () => {
-  await useFetch("/api/resetLoginCnt")
+  await $fetch("/api/loginCnt/reset")
     .then(async () => {
       ElMessage.success("重置成功");
       await loginCntRefresh();
