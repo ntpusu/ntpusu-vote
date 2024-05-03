@@ -372,7 +372,7 @@ import type { FormInstance, FormRules } from "element-plus";
 
 definePageMeta({
   middleware: ["admin"],
-  title: "管理",
+  title: "管理投票",
 });
 
 const {
