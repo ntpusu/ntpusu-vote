@@ -2,11 +2,11 @@
 
 ## 簡介
 
-使用基於 [vue3](https://vuejs.org/) 的 [nuxt](https://nuxt.com/) 框架製作的全端網站\
-使用 [tailwindcss](https://tailwindcss.com/) 框架進行樣式設計\
-使用 [postgreSQL](https://www.postgresql.org/) 資料庫\
-使用 [prisma](https://www.prisma.io/) 作為 ORM\
-透過 [vercel](https://vercel.com/) 進行部署上線\
+使用基於 [vue3](https://vuejs.org/) 的 [nuxt](https://nuxt.com/) 框架製作的全端網站
+使用 [tailwindcss](https://tailwindcss.com/) 框架進行樣式設計
+使用 [postgreSQL](https://www.postgresql.org/) 資料庫
+使用 [prisma](https://www.prisma.io/) 作為 ORM
+透過 [vercel](https://vercel.com/) 進行部署上線
 供學生會進行投票使用
 
 ## 網址
@@ -41,7 +41,7 @@ bun run build
 
 ### 資料庫
 
-使用 [prisma](https://www.prisma.io/) 作為 ORM，schema 位於 prisma/schema.prisma\
+使用 [prisma](https://www.prisma.io/) 作為 ORM，schema 位於 prisma/schema.prisma
 開好資料庫後將相關環境變數設定好，就能執行以下指令
 
 #### 資料庫 Schema 同步
@@ -59,6 +59,7 @@ bun db
 ### ESLint
 
 使用 vscode 需添加設定
+
 ```
 {
   // Enable ESlint flat config support
