@@ -723,9 +723,3 @@ onActivated(async () => {
   checkData();
 });
 </script>
-
-<!-- <style>
-.grecaptcha-badge {
-  @apply z-20;
-}
-</style> -->
