@@ -78,12 +78,12 @@
           <span class="text-sm font-bold sm:text-base md:text-lg"> 登出 </span>
         </ElMenuItem>
         <ElButton
-          plain
-          class="mr-3 md:!hidden"
+          link
+          class="mr-6 md:!hidden"
           @click="show = !show"
         >
-          <ElIcon v-if="!show"><More /></ElIcon>
-          <ElIcon v-else><MoreFilled /></ElIcon>
+          <ElIcon v-if="!show" size="25"><More /></ElIcon>
+          <ElIcon v-else size="25"><MoreFilled /></ElIcon>
         </ElButton>
       </ElMenu>
     </ClientOnly>
@@ -92,11 +92,12 @@
         <div
           v-if="show"
           class="fixed bottom-0 left-0 right-0 top-[3.3rem] z-40 bg-gray-500 bg-opacity-40"
+          @click="show = !show"
         />
         <Transition name="menu">
           <div
             v-if="show"
-            class="absolute bottom-0 right-0 top-[3.3rem] z-50 w-40"
+            class="absolute bottom-0 right-0 top-[3.4rem] z-50 w-40"
           >
             <ElMenu
               :default-active="useRoute().path"
@@ -323,7 +324,11 @@
       <div class="flex justify-center">
         <span
           class="w-11/12 whitespace-pre-wrap break-words text-xs sm:text-sm md:text-base"
-          >國立臺北大學三峽校區學生會投票網站（下稱「投票網站」）使用cookie來記錄您的登入狀態及增進您的使用體驗。這些Cookie僅限於投票網站使用，不會將Cookie用於商業目的。這些Cookie將在您使用投票網站時存儲在您的設備上，並在一定時間後過期。您可以在您的瀏覽器設置中管理和刪除cookie。如果您選擇禁用cookie，將會無法使用投票網站的登入功能。繼續使用投票網站即表示你同意我們使用Cookie。若您對此使用聲明有任何疑問，請隨時<NuxtLink
+          >國立臺北大學三峽校區學生會投票網站（下稱「投票網站」）使用 Cookie
+          來記錄您的登入狀態及增進您的使用體驗。這些 Cookie
+          僅限於投票網站使用，不會將 Cookie 用於其他目的。如果您選擇禁用
+          Cookie，將會無法使用投票網站的部分功能。繼續使用投票網站即表示你同意我們使用
+          Cookie。若您對此使用聲明有任何疑問，請隨時<NuxtLink
             to="https://www.facebook.com/NTPUSU"
             target="_blank"
             class="whitespace-pre-wrap break-all font-bold text-blue-400 hover:text-blue-500 hover:underline"
@@ -579,14 +584,11 @@ onMounted(() => {
 
 .menu-leave-active,
 .menu-enter-active {
-  transition: all .5s ease;
+  @apply transition-transform duration-300;
 }
 
-.menu-enter-from {
-  transform: translateX(100%);
-}
-
+.menu-enter-from,
 .menu-leave-to {
-  transform: translateX(100%);
+  @apply translate-x-full;
 }
 </style>

@@ -36,7 +36,7 @@
           >
             <template #title>
               <div class="mr-3 items-center text-gray-600">
-                若要查看照片或政見等資訊，可以至<NuxtLink
+                若要查看候選人資訊，可以至<NuxtLink
                   to="/bulletin"
                   class="whitespace-pre-wrap break-all font-bold text-blue-400 hover:text-blue-500 hover:underline"
                   >選舉資訊</NuxtLink
