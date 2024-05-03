@@ -20,8 +20,8 @@
             <ElInput
               v-model="addVote.voteName"
               placeholder="請輸入名稱"
+              class="!w-48"
             />
-            <ElButton class="invisible ml-2" />
           </ElSpace>
         </ElFormItem>
         <ElFormItem
@@ -33,7 +33,7 @@
               v-model="addVote.voteGroup"
               placeholder="請選擇投票範圍"
               clearable
-              class="!w-52"
+              class="!w-48"
             >
               <ElOption
                 v-for="item in groupOptions"
@@ -54,7 +54,7 @@
               type="datetime"
               placeholder="請選擇開始時間"
               format="YYYY/MM/DD HH:mm:ss"
-              class="!w-52"
+              class="!w-48"
             />
           </ClientOnly>
         </ElFormItem>
@@ -68,7 +68,7 @@
               type="datetime"
               placeholder="請選擇結束時間"
               format="YYYY/MM/DD HH:mm:ss"
-              class="!w-52"
+              class="!w-48"
             />
           </ClientOnly>
         </ElFormItem>
@@ -103,6 +103,7 @@
             <ElInput
               v-model="candidate.name"
               placeholder="請輸入選項名稱"
+              class="!w-48"
             />
           </ElFormItem>
           <ElButton
