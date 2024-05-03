@@ -1,43 +1,39 @@
 <template>
-  <div class="text-center">
+  <div class="flex flex-col items-center">
     <h1 class="my-5 text-center text-2xl font-bold">管理選舉區</h1>
-    <div class="demo-collapse">
-      <ElCollapse
-        v-model="activeNames"
-        class="w-2/3 max-w-md rounded-xl border-2 border-blue-300 px-4 py-2"
+    <ElCollapse
+      v-model="activeNames"
+      class="w-5/6 max-w-max rounded-xl border-2 border-blue-300 px-4 py-2"
+    >
+      <ElCollapseItem
+        title="所有科系名稱及投票區"
+        name="1"
       >
-        <ElCollapseItem
-          title="所有科系名稱及投票區"
-          name="1"
+        <!-- 顯示目前系統內的資料筆數 -->
+        <ElTable
+          :data="
+            departmentDetail!.map((d) => {
+              return {
+                name: d.name,
+                group: d.departmentInGroup.map((g) => g.group.name).join(', '),
+              };
+            })
+          "
+          class="w-full"
         >
-          <!-- 顯示目前系統內的資料筆數 -->
-          <ElTable
-            :data="
-              departmentDetail!.map((d) => {
-                return {
-                  name: d.name,
-                  group: d.departmentInGroup
-                    .map((g) => g.group.name)
-                    .join(', '),
-                };
-              })
-            "
-            class="w-full"
-          >
-            <ElTableColumn
-              prop="name"
-              label="name"
-              width="200"
-            />
-            <ElTableColumn
-              prop="group"
-              label="Group"
-              width="200"
-            />
-          </ElTable>
-        </ElCollapseItem>
-      </ElCollapse>
-    </div>
+          <ElTableColumn
+            prop="name"
+            label="name"
+            width="200"
+          />
+          <ElTableColumn
+            prop="group"
+            label="Group"
+            width="200"
+          />
+        </ElTable>
+      </ElCollapseItem>
+    </ElCollapse>
     <!-- 檔案上傳元件 -->
     <ElUpload
       v-if="electorCount == 0"
