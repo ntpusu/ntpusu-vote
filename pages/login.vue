@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-[70vh]">
+  <div class="flex h-[70dvh]">
     <ElCard class="m-auto w-full sm:w-5/6 md:w-3/4 lg:w-1/2 xl:w-1/3">
       <template #header>
         <ElPageHeader

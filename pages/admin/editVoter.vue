@@ -204,7 +204,7 @@ const voterData: Ref<{
 
 definePageMeta({
   middleware: ["admin"],
-  title: "管理投票者頁面",
+  title: "管理投票者",
 });
 
 const uploadRef = ref<UploadInstance>();
@@ -248,7 +248,7 @@ const uploadfunc = async (item: { file: File }) => {
       body: formData,
     },
   );
-  
+
   infoMessage.close()
   if (error.value) {
     ElMessage.error("上傳失敗" + errHandle(error));

@@ -3,7 +3,7 @@
     <ElSteps
       direction="vertical"
       align-center
-      space="12vh"
+      space="12dvh"
       class="mt-5 w-full !flex-wrap content-center"
     >
       <ElStep

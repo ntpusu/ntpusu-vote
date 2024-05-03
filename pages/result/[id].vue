@@ -146,7 +146,7 @@
       <template #template>
         <ElSkeletonItem
           variant="rect"
-          class="!h-[100vh] !w-full md:!w-5/6 xl:!w-2/3 2xl:!w-1/2"
+          class="!h-[100dvh] !w-full md:!w-5/6 xl:!w-2/3 2xl:!w-1/2"
         />
       </template>
     </ElSkeleton>

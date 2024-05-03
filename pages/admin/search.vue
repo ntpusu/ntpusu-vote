@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col md:my-[25vh] md:flex-row">
+  <div class="flex flex-col md:my-[25dvh] md:flex-row">
     <ElForm
       label-width="auto"
       label-suffix=":"

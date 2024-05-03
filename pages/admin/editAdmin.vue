@@ -17,12 +17,14 @@
       <span class="font-bold">刷 新</span>
     </ElButton>
     <ElDivider />
-    <div class="flex">
-      <ElInput
-        v-model="addId"
-        placeholder="請輸入ID"
-        clearable
-      />
+    <div class="flex justify-center">
+      <div class="m-4 w-[500px]">
+        <ElInput
+          v-model="addId"
+          placeholder="請輸入ID"
+          clearable
+        />
+      </div>
       <ElButton
         v-if="!adminPending"
         type="primary"
@@ -32,12 +34,14 @@
       </ElButton>
     </div>
     <ElDivider />
-    <div class="flex">
-      <ElInput
-        v-model="delId"
-        placeholder="請輸入ID"
-        clearable
-      />
+    <div class="flex justify-center">
+      <div class="m-4 w-[500px]">
+        <ElInput
+          v-model="addId"
+          placeholder="請輸入ID"
+          clearable
+        />
+      </div>
       <ElButton
         v-if="!adminPending"
         type="primary"

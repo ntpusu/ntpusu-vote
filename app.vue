@@ -1,7 +1,7 @@
 <template>
   <ElContainer
     direction="vertical"
-    class="h-[100vh] font-sansTC"
+    class="h-[100dvh] font-sansTC"
   >
     <NuxtLoadingIndicator />
     <ClientOnly>
@@ -17,7 +17,8 @@
         mode="horizontal"
         :ellipsis="false"
         :active-index="curIndex"
-        class="h-14 sm:h-[3.75rem] md:h-16"
+        :popper-offset="16"
+        class="items-center"
         @select="handleSelect"
       >
         <span
@@ -28,84 +29,137 @@
         </span>
         <div class="flex-grow" />
         <ElMenuItem
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/"
-          @click="useRouter().push('/')"
+          v-for="(item, index) in getMenuItems()"
+          :key="index"
+          :index="item.index"
+          class="!hidden md:!inline-flex"
+          @click="item.click"
         >
-          <span class="text-sm font-bold sm:text-base md:text-lg"> 首頁 </span>
+          <span class="text-sm font-bold sm:text-base md:text-lg">{{
+            item.text
+          }}</span>
         </ElMenuItem>
-        <ElMenuItem
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/bulletin"
-          @click="useRouter().push('/bulletin')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg">
-            選舉資訊
-          </span>
-        </ElMenuItem>
-        <ElMenuItem
-          v-if="status === 'authenticated'"
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/vote"
-          @click="useRouter().push('/vote')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg"> 投票 </span>
-        </ElMenuItem>
-        <ElMenuItem
+        <ElSubMenu
           v-if="admin"
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/check"
-          @click="useRouter().push('/check')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg"> 查詢 </span>
-        </ElMenuItem>
-        <ElMenuItem
-          v-if="admin"
-          class="!px-3 sm:!px-4 md:!px-5"
+          class="!hidden h-full md:!inline-flex"
           index="/admin"
-          @click="useRouter().push('/admin')"
         >
-          <span class="text-sm font-bold sm:text-base md:text-lg"> 管理 </span>
-        </ElMenuItem>
-        <!---->
-        <ElMenuItem
-          v-if="admin"
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/manage_voter"
-          @click="useRouter().push('/manage_voter')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg">
-            管理投票者
-          </span>
-        </ElMenuItem>
-        <ElMenuItem
-          v-if="admin"
-          class="!px-3 sm:!px-4 md:!px-5"
-          index="/manageDepartment"
-          @click="useRouter().push('/manageDepartment')"
-        >
-          <span class="text-sm font-bold sm:text-base md:text-lg">
-            管理選舉區
-          </span>
-        </ElMenuItem>
-        <!---->
+          <template #title>
+            <span class="text-sm font-bold sm:text-base md:text-lg">
+              管理
+            </span>
+          </template>
+          <ElMenuItem
+            v-for="(item, index) in getAdminMenuItems()"
+            :key="index"
+            :index="item.index"
+            class="!hidden md:!block"
+            @click="item.click"
+          >
+            <span class="text-sm font-bold sm:text-base md:text-lg">{{
+              item.text
+            }}</span>
+          </ElMenuItem>
+        </ElSubMenu>
         <ElMenuItem
           v-if="status === 'unauthenticated'"
-          class="!px-3 sm:!px-4 md:!px-5"
           index="/login"
+          class="!hidden md:!inline-flex"
           @click="useRouter().push('/login')"
         >
           <span class="text-sm font-bold sm:text-base md:text-lg"> 登入 </span>
         </ElMenuItem>
         <ElMenuItem
-          v-else-if="status === 'authenticated'"
-          class="!px-3 sm:!px-4 md:!px-5"
+          v-if="status === 'authenticated'"
           index="/logout"
+          class="!hidden md:!inline-flex"
           @click="signOut({ callbackUrl: '/' })"
         >
           <span class="text-sm font-bold sm:text-base md:text-lg"> 登出 </span>
         </ElMenuItem>
+        <ElButton
+          plain
+          class="mr-3 md:!hidden"
+          @click="show = !show"
+        >
+          <ElIcon v-if="!show"><More /></ElIcon>
+          <ElIcon v-else><MoreFilled /></ElIcon>
+        </ElButton>
       </ElMenu>
+    </ClientOnly>
+    <ClientOnly>
+      <div class="md:hidden">
+        <div
+          v-if="show"
+          class="fixed bottom-0 left-0 right-0 top-[3.3rem] z-40 bg-gray-500 bg-opacity-40"
+        />
+        <Transition name="el-zoom-in-top">
+          <div
+            v-if="show"
+            class="absolute bottom-0 right-0 top-[3.3rem] z-50 w-40"
+          >
+            <ElMenu
+              :default-active="useRoute().path"
+              text-color="#808080"
+              active-text-color="#3E84F6"
+              :active-index="curIndex"
+              @select="handleSelect"
+            >
+              <ElMenuItem
+                v-if="status === 'unauthenticated'"
+                index="/login"
+                @click="
+                  useRouter().push('/login');
+                  show = !show;
+                "
+              >
+                <span class="text-sm font-bold sm:text-base md:text-lg">
+                  登入
+                </span>
+              </ElMenuItem>
+              <ElMenuItem
+                v-for="(item, index) in getMenuItems()"
+                :key="index"
+                :index="item.index"
+                @click="item.click"
+              >
+                <span class="text-sm font-bold sm:text-base md:text-lg">{{
+                  item.text
+                }}</span>
+              </ElMenuItem>
+              <ElSubMenu
+                v-if="admin"
+                index="/totalAdmin"
+              >
+                <template #title>
+                  <span class="text-sm font-bold sm:text-base md:text-lg"
+                    >管理</span
+                  >
+                </template>
+                <ElMenuItem
+                  v-for="(item, index) in getAdminMenuItems()"
+                  :key="index"
+                  :index="item.index"
+                  @click="item.click"
+                >
+                  <span class="text-sm font-bold sm:text-base md:text-lg">{{
+                    item.text
+                  }}</span>
+                </ElMenuItem>
+              </ElSubMenu>
+              <ElMenuItem
+                v-if="status === 'authenticated'"
+                index="/logout"
+                @click="signOut({ callbackUrl: '/' })"
+              >
+                <span class="text-sm font-bold sm:text-base md:text-lg">
+                  登出
+                </span>
+              </ElMenuItem>
+            </ElMenu>
+          </div>
+        </Transition>
+      </div>
     </ClientOnly>
     <ElAffix
       v-if="showLoginBadge"
@@ -286,6 +340,7 @@
 
 <script setup lang="ts">
 import { SpeedInsights } from "@vercel/speed-insights/vue";
+import { More, MoreFilled } from "@element-plus/icons-vue";
 
 const route = useRoute();
 const url = useRuntimeConfig().public.productionUrl as string;
@@ -354,11 +409,100 @@ useHead({
 const curIndex = ref(useRoute().path);
 
 const { data: admin } = await useFetch("/api/checkAdmin");
+const { data: superAdmin } = await useFetch("/api/checkSuperAdmin");
 
 const { status, signOut } = useAuth();
 
+const show = ref(false);
+
 const handleSelect = (key: string) => {
   curIndex.value = key;
+};
+
+const getMenuItems = () => {
+  const menuItems = [
+    {
+      index: "/",
+      text: "首頁",
+      click: () => {
+        show.value = false;
+        useRouter().push("/");
+      },
+    },
+    {
+      index: "/bulletin",
+      text: "選舉資訊",
+      click: () => {
+        show.value = false;
+        useRouter().push("/bulletin");
+      },
+    },
+  ];
+  if (status.value === "authenticated") {
+    menuItems.push({
+      index: "/vote",
+      text: "投票",
+      click: () => {
+        show.value = false;
+        useRouter().push("/vote");
+      },
+    });
+  }
+  return menuItems;
+};
+
+const getAdminMenuItems = () => {
+  if (admin.value) {
+    const menuItems = [
+      {
+        index: "/admin/editVoting",
+        text: "管理投票",
+        click: () => {
+          show.value = false;
+          useRouter().push("/admin/editVoting");
+        },
+      },
+      {
+        index: "/admin/search",
+        text: "查詢",
+        click: () => {
+          show.value = false;
+          useRouter().push("/admin/search");
+        },
+      },
+      {
+        index: "/admin/editVoter",
+        text: "管理投票者",
+        click: () => {
+          show.value = false;
+          useRouter().push("/admin/editVoter");
+        },
+      },
+      {
+        index: "/admin/editDepartment",
+        text: "管理選舉區",
+        click: () => {
+          show.value = false;
+          useRouter().push("/admin/editDepartment");
+        },
+      },
+    ];
+
+    if (superAdmin.value) {
+      menuItems.push({
+        index: "/admin/editAdmin",
+        text: "管理管理員",
+        click: () => {
+          show.value = false;
+          useRouter().push("/admin/editAdmin");
+        },
+      });
+    }
+
+    return menuItems;
+  }
+
+  return [];
 };
 
 const cookie = useCookie("cookie", {
