@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
         showTime: boolean
     }
 
-    await prisma.votingTimeLine.create({
+    await prisma.votingTimeline.create({
         data: {
             content,
             start: new Date(start),

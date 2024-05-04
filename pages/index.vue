@@ -82,16 +82,18 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
-const activities: Activity[] = [];
+const activities = ref<Activity[]>([]);
 
-const parseActivities = async () => {
-  const { data: activities_origin } = await useFetch("/api/getTimeLine", { method: "GET", });
-  
+const refreshActivities = async () => {
+  const { data: activities_origin } = await useFetch("/api/timeline/getTimeline", {
+    method: "GET",
+  });
+  activities.value = [];
   if (activities_origin.value == null) {
     return;
   }
   for (const activity of activities_origin.value) {
-    activities.push({
+    activities.value.push({
       content: activity.content,
       start: new Date(activity.start),
       end: new Date(activity.end),
@@ -101,7 +103,7 @@ const parseActivities = async () => {
   }
 };
 
-await parseActivities();
+await refreshActivities();
 
 interface Activity {
   content: string,

@@ -104,7 +104,7 @@ model Admin {
   id Int @id
 }
 
-model VotingTimeLine {
+model VotingTimeline {
   id Int @id @default(autoincrement())
   content String
   start DateTime
