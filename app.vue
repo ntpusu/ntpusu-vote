@@ -6,7 +6,7 @@
     <NuxtLoadingIndicator />
     <ClientOnly>
       <template #fallback>
-        <div class="flex h-12 items-center justify-center sm:h-14 md:h-16">
+        <div class="flex h-14 items-center justify-center">
           <span class="margin text-gray-400"> Loading menu...... </span>
         </div>
         <ElDivider class="!m-0" />
@@ -17,7 +17,7 @@
         mode="horizontal"
         :ellipsis="false"
         :active-index="curIndex"
-        :popper-offset="16"
+        :popper-offset="4"
         class="items-center"
         @select="handleSelect"
       >
@@ -28,6 +28,7 @@
           選舉委員會
         </span>
         <div class="flex-grow" />
+        <!-- > md -->
         <ElMenuItem
           v-for="(item, index) in getMenuItems()"
           :key="index"
@@ -77,28 +78,72 @@
         >
           <span class="text-sm font-bold sm:text-base md:text-lg"> 登出 </span>
         </ElMenuItem>
+        <!-- < md -->
+        <ClientOnly v-if="showLoginBadge">
+          <ElTooltip
+            effect="dark"
+            content="你的登入序號"
+            placement="bottom"
+          >
+            <ElButton
+              class="cursor-pointer md:!hidden"
+              type="primary"
+              size="large"
+              circle
+              @click="showLoginInfo"
+            >
+              <span class="text-sm font-bold text-white sm:text-base">{{
+                loginInfo.id
+              }}</span>
+            </ElButton>
+          </ElTooltip>
+        </ClientOnly>
+        <ClientOnly>
+          <ElTooltip
+            effect="dark"
+            content="累計已登入人數"
+            placement="bottom"
+          >
+            <ElButton
+              class="cursor-pointer md:!hidden"
+              type="success"
+              size="large"
+              circle
+              @click="showTotalBadge = true"
+            >
+              <span class="text-sm font-bold text-white sm:text-base">{{
+                totalCnt
+              }}</span>
+            </ElButton>
+          </ElTooltip>
+        </ClientOnly>
         <ElButton
           link
-          class="mr-6 md:!hidden"
+          class="!ml-4 mr-6 md:!hidden"
           @click="show = !show"
         >
-          <ElIcon v-if="!show" size="25"><More /></ElIcon>
-          <ElIcon v-else size="25"><MoreFilled /></ElIcon>
+          <template #default>
+            <ElIcon size="25">
+              <More v-if="!show" />
+              <MoreFilled v-else
+            /></ElIcon>
+          </template>
         </ElButton>
       </ElMenu>
     </ClientOnly>
-    <ClientOnly>
-      <div class="md:hidden">
+
+    <div class="md:hidden">
+      <div
+        v-if="show"
+        class="fixed bottom-0 left-0 right-0 top-[3.3rem] z-40 bg-gray-500 bg-opacity-40"
+        @click="show = !show"
+      />
+      <Transition name="menu">
         <div
-          v-if="show"
-          class="fixed bottom-0 left-0 right-0 top-[3.3rem] z-40 bg-gray-500 bg-opacity-40"
-          @click="show = !show"
-        />
-        <Transition name="menu">
-          <div
-            v-if="show"
-            class="absolute bottom-0 right-0 top-[3.4rem] z-50 w-40"
-          >
+          v-show="show"
+          class="absolute bottom-0 right-0 top-[3.4rem] z-50 w-40"
+        >
+          <ClientOnly>
             <ElMenu
               :default-active="useRoute().path"
               text-color="#808080"
@@ -110,8 +155,8 @@
                 v-if="status === 'unauthenticated'"
                 index="/login"
                 @click="
-                  useRouter().push('/login');
                   show = !show;
+                  useRouter().push('/login');
                 "
               >
                 <span class="text-sm font-bold sm:text-base md:text-lg">
@@ -158,38 +203,12 @@
                 </span>
               </ElMenuItem>
             </ElMenu>
-          </div>
-        </Transition>
-      </div>
-    </ClientOnly>
+          </ClientOnly>
+        </div>
+      </Transition>
+    </div>
     <ElAffix
-      v-if="showLoginBadge"
-      class="absolute right-6 top-[4.5rem] z-10 hover:animate-pulse sm:right-8 sm:top-20 md:right-10 md:top-[5.5rem]"
-    >
-      <ClientOnly>
-        <ElTooltip
-          effect="dark"
-          content="你的登入序號"
-          placement="left"
-        >
-          <div
-            class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-500 sm:h-12 sm:w-12 md:h-14 md:w-14"
-            @click="showLoginInfo"
-          >
-            <span class="text-sm font-bold text-white sm:text-base">{{
-              loginInfo.id
-            }}</span>
-          </div>
-        </ElTooltip>
-      </ClientOnly>
-    </ElAffix>
-    <ElAffix
-      class="absolute right-6 z-10 sm:right-8 md:right-10"
-      :class="
-        showLoginBadge
-          ? 'top-[7.5rem] sm:top-[8.5rem] md:top-[9.5rem]'
-          : 'top-[4.5rem] sm:top-20 md:top-[5.5rem]'
-      "
+      class="absolute right-10 top-[5.5rem] z-10 hidden hover:animate-pulse md:block"
     >
       <ClientOnly>
         <ElTooltip
@@ -197,25 +216,51 @@
           content="累計已登入人數"
           placement="left"
         >
-          <div
-            class="bg- flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-green-600 hover:animate-pulse sm:h-12 sm:w-12 md:h-14 md:w-14"
-            @click="showTodayBadge = true"
+          <ElButton
+            class="!h-14 !w-14 cursor-pointer"
+            type="success"
+            size="large"
+            circle
+            @click="showTotalBadge = true"
           >
             <span class="text-sm font-bold text-white sm:text-base">{{
               totalCnt
+            }}</span></ElButton
+          >
+        </ElTooltip>
+      </ClientOnly>
+    </ElAffix>
+    <ElAffix
+      v-if="showLoginBadge"
+      class="absolute right-10 top-[9.5rem] z-10 hidden hover:animate-pulse md:block"
+    >
+      <ClientOnly>
+        <ElTooltip
+          effect="dark"
+          content="你的登入序號"
+          placement="left"
+        >
+          <ElButton
+            class="!h-14 !w-14 cursor-pointer"
+            type="primary"
+            circle
+            @click="showLoginInfo"
+          >
+            <span class="text-sm font-bold text-white sm:text-base">{{
+              loginInfo.id
             }}</span>
-          </div>
+          </ElButton>
         </ElTooltip>
       </ClientOnly>
     </ElAffix>
     <ClientOnly>
       <ElDialog
-        v-model="showTodayBadge"
+        v-model="showTotalBadge"
         align-center
         :show-close="false"
         width="30%"
         class="-py-4 min-w-fit !rounded-lg"
-        @click="showTodayBadge = false"
+        @click="showTotalBadge = false"
       >
         <div
           class="-mt-7 flex flex-col items-center justify-center md:flex-row"
@@ -539,7 +584,7 @@ const showLoginInfo = async () => {
 };
 
 const showLoginBadge = ref(false);
-const showTodayBadge = ref(false);
+const showTotalBadge = ref(false);
 
 const checkLogin = () => {
   setTimeout(async () => {

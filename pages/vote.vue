@@ -223,27 +223,17 @@
                     v-model="voteVisible[votingItem.id]"
                     center
                     align-center
+                    :z-index="30"
                     class="!w-fit min-w-[50%] max-w-[90%] !rounded-lg sm:max-w-[80%] md:min-w-[40%] md:max-w-[70%] lg:min-w-[30%] lg:max-w-[50%]"
                     @open="voteLoading[votingItem.id] = true"
                     @close="voteLoading[votingItem.id] = false"
                   >
                     <template #header>
-                      <div class="flex h-12 *:px-2 md:h-14">
+                      <div class="-mr-4 ml-3 flex h-16 flex-col justify-between">
                         <div
-                          class="m-auto flex cursor-default text-lg font-bold sm:text-xl md:text-2xl"
+                          class="my-auto h-7 md:h-14 cursor-default items-center overflow-x-auto text-nowrap text-xl font-bold hover:overflow-x-auto md:overflow-hidden md:text-2xl"
                         >
                           {{ votingItem.name }}
-                        </div>
-                        <div class="flex-grow" />
-                        <div
-                          class="m-auto flex cursor-default flex-col items-end text-xs text-gray-500 md:text-sm"
-                        >
-                          <span class="text-gray-500">
-                            請在下方選擇您要投的選項
-                          </span>
-                          <span class="text-red-500">
-                            投出選票後無法刪除或變更
-                          </span>
                         </div>
                       </div>
                     </template>
@@ -507,6 +497,7 @@ const voteConfirm = async (votingId: number) => {
     ElMessage({
       type: "warning",
       message: "請選擇候選人",
+      customClass: "z-40",
     });
     return;
   }
@@ -656,7 +647,6 @@ const seeResult = async (index: number) => {
           message: "已複製",
         });
       } else {
-        resultLoading.value[index] = false;
         return;
       }
     });
@@ -670,11 +660,11 @@ const seeResult = async (index: number) => {
         fontFamily: '"Noto Sans TC", sans-serif',
       },
     }).catch(() => {
-      resultLoading.value[index] = false;
       return;
     });
   }
 
+  resultLoading.value[index] = false;
   await useRouter().push("/result/" + index);
 };
 

@@ -11,7 +11,7 @@
           </h1>
         </div>
         <ElStatistic
-          class="text-center"
+          class="flex min-w-[calc(55px+5dvw)] flex-col items-center justify-center text-center"
           title="投票人數"
           :value="voteCnt()"
         >
