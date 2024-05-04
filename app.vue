@@ -550,6 +550,14 @@ const getAdminMenuItems = () => {
           useRouter().push("/admin/editDepartment");
         },
       },
+      {
+        index: "/admin/editTimeline",
+        text: "管理時間軸",
+        click: () => {
+          show.value = false;
+          useRouter().push("/admin/editTimeline");
+        },
+      },
     ];
 
     if (superAdmin.value) {
