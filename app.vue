@@ -409,7 +409,7 @@ useSeoMeta({
   ogImage: url + "/ntpusu.jpg",
   ogImageAlt: "國立臺北大學三峽校區學生會的標誌",
   ogImageType: "image/jpeg",
-  ogImageSecureUrl: url,
+  ogImageSecureUrl: url + "/ntpusu.jpg",
   ogLocale: "zh_TW",
   ogLocaleAlternate: "zh_TW",
   author: "國立臺北大學三峽校區學生會",
@@ -429,6 +429,22 @@ useHead({
     lang: "zh_TW",
   },
   meta: [
+    {
+      name: "viewport",
+      content: "width=device-width, initial-scale=1.0",
+    },
+    {
+      name: "charset",
+      content: "UTF-8",
+    },
+    {
+      name: "keywords",
+      content: "臺北大學, 三峽校區, 學生會, 投票, 選舉, 選舉委員會, 選舉資訊, 投票網站",
+    },
+    {
+      name: "robots",
+      content: "index, follow",
+    },
     {
       name: "copyright",
       content: "國立臺北大學三峽校區學生會",
