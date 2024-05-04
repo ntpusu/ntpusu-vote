@@ -1,39 +1,68 @@
 <template>
   <div class="flex flex-wrap justify-center">
-    <el-form
-      ref="formRef"
-      label-width="auto"
-      label-suffix=":"
-      hide-required-asterisk
-    >
-      <el-form-item label="設定時間軸">
-        <el-input
-          v-model="contentInput"
-          placeholder="設定內容"
-        />
-      </el-form-item>
-      <el-form-item label="開始時間">
-        <el-date-picker
-          v-model="startTimePicker"
-          type="datetime"
-          placeholder="選擇開始時間"
-        />
-      </el-form-item>
-      <el-form-item label="結束時間">
-        <el-date-picker
-          v-model="endTimePicker"
-          type="datetime"
-          placeholder="選擇結束時間"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          @click="addActivity"
-          >新增</el-button
-        >
-      </el-form-item>
-    </el-form>
+    <el-space direction="vertical">
+      <el-form
+        ref="formRef"
+        label-width="auto"
+        label-suffix=":"
+        hide-required-asterisk
+      >
+        <el-form-item label="設定時間軸">
+          <el-input
+            v-model="contentInput"
+            placeholder="設定內容"
+          />
+        </el-form-item>
+        <el-form-item label="開始時間">
+          <el-date-picker
+            v-model="startTimePicker"
+            type="datetime"
+            placeholder="選擇開始時間"
+          />
+        </el-form-item>
+        <el-form-item label="結束時間">
+          <el-date-picker
+            v-model="endTimePicker"
+            type="datetime"
+            placeholder="選擇結束時間"
+          />
+        </el-form-item>
+        <el-form-item label="是否顯示詳細時間">
+          <el-switch
+            v-model="showTime"
+            inline-prompt
+            active-text="是"
+            inactive-text="否"
+          />
+        </el-form-item>
+        <el-form-item label="是否顯示結束時間">
+          <el-switch
+            v-model="showEnd"
+            inline-prompt
+            active-text="是"
+            inactive-text="否"
+          />
+        </el-form-item>
+      </el-form>
+      <el-button
+        v-if="editActivityId == null"
+        type="primary"
+        @click="addActivity()"
+        >新增
+      </el-button>
+      <el-button
+        v-if="editActivityId != null"
+        type="primary"
+        @click="updateActivity(editActivityId)"
+        >編輯
+      </el-button>
+      <el-button
+        v-if="editActivityId != null"
+        type="success"
+        @click="() => {clearInput(); editActivityId = null;}"
+        >取消
+      </el-button>
+    </el-space>
     <ElSteps
       direction="vertical"
       align-center
@@ -78,6 +107,10 @@
               })
             }}
           </div>
+          <div>
+          <el-button  :icon="Edit" @click="editActivity(activity.id)" />
+          <el-button  :icon="Delete" @click="deleteActivity(activity.id)" />
+          </div>
         </template>
       </ElStep>
     </ElSteps>
@@ -87,6 +120,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { FormInstance } from "element-plus";
+import { Delete, Edit } from '@element-plus/icons-vue'
 
 definePageMeta({
   middleware: ["admin"],
@@ -99,6 +133,65 @@ const endTimePicker = ref("");
 const showEnd = ref(false);
 const showTime = ref(false);
 const formRef = ref<FormInstance>();
+const editActivityId: Ref<number | null> = ref(null);
+
+const deleteActivity = async (id: number) => {
+  await $fetch("/api/timeline/del", {
+    method: "DELETE",
+    query: {
+      id: id,
+    },
+  }).catch((e) => {
+    console.error(e);
+    ElMessage.error("刪除失敗");
+  }).then(() => {
+    ElMessage.success("刪除成功");
+  });
+  await refreshActivities()
+}
+
+const editActivity = async (id: number) => {
+  const activity = activities.value.find((activity) => activity.id === id);
+  if (activity == null) {
+    return;
+  }
+  contentInput.value = activity.content;
+  startTimePicker.value = activity.start.toString();
+  endTimePicker.value = activity.end.toString();
+  showEnd.value = activity.showEnd;
+  showTime.value = activity.showTime;
+  editActivityId.value = id;
+}
+
+const updateActivity = async (id: number) => {
+  if (
+    contentInput.value === "" ||
+    startTimePicker.value === "" ||
+    endTimePicker.value === ""
+  ) {
+    ElMessage.error("請輸入完整資訊");
+    return;
+  }
+  $fetch("/api/timeline/update", {
+    method: "PUT",
+    body: {
+      id: id,
+      content: contentInput.value,
+      start: startTimePicker.value,
+      end: endTimePicker.value,
+      showEnd: showEnd.value,
+      showTime: showTime.value,
+    },
+  }).catch((e) => {
+    console.error(e);
+    ElMessage.error("更新失敗");
+  }).then(() => {
+    clearInput();
+    ElMessage.success("更新成功");
+  }).finally(async () => {
+    await refreshActivities();
+  })
+};
 
 const addActivity = async () => {
   if (
@@ -109,7 +202,7 @@ const addActivity = async () => {
     ElMessage.error("請輸入完整資訊");
     return;
   }
-  const { error } = await useFetch("/api/addTimeLine", {
+  $fetch("/api/timeline/addTimeline", {
     method: "POST",
     body: {
       content: contentInput.value,
@@ -118,16 +211,24 @@ const addActivity = async () => {
       showEnd: showEnd.value,
       showTime: showTime.value,
     },
-  });
-  if (error.value) {
+  }).catch((e) => {
+    console.error(e);
     ElMessage.error("新增失敗");
-  } else {
+  }).then(() => {
+    clearInput();
     ElMessage.success("新增成功");
-    contentInput.value = "";
-    startTimePicker.value = "";
-    endTimePicker.value = "";
-    await parseActivities();
-  }
+  }).finally(async () => {
+    await refreshActivities();
+  })
+};
+
+const clearInput = () => {
+  contentInput.value = "";
+  startTimePicker.value = "";
+  endTimePicker.value = "";
+  showEnd.value = false;
+  showTime.value = false;
+  editActivityId.value = null;
 };
 
 const style = (start: Date, end: Date) => {
@@ -138,18 +239,19 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
-const activities: Activity[] = [];
+const activities = ref<Activity[]>([]);
 
-const parseActivities = async () => {
-  const { data: activities_origin } = await useFetch("/api/getTimeLine", {
+const refreshActivities = async () => {
+  const { data: activities_origin } = await useFetch("/api/timeline/getTimeline", {
     method: "GET",
   });
-
+  activities.value = [];
   if (activities_origin.value == null) {
     return;
   }
   for (const activity of activities_origin.value) {
-    activities.push({
+    activities.value.push({
+      id: activity.id,
       content: activity.content,
       start: new Date(activity.start),
       end: new Date(activity.end),
@@ -159,9 +261,10 @@ const parseActivities = async () => {
   }
 };
 
-await parseActivities();
+await refreshActivities();
 
 interface Activity {
+  id: number;
   content: string;
   start: Date;
   end: Date;
