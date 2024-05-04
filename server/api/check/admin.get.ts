@@ -15,5 +15,5 @@ export default defineEventHandler(async (event) => {
         select: null,
     })
 
-    return admin !== null || id.toString() == process.env.ADMIN
+    return admin !== null || id.toString() == process.env.SUPER_ADMIN
 })

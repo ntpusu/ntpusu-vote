@@ -9,5 +9,5 @@ export default defineEventHandler(async (event) => {
     const email = session.user.email
     const id = email.substring(1, 10)
 
-    return id == process.env.ADMIN
+    return id == process.env.SUPER_ADMIN
 })

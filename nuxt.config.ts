@@ -1,5 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-let baseURL: string = "http://localhost:3000/api/auth";
+let baseURL = "http://localhost:3000/api/auth";
 
 if (process.env.VERCEL) {
     switch (process.env.VERCEL_ENV) {
@@ -22,6 +22,8 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             productionUrl: process.env.PRODUCTION_URL,
+            pdfUrl: process.env.PDF_URL,
+            igPostUrl: process.env.IG_POST_URL,
             recaptchaSiteKey: process.env.RECAPTCHA_V2_INVISIBLE_SITE_KEY,
         },
     },
