@@ -157,7 +157,7 @@ const deleteActivity = async (id: number) => {
 
 const editActivity = async (id: number) => {
   const activity = activities.value.find((activity) => activity.id === id);
-  if (activity == null) {
+  if (activity === undefined) {
     return;
   }
   contentInput.value = activity.content;
