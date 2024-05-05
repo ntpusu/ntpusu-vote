@@ -59,12 +59,12 @@
               <template #header>
                 <div class="flex items-center justify-between">
                   <div
-                    class="cursor-default text-lg font-bold sm:text-xl md:text-2xl"
+                    class="max-w-[calc(100%-130px)] cursor-default text-balance break-words text-lg font-bold md:text-xl"
                   >
                     {{ votingItem.name }}
                   </div>
                   <div
-                    class="flex flex-col justify-end align-middle text-xs sm:text-sm"
+                    class="flex flex-col justify-end align-middle"
                   >
                     <ClientOnly>
                       <ElTooltip
@@ -152,7 +152,7 @@
               </template>
               <div>
                 <h2
-                  class="cursor-default pb-5 text-center text-base font-bold sm:text-lg md:text-xl"
+                  class="cursor-default pb-5 text-center text-base font-bold md:text-lg"
                 >
                   候選人名單
                 </h2>
@@ -163,7 +163,7 @@
                 >
                   <div
                     v-if="votingItem.onlyOne"
-                    class="flex items-center text-sm sm:text-base md:text-lg"
+                    class="flex items-center"
                   >
                     <ElTag
                       type="success"
@@ -182,7 +182,7 @@
                     <div
                       v-for="itemIndex in votingItem.candidates.length - 1"
                       :key="itemIndex"
-                      class="flex items-center text-sm sm:text-base md:text-lg"
+                      class="flex items-center"
                     >
                       <ElTag
                         type="success"
@@ -229,19 +229,17 @@
                     @close="voteLoading[votingItem.id] = false"
                   >
                     <template #header>
-                      <div class="-mr-4 ml-3 flex h-16 flex-col justify-between">
-                        <div
-                          class="my-auto h-7 md:h-14 cursor-default items-center overflow-x-auto text-nowrap text-xl font-bold hover:overflow-x-auto md:overflow-hidden md:text-2xl"
-                        >
-                          {{ votingItem.name }}
-                        </div>
+                      <div
+                        class="mb-3 cursor-default text-balance break-words text-lg font-bold md:text-xl"
+                      >
+                        {{ votingItem.name }}
                       </div>
                     </template>
                     <ElDivider class="!-mt-5 !mb-0 !border-t-[1.5px]" />
                     <div class="mx-5 flex flex-col items-center align-middle">
                       <span
                         v-if="votingItem.onlyOne"
-                        class="my-2 cursor-default text-base font-bold text-black sm:my-3 sm:text-lg md:my-4 md:text-xl"
+                        class="my-2 cursor-default text-base font-bold text-black sm:my-3 md:my-4 md:text-lg"
                       >
                         同意
                         {{ votingItem.candidates[0].name }}
@@ -249,7 +247,7 @@
                       </span>
                       <span
                         v-else
-                        class="my-2 cursor-default text-base font-bold text-black sm:my-3 sm:text-lg md:my-4 md:text-xl"
+                        class="my-2 cursor-default text-base font-bold text-black sm:my-3 md:my-4 md:text-lg"
                       >
                         請選擇要投的候選人
                       </span>
@@ -433,8 +431,6 @@ const {
   refresh: votingRefresh,
 } = await useLazyFetch("/api/vote/voterSession");
 
-const freshTime = ref(Date.now());
-
 const viewDate = (time: string | number | Date) => {
   return new Date(time).toLocaleString(undefined, {
     hourCycle: "h11",
@@ -593,7 +589,6 @@ const vote = async (votingId: number) => {
     })
     .finally(async () => {
       await votingRefresh();
-      freshTime.value = Date.now();
     });
 };
 
@@ -696,11 +691,7 @@ onMounted(() => {
 });
 
 onActivated(async () => {
-  if (Date.now() - freshTime.value > 1000 * 60 * 15) {
-    await votingRefresh();
-    freshTime.value = Date.now();
-  }
-
+  await votingRefresh();
   checkData();
 });
 </script>
