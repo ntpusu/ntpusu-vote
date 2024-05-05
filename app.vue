@@ -22,7 +22,7 @@
         @select="handleSelect"
       >
         <span
-          class="m-auto ml-3 cursor-pointer text-xl font-bold sm:ml-4 sm:text-2xl md:ml-5 md:text-3xl"
+          class="m-auto ml-3 cursor-pointer text-2xl font-bold md:ml-5 md:text-3xl"
           @click="useRouter().push('/')"
         >
           選舉委員會
