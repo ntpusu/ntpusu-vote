@@ -1,68 +1,74 @@
 <template>
   <div class="flex flex-wrap justify-center">
-    <ElSteps
-      direction="vertical"
-      align-center
-      space="12dvh"
-      class="mt-5 w-full !flex-wrap content-center"
-    >
-      <ElStep
-        v-for="(activity, index) in activities"
-        :key="index"
-        :status="style(activity.start, activity.end)"
-        class="tracking-[1.5px]"
-      >
-        <template #title>
-          <div class="font-bold sm:text-lg">
-            {{ activity.content }}
-          </div>
-        </template>
-        <template #description>
-          <div class="min-w-max sm:text-base">
-            <span>{{
-              activity.start.toLocaleString(undefined, {
-                dateStyle: "long",
-                timeStyle: activity.showTime ? "medium" : undefined,
-              })
-            }}</span>
-            <span v-if="activity.showEnd"> 〜 </span>
-            <span v-if="activity.showEnd && !activity.showTime">{{
-              activity.end.toLocaleString(undefined, {
-                dateStyle: "long",
-                timeStyle: activity.showTime ? "medium" : undefined,
-              })
-            }}</span>
-          </div>
-          <div
-            v-if="activity.showEnd && activity.showTime"
-            class="min-w-max sm:text-base"
+    <el-space direction="vertical">
+      <el-skeleton style="width: 300px" :loading="timelineLoading" :rows="15" :throttle="100" animated>
+        <template #default>
+          <ElSteps
+            direction="vertical"
+            align-center
+            space="12dvh"
+            class="mt-5 w-full !flex-wrap content-center"
           >
-            {{
-              activity.end.toLocaleString(undefined, {
-                dateStyle: "long",
-                timeStyle: activity.showTime ? "medium" : undefined,
-              })
-            }}
-          </div>
+            <ElStep
+              v-for="(activity, index) in activities"
+              :key="index"
+              :status="style(activity.start, activity.end)"
+              class="tracking-[1.5px]"
+            >
+              <template #title>
+                <div class="font-bold sm:text-lg">
+                  {{ activity.content }}
+                </div>
+              </template>
+              <template #description>
+                <div class="min-w-max sm:text-base">
+                  <span>{{
+                    activity.start.toLocaleString(undefined, {
+                      dateStyle: "long",
+                      timeStyle: activity.showTime ? "medium" : undefined,
+                    })
+                  }}</span>
+                  <span v-if="activity.showEnd"> 〜 </span>
+                  <span v-if="activity.showEnd && !activity.showTime">{{
+                    activity.end.toLocaleString(undefined, {
+                      dateStyle: "long",
+                      timeStyle: activity.showTime ? "medium" : undefined,
+                    })
+                  }}</span>
+                </div>
+                <div
+                  v-if="activity.showEnd && activity.showTime"
+                  class="min-w-max sm:text-base"
+                >
+                  {{
+                    activity.end.toLocaleString(undefined, {
+                      dateStyle: "long",
+                      timeStyle: activity.showTime ? "medium" : undefined,
+                    })
+                  }}
+                </div>
+              </template>
+            </ElStep>
+          </ElSteps>
         </template>
-      </ElStep>
-    </ElSteps>
-    <ElButton
-      v-if="status === 'authenticated'"
-      type="success"
-      class="z-10 mt-2 mb-8"
-      @click="useRouter().push('/vote')"
-    >
-      <span class="font-bold">前 往 投 票 頁 面</span>
-    </ElButton>
-    <ElButton
-      v-else
-      type="primary"
-      class="z-10 mt-2 mb-8"
-      @click="useRouter().push('/login')"
-    >
-      <span class="font-bold">前 往 登 入 頁 面</span>
-    </ElButton>
+      </el-skeleton>
+      <ElButton
+        v-if="status === 'authenticated'"
+        type="success"
+        class="z-10 -mt-5 mb-8"
+        @click="useRouter().push('/vote')"
+      >
+        <span class="font-bold">前 往 投 票 頁 面</span>
+      </ElButton>
+      <ElButton
+        v-else
+        type="primary"
+        class="z-10 -mt-5 mb-8"
+        @click="useRouter().push('/login')"
+      >
+        <span class="font-bold">前 往 登 入 頁 面</span>
+      </ElButton>
+    </el-space>
   </div>
 </template>
 
@@ -82,28 +88,34 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
+const timelineLoading = ref(false);
+
 const activities = ref<Activity[]>([]);
 
 const refreshActivities = async () => {
-  const { data: activities_origin } = await useFetch("/api/timeline/getTimeline", {
+  timelineLoading.value = true;
+  useFetch("/api/timeline/get", {
     method: "GET",
-  });
-  activities.value = [];
-  if (activities_origin.value == null) {
-    return;
-  }
-  for (const activity of activities_origin.value) {
-    activities.value.push({
-      content: activity.content,
-      start: new Date(activity.start),
-      end: new Date(activity.end),
-      showEnd: activity.showEnd,
-      showTime: activity.showTime,
-    });
-  }
+  }).then((activities_origin) => {
+    activities.value = [];
+    if (activities_origin.data.value == null) {
+      return;
+    }
+    for (const activity of activities_origin.data.value) {
+      activities.value.push({
+        content: activity.content,
+        start: new Date(activity.start),
+        end: new Date(activity.end),
+        showEnd: activity.showEnd,
+        showTime: activity.showTime,
+      });
+    }
+  }).finally(() => {
+    timelineLoading.value = false;
+  })
 };
 
-await refreshActivities();
+refreshActivities();
 
 interface Activity {
   content: string,
