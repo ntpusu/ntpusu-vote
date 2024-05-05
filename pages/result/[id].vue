@@ -212,10 +212,6 @@ const checkData = () => {
   }, 250);
 };
 
-onBeforeMount(() => {
-  checkData();
-});
-
 onActivated(() => {
   checkData();
 });

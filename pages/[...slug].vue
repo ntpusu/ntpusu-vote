@@ -37,14 +37,6 @@ const timer = () => {
   }, 100);
 };
 
-onMounted(() => {
-  if (useRoute().path != "/404") {
-    setTimeout(async () => {
-      await useRouter().push("/404");
-    }, 250);
-  } else timer();
-});
-
 onActivated(() => {
   if (useRoute().path != "/404") {
     setTimeout(async () => {

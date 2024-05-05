@@ -323,10 +323,6 @@ const load = () => {
   }, 500);
 };
 
-onMounted(() => {
-  load();
-});
-
 onActivated(() => {
   load();
 });

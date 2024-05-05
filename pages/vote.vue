@@ -230,7 +230,7 @@
                   >
                     <template #header>
                       <div
-                        class="mb-3 cursor-default text-balance break-words text-lg font-bold md:text-xl"
+                        class="mb-3 ml-4 -mr-3 cursor-default text-balance break-words text-lg font-bold md:text-xl"
                       >
                         {{ votingItem.name }}
                       </div>
@@ -691,7 +691,7 @@ onMounted(() => {
 });
 
 onActivated(async () => {
-  await votingRefresh();
+  data.value = await $fetch("/api/vote/voterSession");
   checkData();
 });
 </script>
