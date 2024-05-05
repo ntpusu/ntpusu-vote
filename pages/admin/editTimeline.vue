@@ -54,66 +54,70 @@
         v-if="editActivityId != null"
         type="primary"
         @click="updateActivity(editActivityId)"
-        >編輯
+        >更新
       </el-button>
       <el-button
         v-if="editActivityId != null"
         type="success"
-        @click="() => {clearInput(); editActivityId = null;}"
+        @click="clearInput()"
         >取消
       </el-button>
-    </el-space>
-    <ElSteps
-      direction="vertical"
-      align-center
-      space="12vh"
-      class="mt-5 w-full !flex-wrap content-center"
-    >
-      <ElStep
-        v-for="(activity, index) in activities"
-        :key="index"
-        :status="style(activity.start, activity.end)"
-        class="tracking-[1.5px]"
-      >
-        <template #title>
-          <div class="font-bold sm:text-lg">
-            {{ activity.content }}
-          </div>
-        </template>
-        <template #description>
-          <div class="min-w-max sm:text-base">
-            <span>{{
-              activity.start.toLocaleString(undefined, {
-                dateStyle: "long",
-                timeStyle: activity.showTime ? "medium" : undefined,
-              })
-            }}</span>
-            <span v-if="activity.showEnd"> 〜 </span>
-            <span v-if="activity.showEnd && !activity.showTime">{{
-              activity.end.toLocaleString(undefined, {
-                dateStyle: "long",
-                timeStyle: activity.showTime ? "medium" : undefined,
-              })
-            }}</span>
-          </div>
-          <div
-            v-if="activity.showEnd && activity.showTime"
-            class="min-w-max sm:text-base"
+      <el-skeleton style="width: 300px" :loading="timelineLoading" :rows="15" :throttle="100" animated>
+        <template #default>
+          <ElSteps
+            direction="vertical"
+            align-center
+            space="12vh"
+            class="mt-5 w-full !flex-wrap content-center"
           >
-            {{
-              activity.end.toLocaleString(undefined, {
-                dateStyle: "long",
-                timeStyle: activity.showTime ? "medium" : undefined,
-              })
-            }}
-          </div>
-          <div>
-          <el-button  :icon="Edit" @click="editActivity(activity.id)" />
-          <el-button  :icon="Delete" @click="deleteActivity(activity.id)" />
-          </div>
+            <ElStep
+              v-for="(activity, index) in activities"
+              :key="index"
+              :status="style(activity.start, activity.end)"
+              class="tracking-[1.5px]"
+            >
+              <template #title>
+                <div class="font-bold sm:text-lg">
+                  {{ activity.content }}
+                </div>
+              </template>
+              <template #description>
+                <div class="min-w-max sm:text-base">
+                  <span>{{
+                    activity.start.toLocaleString(undefined, {
+                      dateStyle: "long",
+                      timeStyle: activity.showTime ? "medium" : undefined,
+                    })
+                  }}</span>
+                  <span v-if="activity.showEnd"> 〜 </span>
+                  <span v-if="activity.showEnd && !activity.showTime">{{
+                    activity.end.toLocaleString(undefined, {
+                      dateStyle: "long",
+                      timeStyle: activity.showTime ? "medium" : undefined,
+                    })
+                  }}</span>
+                </div>
+                <div
+                  v-if="activity.showEnd && activity.showTime"
+                  class="min-w-max sm:text-base"
+                >
+                  {{
+                    activity.end.toLocaleString(undefined, {
+                      dateStyle: "long",
+                      timeStyle: activity.showTime ? "medium" : undefined,
+                    })
+                  }}
+                </div>
+                <div>
+                <el-button  :icon="Edit" @click="editActivity(activity.id)" />
+                <el-button  :icon="Delete" @click="deleteActivity(activity.id)" />
+                </div>
+              </template>
+            </ElStep>
+          </ElSteps>
         </template>
-      </ElStep>
-    </ElSteps>
+      </el-skeleton>
+    </el-space>
   </div>
 </template>
 
@@ -136,7 +140,7 @@ const formRef = ref<FormInstance>();
 const editActivityId: Ref<number | null> = ref(null);
 
 const deleteActivity = async (id: number) => {
-  await $fetch("/api/timeline/del", {
+  $fetch("/api/timeline/del", {
     method: "DELETE",
     query: {
       id: id,
@@ -146,8 +150,9 @@ const deleteActivity = async (id: number) => {
     ElMessage.error("刪除失敗");
   }).then(() => {
     ElMessage.success("刪除成功");
-  });
-  await refreshActivities()
+  }).finally(() => {
+    refreshActivities()
+  })
 }
 
 const editActivity = async (id: number) => {
@@ -188,8 +193,8 @@ const updateActivity = async (id: number) => {
   }).then(() => {
     clearInput();
     ElMessage.success("更新成功");
-  }).finally(async () => {
-    await refreshActivities();
+  }).finally(() => {
+    refreshActivities();
   })
 };
 
@@ -202,8 +207,8 @@ const addActivity = async () => {
     ElMessage.error("請輸入完整資訊");
     return;
   }
-  $fetch("/api/timeline/addTimeline", {
-    method: "POST",
+  $fetch("/api/timeline/add", {
+    method: "PUT",
     body: {
       content: contentInput.value,
       start: startTimePicker.value,
@@ -217,8 +222,8 @@ const addActivity = async () => {
   }).then(() => {
     clearInput();
     ElMessage.success("新增成功");
-  }).finally(async () => {
-    await refreshActivities();
+  }).finally(() => {
+    refreshActivities();
   })
 };
 
@@ -239,29 +244,35 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
+const timelineLoading = ref(false);
+
 const activities = ref<Activity[]>([]);
 
 const refreshActivities = async () => {
-  const { data: activities_origin } = await useFetch("/api/timeline/getTimeline", {
+  timelineLoading.value = true;
+  useFetch("/api/timeline/get", {
     method: "GET",
-  });
-  activities.value = [];
-  if (activities_origin.value == null) {
-    return;
-  }
-  for (const activity of activities_origin.value) {
-    activities.value.push({
-      id: activity.id,
-      content: activity.content,
-      start: new Date(activity.start),
-      end: new Date(activity.end),
-      showEnd: activity.showEnd,
-      showTime: activity.showTime,
-    });
-  }
+  }).then((activities_origin) => {
+    activities.value = [];
+    if (activities_origin.data.value == null) {
+      return;
+    }
+    for (const activity of activities_origin.data.value) {
+      activities.value.push({
+        id: activity.id,
+        content: activity.content,
+        start: new Date(activity.start),
+        end: new Date(activity.end),
+        showEnd: activity.showEnd,
+        showTime: activity.showTime,
+      });
+    }
+  }).finally(() => {
+    timelineLoading.value = false;
+  })
 };
 
-await refreshActivities();
+refreshActivities();
 
 interface Activity {
   id: number;
