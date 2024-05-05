@@ -87,7 +87,7 @@ const isWebview = () => {
   return Boolean(ua.match(regex));
 };
 
-onMounted(() => {
+onActivated(() => {
   isInAppBrowser.value = isWebview();
 });
 </script>
