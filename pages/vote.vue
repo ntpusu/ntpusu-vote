@@ -691,7 +691,7 @@ onMounted(() => {
 });
 
 onActivated(async () => {
-  data.value = await $fetch("/api/vote/voterSession");
   checkData();
+  data.value = await $fetch("/api/vote/voterSession");
 });
 </script>
