@@ -595,6 +595,8 @@ const checkLogin = () => {
           showLoginBadge.value = true;
 
           if (res.firstLogin) {
+            await totalCntRefresh();
+            await realCntRefresh();
             await showLoginInfo();
           }
         });
@@ -603,8 +605,8 @@ const checkLogin = () => {
   }, 250);
 };
 
-const { data: totalCnt } = await useFetch("/api/loginCnt/get");
-const { data: realCnt } = await useFetch("/api/loginCnt/get", {
+const { data: totalCnt, refresh: totalCntRefresh } = await useFetch("/api/loginCnt/get");
+const { data: realCnt, refresh: realCntRefresh } = await useFetch("/api/loginCnt/get", {
   params: {
     startTime: new Date(2024, 4, 23).getTime(),
     endTime: new Date(2024, 4, 23, 23, 59, 59, 999).getTime(),
