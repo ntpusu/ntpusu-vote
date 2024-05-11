@@ -235,7 +235,6 @@ const searchVoter = async () => {
         message: "查無此人",
         type: "warning",
       });
-      return;
     });
 };
 
@@ -260,7 +259,6 @@ const searchToken = async () => {
         message: "無此憑證或投票尚未結束",
         type: "warning",
       });
-      return;
     });
 };
 
@@ -285,7 +283,6 @@ const searchVG = async () => {
         message: "投票尚未結束",
         type: "warning",
       });
-      return;
     });
 };
 </script>

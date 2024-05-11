@@ -63,9 +63,7 @@
                   >
                     {{ votingItem.name }}
                   </div>
-                  <div
-                    class="flex flex-col justify-end align-middle"
-                  >
+                  <div class="flex flex-col justify-end align-middle">
                     <ClientOnly>
                       <ElTooltip
                         placement="right"
@@ -230,7 +228,7 @@
                   >
                     <template #header>
                       <div
-                        class="mb-3 ml-4 -mr-3 cursor-default text-balance break-words text-lg font-bold md:text-xl"
+                        class="-mr-3 mb-3 ml-4 cursor-default text-balance break-words text-lg font-bold md:text-xl"
                       >
                         {{ votingItem.name }}
                       </div>
@@ -634,17 +632,23 @@ const seeResult = async (index: number) => {
       customStyle: {
         fontFamily: '"Noto Sans TC", sans-serif',
       },
-    }).catch(async (action: Action) => {
-      if (action === "cancel") {
-        await navigator.clipboard.writeText(data.value!.tokens[index]);
-        ElMessage({
-          type: "success",
-          message: "已複製",
-        });
-      } else {
-        return;
-      }
-    });
+    })
+      .then(async () => {
+        resultLoading.value[index] = false;
+        await useRouter().push("/result/" + index);
+      })
+      .catch(async (action: Action) => {
+        if (action === "cancel") {
+          await navigator.clipboard.writeText(data.value!.tokens[index]);
+          ElMessage({
+            type: "success",
+            message: "已複製",
+          });
+
+          resultLoading.value[index] = false;
+          await useRouter().push("/result/" + index);
+        }
+      });
   } else {
     await ElMessageBox.alert("無投票憑證", "未投票", {
       confirmButtonText: "確 定",
@@ -654,13 +658,11 @@ const seeResult = async (index: number) => {
       customStyle: {
         fontFamily: '"Noto Sans TC", sans-serif',
       },
-    }).catch(() => {
-      return;
+    }).then(async () => {
+      resultLoading.value[index] = false;
+      await useRouter().push("/result/" + index);
     });
   }
-
-  resultLoading.value[index] = false;
-  await useRouter().push("/result/" + index);
 };
 
 const checkData = () => {
