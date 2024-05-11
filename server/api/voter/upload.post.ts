@@ -1,14 +1,9 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
-import * as XLSX from 'xlsx';
 import type { Prisma } from '@prisma/client';
-
+import * as XLSX from 'xlsx';
 export default defineEventHandler(async (event) => {
-    const session = await getServerSession(event) as { user: { email: string } } | null
-    const formData = (await readMultipartFormData(event))!
-    const file = formData[0].data
-
-    if (!session) {
+    // 確認權限
+    if (!event.context.session) {
         throw createError({
             statusCode: 401,
             statusMessage: 'Unauthorized',
@@ -16,22 +11,17 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session.user.email
-    const studentId = parseInt(email.substring(1, 10))
-
-    const admin = await prisma.admin.findUnique({
-        where: { id: studentId },
-        select: null,
-    })
-
-    if (!admin) {
+    if (!event.context.isAdmin) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不在管理員名單中',
+            message: '不是管理員',
         })
     }
 
+    // 執行操作
+    const formData = (await readMultipartFormData(event))!
+    const file = formData[0].data
     const voter_workbook = XLSX.read(file)
     const voter_sheet = voter_workbook.Sheets[voter_workbook.SheetNames[0]]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,5 +100,6 @@ export default defineEventHandler(async (event) => {
         data: students,
     })
 
+    setResponseStatus(event, 200)
     return failAddingVoter;
 })

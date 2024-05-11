@@ -1,14 +1,7 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const { voterId, voterDepartment } = await readBody(event) as {
-        voterId: number
-        voterDepartment: string
-    }
-
-    const session = await getServerSession(event) as { user: { email: string } } | null
-
-    if (!session) {
+    // 確認權限
+    if (!event.context.session) {
         throw createError({
             statusCode: 401,
             statusMessage: 'Unauthorized',
@@ -16,20 +9,18 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session.user.email
-    const studentId = parseInt(email.substring(1, 10))
-
-    const admin = await prisma.admin.findUnique({
-        where: { id: studentId },
-        select: null,
-    })
-
-    if (!admin) {
+    if (!event.context.isAdmin) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不在管理員名單中',
+            message: '不是管理員',
         })
+    }
+
+    // 執行操作
+    const { voterId, voterDepartment } = await readBody(event) as {
+        voterId: number
+        voterDepartment: string
     }
 
     const {
@@ -41,6 +32,8 @@ export default defineEventHandler(async (event) => {
         }
     }).catch(() => {
         throw createError({
+            statusCode: 404,
+            statusMessage: 'Not Found',
             message: `${voterDepartment} 不在資料庫中`
         })
     })
@@ -54,5 +47,6 @@ export default defineEventHandler(async (event) => {
         }
     })
 
-    return {}
+    setResponseStatus(event, 204)
+    return null
 })

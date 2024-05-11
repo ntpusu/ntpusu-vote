@@ -1,10 +1,8 @@
 import prisma from '~/lib/prisma'
 import HS1 from 'crypto-js/hmac-sha1.js'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const session = await getServerSession(event) as { user: { email: string } } | null
-
-    if (!session) {
+    // 確認權限
+    if (!event.context.session) {
         throw createError({
             statusCode: 401,
             statusMessage: 'Unauthorized',
@@ -12,11 +10,18 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session.user.email
-    const studentId = parseInt(email.substring(1, 10))
+    if (!event.context.isVoter) {
+        throw createError({
+            statusCode: 403,
+            statusMessage: 'Forbidden',
+            message: '不是選舉人',
+        })
+    }
 
-    const voter = await prisma.voter.findUnique({
-        where: { id: studentId },
+    // 執行操作
+    const id = parseInt(event.context.id)
+    const voter = await prisma.voter.findUniqueOrThrow({
+        where: { id },
         select: {
             department: {
                 select: {
@@ -29,14 +34,6 @@ export default defineEventHandler(async (event) => {
             },
         },
     })
-
-    if (!voter) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Forbidden',
-            message: '不在選舉人名單中',
-        })
-    }
 
     const groupIds = voter.department.departmentInGroup.map((item) => item.groupId)
 
@@ -66,7 +63,7 @@ export default defineEventHandler(async (event) => {
 
     const tokens: string[] = []
     for (const votingItem of voting) {
-        const token = HS1(studentId.toString() + votingItem.id.toString(), process.env.AUTH_SECRET as string).toString()
+        const token = HS1(id.toString() + votingItem.id.toString(), process.env.AUTH_SECRET as string).toString()
 
         const ballot = await prisma.ballot.findUnique({
             where: { token },

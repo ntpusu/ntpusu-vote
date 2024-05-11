@@ -1,4 +1,5 @@
 export default defineEventHandler(async (event) => {
+  // 執行操作
   const { response } = await readBody(event) as { response: string | undefined }
   if (!response) {
     throw createError({
