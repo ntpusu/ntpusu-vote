@@ -1,4 +1,3 @@
-<!-- https://drive.google.com/file/d/1vooeYRpqUp4fQ5w2iMZSNIuL47kORAfe/preview -->
 <template>
   <div class="flex items-center justify-center">
     <div class="flex h-auto w-5/6 flex-col md:w-2/3 lg:w-1/2">
@@ -14,7 +13,7 @@
       <div v-show="state === '選舉公報'">
         <ClientOnly>
           <iframe
-            src="https://drive.google.com/file/d/1vooeYRpqUp4fQ5w2iMZSNIuL47kORAfe/preview"
+            :src="pdfUrl"
             frameborder="1"
             allowfullscreen="true"
             allow="autoplay; clipboard-write; web-share"
@@ -30,7 +29,7 @@
           <blockquote
             class="instagram-media !m-0 w-full !rounded-md sm:!rounded-lg md:!rounded-xl"
             data-instgrm-captioned
-            data-instgrm-permalink="https://www.instagram.com/p/CsLrwQurAEI/?utm_source=ig_embed&utm_campaign=loading&omitscript=true"
+            :data-instgrm-permalink="igPostUrl + '?utm_source=ig_embed&utm_campaign=loading&omitscript=true'"
             data-instgrm-version="14"
             style="
               background: #fff;
@@ -43,7 +42,7 @@
           >
             <div style="padding: 16px">
               <a
-                href="https://www.instagram.com/p/CsLrwQurAEI/?utm_source=ig_embed&utm_campaign=loading"
+                :href="igPostUrl + '?utm_source=ig_embed&utm_campaign=loading'"
                 style="
                   background: #ffffff;
                   line-height: 0;
@@ -285,7 +284,7 @@
                 "
               >
                 <a
-                  href="https://www.instagram.com/p/CsLrwQurAEI/?utm_source=ig_embed&utm_campaign=loading"
+                  :href="igPostUrl +'?utm_source=ig_embed&utm_campaign=loading'"
                   style="
                     color: #c9c8cd;
                     font-family: Arial, sans-serif;
@@ -315,6 +314,8 @@ definePageMeta({
 
 const state = ref("選舉公報");
 const options = ["選舉公報", "操作說明"];
+
+const { pdfUrl, igPostUrl } = useRuntimeConfig().public;
 
 const load = () => {
   setTimeout(() => {

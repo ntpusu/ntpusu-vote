@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     const email = session.user.email
     const studentId = email.substring(1, 10)
 
-    if (studentId != process.env.ADMIN) {
+    if (studentId != process.env.SUPER_ADMIN) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
