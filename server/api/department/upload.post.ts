@@ -1,12 +1,8 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 import * as XLSX from 'xlsx';
 export default defineEventHandler(async (event) => {
-    const session = await getServerSession(event) as { user: { email: string } } | null
-    const formData = (await readMultipartFormData(event))!
-    const file = formData[1].data
-
-    if (!session) {
+    // 確認權限
+    if (!event.context.session) {
         throw createError({
             statusCode: 401,
             statusMessage: 'Unauthorized',
@@ -14,21 +10,17 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session.user.email
-    const studentId = parseInt(email.substring(1, 10))
-
-    const admin = await prisma.admin.findUnique({
-        where: { id: studentId },
-        select: null,
-    })
-
-    if (!admin) {
+    if (!event.context.isAdmin) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不在管理員名單中',
+            message: '不是管理員',
         })
     }
+
+    // 執行操作
+    const formData = (await readMultipartFormData(event))!
+    const file = formData[1].data
 
     const group_workbook = XLSX.read(file)
     const group_sheet = group_workbook.Sheets[group_workbook.SheetNames[0]]
@@ -46,20 +38,23 @@ export default defineEventHandler(async (event) => {
 
     allGroups = Array.from(new Set(allGroups))
 
+    await prisma.group.deleteMany()
+    await prisma.department.deleteMany()
+
     await prisma.group.createMany({
         data: allGroups.map((group) => {
             return {
                 name: group,
             }
-        }),
-        skipDuplicates: true,
+        })
     })
 
     for (let i = 1; i < group_table.length; i++) {
         if (group_table[i][0] === undefined || group_table[i][0].trim() === "") {
             continue
         }
-        const department = group_table[i][0] as string
+
+        const department = group_table[i][0]
         const groups = []
         for (let j = 1; j < 4; j++) {
             if (group_table[i][j] !== undefined && group_table[i][j].trim() !== "") {
@@ -85,5 +80,6 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    return {}
+    setResponseStatus(event, 204)
+    return null
 })

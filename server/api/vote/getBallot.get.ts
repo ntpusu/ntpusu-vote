@@ -1,8 +1,24 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const { token } = getQuery(event) as { token: string | undefined }
+    // 確認權限
+    if (!event.context.session) {
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized',
+            message: '未登入',
+        })
+    }
 
+    if (!event.context.isAdmin) {
+        throw createError({
+            statusCode: 403,
+            statusMessage: 'Forbidden',
+            message: '不是管理員',
+        })
+    }
+
+    // 確認參數
+    const { token } = getQuery(event) as { token: string | undefined }
     if (!token) {
         throw createError({
             statusCode: 400,
@@ -11,32 +27,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const session = await getServerSession(event) as { user: { email: string } } | null
-
-    if (!session) {
-        throw createError({
-            statusCode: 401,
-            statusMessage: 'Unauthorized',
-            message: '未登入',
-        })
-    }
-
-    const email = session.user.email
-    const studentId = parseInt(email.substring(1, 10))
-
-    const admin = await prisma.admin.findUnique({
-        where: { id: studentId },
-        select: null,
-    })
-
-    if (!admin) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Forbidden',
-            message: '不在管理員名單中'
-        })
-    }
-
+    // 執行操作
     const ballot = await prisma.ballot.findUniqueOrThrow({
         where: { token },
         select: {
@@ -63,6 +54,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    setResponseStatus(event, 200)
     return {
         vote: ballot.candidate.voting.name,
         candidate: ballot.candidate.name,

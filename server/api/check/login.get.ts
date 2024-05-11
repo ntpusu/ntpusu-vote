@@ -1,9 +1,7 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const session = await getServerSession(event) as { user: { email: string } } | null
-
-    if (!session) {
+    // 確認權限
+    if (!event.context.session) {
         throw createError({
             statusCode: 401,
             statusMessage: 'Unauthorized',
@@ -11,23 +9,17 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session.user.email
-    const id = parseInt(email.substring(1, 10))
-
-    const voter = await prisma.voter.findUnique({
-        where: { id },
-        select: null,
-    })
-
-    if (!voter) {
+    if (!event.context.isVoter) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
-            message: '不在選舉人名單中',
+            message: '不是選舉人',
         })
     }
 
-    let login = await prisma.voterLogin.findUnique({
+    // 執行操作
+    const id = parseInt(event.context.id)
+    const login = await prisma.voterLogin.findUnique({
         where: { voterId: id },
         select: {
             id: true,
@@ -35,8 +27,10 @@ export default defineEventHandler(async (event) => {
         },
     })
 
-    if (!login) {
-        login = await prisma.voterLogin.create({
+    setResponseStatus(event, login ? 200 : 201)
+    return {
+        firstLogin: login === null,
+        login: login || await prisma.voterLogin.create({
             data: {
                 id: await prisma.voterLogin.count() + 1,
                 voterId: id,
@@ -45,16 +39,6 @@ export default defineEventHandler(async (event) => {
                 id: true,
                 time: true,
             },
-        })
-
-        return {
-            firstLogin: true,
-            login,
-        }
-    }
-
-    return {
-        firstLogin: false,
-        login,
+        }),
     }
 })
