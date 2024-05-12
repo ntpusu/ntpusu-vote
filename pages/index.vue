@@ -88,34 +88,28 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
-const timelineLoading = ref(false);
-
-const activities = ref<Activity[]>([]);
-
-const refreshActivities = async () => {
-  timelineLoading.value = true;
-  useFetch("/api/timeline/get", {
-    method: "GET",
-  }).then((activities_origin) => {
-    activities.value = [];
-    if (activities_origin.data.value == null) {
-      return;
-    }
-    for (const activity of activities_origin.data.value) {
-      activities.value.push({
-        content: activity.content,
-        start: new Date(activity.start),
-        end: new Date(activity.end),
-        showEnd: activity.showEnd,
-        showTime: activity.showTime,
-      });
-    }
-  }).finally(() => {
-    timelineLoading.value = false;
-  })
-};
-
-refreshActivities();
+const {
+  data: activities,
+  pending: timelineLoading,
+} = useFetch("/api/timeline/get", {
+      method: "GET",
+      transform: (activities_origin) => {
+        const activities: Activity[] = [];
+        if (activities_origin.length == 0) {
+          return activities;
+        }
+        for (const activity of activities_origin) {
+          activities.push({
+            content: activity.content,
+            start: new Date(activity.start),
+            end: new Date(activity.end),
+            showEnd: activity.showEnd,
+            showTime: activity.showTime,
+          });
+        }
+        return activities;
+      },
+  });
 
 interface Activity {
   content: string,

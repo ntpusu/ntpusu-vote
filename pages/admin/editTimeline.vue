@@ -9,27 +9,27 @@
       >
         <el-form-item label="設定時間軸">
           <el-input
-            v-model="contentInput"
+            v-model="input.content"
             placeholder="設定內容"
           />
         </el-form-item>
         <el-form-item label="開始時間">
           <el-date-picker
-            v-model="startTimePicker"
+            v-model="input.start"
             type="datetime"
             placeholder="選擇開始時間"
           />
         </el-form-item>
         <el-form-item label="結束時間">
           <el-date-picker
-            v-model="endTimePicker"
+            v-model="input.end"
             type="datetime"
             placeholder="選擇結束時間"
           />
         </el-form-item>
         <el-form-item label="是否顯示詳細時間">
           <el-switch
-            v-model="showTime"
+            v-model="input.showTime"
             inline-prompt
             active-text="是"
             inactive-text="否"
@@ -37,7 +37,7 @@
         </el-form-item>
         <el-form-item label="是否顯示結束時間">
           <el-switch
-            v-model="showEnd"
+            v-model="input.showEnd"
             inline-prompt
             active-text="是"
             inactive-text="否"
@@ -45,19 +45,19 @@
         </el-form-item>
       </el-form>
       <el-button
-        v-if="editActivityId == null"
+        v-if="input.id == null"
         type="primary"
         @click="addActivity()"
         >新增
       </el-button>
       <el-button
-        v-if="editActivityId != null"
+        v-if="input.id != null"
         type="primary"
-        @click="updateActivity(editActivityId)"
+        @click="updateActivity()"
         >更新
       </el-button>
       <el-button
-        v-if="editActivityId != null"
+        v-if="input.id != null"
         type="success"
         @click="clearInput()"
         >取消
@@ -73,7 +73,7 @@
             <ElStep
               v-for="(activity, index) in activities"
               :key="index"
-              :status="style(activity.start, activity.end)"
+              :status="style(activity.start as Date, activity.end as Date)"
               class="tracking-[1.5px]"
             >
               <template #title>
@@ -130,15 +130,20 @@ definePageMeta({
   title: "管理首頁時間線頁面",
 });
 
-const contentInput = ref("");
-const startTimePicker = ref("");
-const endTimePicker = ref("");
-const showEnd = ref(false);
-const showTime = ref(false);
+const input = ref<Activity>({
+  id: null,
+  content: "",
+  start: '',
+  end: '',
+  showEnd: false,
+  showTime: false,
+});
 const formRef = ref<FormInstance>();
-const editActivityId: Ref<number | null> = ref(null);
 
-const deleteActivity = (id: number) => {
+const deleteActivity = (id: number | null) => {
+  if(id === null) {
+    return;
+  }
   $fetch("/api/timeline/del", {
     method: "DELETE",
     query: {
@@ -154,38 +159,43 @@ const deleteActivity = (id: number) => {
   })
 }
 
-const editActivity = (id: number) => {
-  const activity = activities.value.find((activity) => activity.id === id);
+const editActivity = (id: number | null) => {
+  if(id === null) {
+    return;
+  }
+  const activity = activities.value!.find((activity) => activity.id === id);
   if (activity === undefined) {
     return;
   }
-  contentInput.value = activity.content;
-  startTimePicker.value = activity.start.toString();
-  endTimePicker.value = activity.end.toString();
-  showEnd.value = activity.showEnd;
-  showTime.value = activity.showTime;
-  editActivityId.value = id;
+  //deep copy
+  input.value = {
+    id: activity.id,
+    content: activity.content,
+    start: activity.start,
+    end: activity.end,
+    showEnd: activity.showEnd,
+    showTime: activity.showTime,
+  };
 }
 
-const updateActivity = (id: number) => {
+const updateActivity = () => {
+  if (input.value.id === null) {
+    ElMessage.error("未選擇更新目標")
+    return;
+  }
   if (
-    contentInput.value === "" ||
-    startTimePicker.value === "" ||
-    endTimePicker.value === ""
+    input.value.content === ""
   ) {
-    ElMessage.error("請輸入完整資訊");
+    ElMessage.error("內容不可為空");
+    return;
+  }
+  if (input.value.start > input.value.end) {
+    ElMessage.error("開始時間不可大於結束時間");
     return;
   }
   $fetch("/api/timeline/update", {
     method: "PUT",
-    body: {
-      id: id,
-      content: contentInput.value,
-      start: startTimePicker.value,
-      end: endTimePicker.value,
-      showEnd: showEnd.value,
-      showTime: showTime.value,
-    },
+    body: input.value,
   }).catch((e) => {
     console.error(e);
     ElMessage.error("更新失敗");
@@ -199,22 +209,18 @@ const updateActivity = (id: number) => {
 
 const addActivity = () => {
   if (
-    contentInput.value === "" ||
-    startTimePicker.value === "" ||
-    endTimePicker.value === ""
+    input.value.content === ""
   ) {
-    ElMessage.error("請輸入完整資訊");
+    ElMessage.error("內容不可為空");
+    return;
+  }
+  if (input.value.start > input.value.end) {
+    ElMessage.error("開始時間不可大於結束時間");
     return;
   }
   $fetch("/api/timeline/add", {
     method: "PUT",
-    body: {
-      content: contentInput.value,
-      start: startTimePicker.value,
-      end: endTimePicker.value,
-      showEnd: showEnd.value,
-      showTime: showTime.value,
-    },
+    body: input.value,
   }).catch((e) => {
     console.error(e);
     ElMessage.error("新增失敗");
@@ -227,12 +233,14 @@ const addActivity = () => {
 };
 
 const clearInput = () => {
-  contentInput.value = "";
-  startTimePicker.value = "";
-  endTimePicker.value = "";
-  showEnd.value = false;
-  showTime.value = false;
-  editActivityId.value = null;
+  input.value = {
+    id: null,
+    content: "",
+    start: '',
+    end: '',
+    showEnd: false,
+    showTime: false,
+  };
 };
 
 const style = (start: Date, end: Date) => {
@@ -243,42 +251,38 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
-const timelineLoading = ref(false);
-
-const activities = ref<Activity[]>([]);
-
-const refreshActivities = () => {
-  timelineLoading.value = true;
-  useFetch("/api/timeline/get", {
-    method: "GET",
-  }).then((activities_origin) => {
-    activities.value = [];
-    if (activities_origin.data.value == null) {
-      return;
-    }
-    for (const activity of activities_origin.data.value) {
-      activities.value.push({
-        id: activity.id,
-        content: activity.content,
-        start: new Date(activity.start),
-        end: new Date(activity.end),
-        showEnd: activity.showEnd,
-        showTime: activity.showTime,
-      });
-    }
-  }).finally(() => {
-    timelineLoading.value = false;
-  })
-};
-
-refreshActivities();
+const {
+  data: activities,
+  refresh: refreshActivities,
+  pending: timelineLoading,
+} = useFetch("/api/timeline/get", {
+      method: "GET",
+      transform: (activities_origin) => {
+        const activities: Activity[] = [];
+        if (activities_origin.length == 0) {
+          return activities;
+        }
+        for (const activity of activities_origin) {
+          activities.push({
+            id: activity.id,
+            content: activity.content,
+            start: new Date(activity.start),
+            end: new Date(activity.end),
+            showEnd: activity.showEnd,
+            showTime: activity.showTime,
+          });
+        }
+        return activities;
+      },
+  });
 
 interface Activity {
-  id: number;
+  id: number | null;
   content: string;
-  start: Date;
-  end: Date;
+  start: Date | string;
+  end: Date | string;
   showEnd: boolean;
   showTime: boolean;
 }
+
 </script>
