@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
         },
     })
 
-    if (studentId != process.env.ADMIN) {
+    if (studentId != process.env.SUPER_ADMIN) {
         if (Date.now() >= voting.startTime.getTime()) {
             throw createError({
                 statusCode: 403,

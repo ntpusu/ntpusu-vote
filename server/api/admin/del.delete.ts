@@ -1,19 +1,7 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const { id } = getQuery(event) as { id: string | undefined }
-
-    if (!id || isNaN(parseInt(id))) {
-        throw createError({
-            statusCode: 400,
-            statusMessage: 'Bad Request',
-            message: 'Parameter "id" is required and should be a number.',
-        })
-    }
-
-    const session = await getServerSession(event) as { user: { email: string } } | null
-
-    if (!session) {
+    // 確認權限
+    if (!event.context.session) {
         throw createError({
             statusCode: 401,
             statusMessage: 'Unauthorized',
@@ -21,10 +9,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session.user.email
-    const studentId = email.substring(1, 10)
-
-    if (studentId != process.env.ADMIN) {
+    if (!event.context.isSuperAdmin) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
@@ -32,10 +17,23 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    // 確認參數
+    const { id } = getQuery(event) as { id: string | undefined }
+
+    if (!id || isNaN(parseInt(id))) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: 'Parameter "id" is required and must be a number.',
+        })
+    }
+
+    // 執行操作
     await prisma.admin.delete({
         where: { id: parseInt(id) },
         select: null,
     })
 
-    return {}
+    setResponseStatus(event, 204)
+    return null
 })

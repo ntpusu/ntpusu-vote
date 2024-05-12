@@ -25,7 +25,7 @@ definePageMeta({
 });
 
 const event = useRequestEvent();
-if (event) setResponseStatus(event, 404);
+if (event) setResponseStatus(event, 404, "NOT FOUND");
 
 const countdown = ref(10);
 const timer = () => {

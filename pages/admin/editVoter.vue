@@ -321,7 +321,7 @@ const refreshVoterData = async () => {
 };
 
 const modifyDepartment = async () => {
-  const { error } = await useFetch("/api/voter/modify", {
+  const { error } = await useFetch("/api/voter/update", {
     method: "POST",
     body: {
       voterId: parseInt(queryInputData.value),

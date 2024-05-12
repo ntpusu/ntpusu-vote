@@ -1,9 +1,7 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const session = await getServerSession(event) as { user: { email: string } } | null
-
-    if (!session) {
+    // 確認權限
+    if (!event.context.session) {
         throw createError({
             statusCode: 401,
             statusMessage: 'Unauthorized',
@@ -11,10 +9,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const email = session.user.email
-    const studentId = email.substring(1, 10)
-
-    if (studentId != process.env.ADMIN) {
+    if (!event.context.isSuperAdmin) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Forbidden',
@@ -22,6 +17,8 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    // 執行操作
+    setResponseStatus(event, 200)
     return await prisma.admin.findMany({
         orderBy: { id: 'asc' }
     })

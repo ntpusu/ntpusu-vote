@@ -1,8 +1,24 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-    const { voter } = getQuery(event) as { voter: string | undefined }
+    // 確認權限
+    if (!event.context.session) {
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized',
+            message: '未登入',
+        })
+    }
 
+    if (!event.context.isAdmin) {
+        throw createError({
+            statusCode: 403,
+            statusMessage: 'Forbidden',
+            message: '不是管理員',
+        })
+    }
+
+    // 確認參數
+    const { voter } = getQuery(event) as { voter: string | undefined }
     if (!voter || !/^\d{8,9}$/.test(voter)) {
         throw createError({
             statusCode: 400,
@@ -11,33 +27,8 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    // 執行操作
     const id = parseInt(voter)
-    const session = await getServerSession(event) as { user: { email: string } } | null
-
-    if (!session) {
-        throw createError({
-            statusCode: 401,
-            statusMessage: 'Unauthorized',
-            message: '未登入',
-        })
-    }
-
-    const email = session.user.email
-    const studentId = parseInt(email.substring(1, 10))
-
-    const admin = await prisma.admin.findUnique({
-        where: { id: studentId },
-        select: null,
-    })
-
-    if (!admin) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Forbidden',
-            message: '不在管理員名單中'
-        })
-    }
-
     const voterData = await prisma.voter.findUniqueOrThrow({
         where: { id },
         select: {
@@ -53,6 +44,7 @@ export default defineEventHandler(async (event) => {
         }
     })
 
+    setResponseStatus(event, 200)
     return {
         id: voterData.id,
         department: voterDepartment.name,

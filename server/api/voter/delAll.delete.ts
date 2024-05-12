@@ -1,34 +1,23 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
-
-    const session = await getServerSession(event) as { user: { email: string } } | null
-
-    if (!session) {
-        throw createError({
-            statusCode: 401,
-            statusMessage: 'Unauthorized',
-            message: '未登入',
-        })
-    }
-
-    const email = session.user.email
-    const studentId = parseInt(email.substring(1, 10))
-
-    const admin = await prisma.admin.findUnique({
-        where: { id: studentId },
-        select: null,
+// 確認權限
+if (!event.context.session) {
+    throw createError({
+        statusCode: 401,
+        statusMessage: 'Unauthorized',
+        message: '未登入',
     })
+}
 
-    if (!admin) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Forbidden',
-            message: '不在管理員名單中',
-        })
-    }
+if (!event.context.isAdmin) {
+    throw createError({
+        statusCode: 403,
+        statusMessage: 'Forbidden',
+        message: '不是管理員',
+    })
+}
 
-    await prisma.voter.deleteMany({})
-
+    await prisma.voter.deleteMany()
+    setResponseStatus(event, 204)
     return {}
 })
