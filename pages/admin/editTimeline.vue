@@ -122,7 +122,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import type { FormInstance } from "element-plus";
 import { Delete, Edit } from '@element-plus/icons-vue'
 
@@ -139,7 +138,7 @@ const showTime = ref(false);
 const formRef = ref<FormInstance>();
 const editActivityId: Ref<number | null> = ref(null);
 
-const deleteActivity = async (id: number) => {
+const deleteActivity = (id: number) => {
   $fetch("/api/timeline/del", {
     method: "DELETE",
     query: {
@@ -155,7 +154,7 @@ const deleteActivity = async (id: number) => {
   })
 }
 
-const editActivity = async (id: number) => {
+const editActivity = (id: number) => {
   const activity = activities.value.find((activity) => activity.id === id);
   if (activity === undefined) {
     return;
@@ -168,7 +167,7 @@ const editActivity = async (id: number) => {
   editActivityId.value = id;
 }
 
-const updateActivity = async (id: number) => {
+const updateActivity = (id: number) => {
   if (
     contentInput.value === "" ||
     startTimePicker.value === "" ||
@@ -198,7 +197,7 @@ const updateActivity = async (id: number) => {
   })
 };
 
-const addActivity = async () => {
+const addActivity = () => {
   if (
     contentInput.value === "" ||
     startTimePicker.value === "" ||
@@ -248,7 +247,7 @@ const timelineLoading = ref(false);
 
 const activities = ref<Activity[]>([]);
 
-const refreshActivities = async () => {
+const refreshActivities = () => {
   timelineLoading.value = true;
   useFetch("/api/timeline/get", {
     method: "GET",

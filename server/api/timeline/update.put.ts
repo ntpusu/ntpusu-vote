@@ -37,6 +37,35 @@ export default defineEventHandler(async (event) => {
         showTime: boolean
     }
 
+    if (isNaN(id)) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: 'id 不是數字',
+        })
+    }
+    if (!content) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: 'content 不能為空',
+        })
+    }
+    if (!start) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: 'start 不能為空',
+        })
+    }
+    if (!end) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: 'end 不能為空',
+        })
+    }
+
     await prisma.votingTimeline.update({
         where: { id },
         data: {
