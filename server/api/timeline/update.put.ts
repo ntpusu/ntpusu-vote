@@ -66,12 +66,23 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    const startDate = new Date(start)
+    const endDate = new Date(end)
+    
+    if (startDate > endDate) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: '開始時間不能晚於結束時間',
+        })
+    }
+
     await prisma.votingTimeline.update({
         where: { id },
         data: {
             content,
-            start: new Date(start),
-            end: new Date(end),
+            start: startDate,
+            end: endDate,
             showEnd,
             showTime,
         }
