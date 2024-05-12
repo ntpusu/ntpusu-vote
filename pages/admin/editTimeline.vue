@@ -183,14 +183,7 @@ const updateActivity = () => {
     ElMessage.error("未選擇更新目標")
     return;
   }
-  if (
-    input.value.content === ""
-  ) {
-    ElMessage.error("內容不可為空");
-    return;
-  }
-  if (input.value.start > input.value.end) {
-    ElMessage.error("開始時間不可大於結束時間");
+  if(checkActivity(input.value) === false) {
     return;
   }
   $fetch("/api/timeline/update", {
@@ -208,14 +201,7 @@ const updateActivity = () => {
 };
 
 const addActivity = () => {
-  if (
-    input.value.content === ""
-  ) {
-    ElMessage.error("內容不可為空");
-    return;
-  }
-  if (input.value.start > input.value.end) {
-    ElMessage.error("開始時間不可大於結束時間");
+  if(checkActivity(input.value) === false) {
     return;
   }
   $fetch("/api/timeline/add", {
@@ -230,6 +216,18 @@ const addActivity = () => {
   }).finally(() => {
     refreshActivities();
   })
+};
+
+const checkActivity = (activity : Activity) => {
+  if (activity.content === "") {
+    ElMessage.error("內容不可為空");
+    return false;
+  }
+  if (activity.start > activity.end) {
+    ElMessage.error("開始時間不可大於結束時間");
+    return false;
+  }
+  return true;
 };
 
 const clearInput = () => {
