@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
         showTime: boolean
     }
 
-    if (isNaN(id)) {
+    if (!id || isNaN(id)) {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
