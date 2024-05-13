@@ -37,10 +37,6 @@ export default defineEventHandler(async (event) => {
     }
 
     allGroups = Array.from(new Set(allGroups))
-
-    await prisma.group.deleteMany()
-    await prisma.department.deleteMany()
-
     await prisma.group.createMany({
         data: allGroups.map((group) => {
             return {
@@ -49,6 +45,7 @@ export default defineEventHandler(async (event) => {
         })
     })
 
+    const tasks = []
     for (let i = 1; i < group_table.length; i++) {
         if (group_table[i][0] === undefined || group_table[i][0].trim() === "") {
             continue
@@ -62,7 +59,7 @@ export default defineEventHandler(async (event) => {
             }
         }
 
-        await prisma.department.create({
+        tasks.push(prisma.department.create({
             data: {
                 name: department,
                 departmentInGroup: {
@@ -77,9 +74,10 @@ export default defineEventHandler(async (event) => {
                     })
                 }
             }
-        })
+        }))
     }
 
+    await Promise.all(tasks)
     setResponseStatus(event, 204)
     return null
 })
