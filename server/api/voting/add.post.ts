@@ -103,17 +103,20 @@ export default defineEventHandler(async (event) => {
         })
     }
     else {
-        await prisma.candidate.createMany({
-            data: candidates.map((candidate) => ({
-                name: candidate.name,
-                groupId: voteGroup,
-                votingId: voting.id,
-            })).concat([{
-                name: '廢票',
-                groupId: voteGroup,
-                votingId: voting.id,
-            }]),
-        })
+        const validCandidates = candidates.filter(candidate => candidate.name !== '廢票');
+        if (validCandidates.length > 0) {
+            await prisma.candidate.createMany({
+                data: validCandidates.map((candidate) => ({
+                    name: candidate.name,
+                    groupId: voteGroup,
+                    votingId: voting.id,
+                })).concat([{
+                    name: '廢票',
+                    groupId: voteGroup,
+                    votingId: voting.id,
+                }]),
+            })
+        }
     }
 
     return {}

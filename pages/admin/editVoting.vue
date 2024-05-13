@@ -94,9 +94,8 @@
             :prop="'candidates.' + index + '.name'"
             :label="addVote.onlyOne ? '候選人名稱' : index + 1 + '號名稱'"
             :rules="{
-              required: true,
-              message: '選項為必填',
-              trigger: 'blur',
+              validator: checkOptionWords,
+              trigger: 'blur'
             }"
             class="!mb-4"
           >
@@ -436,6 +435,16 @@ const rules = reactive<FormRules>({
   endTime: [{ required: true, message: "結束時間為必填", trigger: "change" }],
 });
 
+const checkOptionWords = (rule: any, value: any, callback: any) =>{
+  if(!value){
+    callback(new Error('選項為必填'));
+  }
+  if (value.includes('廢票')) {
+    callback(new Error('請重新輸入，不需輸入"廢票"選項'));
+  } else{
+    callback();
+  }
+}
 const submitForm = async (formRef: FormInstance | undefined) => {
   if (!formRef) return;
 
