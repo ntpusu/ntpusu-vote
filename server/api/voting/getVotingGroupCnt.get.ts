@@ -1,6 +1,23 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
+    // 確認權限
+    if (!event.context.session) {
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized',
+            message: '未登入',
+        })
+    }
+
+    if (!event.context.isAdmin) {
+        throw createError({
+            statusCode: 403,
+            statusMessage: 'Forbidden',
+            message: '不是管理員',
+        })
+    }
+
+    // 確認參數
     const { votingId, groupId } = getQuery(event) as { votingId: string | undefined, groupId: string | undefined }
 
     if (!votingId || isNaN(parseInt(votingId)) || !groupId || isNaN(parseInt(groupId))) {
@@ -11,32 +28,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const session = await getServerSession(event) as { user: { email: string } } | null
-
-    if (!session) {
-        throw createError({
-            statusCode: 401,
-            statusMessage: 'Unauthorized',
-            message: '未登入',
-        })
-    }
-
-    const email = session.user.email
-    const studentId = parseInt(email.substring(1, 10))
-
-    const admin = await prisma.admin.findUnique({
-        where: { id: studentId },
-        select: null,
-    })
-
-    if (!admin) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Forbidden',
-            message: '不在管理員名單中',
-        })
-    }
-
+    // 執行操作
     const VFG = await prisma.votingFromGroup.findUniqueOrThrow({
         where: {
             votingId_groupId: {
