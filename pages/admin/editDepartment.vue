@@ -200,11 +200,8 @@ const deleteGroupData = async () => {
           electorCountRefresh();
           electorDetailRefresh();
         });
+
       deletingDialogVisible.value = false;
-      ElMessage({
-        type: "success",
-        message: "刪除成功",
-      });
     })
     .catch(() => {
       ElMessage({
