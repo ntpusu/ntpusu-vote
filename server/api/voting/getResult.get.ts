@@ -1,6 +1,15 @@
 import prisma from '~/lib/prisma'
-import { getServerSession } from '#auth'
 export default defineEventHandler(async (event) => {
+    // 確認權限
+    if (!event.context.session) {
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Unauthorized',
+            message: '未登入',
+        })
+    }
+
+    // 確認參數
     const { id } = getQuery(event) as { id: string | undefined }
 
     if (!id || isNaN(parseInt(id))) {
@@ -11,19 +20,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const session = await getServerSession(event) as { user: { email: string } } | null
-
-    if (!session) {
-        throw createError({
-            statusCode: 401,
-            statusMessage: 'Unauthorized',
-            message: '未登入',
-        })
-    }
-
-    const email = session.user.email
-    const studentId = parseInt(email.substring(1, 10))
-
+    // 執行操作
     const voting = await prisma.voting.findUniqueOrThrow({
         where: { id: parseInt(id) },
         select: {
@@ -49,6 +46,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    const studentId = parseInt(event.context.id)
     const admin = await prisma.admin.findUnique({
         where: { id: studentId },
         select: null,
