@@ -62,7 +62,13 @@
         @click="clearInput()"
         >取消
       </el-button>
-      <el-skeleton style="width: 300px" :loading="timelineLoading" :rows="15" :throttle="100" animated>
+      <el-skeleton
+        style="width: 300px"
+        :loading="timelineLoading"
+        :rows="15"
+        :throttle="100"
+        animated
+      >
         <template #default>
           <ElSteps
             direction="vertical"
@@ -109,8 +115,14 @@
                   }}
                 </div>
                 <div>
-                <el-button  :icon="Edit" @click="editActivity(activity.id)" />
-                <el-button  :icon="Delete" @click="deleteActivity(activity.id)" />
+                  <el-button
+                    :icon="Edit"
+                    @click="editActivity(activity.id)"
+                  />
+                  <el-button
+                    :icon="Delete"
+                    @click="deleteActivity(activity.id)"
+                  />
                 </div>
               </template>
             </ElStep>
@@ -123,7 +135,7 @@
 
 <script setup lang="ts">
 import type { FormInstance } from "element-plus";
-import { Delete, Edit } from '@element-plus/icons-vue'
+import { Delete, Edit } from "@element-plus/icons-vue";
 
 definePageMeta({
   middleware: ["admin"],
@@ -133,15 +145,15 @@ definePageMeta({
 const input = ref<Activity>({
   id: null,
   content: "",
-  start: '',
-  end: '',
+  start: "",
+  end: "",
   showEnd: false,
   showTime: false,
 });
 const formRef = ref<FormInstance>();
 
 const deleteActivity = (id: number | null) => {
-  if(id === null) {
+  if (id === null) {
     return;
   }
   $fetch("/api/timeline/del", {
@@ -149,18 +161,21 @@ const deleteActivity = (id: number | null) => {
     query: {
       id: id,
     },
-  }).catch((e) => {
-    console.error(e);
-    ElMessage.error("刪除失敗");
-  }).then(() => {
-    ElMessage.success("刪除成功");
-  }).finally(() => {
-    refreshActivities()
   })
-}
+    .catch((e) => {
+      console.error(e);
+      ElMessage.error("刪除失敗");
+    })
+    .then(() => {
+      ElMessage.success("刪除成功");
+    })
+    .finally(() => {
+      refreshActivities();
+    });
+};
 
 const editActivity = (id: number | null) => {
-  if(id === null) {
+  if (id === null) {
     return;
   }
   const activity = activities.value!.find((activity) => activity.id === id);
@@ -176,49 +191,55 @@ const editActivity = (id: number | null) => {
     showEnd: activity.showEnd,
     showTime: activity.showTime,
   };
-}
+};
 
 const updateActivity = () => {
   if (input.value.id === null) {
-    ElMessage.error("未選擇更新目標")
+    ElMessage.error("未選擇更新目標");
     return;
   }
-  if(checkActivity(input.value) === false) {
+  if (checkActivity(input.value) === false) {
     return;
   }
   $fetch("/api/timeline/update", {
     method: "PUT",
     body: input.value,
-  }).catch((e) => {
-    console.error(e);
-    ElMessage.error("更新失敗");
-  }).then(() => {
-    clearInput();
-    ElMessage.success("更新成功");
-  }).finally(() => {
-    refreshActivities();
   })
+    .catch((e) => {
+      console.error(e);
+      ElMessage.error("更新失敗");
+    })
+    .then(() => {
+      clearInput();
+      ElMessage.success("更新成功");
+    })
+    .finally(() => {
+      refreshActivities();
+    });
 };
 
 const addActivity = () => {
-  if(checkActivity(input.value) === false) {
+  if (checkActivity(input.value) === false) {
     return;
   }
   $fetch("/api/timeline/add", {
     method: "PUT",
     body: input.value,
-  }).catch((e) => {
-    console.error(e);
-    ElMessage.error("新增失敗");
-  }).then(() => {
-    clearInput();
-    ElMessage.success("新增成功");
-  }).finally(() => {
-    refreshActivities();
   })
+    .catch((e) => {
+      console.error(e);
+      ElMessage.error("新增失敗");
+    })
+    .then(() => {
+      clearInput();
+      ElMessage.success("新增成功");
+    })
+    .finally(() => {
+      refreshActivities();
+    });
 };
 
-const checkActivity = (activity : Activity) => {
+const checkActivity = (activity: Activity) => {
   if (activity.content === "") {
     ElMessage.error("內容不可為空");
     return false;
@@ -234,8 +255,8 @@ const clearInput = () => {
   input.value = {
     id: null,
     content: "",
-    start: '',
-    end: '',
+    start: "",
+    end: "",
     showEnd: false,
     showTime: false,
   };
@@ -254,25 +275,14 @@ const {
   refresh: refreshActivities,
   pending: timelineLoading,
 } = useFetch("/api/timeline/get", {
-      method: "GET",
-      transform: (activities_origin) => {
-        const activities: Activity[] = [];
-        if (activities_origin.length == 0) {
-          return activities;
-        }
-        for (const activity of activities_origin) {
-          activities.push({
-            id: activity.id,
-            content: activity.content,
-            start: new Date(activity.start),
-            end: new Date(activity.end),
-            showEnd: activity.showEnd,
-            showTime: activity.showTime,
-          });
-        }
-        return activities;
-      },
-  });
+  method: "GET",
+  transform: (activities_origin) =>
+    activities_origin.map((activity: Activity) => {
+      activity.start = new Date(activity.start);
+      activity.end = new Date(activity.end);
+      return activity;
+    }),
+});
 
 interface Activity {
   id: number | null;
@@ -282,5 +292,4 @@ interface Activity {
   showEnd: boolean;
   showTime: boolean;
 }
-
 </script>

@@ -1,7 +1,13 @@
 <template>
   <div class="flex flex-wrap justify-center">
     <el-space direction="vertical">
-      <el-skeleton style="width: 300px" :loading="timelineLoading" :rows="15" :throttle="100" animated>
+      <el-skeleton
+        style="width: 300px"
+        :loading="timelineLoading"
+        :rows="15"
+        :throttle="100"
+        animated
+      >
         <template #default>
           <ElSteps
             direction="vertical"
@@ -88,34 +94,19 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
-const {
-  data: activities,
-  pending: timelineLoading,
-} = useFetch("/api/timeline/get", {
-      method: "GET",
-      transform: (activities_origin) => {
-        const activities: Activity[] = [];
-        if (activities_origin.length == 0) {
-          return activities;
-        }
-        for (const activity of activities_origin) {
-          activities.push({
-            content: activity.content,
-            start: new Date(activity.start),
-            end: new Date(activity.end),
-            showEnd: activity.showEnd,
-            showTime: activity.showTime,
-          });
-        }
-        return activities;
-      },
-  });
+const { data: activities, pending: timelineLoading } = useFetch(
+  "/api/timeline/get",
+  {
+    method: "GET",
+    transform: (activities_origin) =>
+      activities_origin.map((activity) => {
+        return {
+          ...activity,
+          start: new Date(activity.start),
+          end: new Date(activity.end),
+        };
+      }),
+  },
+);
 
-interface Activity {
-  content: string,
-  start: Date,
-  end:   Date,
-  showEnd: boolean,
-  showTime: boolean,
-}
 </script>
