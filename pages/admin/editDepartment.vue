@@ -195,16 +195,15 @@ const deleteGroupData = async () => {
           ElMessage.error("刪除失敗");
         })
         .finally(() => {
+          ElMessage.success("刪除成功");
+
           queryInput.value = "";
           departmentIdStatus.value = studentIdStatusEnum.noInput;
           electorCountRefresh();
           electorDetailRefresh();
         });
+
       deletingDialogVisible.value = false;
-      ElMessage({
-        type: "success",
-        message: "刪除成功",
-      });
     })
     .catch(() => {
       ElMessage({
