@@ -45,12 +45,40 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+
     if (new Date(startTime) >= new Date(endTime)) {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
             message: 'StartTime should be earlier than endTime.',
         })
+    }
+
+    const candidatesString = candidates.map(candidate => candidate.name)
+
+    if (candidatesString.includes("廢票")) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: '不可新增廢票選項',
+        })
+    }
+
+    if (onlyOne) {
+        if (candidatesString.includes("同意")) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: 'Bad Request',
+                message: '不可新增同意選項',
+            })
+        }
+        if (candidatesString.includes("不同意")) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: 'Bad Request',
+                message: '不可新增不同意選項',
+            })
+        }
     }
 
     // 執行操作
@@ -103,21 +131,17 @@ export default defineEventHandler(async (event) => {
         })
     }
     else {
-        const validCandidates = candidates.filter(candidate => candidate.name !== '廢票');
-        if (validCandidates.length > 0) {
-            await prisma.candidate.createMany({
-                data: validCandidates.map((candidate) => ({
-                    name: candidate.name,
-                    groupId: voteGroup,
-                    votingId: voting.id,
-                })).concat([{
-                    name: '廢票',
-                    groupId: voteGroup,
-                    votingId: voting.id,
-                }]),
-            })
-        }
+        await prisma.candidate.createMany({
+            data: candidates.map((candidate) => ({
+                name: candidate.name,
+                groupId: voteGroup,
+                votingId: voting.id,
+            })).concat([{
+                name: '廢票',
+                groupId: voteGroup,
+                votingId: voting.id,
+            }]),
+        })
     }
-
     return {}
 })
