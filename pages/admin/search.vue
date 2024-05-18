@@ -245,6 +245,7 @@ const VG = reactive<{
 const voterShow = ref(false);
 const loginShow = ref(false);
 const tokenShow = ref(false);
+const loginShow = ref(false);
 const VGShow = ref(false);
 
 const voterData: Ref<{
