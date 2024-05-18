@@ -89,12 +89,20 @@
         >
           <div class="flex flex-col flex-wrap items-start justify-center">
             <h1 class="text-lg font-bold">登入序號：{{ loginData.loginId }}</h1>
-            <h1 class="text-lg font-bold">學號：{{ loginData.id }} </h1>
+            <h1 class="text-lg font-bold">學號：{{ loginData.id }}</h1>
             <h1 class="text-lg font-bold">
               登入時間：{{ new Date(loginData.time).toLocaleString() }}
             </h1>
+            <div class="flex flex-row items-center justify-center">
+              <ElButton
+                type="primary"
+                class="!rounded-md"
+                @click="copy"
+              >
+                <span class="font-bold">複製學號</span>
+              </ElButton>
+            </div>
           </div>
-        
         </ElDialog>
       </ClientOnly>
     </ElForm>
@@ -235,8 +243,8 @@ const VG = reactive<{
 });
 
 const voterShow = ref(false);
-const tokenShow = ref(false);
 const loginShow = ref(false);
+const tokenShow = ref(false);
 const VGShow = ref(false);
 
 const voterData: Ref<{
@@ -313,6 +321,14 @@ const searchLoginId = async () => {
         type: "warning",
       });
     });
+};
+
+const copy = () => {
+  navigator.clipboard.writeText(loginData.value.id.toString());
+  ElMessage({
+    message: "已複製學號",
+    type: "success",
+  });
 };
 
 const searchToken = async () => {

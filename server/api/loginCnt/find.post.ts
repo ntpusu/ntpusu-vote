@@ -30,8 +30,7 @@ export default defineEventHandler(async (event) => {
             message: 'Parameter "loginId" is required and must be a number.',
         })
     }
-    
-    console.log('id', id)
+
     const item = await prisma.voterLogin.findUnique({
         where: { id: parseInt(loginId) },
         select: {
@@ -39,12 +38,14 @@ export default defineEventHandler(async (event) => {
             time: true,
         },
     })
+
     if (!item) {
-        console.error('找不到登入紀錄', loginId)
-        return null; // or handle the null case accordingly
+        throw createError({
+            statusCode: 404,
+            statusMessage: 'Not Found',
+            message: '找不到登入紀錄',
+        })
     }
-    console.log('id', item.voterId)
-    console.log('time', item.time)
 
     return {
         loginId: loginId,
