@@ -191,16 +191,16 @@ const deleteGroupData = async () => {
       await $fetch("/api/department/delAll", {
         method: "DELETE",
       })
-        .catch(() => {
-          ElMessage.error("刪除失敗");
-        })
-        .finally(() => {
+        .then(() => {
           ElMessage.success("刪除成功");
 
           queryInput.value = "";
           departmentIdStatus.value = studentIdStatusEnum.noInput;
           electorCountRefresh();
           electorDetailRefresh();
+        })
+        .catch(() => {
+          ElMessage.error("刪除失敗");
         });
 
       deletingDialogVisible.value = false;
