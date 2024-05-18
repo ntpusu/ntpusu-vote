@@ -62,6 +62,50 @@
       class="m-auto flex flex-col items-center justify-center py-10"
     >
       <ElFormItem
+        label="登入序號"
+        class="m-auto w-5/6"
+      >
+        <ElInput
+          v-model="loginId"
+          placeholder="請輸入登入序號"
+          clearable
+        />
+      </ElFormItem>
+      <ElButton
+        type="primary"
+        class="w-1/5 !rounded-md"
+        @click="searchLoginId"
+      >
+        <span class="font-bold">查 詢</span>
+      </ElButton>
+      <ClientOnly>
+        <ElDialog
+          v-if="loginData"
+          v-model="loginShow"
+          title="登入序號資訊"
+          center
+          align-center
+          class="!w-fit !rounded-lg px-5"
+        >
+          <div class="flex flex-col flex-wrap items-start justify-center">
+            <h1 class="text-lg font-bold">登入序號：{{ loginData.loginId }}</h1>
+            <h1 class="text-lg font-bold">學號：{{ loginData.id }} </h1>
+            <h1 class="text-lg font-bold">
+              登入時間：{{ new Date(loginData.time).toLocaleString() }}
+            </h1>
+          </div>
+        
+        </ElDialog>
+      </ClientOnly>
+    </ElForm>
+    <ElDivider class="md:!hidden" />
+    <ElForm
+      label-width="auto"
+      label-suffix=":"
+      hide-required-asterisk
+      class="m-auto flex flex-col items-center justify-center py-10"
+    >
+      <ElFormItem
         label="憑證"
         class="m-auto w-5/6"
       >
@@ -180,6 +224,7 @@ const { data: voting } = await useFetch("/api/voting/getAll");
 const { data: group } = await useFetch("/api/department/getAllGroup");
 
 const voter = ref("");
+const loginId = ref("");
 const token = ref("");
 const VG = reactive<{
   votingId: number | undefined;
@@ -191,6 +236,7 @@ const VG = reactive<{
 
 const voterShow = ref(false);
 const tokenShow = ref(false);
+const loginShow = ref(false);
 const VGShow = ref(false);
 
 const voterData: Ref<{
@@ -200,6 +246,12 @@ const voterData: Ref<{
     serNum: number | undefined;
     time: string | undefined;
   };
+} | null> = ref(null);
+
+const loginData: Ref<{
+  loginId: number;
+  id: number;
+  time: string;
 } | null> = ref(null);
 
 const tokenData: Ref<{
@@ -233,6 +285,31 @@ const searchVoter = async () => {
     .catch(() => {
       ElMessage({
         message: "查無此人",
+        type: "warning",
+      });
+    });
+};
+
+const searchLoginId = async () => {
+  if (loginId.value == "") {
+    ElMessage({
+      message: "請輸入登入序號",
+      type: "warning",
+    });
+    return;
+  }
+
+  await $fetch("/api/loginCnt/find", {
+    method: "POST",
+    body: { loginId: loginId.value },
+  })
+    .then((res) => {
+      loginData.value = res;
+      loginShow.value = true;
+    })
+    .catch(() => {
+      ElMessage({
+        message: "查無此登入序號",
         type: "warning",
       });
     });
