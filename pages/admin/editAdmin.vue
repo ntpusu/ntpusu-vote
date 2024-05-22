@@ -37,7 +37,7 @@
     <div class="flex justify-center">
       <div class="m-4 w-[500px]">
         <ElInput
-          v-model="addId"
+          v-model="delId"
           placeholder="請輸入ID"
           clearable
         />
