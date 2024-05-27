@@ -1,67 +1,123 @@
 <template>
   <div class="flex flex-wrap justify-center">
     <el-space direction="vertical">
-      <el-form
-        ref="formRef"
-        label-width="auto"
-        label-suffix=":"
-        hide-required-asterisk
-      >
-        <el-form-item label="設定時間軸">
-          <el-input
-            v-model="input.content"
-            placeholder="設定內容"
-          />
-        </el-form-item>
-        <el-form-item label="開始時間">
-          <el-date-picker
-            v-model="input.start"
-            type="datetime"
-            placeholder="選擇開始時間"
-          />
-        </el-form-item>
-        <el-form-item label="結束時間">
-          <el-date-picker
-            v-model="input.end"
-            type="datetime"
-            placeholder="選擇結束時間"
-          />
-        </el-form-item>
-        <el-form-item label="是否顯示詳細時間">
-          <el-switch
-            v-model="input.showTime"
-            inline-prompt
-            active-text="是"
-            inactive-text="否"
-          />
-        </el-form-item>
-        <el-form-item label="是否顯示結束時間">
-          <el-switch
-            v-model="input.showEnd"
-            inline-prompt
-            active-text="是"
-            inactive-text="否"
-          />
-        </el-form-item>
-      </el-form>
-      <el-button
-        v-if="input.id == null"
-        type="primary"
-        @click="addActivity()"
-        >新增
-      </el-button>
-      <el-button
-        v-if="input.id != null"
-        type="primary"
-        @click="updateActivity()"
-        >更新
-      </el-button>
-      <el-button
-        v-if="input.id != null"
-        type="success"
-        @click="clearInput()"
-        >取消
-      </el-button>
+      <el-space direction="vertical">
+        <el-text class="mx-1" type="info">預覽修改</el-text>
+        <div
+          v-if= "!(input.start instanceof Date && input.end instanceof Date)"
+        >
+          <el-text class="mx-1" type="warning">請選擇開始時間與結束時間</el-text>
+        </div>
+        <ElSteps
+          v-if="(input.start instanceof Date) && (input.end instanceof Date)"
+          direction="vertical"
+          align-center
+          space="12vh"
+          class="mt-5 w-full !flex-wrap content-center"
+        >
+          <ElStep
+            :status="style(input.start as Date, input.end as Date)"
+            class="tracking-[1.5px]"
+          >
+            <template #title>
+              <div class="font-bold sm:text-lg">
+                {{ input.content }}
+              </div>
+            </template>
+            <template #description>
+              <div class="min-w-max sm:text-base">
+                <span>{{
+                  input.start.toLocaleString(undefined, {
+                    dateStyle: "long",
+                    timeStyle: input.showTime ? "medium" : undefined,
+                  })
+                }}</span>
+                <span v-if="input.showEnd"> 〜 </span>
+                <span v-if="input.showEnd && !input.showTime">{{
+                  input.end.toLocaleString(undefined, {
+                    dateStyle: "long",
+                    timeStyle: input.showTime ? "medium" : undefined,
+                  })
+                }}</span>
+              </div>
+              <div
+                v-if="input.showEnd && input.showTime"
+                class="min-w-max sm:text-base"
+              >
+                {{
+                  input.end.toLocaleString(undefined, {
+                    dateStyle: "long",
+                    timeStyle: input.showTime ? "medium" : undefined,
+                  })
+                }}
+              </div>
+            </template>
+          </ElStep>
+        </ElSteps>
+      </el-space>
+      <el-space direction="vertical">
+        <el-form
+          ref="formRef"
+          label-width="auto"
+          label-suffix=":"
+          hide-required-asterisk
+        >
+          <el-form-item label="設定時間軸">
+            <el-input
+              v-model="input.content"
+              placeholder="設定內容"
+            />
+          </el-form-item>
+          <el-form-item label="開始時間">
+            <el-date-picker
+              v-model="input.start"
+              type="datetime"
+              placeholder="選擇開始時間"
+            />
+          </el-form-item>
+          <el-form-item label="結束時間">
+            <el-date-picker
+              v-model="input.end"
+              type="datetime"
+              placeholder="選擇結束時間"
+            />
+          </el-form-item>
+          <el-form-item label="是否顯示詳細時間">
+            <el-switch
+              v-model="input.showTime"
+              inline-prompt
+              active-text="是"
+              inactive-text="否"
+            />
+          </el-form-item>
+          <el-form-item label="是否顯示結束時間">
+            <el-switch
+              v-model="input.showEnd"
+              inline-prompt
+              active-text="是"
+              inactive-text="否"
+            />
+          </el-form-item>
+        </el-form>
+        <el-button
+          v-if="input.id == null"
+          type="primary"
+          @click="addActivity()"
+          >新增
+        </el-button>
+        <el-button
+          v-if="input.id != null"
+          type="primary"
+          @click="updateActivity()"
+          >更新
+        </el-button>
+        <el-button
+          v-if="input.id != null"
+          type="success"
+          @click="clearInput()"
+          >取消
+        </el-button>
+      </el-space>
       <el-skeleton
         style="width: 300px"
         :loading="timelineLoading"
