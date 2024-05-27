@@ -1,4 +1,3 @@
-import { id } from 'element-plus/es/locales.mjs'
 import prisma from '~/lib/prisma'
 export default defineEventHandler(async (event) => {
     // 確認權限
