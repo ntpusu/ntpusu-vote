@@ -1,68 +1,68 @@
 <template>
   <div class="flex flex-wrap justify-center">
-    <el-space direction="vertical">
-      <el-form
+    <ElSpace direction="vertical">
+      <ElForm
         ref="formRef"
         label-width="auto"
         label-suffix=":"
         hide-required-asterisk
       >
-        <el-form-item label="設定時間軸">
-          <el-input
+        <ElFormItem label="設定時間軸">
+          <ElInput
             v-model="input.content"
             placeholder="設定內容"
           />
-        </el-form-item>
-        <el-form-item label="開始時間">
-          <el-date-picker
+        </ElFormItem>
+        <ElFormItem label="開始時間">
+          <ElDatePicker
             v-model="input.start"
             type="datetime"
             placeholder="選擇開始時間"
           />
-        </el-form-item>
-        <el-form-item label="結束時間">
-          <el-date-picker
+        </ElFormItem>
+        <ElFormItem label="結束時間">
+          <ElDatePicker
             v-model="input.end"
             type="datetime"
             placeholder="選擇結束時間"
           />
-        </el-form-item>
-        <el-form-item label="是否顯示詳細時間">
-          <el-switch
+        </ElFormItem>
+        <ElFormItem label="是否顯示詳細時間">
+          <ElSwitch
             v-model="input.showTime"
             inline-prompt
             active-text="是"
             inactive-text="否"
           />
-        </el-form-item>
-        <el-form-item label="是否顯示結束時間">
-          <el-switch
+        </ElFormItem>
+        <ElFormItem label="是否顯示結束時間">
+          <ElSwitch
             v-model="input.showEnd"
             inline-prompt
             active-text="是"
             inactive-text="否"
           />
-        </el-form-item>
-      </el-form>
-      <el-button
+        </ElFormItem>
+      </ElForm>
+      <ElButton
         v-if="input.id == null"
         type="primary"
         @click="addActivity()"
         >新增
-      </el-button>
-      <el-button
+      </ElButton>
+      <ElButton
         v-if="input.id != null"
         type="primary"
         @click="updateActivity()"
         >更新
-      </el-button>
-      <el-button
+      </ElButton>
+      <ElButton
         v-if="input.id != null"
         type="success"
         @click="clearInput()"
         >取消
-      </el-button>
-      <el-skeleton
+      </ElButton>
+      <ElSkeleton
         style="width: 300px"
         :loading="timelineLoading"
         :rows="15"
@@ -115,11 +115,11 @@
                   }}
                 </div>
                 <div>
-                  <el-button
+                  <ElButton
                     :icon="Edit"
                     @click="editActivity(activity.id)"
                   />
-                  <el-button
+                  <ElButton
                     :icon="Delete"
                     @click="deleteActivity(activity.id)"
                   />
@@ -128,8 +128,8 @@
             </ElStep>
           </ElSteps>
         </template>
-      </el-skeleton>
-    </el-space>
+      </ElSkeleton>
+    </ElSpace>
   </div>
 </template>
 
@@ -275,7 +275,6 @@ const {
   refresh: refreshActivities,
   pending: timelineLoading,
 } = useFetch("/api/timeline/get", {
-  method: "GET",
   transform: (activities_origin) =>
     activities_origin.map((activity: Activity) => {
       activity.start = new Date(activity.start);

@@ -1,6 +1,5 @@
 import prisma from '~/lib/prisma'
 export default defineEventHandler(async (event) => {
-
     if (!event.context.session) {
         throw createError({
             statusCode: 401,
@@ -49,7 +48,7 @@ export default defineEventHandler(async (event) => {
 
     const startDate = new Date(start)
     const endDate = new Date(end)
-    
+
     if (startDate > endDate) {
         throw createError({
             statusCode: 400,

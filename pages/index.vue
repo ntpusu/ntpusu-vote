@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-wrap justify-center">
-    <el-space direction="vertical">
-      <el-skeleton
+    <ElSpace direction="vertical">
+      <ElSkeleton
         style="width: 300px"
         :loading="timelineLoading"
         :rows="15"
@@ -57,7 +57,7 @@
             </ElStep>
           </ElSteps>
         </template>
-      </el-skeleton>
+      </ElSkeleton>
       <ElButton
         v-if="status === 'authenticated'"
         type="success"
@@ -74,7 +74,7 @@
       >
         <span class="font-bold">前 往 登 入 頁 面</span>
       </ElButton>
-    </el-space>
+    </ElSpace>
   </div>
 </template>
 
@@ -97,7 +97,6 @@ const style = (start: Date, end: Date) => {
 const { data: activities, pending: timelineLoading } = useFetch(
   "/api/timeline/get",
   {
-    method: "GET",
     transform: (activities_origin) =>
       activities_origin.map((activity) => {
         return {
@@ -108,5 +107,4 @@ const { data: activities, pending: timelineLoading } = useFetch(
       }),
   },
 );
-
 </script>
