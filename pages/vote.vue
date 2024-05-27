@@ -624,7 +624,7 @@ const seeResult = async (index: number) => {
     await ElMessageBox.confirm(data.value!.tokens[index], "投票憑證", {
       cancelButtonText: "複製憑證",
       cancelButtonClass: "el-button--success",
-      confirmButtonText: "確 定",
+      confirmButtonText: "繼 續",
       distinguishCancelAndClose: true,
       autofocus: false,
       type: "success",
@@ -651,7 +651,7 @@ const seeResult = async (index: number) => {
       });
   } else {
     await ElMessageBox.alert("無投票憑證", "未投票", {
-      confirmButtonText: "確 定",
+      confirmButtonText: "繼 續",
       autofocus: false,
       type: "warning",
       roundButton: true,
