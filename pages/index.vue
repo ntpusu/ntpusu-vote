@@ -50,7 +50,7 @@
     <ElButton
       v-if="status === 'authenticated'"
       type="success"
-      class="z-10 -mt-5 mb-8"
+      class="z-10 mt-2 mb-8"
       @click="useRouter().push('/vote')"
     >
       <span class="font-bold">前 往 投 票 頁 面</span>
@@ -58,7 +58,7 @@
     <ElButton
       v-else
       type="primary"
-      class="z-10 -mt-5 mb-8"
+      class="z-10 mt-2 mb-8"
       @click="useRouter().push('/login')"
     >
       <span class="font-bold">前 往 登 入 頁 面</span>
