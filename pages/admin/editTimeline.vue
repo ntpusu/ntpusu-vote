@@ -6,7 +6,7 @@
         <div
           v-if= "!(input.start instanceof Date && input.end instanceof Date)"
         >
-          <el-text class="mx-1" type="warning">請選擇開始時間與結束時間</el-text>
+          <el-text class="mx-1" type="warning">填寫完整開始時間與結束時間以預覽</el-text>
         </div>
         <ElSteps
           v-if="(input.start instanceof Date) && (input.end instanceof Date)"
