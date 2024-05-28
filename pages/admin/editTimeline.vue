@@ -62,7 +62,7 @@
           label-suffix=":"
           hide-required-asterisk
         >
-          <el-form-item label="設定時間軸">
+          <el-form-item label="設定時間軸" prop="content">
             <el-input
               v-model="input.content"
               placeholder="設定內容"
@@ -247,6 +247,7 @@ const editActivity = (id: number | null) => {
     showEnd: activity.showEnd,
     showTime: activity.showTime,
   };
+  formRef.value?.scrollToField("content");
 };
 
 const updateActivity = () => {
