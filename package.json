@@ -29,7 +29,7 @@
     "@nuxtjs/google-fonts": "^3.2.0",
     "@types/crypto-js": "^4.2.2",
     "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.14",
+    "prettier-plugin-tailwindcss": "^0.6.2",
     "prisma": "^5.14.0",
     "vite-plugin-eslint2": "^4.4.0",
     "vue3-recaptcha-v2": "^2.0.2"
