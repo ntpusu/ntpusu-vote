@@ -84,6 +84,7 @@ definePageMeta({
   title: "首頁",
 });
 
+const router = useRouter();
 const { status } = useAuthState();
 
 const style = (start: Date, end: Date) => {
