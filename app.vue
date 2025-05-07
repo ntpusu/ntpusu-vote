@@ -292,7 +292,7 @@
           >
             <template #content>
               <div class="text-center">
-                投票期間為<br>2024年5月23日<br>00:00 ~ 23:59
+                投票期間為<br>2025年5月22日<br>00:00 ~ 23:59
               </div>
             </template>
             <div class="m-3 text-center">
@@ -632,8 +632,8 @@ const checkLogin = () => {
 const { data: totalCnt, refresh: totalCntRefresh } = await useFetch("/api/loginCnt/get");
 const { data: realCnt, refresh: realCntRefresh } = await useFetch("/api/loginCnt/get", {
   params: {
-    startTime: new Date(2024, 4, 23).getTime(),
-    endTime: new Date(2024, 4, 23, 23, 59, 59, 999).getTime(),
+    startTime: new Date(2025, 5, 22).getTime(),
+    endTime: new Date(2025, 5, 22, 23, 59, 59, 999).getTime(),
   },
 });
 

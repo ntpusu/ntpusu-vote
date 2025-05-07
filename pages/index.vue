@@ -94,6 +94,7 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
+
 const { data: activities, pending: timelineLoading } = useFetch(
   "/api/timeline/get",
   {

@@ -48,7 +48,6 @@ export default defineEventHandler(async (event) => {
 
     const startDate = new Date(start)
     const endDate = new Date(end)
-
     if (startDate > endDate) {
         throw createError({
             statusCode: 400,
