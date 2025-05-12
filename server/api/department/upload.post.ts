@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    // 執行操作
+    // 解析上傳檔案
     const formData = (await readMultipartFormData(event))!
     const file = formData[1].data
 
@@ -37,47 +37,45 @@ export default defineEventHandler(async (event) => {
     }
 
     allGroups = Array.from(new Set(allGroups))
+
+    // 建立群組資料
     await prisma.group.createMany({
-        data: allGroups.map((group) => {
-            return {
-                name: group,
-            }
-        })
+        data: allGroups.map((group) => ({ name: group }))
     })
 
-    const tasks = []
+    // 逐筆寫入 department 與對應 group 關聯
     for (let i = 1; i < group_table.length; i++) {
-        if (group_table[i][0] === undefined || group_table[i][0].trim() === "") {
-            continue
-        }
+        if (group_table[i][0] === undefined || group_table[i][0].trim() === "") continue
 
-        const department = group_table[i][0]
+        const department = group_table[i][0].trim()
         const groups = []
         for (let j = 1; j < 4; j++) {
             if (group_table[i][j] !== undefined && group_table[i][j].trim() !== "") {
-                groups.push(group_table[i][j])
+                groups.push(group_table[i][j].trim())
             }
         }
 
-        tasks.push(prisma.department.create({
-            data: {
-                name: department,
-                departmentInGroup: {
-                    create: groups.map((group) => {
-                        return {
+        // 單筆建立 department 與關聯
+        try {
+            await prisma.department.create({
+                data: {
+                    name: department,
+                    departmentInGroup: {
+                        create: groups.map((group) => ({
                             group: {
-                                connect: {
-                                    name: group,
-                                }
+                                connect: { name: group }
                             }
-                        }
-                    })
+                        }))
+                    }
                 }
-            }
-        }))
+            })
+        } catch (err) {
+            setResponseStatus(event, 500)
+            return err
+            console.error(`建立 department '${department}' 時發生錯誤：`, err)
+        }
     }
 
-    await Promise.all(tasks)
     setResponseStatus(event, 204)
     return null
 })

@@ -169,7 +169,7 @@ const uploadFunc = async (item: { file: File }) => {
   formData.append("fileName", file.name);
   formData.append("file", file);
 
-  await $fetch("/api/department/upload", {
+  resultMessage = await $fetch("/api/department/upload", {
     method: "POST",
     body: formData,
   });
@@ -178,6 +178,12 @@ const uploadFunc = async (item: { file: File }) => {
   electorCountRefresh();
   electorDetailRefresh();
   uploadRef.value!.clearFiles();
+
+  if(resultMessage.status == 204) {
+    ElMessage.success("上傳成功");
+  } else {
+    ElMessage.error("上傳失敗: " + resultMessage.value);
+  }
 };
 
 const deleteGroupData = async () => {
