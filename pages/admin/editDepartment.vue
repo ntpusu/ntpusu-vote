@@ -1,60 +1,30 @@
 <template>
   <div class="flex flex-col items-center">
     <h1 class="my-5 text-center text-2xl font-bold">管理選舉區</h1>
-    <ElCollapse
-      v-model="activeNames"
-      class="w-5/6 max-w-max rounded-xl border-2 border-blue-300 px-4 py-2"
-    >
-      <ElCollapseItem
-        title="所有科系名稱及投票區"
-        name="1"
-      >
+    <ElCollapse v-model="activeNames" class="w-5/6 max-w-max rounded-xl border-2 border-blue-300 px-4 py-2">
+      <ElCollapseItem title="所有科系名稱及投票區" name="1">
         <!-- 顯示目前系統內的資料筆數 -->
-        <ElTable
-          :data="
-            departmentDetail!.map((d) => {
-              return {
-                name: d.name,
-                group: d.departmentInGroup.map((g) => g.group.name).join(', '),
-              };
-            })
-          "
-          class="w-full"
-        >
-          <ElTableColumn
-            prop="name"
-            label="name"
-            width="200"
-          />
-          <ElTableColumn
-            prop="group"
-            label="Group"
-            width="200"
-          />
+        <ElTable :data="departmentDetail!.map((d) => {
+          return {
+            name: d.name,
+            group: d.departmentInGroup.map((g) => g.group.name).join(', '),
+          };
+        })
+          " class="w-full">
+          <ElTableColumn prop="name" label="name" width="200" />
+          <ElTableColumn prop="group" label="Group" width="200" />
         </ElTable>
       </ElCollapseItem>
     </ElCollapse>
     <!-- 檔案上傳元件 -->
-    <ElUpload
-      v-if="electorCount == 0"
-      ref="uploadRef"
-      action="none"
-      accept=".xlsx"
-      :http-request="uploadFunc"
-      :drag="true"
-      :auto-upload="false"
-      :limit="1"
-    >
+    <ElUpload v-if="electorCount == 0" ref="uploadRef" action="none" accept=".xlsx" :http-request="uploadFunc"
+      :drag="true" :auto-upload="false" :limit="1">
       <!-- 上傳按鈕 -->
       <template #trigger>
         <ElButton type="primary">選擇檔案</ElButton>
       </template>
       <!-- 提交按鈕 -->
-      <ElButton
-        class="ml-3"
-        type="success"
-        @click="submitUpload"
-      >
+      <ElButton class="ml-3" type="success" @click="submitUpload">
         上傳至伺服器端
       </ElButton>
       <!-- 上傳提示 -->
@@ -64,55 +34,24 @@
     </ElUpload>
     <br>
     <div class="demo-progress">
-      <ElText
-        v-if="uploadDialogVisible"
-        class="mx-1"
-        size="large"
-        >上傳中...</ElText
-      >
+      <ElText v-if="uploadDialogVisible" class="mx-1" size="large">上傳中...</ElText>
       <!-- 顯示上傳進度條 -->
-      <ElProgress
-        v-if="uploadDialogVisible"
-        class="mt-3 w-2/3"
-        :percentage="100"
-        status="success"
-        :indeterminate="true"
-        :duration="2"
-      />
+      <ElProgress v-if="uploadDialogVisible" class="mt-3 w-2/3" :percentage="100" status="success" :indeterminate="true"
+        :duration="2" />
     </div>
     <!-- 刪除選區 -->
     <div class="demo-progress">
-      <ElText
-        v-if="deletingDialogVisible"
-        class="mx-1"
-        size="large"
-        >刪除中...</ElText
-      >
+      <ElText v-if="deletingDialogVisible" class="mx-1" size="large">刪除中...</ElText>
       <!-- 顯示刪除進度條 -->
-      <ElProgress
-        v-if="deletingDialogVisible"
-        class="mt-3 w-2/3"
-        :percentage="100"
-        status="exception"
-        :indeterminate="true"
-        :duration="1"
-      />
+      <ElProgress v-if="deletingDialogVisible" class="mt-3 w-2/3" :percentage="100" status="exception"
+        :indeterminate="true" :duration="1" />
     </div>
     <!-- 顯示目前系統內的資料筆數 -->
-    <ElText
-      v-if="!uploadDialogVisible && !deletingDialogVisible"
-      class="mx-1"
-      size="large"
-      >目前系統內有{{ electorCount }}筆資料</ElText
-    >
+    <ElText v-if="!uploadDialogVisible && !deletingDialogVisible" class="mx-1" size="large">目前系統內有{{ electorCount }}筆資料
+    </ElText>
     <br>
     <!-- 刪除選區 -->
-    <ElButton
-      v-if="electorCount != 0"
-      type="danger"
-      @click="deleteGroupData"
-      >刪除所有選區</ElButton
-    >
+    <ElButton v-if="electorCount != 0" type="danger" @click="deleteGroupData">刪除所有選區</ElButton>
     <br>
   </div>
 </template>
@@ -169,21 +108,24 @@ const uploadFunc = async (item: { file: File }) => {
   formData.append("fileName", file.name);
   formData.append("file", file);
 
-  resultMessage = await $fetch("/api/department/upload", {
+  await $fetch("/api/department/upload", {
     method: "POST",
     body: formData,
-  });
+  }).then((res: string) => {
+    if (!res) {
+      ElMessage.success("上傳成功");
+      uploadDialogVisible.value = false;
+      electorCountRefresh();
+      electorDetailRefresh();
+      uploadRef.value!.clearFiles();
+    } else {
+      ElMessage.error("上傳失敗: " + res);
+    }
+  })
+    .catch((res) => {
+      ElMessage.error("上傳失敗: " + res);
+    });;
 
-  uploadDialogVisible.value = false;
-  electorCountRefresh();
-  electorDetailRefresh();
-  uploadRef.value!.clearFiles();
-
-  if(resultMessage.status == 204) {
-    ElMessage.success("上傳成功");
-  } else {
-    ElMessage.error("上傳失敗: " + resultMessage.value);
-  }
 };
 
 const deleteGroupData = async () => {

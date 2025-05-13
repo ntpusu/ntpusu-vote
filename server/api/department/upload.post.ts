@@ -69,10 +69,10 @@ export default defineEventHandler(async (event) => {
                     }
                 }
             })
-        } catch (err) {
+        } catch (err: string) {
             setResponseStatus(event, 500)
-            return err
             console.error(`建立 department '${department}' 時發生錯誤：`, err)
+            return err
         }
     }
 
