@@ -1,5 +1,5 @@
 import prisma from '~/lib/prisma'
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '~/generated/prisma/client';
 import * as XLSX from 'xlsx';
 export default defineEventHandler(async (event) => {
     // 確認權限
