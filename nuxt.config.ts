@@ -59,10 +59,12 @@ export default defineNuxtConfig({
         pageTransition: { name: "page", mode: "out-in" },
     },
     nitro: {
-        noExternals: [
-            "vue",
-            "@vue/server-renderer",
-        ],
+        externals: {
+            inline: [
+                "vue",
+                "@vue/server-renderer",
+            ],
+        },
     },
     googleFonts: {
         families: {
