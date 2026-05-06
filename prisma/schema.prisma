@@ -55,7 +55,7 @@ model Voter {
 }
 
 model VoterLogin {
-  id   Int      @id
+  id   Int      @id @default(autoincrement())
   time DateTime @default(now())
 
   voterId Int   @unique
@@ -105,6 +105,10 @@ model Admin {
   id Int @id
 }
 
+model SuperAdmin {
+  id Int @id
+}
+
 model VotingTimeline {
   id Int @id @default(autoincrement())
   content String
@@ -112,4 +116,5 @@ model VotingTimeline {
   end DateTime
   showEnd Boolean
   showTime Boolean
+  isLotteryTime Boolean @default(false)
 }

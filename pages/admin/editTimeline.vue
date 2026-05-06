@@ -98,6 +98,14 @@
               inactive-text="否"
             />
           </ElFormItem>
+          <ElFormItem label="是否為抽獎時間">
+            <ElSwitch
+              v-model="input.isLotteryTime"
+              inline-prompt
+              active-text="是"
+              inactive-text="否"
+            />
+          </ElFormItem>
         </ElForm>
         <ElButton
           v-if="input.id == null"
@@ -205,6 +213,7 @@ const input = ref<Activity>({
   end: "",
   showEnd: false,
   showTime: false,
+  isLotteryTime: false,
 });
 const formRef = ref<FormInstance>();
 
@@ -246,6 +255,7 @@ const editActivity = (id: number | null) => {
     end: activity.end,
     showEnd: activity.showEnd,
     showTime: activity.showTime,
+    isLotteryTime: activity.isLotteryTime,
   };
   formRef.value?.scrollToField("content");
 };
@@ -316,6 +326,7 @@ const clearInput = () => {
     end: "",
     showEnd: false,
     showTime: false,
+    isLotteryTime: false,
   };
 };
 
@@ -347,5 +358,6 @@ interface Activity {
   end: Date | string;
   showEnd: boolean;
   showTime: boolean;
+  isLotteryTime: boolean;
 }
 </script>

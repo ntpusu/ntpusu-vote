@@ -1,20 +1,36 @@
 import prisma from '~/lib/prisma'
 export default defineEventHandler(async (event) => {
     // 執行操作
-    const { startTime, endTime } = getQuery(event) as { startTime: string, endTime: string }
+    const { isLotteryTime } = getQuery(event)
 
     setResponseStatus(event, 200)
-    if (!startTime || isNaN(parseInt(startTime)) || !endTime || isNaN(parseInt(endTime))) {
+    if (isLotteryTime !== 'true') {
         return await prisma.voterLogin.count()
     }
-    else {
-        return await prisma.voterLogin.count({
-            where: {
-                time: {
-                    gte: new Date(parseInt(startTime)),
-                    lte: new Date(parseInt(endTime)),
-                },
-            },
-        })
+
+    const lotteryTimeline = await prisma.votingTimeline.findFirst({
+        where: {
+            isLotteryTime: true,
+        },
+        orderBy: {
+            start: 'asc',
+        },
+        select: {
+            start: true,
+            end: true,
+        },
+    })
+
+    if (!lotteryTimeline) {
+        return 0
     }
+
+    return await prisma.voterLogin.count({
+        where: {
+            time: {
+                gte: lotteryTimeline.start,
+                lte: lotteryTimeline.end,
+            },
+        },
+    })
 })

@@ -170,6 +170,36 @@
         </div>
       </template>
     </ElDialog>
+    <ElDialog
+      v-model="failedVoterDialogVisible"
+      :z-index="1000"
+      title="無法新增學號"
+      width="600"
+    >
+      <ElTable
+        :data="failedVoters"
+        max-height="420"
+        border
+      >
+        <ElTableColumn
+          prop="id"
+          label="學號"
+          width="180"
+        />
+        <ElTableColumn
+          prop="reasonText"
+          label="失敗原因"
+        />
+      </ElTable>
+      <template #footer>
+        <ElButton
+          type="primary"
+          @click="failedVoterDialogVisible = false"
+        >
+          關閉
+        </ElButton>
+      </template>
+    </ElDialog>
   </div>
 </template>
 
@@ -184,6 +214,7 @@ definePageMeta({
 
 const dataChangeDialogVisible = ref(false);
 const deleteAllVoterDialogVisible = ref(false);
+const failedVoterDialogVisible = ref(false);
 const queryInput = ref("");
 const departmentInput = ref("");
 const queryInputData = ref("");
@@ -206,6 +237,14 @@ const voterData: Ref<{
   id: number;
   department: string;
 } | null> = ref(null);
+
+interface FailedVoter {
+  id: number;
+  reason: FailReason;
+  reasonText: string;
+}
+
+const failedVoters = ref<FailedVoter[]>([]);
 
 const uploadRef = ref<UploadInstance>();
 
@@ -247,39 +286,20 @@ const uploadFunc = async (item: { file: File }) => {
 
   infoMessage.close();
   if (error.value) {
-    ElMessage.error("上傳失敗" + errHandle(error));
+    ElMessage.error({ message: "上傳失敗" + errHandle(error), showClose: true });
   } else {
     ElMessage.success("上傳成功");
   }
 
-  if (failAddingVoter.value && failAddingVoter.value.length != 0) {
-    let errorMessage = "無法新增下列投票者:<br>";
-    for (let i = 0; i < failAddingVoter.value.length; i++) {
-      const failedVoter = failAddingVoter.value[i];
-      if (!failedVoter) continue;
-
-      errorMessage += `學號: ${failedVoter.id} 原因: `;
-      if (failedVoter.reason == FailReason.DuplicateStudentId) {
-        errorMessage += "此名單學號重複<br>";
-      } else if (
-        failedVoter.reason == FailReason.DepartmentNotExist
-      ) {
-        errorMessage += "系所不存在<br>";
-      } else if (
-        failedVoter.reason == FailReason.InvalidStudentId
-      ) {
-        errorMessage += "學號格式錯誤<br>";
-      } else {
-        errorMessage += "未知錯誤<br>";
-      }
-    }
-    ElMessage({
-      dangerouslyUseHTMLString: true,
-      showClose: true,
-      message: errorMessage,
-      type: "warning",
-      duration: 0,
-    });
+  if (failAddingVoter.value && failAddingVoter.value.length !== 0) {
+    failedVoters.value = failAddingVoter.value
+      .filter((failedVoter): failedVoter is { id: number; reason: FailReason } => Boolean(failedVoter))
+      .map((failedVoter) => ({
+        id: failedVoter.id,
+        reason: failedVoter.reason,
+        reasonText: getFailReasonText(failedVoter.reason),
+      }));
+    failedVoterDialogVisible.value = true;
   }
 
   voterCountRefresh();
@@ -388,6 +408,14 @@ const addNewVoter = async () => {
     ElMessage.success("新增成功");
   }
   refreshVoterData();
+};
+
+const getFailReasonText = (reason: FailReason) => {
+  if (reason === FailReason.DuplicateStudentId) return "此名單學號重複";
+  if (reason === FailReason.DepartmentNotExist) return "系所不存在";
+  if (reason === FailReason.InvalidStudentId) return "學號格式錯誤";
+
+  return "未知錯誤";
 };
 
 interface Department {

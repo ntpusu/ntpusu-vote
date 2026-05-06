@@ -16,12 +16,13 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { content, start, end, showEnd, showTime } = await readBody(event) as {
+    const { content, start, end, showEnd, showTime, isLotteryTime } = await readBody(event) as {
         content: string
         start: string
         end: string
         showEnd: boolean
         showTime: boolean
+        isLotteryTime: boolean
     }
 
     if (!content) {
@@ -45,7 +46,6 @@ export default defineEventHandler(async (event) => {
             message: 'end 不能為空',
         })
     }
-
     const startDate = new Date(start)
     const endDate = new Date(end)
     if (startDate > endDate) {
@@ -63,6 +63,7 @@ export default defineEventHandler(async (event) => {
             end: endDate,
             showEnd,
             showTime,
+            isLotteryTime,
         },
         select: {
             id: true,

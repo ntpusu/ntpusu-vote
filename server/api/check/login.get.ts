@@ -32,7 +32,6 @@ export default defineEventHandler(async (event) => {
         firstLogin: login === null,
         login: login || await prisma.voterLogin.create({
             data: {
-                id: await prisma.voterLogin.count() + 1,
                 voterId: id,
             },
             select: {
