@@ -292,11 +292,11 @@
           >
             <template #content>
               <div class="text-center">
-                投票期間為<br>2025年5月22日<br>00:00 ~ 23:59
+                抽獎期間為{{ lotteryTime }}
               </div>
             </template>
             <div class="m-3 text-center">
-              <div class="text-lg text-black">投票期間登入人數</div>
+              <div class="text-lg text-black">抽獎期間登入人數</div>
               <div class="text-2xl font-bold text-black">{{ realCnt }} 人</div>
             </div>
           </ElTooltip>
@@ -640,6 +640,11 @@ const checkLogin = () => {
 };
 
 const { data: totalCnt, refresh: totalCntRefresh } = await useFetch("/api/loginCnt/get");
+const { data: lotteryTime } = await useFetch("/api/timeline/get", {
+  params: {
+    getLotteryTime: "true",
+  },
+});
 const { data: realCnt, refresh: realCntRefresh } = await useFetch("/api/loginCnt/get", {
   params: {
     isLotteryTime: "true",
