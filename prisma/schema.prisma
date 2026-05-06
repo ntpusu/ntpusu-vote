@@ -1,11 +1,12 @@
 generator client {
-  provider = "prisma-client-js"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  engineType   = "client"
+  moduleFormat = "esm"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider = "postgresql"
 }
 
 model Voting {
@@ -54,7 +55,7 @@ model Voter {
 }
 
 model VoterLogin {
-  id   Int      @id
+  id   Int      @id @default(autoincrement())
   time DateTime @default(now())
 
   voterId Int   @unique
@@ -104,6 +105,10 @@ model Admin {
   id Int @id
 }
 
+model SuperAdmin {
+  id Int @id
+}
+
 model VotingTimeline {
   id Int @id @default(autoincrement())
   content String
@@ -111,5 +116,5 @@ model VotingTimeline {
   end DateTime
   showEnd Boolean
   showTime Boolean
+  isLotteryTime Boolean @default(false)
 }
-

@@ -292,11 +292,11 @@
           >
             <template #content>
               <div class="text-center">
-                投票期間為<br>2025年5月22日<br>00:00 ~ 23:59
+                抽獎期間為{{ lotteryTime }}
               </div>
             </template>
             <div class="m-3 text-center">
-              <div class="text-lg text-black">投票期間登入人數</div>
+              <div class="text-lg text-black">抽獎期間登入人數</div>
               <div class="text-2xl font-bold text-black">{{ realCnt }} 人</div>
             </div>
           </ElTooltip>
@@ -472,8 +472,12 @@ useHead({
 
 const curIndex = ref(useRoute().path);
 
-const { data: admin } = await useFetch("/api/check/admin");
-const { data: superAdmin } = await useFetch("/api/check/superAdmin");
+const { data: admin } = await useFetch("/api/check/admin", {
+  default: () => false,
+});
+const { data: superAdmin } = await useFetch("/api/check/superAdmin", {
+  default: () => false,
+});
 
 const { status, signOut } = useAuth();
 
@@ -483,8 +487,14 @@ const handleSelect = (key: string) => {
   curIndex.value = key;
 };
 
-const getMenuItems = () => {
-  const menuItems = [
+interface MenuItem {
+  index: string;
+  text: string;
+  click: () => void;
+}
+
+const getMenuItems = (): MenuItem[] => {
+  const menuItems: MenuItem[] = [
     {
       index: "/",
       text: "首頁",
@@ -515,9 +525,9 @@ const getMenuItems = () => {
   return menuItems;
 };
 
-const getAdminMenuItems = () => {
+const getAdminMenuItems = (): MenuItem[] => {
   if (admin.value) {
-    const menuItems = [
+    const menuItems: MenuItem[] = [
       {
         index: "/admin/editVoting",
         text: "管理投票",
@@ -630,10 +640,14 @@ const checkLogin = () => {
 };
 
 const { data: totalCnt, refresh: totalCntRefresh } = await useFetch("/api/loginCnt/get");
+const { data: lotteryTime } = await useFetch("/api/timeline/get", {
+  params: {
+    getLotteryTime: "true",
+  },
+});
 const { data: realCnt, refresh: realCntRefresh } = await useFetch("/api/loginCnt/get", {
   params: {
-    startTime: new Date(2025, 5, 22).getTime(),
-    endTime: new Date(2025, 5, 22, 23, 59, 59, 999).getTime(),
+    isLotteryTime: "true",
   },
 });
 

@@ -9,11 +9,15 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  return await $fetch('https://www.google.com/recaptcha/api/siteverify', {
-    method: 'POST',
-    params: {
-      secret: process.env.RECAPTCHA_V2_INVISIBLE_SECRET_KEY,
-      response,
-    },
+  const body = new URLSearchParams({
+    secret: process.env.RECAPTCHA_V2_INVISIBLE_SECRET_KEY ?? '',
+    response,
   })
+
+  const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+    method: 'POST',
+    body,
+  })
+
+  return await recaptchaResponse.json()
 })

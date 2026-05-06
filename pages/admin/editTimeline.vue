@@ -1,12 +1,12 @@
 <template>
   <div class="flex flex-wrap justify-center">
-    <el-space direction="vertical">
-      <el-space direction="vertical">
-        <el-text class="mx-1" type="info">預覽修改</el-text>
+    <ElSpace direction="vertical">
+      <ElSpace direction="vertical">
+        <ElText class="mx-1" type="info">預覽修改</ElText>
         <div
           v-if= "!(input.start instanceof Date && input.end instanceof Date)"
         >
-          <el-text class="mx-1" type="warning">填寫完整開始時間與結束時間以預覽</el-text>
+          <ElText class="mx-1" type="warning">填寫完整開始時間與結束時間以預覽</ElText>
         </div>
         <ElSteps
           v-if="(input.start instanceof Date) && (input.end instanceof Date)"
@@ -54,71 +54,79 @@
             </template>
           </ElStep>
         </ElSteps>
-      </el-space>
-      <el-space direction="vertical">
-        <el-form
+      </ElSpace>
+      <ElSpace direction="vertical">
+        <ElForm
           ref="formRef"
           label-width="auto"
           label-suffix=":"
           hide-required-asterisk
         >
-          <el-form-item label="設定時間軸" prop="content">
-            <el-input
+          <ElFormItem label="設定時間軸" prop="content">
+            <ElInput
               v-model="input.content"
               placeholder="設定內容"
             />
-          </el-form-item>
-          <el-form-item label="開始時間">
-            <el-date-picker
+          </ElFormItem>
+          <ElFormItem label="開始時間">
+            <ElDatePicker
               v-model="input.start"
               type="datetime"
               placeholder="選擇開始時間"
             />
-          </el-form-item>
-          <el-form-item label="結束時間">
-            <el-date-picker
+          </ElFormItem>
+          <ElFormItem label="結束時間">
+            <ElDatePicker
               v-model="input.end"
               type="datetime"
               placeholder="選擇結束時間"
             />
-          </el-form-item>
-          <el-form-item label="是否顯示詳細時間">
-            <el-switch
+          </ElFormItem>
+          <ElFormItem label="是否顯示詳細時間">
+            <ElSwitch
               v-model="input.showTime"
               inline-prompt
               active-text="是"
               inactive-text="否"
             />
-          </el-form-item>
-          <el-form-item label="是否顯示結束時間">
-            <el-switch
+          </ElFormItem>
+          <ElFormItem label="是否顯示結束時間">
+            <ElSwitch
               v-model="input.showEnd"
               inline-prompt
               active-text="是"
               inactive-text="否"
             />
-          </el-form-item>
-        </el-form>
-        <el-button
+          </ElFormItem>
+          <ElFormItem label="是否為抽獎時間">
+            <ElSwitch
+              v-model="input.isLotteryTime"
+              inline-prompt
+              active-text="是"
+              inactive-text="否"
+            />
+          </ElFormItem>
+        </ElForm>
+        <ElButton
           v-if="input.id == null"
           type="primary"
           @click="addActivity()"
           >新增
-        </el-button>
-        <el-button
+        </ElButton>
+        <ElButton
           v-if="input.id != null"
           type="primary"
           @click="updateActivity()"
           >更新
-        </el-button>
-        <el-button
+        </ElButton>
+        <ElButton
           v-if="input.id != null"
           type="success"
           @click="clearInput()"
           >取消
-        </el-button>
-      </el-space>
-      <el-skeleton
+        </ElButton>
+      </ElSpace>
+      <ElSkeleton
         style="width: 300px"
         :loading="timelineLoading"
         :rows="15"
@@ -171,11 +179,11 @@
                   }}
                 </div>
                 <div>
-                  <el-button
+                  <ElButton
                     :icon="Edit"
                     @click="editActivity(activity.id)"
                   />
-                  <el-button
+                  <ElButton
                     :icon="Delete"
                     @click="deleteActivity(activity.id)"
                   />
@@ -184,8 +192,8 @@
             </ElStep>
           </ElSteps>
         </template>
-      </el-skeleton>
-    </el-space>
+      </ElSkeleton>
+    </ElSpace>
   </div>
 </template>
 
@@ -205,6 +213,7 @@ const input = ref<Activity>({
   end: "",
   showEnd: false,
   showTime: false,
+  isLotteryTime: false,
 });
 const formRef = ref<FormInstance>();
 
@@ -246,6 +255,7 @@ const editActivity = (id: number | null) => {
     end: activity.end,
     showEnd: activity.showEnd,
     showTime: activity.showTime,
+    isLotteryTime: activity.isLotteryTime,
   };
   formRef.value?.scrollToField("content");
 };
@@ -316,6 +326,7 @@ const clearInput = () => {
     end: "",
     showEnd: false,
     showTime: false,
+    isLotteryTime: false,
   };
 };
 
@@ -332,7 +343,6 @@ const {
   refresh: refreshActivities,
   pending: timelineLoading,
 } = useFetch("/api/timeline/get", {
-  method: "GET",
   transform: (activities_origin) =>
     activities_origin.map((activity: Activity) => {
       activity.start = new Date(activity.start);
@@ -348,5 +358,6 @@ interface Activity {
   end: Date | string;
   showEnd: boolean;
   showTime: boolean;
+  isLotteryTime: boolean;
 }
 </script>

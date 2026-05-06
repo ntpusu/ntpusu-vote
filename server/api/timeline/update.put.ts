@@ -1,6 +1,5 @@
 import prisma from '~/lib/prisma'
 export default defineEventHandler(async (event) => {
-
     if (!event.context.session) {
         throw createError({
             statusCode: 401,
@@ -17,13 +16,14 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const { id, content, start, end, showEnd, showTime } = await readBody(event) as {
+    const { id, content, start, end, showEnd, showTime, isLotteryTime } = await readBody(event) as {
         id: number
         content: string
         start: string
         end: string
         showEnd: boolean
         showTime: boolean
+        isLotteryTime: boolean
     }
 
     if (!id || isNaN(id)) {
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
 
     const startDate = new Date(start)
     const endDate = new Date(end)
-    
+
     if (startDate > endDate) {
         throw createError({
             statusCode: 400,
@@ -74,6 +74,7 @@ export default defineEventHandler(async (event) => {
             end: endDate,
             showEnd,
             showTime,
+            isLotteryTime
         },
         select: {
             id: true,

@@ -7,11 +7,12 @@ ARG BASH_COMPLETION_DIR=/usr/share/bash-completion/completions
 ARG ZSH_COMPLETION_DIR=/usr/share/zsh/vendor-completions
 
 RUN \
+    chown -R node:node /workspaces/ntpusu-vote &&\
     # Update to latest packages and install fontconfig, bash-completion
-    apt update; \
-    apt install -y \
+    apt-get update; \
+    apt-get install -y \
     bash-completion; \
-    apt dist-upgrade -y; \
+    apt-get dist-upgrade -y; \
     rm -rf /var/lib/apt/lists/*; \
     # Add hilighting support to zsh
     git clone https://github.com/zdharma-continuum/fast-syntax-highlighting /usr/share/zsh/fast-syntax-highlighting && \

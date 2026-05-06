@@ -125,7 +125,7 @@ export default defineEventHandler(async (event) => {
             }),
         ])
     }
-    catch (e) {
+    catch {
         setResponseStatus(event, 500)
         return { vote: false, token }
     }

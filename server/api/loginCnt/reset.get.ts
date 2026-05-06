@@ -19,6 +19,7 @@ export default defineEventHandler(async (event) => {
 
     // 執行操作
     await prisma.voterLogin.deleteMany()
+    await prisma.$executeRaw`SELECT setval(pg_get_serial_sequence('"VoterLogin"', 'id'), 1, false)`
     setResponseStatus(event, 204)
     return null
 })

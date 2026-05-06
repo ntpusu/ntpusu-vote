@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center">
     <ElCard
-      v-if="!votingPending && voting !== null"
+      v-if="!votingPending && voting"
       class="w-full md:w-5/6 xl:w-2/3 2xl:w-1/2"
     >
       <div class="flex justify-around">
@@ -183,7 +183,7 @@ const findOther = () => {
       candidate.name == "廢票" ||
       candidate.name == "同意" ||
       candidate.name == "不同意",
-  );
+  ) ?? [];
 };
 
 const viewDate = (time: string | number | Date) => {

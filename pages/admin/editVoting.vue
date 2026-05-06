@@ -464,6 +464,7 @@ const groupOptions = computed(() => {
   if (!Group.value) return [];
 
   return Group.value.map((item) => ({
+    key: item.id,//FIXME
     label: item.name,
     value: item.id,
   }));

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-wrap justify-center">
-    <el-space direction="vertical">
-      <el-skeleton
+    <ElSpace direction="vertical">
+      <ElSkeleton
         style="width: 300px"
         :loading="timelineLoading"
         :rows="15"
@@ -57,11 +57,11 @@
             </ElStep>
           </ElSteps>
         </template>
-      </el-skeleton>
+      </ElSkeleton>
       <ElButton
         v-if="status === 'authenticated'"
         type="success"
-        class="z-10 mt-2 mb-8"
+        class="z-10 -mt-5 mb-8"
         @click="useRouter().push('/vote')"
       >
         <span class="font-bold">前 往 投 票 頁 面</span>
@@ -69,12 +69,12 @@
       <ElButton
         v-else
         type="primary"
-        class="z-10 mt-2 mb-8"
+        class="z-10 -mt-5 mb-8"
         @click="useRouter().push('/login')"
       >
         <span class="font-bold">前 往 登 入 頁 面</span>
       </ElButton>
-    </el-space>
+    </ElSpace>
   </div>
 </template>
 
@@ -84,7 +84,6 @@ definePageMeta({
   title: "首頁",
 });
 
-const router = useRouter();
 const { status } = useAuthState();
 
 const style = (start: Date, end: Date) => {
@@ -95,10 +94,10 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
+
 const { data: activities, pending: timelineLoading } = useFetch(
   "/api/timeline/get",
   {
-    method: "GET",
     transform: (activities_origin) =>
       activities_origin.map((activity) => {
         return {
@@ -109,5 +108,4 @@ const { data: activities, pending: timelineLoading } = useFetch(
       }),
   },
 );
-
 </script>

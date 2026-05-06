@@ -11,14 +11,12 @@
       >
         <!-- 顯示目前系統內的資料筆數 -->
         <ElTable
-          :data="
-            departmentDetail!.map((d) => {
-              return {
-                name: d.name,
-                group: d.departmentInGroup.map((g) => g.group.name).join(', '),
-              };
-            })
-          "
+          :data="departmentDetail!.map((d) => {
+            return {
+              name: d.name,
+              group: d.departmentInGroup.map((g) => g.group.name).join(', '),
+            };
+          })"
           class="w-full"
         >
           <ElTableColumn
@@ -68,8 +66,7 @@
         v-if="uploadDialogVisible"
         class="mx-1"
         size="large"
-        >上傳中...</ElText
-      >
+      >上傳中...</ElText>
       <!-- 顯示上傳進度條 -->
       <ElProgress
         v-if="uploadDialogVisible"
@@ -86,8 +83,7 @@
         v-if="deletingDialogVisible"
         class="mx-1"
         size="large"
-        >刪除中...</ElText
-      >
+      >刪除中...</ElText>
       <!-- 顯示刪除進度條 -->
       <ElProgress
         v-if="deletingDialogVisible"
@@ -103,16 +99,15 @@
       v-if="!uploadDialogVisible && !deletingDialogVisible"
       class="mx-1"
       size="large"
-      >目前系統內有{{ electorCount }}筆資料</ElText
-    >
+    >目前系統內有{{ electorCount }}筆資料
+    </ElText>
     <br>
     <!-- 刪除選區 -->
     <ElButton
       v-if="electorCount != 0"
       type="danger"
       @click="deleteGroupData"
-      >刪除所有選區</ElButton
-    >
+    >刪除所有選區</ElButton>
     <br>
   </div>
 </template>
@@ -172,12 +167,22 @@ const uploadFunc = async (item: { file: File }) => {
   await $fetch("/api/department/upload", {
     method: "POST",
     body: formData,
-  });
-
-  uploadDialogVisible.value = false;
-  electorCountRefresh();
-  electorDetailRefresh();
-  uploadRef.value!.clearFiles();
+  }).then((res) => {
+    if (!res) {
+      ElMessage.success("上傳成功");
+      uploadDialogVisible.value = false;
+      electorCountRefresh();
+      electorDetailRefresh();
+      uploadRef.value!.clearFiles();
+    } else if (typeof res === "string") {
+      ElMessage.error("上傳失敗: " + res);
+    } else {
+      ElMessage.error("上傳失敗");
+    }
+  })
+    .catch((res) => {
+      ElMessage.error("上傳失敗: " + res);
+    });
 };
 
 const deleteGroupData = async () => {
