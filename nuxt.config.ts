@@ -27,6 +27,21 @@ export default defineNuxtConfig({
             recaptchaSiteKey: process.env.RECAPTCHA_V2_INVISIBLE_SITE_KEY,
         },
     },
+    vite: {
+        optimizeDeps: {
+            include: [
+                'dayjs', // CJS
+                'dayjs/plugin/*.js',
+                'lodash-unified',
+                '@vue/devtools-core',
+                '@vue/devtools-kit',
+                'vue3-recaptcha-v2',
+                '@vercel/analytics',
+                '@vercel/speed-insights/vue',
+                '@element-plus/icons-vue',
+            ],
+        }
+  },
     modules: [
         "@element-plus/nuxt",
         "@nuxt/image",
@@ -126,7 +141,7 @@ export default defineNuxtConfig({
         /**
          * Configuration of the application-side session.
          */
-        session: {
+        sessionRefresh: {
             /**
              * Whether to refresh the session every `X` milliseconds. Set this to `false` to turn it off. The session will only be refreshed if a session already exists.
              *
@@ -138,14 +153,14 @@ export default defineNuxtConfig({
              * @default false
              *
              */
-            enableRefreshPeriodically: false,
+            enablePeriodically: false,
             /**
              * Whether to refresh the session every time the browser window is refocused.
              *
              * @example false
              * @default true
              */
-            enableRefreshOnWindowFocus: true,
+            enableOnWindowFocus: true,
         },
         /**
          * Whether to add a global authentication middleware that protects all pages. Can be either `false` to disable, `true` to enabled

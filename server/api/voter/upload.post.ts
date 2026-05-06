@@ -20,10 +20,27 @@ export default defineEventHandler(async (event) => {
     }
 
     // 執行操作
-    const formData = (await readMultipartFormData(event))!
-    const file = formData[0].data
+    const formData = await readMultipartFormData(event)
+    const file = formData?.[0]?.data
+    if (!file) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: '未上傳投票者檔案',
+        })
+    }
+
     const voter_workbook = XLSX.read(file)
-    const voter_sheet = voter_workbook.Sheets[voter_workbook.SheetNames[0]]
+    const voterSheetName = voter_workbook.SheetNames[0]
+    const voter_sheet = voterSheetName ? voter_workbook.Sheets[voterSheetName] : undefined
+    if (!voter_sheet) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: '投票者檔案沒有可讀取的工作表',
+        })
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const voter_table: any[][] = XLSX.utils.sheet_to_json(voter_sheet, { header: 1 })
 
@@ -62,7 +79,10 @@ export default defineEventHandler(async (event) => {
     const studentIdSet = new Set<number>()
 
     for (let i = 1; i < voter_table.length; i++) {
-        const studentId = voter_table[i][0] as number
+        const row = voter_table[i]
+        if (!row) continue;
+
+        const studentId = row[0] as number
         if (studentIdSet.has(studentId)) {
             failAddingVoter.push({
                 id: studentId,
@@ -80,7 +100,16 @@ export default defineEventHandler(async (event) => {
             })
             continue;
         }
-        const studentDepartment = (voter_table[i][2] as string).replace(/\d[AB]?/, "")
+        const departmentCell = row[2]
+        if (typeof departmentCell !== 'string') {
+            failAddingVoter.push({
+                id: studentId,
+                reason: FailReason.DepartmentNotExist,
+            })
+            continue;
+        }
+
+        const studentDepartment = departmentCell.replace(/\d[AB]?/, "")
         const departmentId = departmentMp.get(studentDepartment);
         if (departmentId === undefined) {
             failAddingVoter.push({

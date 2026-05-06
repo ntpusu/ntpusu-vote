@@ -2,7 +2,7 @@
   <div>
     <ElSkeleton
       animated
-      :loading="votingPending || data === null"
+      :loading="votingPending || !data"
       class="flex flex-col items-center"
     >
       <template #template>
@@ -26,7 +26,7 @@
       </template>
       <template #default>
         <div
-          v-if="!votingPending && data !== null"
+          v-if="!votingPending && data"
           class="flex flex-col items-center"
         >
           <ElAlert
@@ -173,7 +173,7 @@
                       1
                     </ElTag>
                     <div class="text-b mx-2">
-                      {{ votingItem.candidates[0].name }}
+                      {{ votingItem.candidates[0]?.name }}
                     </div>
                   </div>
                   <template v-else>
@@ -192,7 +192,7 @@
                         {{ itemIndex }}
                       </ElTag>
                       <div class="mx-2">
-                        {{ votingItem.candidates[itemIndex - 1].name }}
+                        {{ votingItem.candidates[itemIndex - 1]?.name }}
                       </div>
                     </div>
                   </template>
@@ -240,7 +240,7 @@
                         class="my-2 cursor-default text-base font-bold text-black sm:my-3 md:my-4 md:text-lg"
                       >
                         同意
-                        {{ votingItem.candidates[0].name }}
+                        {{ votingItem.candidates[0]?.name }}
                         當選嗎？
                       </span>
                       <span
@@ -469,12 +469,15 @@ const handleWidgetId = (id: number) => {
 };
 
 const handleLoad = async (response: unknown) => {
-  const res: {
-    success: boolean;
-  } = await $fetch("/api/recaptcha/recaptchaV2", {
+  const recaptchaUrl = "/api/recaptcha/recaptchaV2";
+  const recaptchaResponse = await fetch(recaptchaUrl, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ response }),
   });
+  const res = (await recaptchaResponse.json()) as { success: boolean };
 
   if (res.success) {
     vote(curVoteId.value);
@@ -592,8 +595,13 @@ const vote = async (votingId: number) => {
 
 const seeToken = async (index: number) => {
   tokenLoading.value[index] = true;
+  const token = data.value?.tokens[index];
+  if (!token) {
+    tokenLoading.value[index] = false;
+    return;
+  }
 
-  await ElMessageBox.confirm(data.value!.tokens[index], "投票憑證", {
+  await ElMessageBox.confirm(token, "投票憑證", {
     cancelButtonText: "複製憑證",
     cancelButtonClass: "el-button--success",
     confirmButtonText: "確 定",
@@ -606,7 +614,7 @@ const seeToken = async (index: number) => {
     },
   }).catch(async (action: Action) => {
     if (action === "cancel") {
-      await navigator.clipboard.writeText(data.value!.tokens[index]);
+      await navigator.clipboard.writeText(token);
       ElMessage({
         type: "success",
         message: "已複製",
@@ -619,9 +627,10 @@ const seeToken = async (index: number) => {
 
 const seeResult = async (index: number) => {
   resultLoading.value[index] = true;
+  const token = data.value?.tokens[index];
 
-  if (data.value!.tokens[index]) {
-    await ElMessageBox.confirm(data.value!.tokens[index], "投票憑證", {
+  if (token) {
+    await ElMessageBox.confirm(token, "投票憑證", {
       cancelButtonText: "複製憑證",
       cancelButtonClass: "el-button--success",
       confirmButtonText: "繼 續",
@@ -641,7 +650,7 @@ const seeResult = async (index: number) => {
         resultLoading.value[index] = false;
 
         if (action === "cancel") {
-          await navigator.clipboard.writeText(data.value!.tokens[index]);
+          await navigator.clipboard.writeText(token);
           ElMessage({
             type: "success",
             message: "已複製",
@@ -699,6 +708,6 @@ onMounted(() => {
 
 onActivated(async () => {
   checkData();
-  data.value = await $fetch("/api/vote/voterSession");
+  await votingRefresh();
 });
 </script>

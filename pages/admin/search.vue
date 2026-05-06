@@ -257,7 +257,7 @@ const voterData: Ref<{
 } | null> = ref(null);
 
 const loginData: Ref<{
-  loginId: number;
+  loginId: string;
   id: number;
   time: string;
 } | null> = ref(null);
@@ -324,6 +324,8 @@ const searchLoginId = async () => {
 };
 
 const copy = () => {
+  if (!loginData.value) return;
+
   navigator.clipboard.writeText(loginData.value.id.toString());
   ElMessage({
     message: "已複製學號",

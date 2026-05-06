@@ -77,10 +77,19 @@ export default defineEventHandler(async (event) => {
     })
 
     if (onlyOne) {
+        const candidateName = candidates[0]?.name
+        if (!candidateName) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: 'Bad Request',
+                message: 'Candidate is required when onlyOne is true.',
+            })
+        }
+
         await prisma.candidate.createMany({
             data: [
                 {
-                    name: candidates[0].name,
+                    name: candidateName,
                     groupId: voteGroup,
                     votingId: voting.id,
                 },

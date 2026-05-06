@@ -19,19 +19,39 @@ export default defineEventHandler(async (event) => {
     }
 
     // 解析上傳檔案
-    const formData = (await readMultipartFormData(event))!
-    const file = formData[1].data
+    const formData = await readMultipartFormData(event)
+    const file = formData?.[1]?.data
+    if (!file) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: '未上傳系所檔案',
+        })
+    }
 
     const group_workbook = XLSX.read(file)
-    const group_sheet = group_workbook.Sheets[group_workbook.SheetNames[0]]
+    const groupSheetName = group_workbook.SheetNames[0]
+    const group_sheet = groupSheetName ? group_workbook.Sheets[groupSheetName] : undefined
+    if (!group_sheet) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            message: '系所檔案沒有可讀取的工作表',
+        })
+    }
+
     const group_table: string[][] = XLSX.utils.sheet_to_json(group_sheet, { header: 1 })
 
     let allGroups: string[] = []
 
     for (let i = 1; i < group_table.length; i++) {
+        const row = group_table[i]
+        if (!row) continue
+
         for (let j = 1; j < 4; j++) {
-            if (group_table[i][j] !== undefined && group_table[i][j].trim() !== "") {
-                allGroups.push(group_table[i][j])
+            const group = row[j]
+            if (group !== undefined && group.trim() !== "") {
+                allGroups.push(group)
             }
         }
     }
@@ -45,13 +65,15 @@ export default defineEventHandler(async (event) => {
 
     // 逐筆寫入 department 與對應 group 關聯
     for (let i = 1; i < group_table.length; i++) {
-        if (group_table[i][0] === undefined || group_table[i][0].trim() === "") continue
+        const row = group_table[i]
+        if (!row || row[0] === undefined || row[0].trim() === "") continue
 
-        const department = group_table[i][0].trim()
+        const department = row[0].trim()
         const groups = []
         for (let j = 1; j < 4; j++) {
-            if (group_table[i][j] !== undefined && group_table[i][j].trim() !== "") {
-                groups.push(group_table[i][j].trim())
+            const group = row[j]
+            if (group !== undefined && group.trim() !== "") {
+                groups.push(group.trim())
             }
         }
 
@@ -69,7 +91,7 @@ export default defineEventHandler(async (event) => {
                     }
                 }
             })
-        } catch (err: string) {
+        } catch (err: unknown) {
             setResponseStatus(event, 500)
             console.error(`建立 department '${department}' 時發生錯誤：`, err)
             return err
