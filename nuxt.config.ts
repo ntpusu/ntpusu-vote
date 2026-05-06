@@ -58,6 +58,12 @@ export default defineNuxtConfig({
     app: {
         pageTransition: { name: "page", mode: "out-in" },
     },
+    nitro: {
+        noExternals: [
+            "vue",
+            "@vue/server-renderer",
+        ],
+    },
     googleFonts: {
         families: {
             "Noto Sans TC": [400, 700],
