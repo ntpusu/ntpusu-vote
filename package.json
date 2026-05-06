@@ -23,6 +23,7 @@
     "@vue/server-renderer": "3.5.13",
     "crypto-js": "^4.2.0",
     "element-plus": "^2.13.7",
+    "entities": "^8.0.0",
     "nuxt": "^4.4.4",
     "nuxt-security": "^2.5.1",
     "pg": "^8.20.0",
