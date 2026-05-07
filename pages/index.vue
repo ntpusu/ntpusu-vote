@@ -94,18 +94,30 @@ const style = (start: Date, end: Date) => {
       : "success";
 };
 
+interface Activity {
+  id: number | null;
+  content: string;
+  start: Date;
+  end: Date;
+  showEnd: boolean;
+  showTime: boolean;
+  isLotteryTime: boolean;
+}
 
-const { data: activities, pending: timelineLoading } = useFetch(
-  "/api/timeline/get",
-  {
-    transform: (activities_origin) =>
-      activities_origin.map((activity) => {
-        return {
-          ...activity,
-          start: new Date(activity.start),
-          end: new Date(activity.end),
-        };
-      }),
+type TimelineActivityResponse = Omit<Activity, "start" | "end"> & {
+  start: string;
+  end: string;
+};
+
+const { data: activities, pending: timelineLoading } = useAsyncData<Activity[]>(
+  "timeline-activities",
+  async () => {
+    const activitiesOrigin = await $fetch<TimelineActivityResponse[]>("/api/timeline/get");
+    return activitiesOrigin.map((activity) => ({
+      ...activity,
+      start: new Date(activity.start),
+      end: new Date(activity.end),
+    }));
   },
 );
 </script>

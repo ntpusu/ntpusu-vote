@@ -342,13 +342,13 @@ const {
   data: activities,
   refresh: refreshActivities,
   pending: timelineLoading,
-} = useFetch("/api/timeline/get", {
-  transform: (activities_origin) =>
-    activities_origin.map((activity: Activity) => {
-      activity.start = new Date(activity.start);
-      activity.end = new Date(activity.end);
-      return activity;
-    }),
+} = useAsyncData<Activity[]>("admin-timeline-activities", async () => {
+  const activitiesOrigin = await $fetch<TimelineActivityResponse[]>("/api/timeline/get");
+  return activitiesOrigin.map((activity) => ({
+    ...activity,
+    start: new Date(activity.start),
+    end: new Date(activity.end),
+  }));
 });
 
 interface Activity {
@@ -360,4 +360,9 @@ interface Activity {
   showTime: boolean;
   isLotteryTime: boolean;
 }
+
+type TimelineActivityResponse = Omit<Activity, "start" | "end"> & {
+  start: string;
+  end: string;
+};
 </script>

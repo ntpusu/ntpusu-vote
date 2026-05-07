@@ -1,10 +1,10 @@
 import prisma from '~/lib/prisma'
 export default defineEventHandler(async (event) => {
     // 執行操作
-    const { isLotteryTime } = getQuery(event)
+    const { inLotteryTime } = getQuery(event)
 
     setResponseStatus(event, 200)
-    if (isLotteryTime !== 'true') {
+    if (inLotteryTime !== 'true') {
         return await prisma.voterLogin.count()
     }
 
