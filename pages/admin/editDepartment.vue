@@ -168,16 +168,14 @@ const uploadFunc = async (item: { file: File }) => {
     method: "POST",
     body: formData,
   }).then((res) => {
-    if (!res) {
+    if (res === "0") {
       ElMessage.success("上傳成功");
       uploadDialogVisible.value = false;
       electorCountRefresh();
       electorDetailRefresh();
       uploadRef.value!.clearFiles();
-    } else if (typeof res === "string") {
-      ElMessage.error("上傳失敗: " + res);
     } else {
-      ElMessage.error("上傳失敗");
+      ElMessage.error("上傳失敗: " + res);
     }
   })
     .catch((res) => {

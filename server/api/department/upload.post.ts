@@ -1,5 +1,6 @@
 import prisma from '~/lib/prisma'
 import * as XLSX from 'xlsx';
+
 export default defineEventHandler(async (event) => {
     // 確認權限
     if (!event.context.session) {
@@ -55,15 +56,9 @@ export default defineEventHandler(async (event) => {
             }
         }
     }
-
     allGroups = Array.from(new Set(allGroups))
 
-    // 建立群組資料
-    await prisma.group.createMany({
-        data: allGroups.map((group) => ({ name: group }))
-    })
-
-    // 逐筆寫入 department 與對應 group 關聯
+    const departmentGroups = new Map<string, string[]>()
     for (let i = 1; i < group_table.length; i++) {
         const row = group_table[i]
         if (!row || row[0] === undefined || row[0].trim() === "") continue
@@ -77,27 +72,69 @@ export default defineEventHandler(async (event) => {
             }
         }
 
-        // 單筆建立 department 與關聯
-        try {
-            await prisma.department.create({
-                data: {
-                    name: department,
-                    departmentInGroup: {
-                        create: groups.map((group) => ({
-                            group: {
-                                connect: { name: group }
-                            }
-                        }))
-                    }
-                }
-            })
-        } catch (err: unknown) {
-            setResponseStatus(event, 500)
-            console.error(`建立 department '${department}' 時發生錯誤：`, err)
-            return err
-        }
+        departmentGroups.set(department, groups)
     }
+    try {
+        await prisma.$transaction(async (tx) => {
+            //Create Groups
+            if (allGroups.length > 0) {
+                await tx.group.createMany({
+                    data: allGroups.map((group) => ({ name: group })),
+                    skipDuplicates: true,
+                })
+            }
+            //Create Departments
+            const departmentNames = Array.from(departmentGroups.keys())
+            if (departmentNames.length > 0) {
+                await tx.department.createMany({
+                    data: departmentNames.map((department) => ({ name: department })),
+                    skipDuplicates: true,
+                })
+            }
 
-    setResponseStatus(event, 204)
-    return null
+            //Make map
+            const [groups, departments] = await Promise.all([
+                tx.group.findMany({
+                    where: { name: { in: allGroups } },
+                    select: { id: true, name: true },
+                }),
+                tx.department.findMany({
+                    where: { name: { in: departmentNames } },
+                    select: { id: true, name: true },
+                }),
+            ])
+            const groupIds = new Map(groups.map((group) => [group.name, group.id]))
+            const departmentIds = new Map(
+                departments.map((department) => [department.name, department.id]),
+            )
+
+            //逐筆建立 DepartmentInGroup 關聯
+            const departmentInGroupInput = departmentNames.flatMap((department) => {
+                const departmentId = departmentIds.get(department)
+                if (!departmentId) return []
+
+                return (departmentGroups.get(department) ?? []).flatMap((group) => {
+                    const groupId = groupIds.get(group)
+                    return groupId ? [{ departmentId, groupId }] : []
+                })
+            })
+
+            //then create many
+            if (departmentInGroupInput.length > 0) {
+                await tx.departmentInGroup.createMany({
+                    data: departmentInGroupInput,
+                    skipDuplicates: true,
+                })
+            }
+        })} catch (e) {
+            console.error("Error processing department upload:", e)
+            throw createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                message: '處理系所檔案時發生錯誤:' + e,
+            })
+        }
+
+    setResponseStatus(event, 201)
+    return "0"
 })
