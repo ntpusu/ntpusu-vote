@@ -79,7 +79,7 @@
           <span class="text-sm font-bold sm:text-base md:text-lg"> 登出 </span>
         </ElMenuItem>
         <!-- < md -->
-        <ClientOnly v-if="showLoginBadge">
+        <ClientOnly v-if="showFirstLoginBadge">
           <ElTooltip
             effect="dark"
             content="你的登入序號"
@@ -109,7 +109,7 @@
               type="success"
               size="large"
               circle
-              @click="showTotalBadge = true"
+              @click="showTotalLoginStats"
             >
               <span class="text-sm font-bold text-white sm:text-base">{{
                 totalCnt
@@ -221,7 +221,7 @@
             type="success"
             size="large"
             circle
-            @click="showTotalBadge = true"
+            @click="showTotalLoginStats"
           >
             <span class="text-sm font-bold text-white sm:text-base">{{
               totalCnt
@@ -231,7 +231,7 @@
       </ClientOnly>
     </ElAffix>
     <ElAffix
-      v-if="showLoginBadge"
+      v-if="showFirstLoginBadge"
       class="absolute right-10 top-[9.5rem] z-10 hidden hover:animate-pulse md:block"
     >
       <ClientOnly>
@@ -472,14 +472,24 @@ useHead({
 
 const curIndex = ref(useRoute().path);
 
-const { data: admin } = await useFetch("/api/check/admin", {
-  default: () => false,
-});
-const { data: superAdmin } = await useFetch("/api/check/superAdmin", {
-  default: () => false,
-});
-
 const { status, signOut } = useAuth();
+const admin = ref(false);
+const superAdmin = ref(false);
+
+const refreshAdminStatus = async () => {
+  if (status.value !== "authenticated") {
+    admin.value = false;
+    superAdmin.value = false;
+    return;
+  }
+
+  const role = await $fetch("/api/check/role");
+
+  admin.value = role.admin;
+  superAdmin.value = role.superAdmin;
+};
+
+watch(status, refreshAdminStatus, { immediate: true });
 
 const show = ref(false);
 
@@ -617,43 +627,61 @@ const showLoginInfo = async () => {
   ).catch(() => {});
 };
 
-const showLoginBadge = ref(false);
+const showFirstLoginBadge = ref(false);
 const showTotalBadge = ref(false);
+const totalStatsLoaded = ref(false);
 
-const checkLogin = () => {
-  setTimeout(async () => {
-    if (status.value) {
-      if (status.value === "authenticated") {
-        await $fetch("/api/check/login").then(async (res) => {
-          loginInfo.value = res.login;
-          showLoginBadge.value = true;
+const showTotalLoginStats = async () => {
+  showTotalBadge.value = true;
+  if (totalStatsLoaded.value) {
+    return;
+  }
 
-          if (res.firstLogin) {
-            await totalCntRefresh();
-            await realCntRefresh();
-            await showLoginInfo();
-          }
-        });
-      }
-    } else checkLogin();
-  }, 250);
+  await Promise.all([
+    lotteryTimeRefresh(),
+    realCntRefresh(),
+  ]);
+  totalStatsLoaded.value = true;
 };
 
-const { data: totalCnt, refresh: totalCntRefresh } = await useFetch("/api/loginCnt/get");
-const { data: lotteryTime } = await useFetch("/api/timeline/get", {
+const checkLogin = async () => {
+  if (import.meta.server || status.value !== "authenticated") {
+    return;
+  }
+
+  try {
+    const res = await $fetch("/api/check/login");
+    loginInfo.value = res.login;
+    showFirstLoginBadge.value = true;
+
+    if (res.firstLogin) {
+      await totalCntRefresh();
+      await showLoginInfo();
+    }
+  } catch (err) {
+    console.error("檢查登入序號失敗：", err);
+  }
+};
+
+const { data: totalCnt, refresh: totalCntRefresh } = useLazyFetch("/api/loginCnt/get", {
+  default: () => 0,
+});
+const { data: lotteryTime, refresh: lotteryTimeRefresh } = useFetch("/api/timeline/get", {
+  immediate: false,
   params: {
     getLotteryTime: "true",
   },
+  default: () => "",
 });
-const { data: realCnt, refresh: realCntRefresh } = await useFetch("/api/loginCnt/get", {
+const { data: realCnt, refresh: realCntRefresh } = useLazyFetch("/api/loginCnt/get", {
+  immediate: false,
   params: {
-    isLotteryTime: "true",
+    inLotteryTime: "true",
   },
+  default: () => 0,
 });
 
-onMounted(() => {
-  checkLogin();
-});
+watch(status, checkLogin, { immediate: true });
 </script>
 
 <style>
