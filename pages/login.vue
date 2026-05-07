@@ -16,20 +16,17 @@
           preload
           class="m-auto my-2 w-64 sm:w-72"
           :class="
-            isInAppBrowser ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+            isInAppBrowser || signingIn ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
           "
-          @click="
-            isInAppBrowser
-              ? googleLoginInEmbedded()
-              : signIn('google', { callbackUrl: '/vote' })
-          "
+          @click="signInWithGoogle"
         />
         <NuxtImg
           src="/login/microsoft.svg"
           format="svg"
           preload
-          class="m-auto my-2 w-64 cursor-pointer sm:w-72"
-          @click="signIn('azure-ad', { callbackUrl: '/vote' })"
+          class="m-auto my-2 w-64 sm:w-72"
+          :class="signingIn ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'"
+          @click="signInWithAzure"
         />
         <span class="m-auto pt-5 text-sm text-gray-600">
           請使用學校 Google 或 Microsoft 帳號進行登錄
@@ -61,6 +58,29 @@ definePageMeta({
 
 const { signIn } = useAuth();
 const isInAppBrowser = ref(false);
+const signingIn = ref(false);
+
+const signInWithGoogle = async () => {
+  if (signingIn.value) {
+    return;
+  }
+  if (isInAppBrowser.value) {
+    googleLoginInEmbedded();
+    return;
+  }
+
+  signingIn.value = true;
+  await signIn("google", { callbackUrl: "/vote" });
+};
+
+const signInWithAzure = async () => {
+  if (signingIn.value) {
+    return;
+  }
+
+  signingIn.value = true;
+  await signIn("azure-ad", { callbackUrl: "/vote" });
+};
 
 const googleLoginInEmbedded = () => {
   ElMessageBox.alert(
@@ -79,6 +99,7 @@ const isWebview = () => {
   const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
   const rules = [
     "WebView",
+    "Instagram",
     "(iPhone|iPod|iPad)(.*Line|(?!.*Safari))",
     "Android.*(;\\s+wv|Version/\\d.\\d\\s+Chrome/\\d+(\\.0){3})",
     "Linux; U; Android",
