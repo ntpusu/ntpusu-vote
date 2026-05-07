@@ -25,27 +25,34 @@ export default defineEventHandler(async (event) => {
     const studentId = Number(idStr)
     event.context.id = idStr
 
-    // 確認是否為(超級)管理員
-    const isSuperAdmin = idStr === process.env.SUPER_ADMIN
-    event.context.isSuperAdmin = isSuperAdmin
-    event.context.isAdmin = isSuperAdmin
-
-    const [admin, voter] = await Promise.all([
-      isSuperAdmin
-        ? Promise.resolve({})
-        : prisma.admin.findUnique({
-          where: { id: studentId },
-          select: null,
-        }),
+    const [
+      registeredSuperAdmin,
+      anySuperAdmin,
+      admin,
+      voter,
+    ] = await Promise.all([
+      prisma.superAdmin.findUnique({
+        where: { id: studentId },
+        select: { id: true },
+      }),
+      prisma.superAdmin.findFirst({
+        select: { id: true },
+      }),
+      prisma.admin.findUnique({
+        where: { id: studentId },
+        select: null,
+      }),
       prisma.voter.findUnique({
         where: { id: studentId },
         select: null,
       }),
     ])
 
-    if (!isSuperAdmin) {
-      event.context.isAdmin = admin !== null
-    }
+    const isBootstrapSuperAdmin
+      = anySuperAdmin === null && idStr === process.env.SUPER_ADMIN
+
+    event.context.isSuperAdmin = registeredSuperAdmin !== null || isBootstrapSuperAdmin
+    event.context.isAdmin = event.context.isSuperAdmin || admin !== null
 
     // 確認是否在選舉人名錄中
     event.context.isVoter = voter !== null
