@@ -78,7 +78,6 @@
         >
           <span class="text-sm font-bold sm:text-base md:text-lg"> 登出 </span>
         </ElMenuItem>
-        <!-- < md -->
         <ClientOnly v-if="showFirstLoginBadge">
           <ElTooltip
             effect="dark"
@@ -208,7 +207,7 @@
       </Transition>
     </div>
     <ElAffix
-      class="absolute right-10 top-[5.5rem] z-10 hidden hover:animate-pulse md:block"
+      class="absolute right-10 top-[5.5rem] z-10 !hidden hover:animate-pulse md:!block"
     >
       <ClientOnly>
         <ElTooltip
@@ -232,7 +231,7 @@
     </ElAffix>
     <ElAffix
       v-if="showFirstLoginBadge"
-      class="absolute right-10 top-[9.5rem] z-10 hidden hover:animate-pulse md:block"
+      class="absolute right-10 top-[9.5rem] z-10 !hidden hover:animate-pulse md:!block"
     >
       <ClientOnly>
         <ElTooltip
