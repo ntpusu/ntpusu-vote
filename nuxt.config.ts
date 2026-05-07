@@ -19,6 +19,7 @@ if (process.env.VERCEL) {
 }
 
 export default defineNuxtConfig({
+    compatibilityDate: '2026-05-07',
     runtimeConfig: {
         public: {
             productionUrl: process.env.PRODUCTION_URL,
@@ -39,6 +40,7 @@ export default defineNuxtConfig({
                 '@vercel/analytics',
                 '@vercel/speed-insights/vue',
                 '@element-plus/icons-vue',
+                '@vueuse/shared',
             ],
         }
   },
