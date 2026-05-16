@@ -34,7 +34,7 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
-    "@nuxt/kit": "^3.21.4",
+    "@nuxt/kit": "^4.4.5",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@types/crypto-js": "^4.2.2",
     "mlly": "^1.8.2",
