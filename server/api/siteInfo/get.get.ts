@@ -1,8 +1,8 @@
 import prisma from '~/lib/prisma'
 
 const defaultSiteInfo = {
-    bulletinUrl: process.env.PDF_URL ?? '',
-    guideUrl: process.env.IG_POST_URL ?? '',
+    bulletinUrl: '',
+    guideUrl: '',
     guideSource: 'instagram',
 }
 
