@@ -30,6 +30,14 @@ export default defineEventHandler(async (event) => {
                     name: true,
                 },
             },
+            candidates: {
+                select: {
+                    name: true,
+                },
+                orderBy: {
+                    name: 'asc',
+                },
+            },
         },
     })
 })

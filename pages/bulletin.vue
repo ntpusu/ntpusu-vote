@@ -13,7 +13,7 @@
       <div v-show="state === '選舉公報'">
         <ClientOnly>
           <iframe
-            :src="pdfUrl"
+            :src="siteInfo?.bulletinUrl"
             frameborder="1"
             allowfullscreen="true"
             allow="autoplay; clipboard-write; web-share"
@@ -24,12 +24,12 @@
           </iframe>
         </ClientOnly>
       </div>
-      <div v-show="state === '操作說明'">
+      <div v-show="state === '操作說明' && siteInfo?.guideSource === 'instagram'">
         <ClientOnly>
           <blockquote
             class="instagram-media !m-0 w-full !rounded-md sm:!rounded-lg md:!rounded-xl"
             data-instgrm-captioned
-            :data-instgrm-permalink="igPostUrl + '?utm_source=ig_embed&utm_campaign=loading&omitscript=true'"
+            :data-instgrm-permalink="siteInfo?.guideUrl + '?utm_source=ig_embed&utm_campaign=loading&omitscript=true'"
             data-instgrm-version="14"
             style="
               background: #fff;
@@ -42,7 +42,7 @@
           >
             <div style="padding: 16px">
               <a
-                :href="igPostUrl + '?utm_source=ig_embed&utm_campaign=loading'"
+                :href="siteInfo?.guideUrl + '?utm_source=ig_embed&utm_campaign=loading'"
                 style="
                   background: #ffffff;
                   line-height: 0;
@@ -284,7 +284,7 @@
                 "
               >
                 <a
-                  :href="igPostUrl +'?utm_source=ig_embed&utm_campaign=loading'"
+                  :href="siteInfo?.guideUrl +'?utm_source=ig_embed&utm_campaign=loading'"
                   style="
                     color: #c9c8cd;
                     font-family: Arial, sans-serif;
@@ -302,6 +302,20 @@
           </blockquote>
         </ClientOnly>
       </div>
+      <div v-show="state === '操作說明' && siteInfo?.guideSource === 'gdrive'">
+        <ClientOnly>
+          <iframe
+            :src="siteInfo?.guideUrl"
+            frameborder="1"
+            allowfullscreen="true"
+            allow="autoplay; clipboard-write; web-share"
+            class="h-full min-h-[80dvh] w-full rounded-md sm:rounded-lg md:rounded-xl"
+            load="lazy"
+          >
+            載入中~~~
+          </iframe>
+        </ClientOnly>
+      </div>
     </div>
   </div>
 </template>
@@ -315,16 +329,28 @@ definePageMeta({
 const state = ref("選舉公報");
 const options = ["選舉公報", "操作說明"];
 
-const { pdfUrl, igPostUrl } = useRuntimeConfig().public;
+interface SiteInfo {
+  bulletinUrl: string;
+  guideUrl: string;
+  guideSource: "instagram" | "gdrive";
+}
+
+const { data: siteInfo } = await useFetch<SiteInfo>("/api/siteInfo/get");
 
 const load = () => {
+  if (siteInfo.value?.guideSource !== "instagram") return;
+
   setTimeout(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).instgrm.Embeds.process();
+    (window as any).instgrm?.Embeds.process();
   }, 500);
 };
 
 onActivated(() => {
+  load();
+});
+
+watch(state, () => {
   load();
 });
 </script>

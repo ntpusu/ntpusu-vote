@@ -109,6 +109,11 @@ model SuperAdmin {
   id Int @id
 }
 
+model SiteSetting {
+  key String @id
+  value String
+}
+
 model VotingTimeline {
   id Int @id @default(autoincrement())
   content String

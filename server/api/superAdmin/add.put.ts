@@ -41,6 +41,7 @@ export default defineEventHandler(async (event) => {
                 "Department",
                 "Group",
                 "Admin",
+                "SiteSetting",
                 "VotingTimeline",
                 "SuperAdmin"
             RESTART IDENTITY CASCADE
