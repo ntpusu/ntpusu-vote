@@ -570,6 +570,14 @@ const getAdminMenuItems = (): MenuItem[] => {
         },
       },
       {
+        index: "/admin/editInfo",
+        text: "管理資訊",
+        click: () => {
+          show.value = false;
+          useRouter().push("/admin/editInfo");
+        },
+      },
+      {
         index: "/admin/editTimeline",
         text: "管理時間軸",
         click: () => {
