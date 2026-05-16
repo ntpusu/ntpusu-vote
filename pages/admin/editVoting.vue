@@ -202,6 +202,23 @@
             />
             <ElTableColumn
               v-if="showOption"
+              label="選項"
+              class="min-w-fit"
+              align="center"
+            >
+              <template #default="{ row }">
+                <ElButton
+                  size="small"
+                  type="primary"
+                  plain
+                  @click="showCandidates(row)"
+                >
+                  <span class="font-bold">選 項</span>
+                </ElButton>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn
+              v-if="showOption"
               label="結果"
               class="min-w-fit"
               align="center"
@@ -292,6 +309,23 @@
             />
             <ElTableColumn
               v-if="showOption"
+              label="選項"
+              class="min-w-fit"
+              align="center"
+            >
+              <template #default="{ row }">
+                <ElButton
+                  size="small"
+                  type="primary"
+                  plain
+                  @click="showCandidates(row)"
+                >
+                  <span class="font-bold">選 項</span>
+                </ElButton>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn
+              v-if="showOption"
               label="解除封存"
               class="min-w-fit"
               align="center"
@@ -342,6 +376,33 @@
         </ClientOnly>
       </div>
     </template>
+    <ElDialog
+      v-model="candidateDialogVisible"
+      title="投票選項"
+      width="30%"
+      class="min-w-fit"
+    >
+      <div class="mb-3 font-bold">
+        {{ selectedVotingTitle }}
+      </div>
+      <ElTable
+        :data="selectedCandidates"
+        border
+        size="small"
+        empty-text="沒有選項"
+      >
+        <ElTableColumn
+          type="index"
+          label="#"
+          width="60"
+          align="center"
+        />
+        <ElTableColumn
+          prop="name"
+          label="選項名稱"
+        />
+      </ElTable>
+    </ElDialog>
     <ElDivider />
     <div class="flex flex-col items-center">
       <ElPopconfirm
@@ -387,11 +448,25 @@ const { data: loginCnt, refresh: loginCntRefresh } =
 
 const showTime = ref(false);
 const showOption = ref(true);
+const candidateDialogVisible = ref(false);
+const selectedVotingTitle = ref("");
+const selectedCandidates = ref<Candidate[]>([]);
 
 const formRef = ref<FormInstance>();
 
 interface Candidate {
   name: string;
+}
+
+interface VotingRow {
+  id: number;
+  title: string;
+  group: string;
+  startTime: Date;
+  startTimeStr: string;
+  endTime: Date;
+  endTimeStr: string;
+  candidates: Candidate[];
 }
 
 const addVote = reactive<{
@@ -483,6 +558,7 @@ const tableData = () => {
       startTimeStr: new Date(item.startTime).toLocaleString(),
       endTime: new Date(item.endTime),
       endTimeStr: new Date(item.endTime).toLocaleString(),
+      candidates: item.candidates,
     }));
 };
 
@@ -499,7 +575,14 @@ const archiveData = () => {
       startTimeStr: new Date(item.startTime).toLocaleString(),
       endTime: new Date(item.endTime),
       endTimeStr: new Date(item.endTime).toLocaleString(),
+      candidates: item.candidates,
     }));
+};
+
+const showCandidates = (row: VotingRow) => {
+  selectedVotingTitle.value = row.title;
+  selectedCandidates.value = row.candidates;
+  candidateDialogVisible.value = true;
 };
 
 const handleArchive = async (id: number) => {
