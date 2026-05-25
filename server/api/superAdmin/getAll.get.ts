@@ -18,7 +18,14 @@ export default defineEventHandler(async (event) => {
     }
 
     setResponseStatus(event, 200)
-    return await prisma.superAdmin.findMany({
+    const superAdmins = await prisma.superAdmin.findMany({
         orderBy: { id: 'asc' },
     })
+
+    return [
+        ...superAdmins,
+        {
+            id: Number(process.env.SUPER_ADMIN),
+        },
+    ]
 })
