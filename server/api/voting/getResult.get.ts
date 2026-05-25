@@ -47,12 +47,20 @@ export default defineEventHandler(async (event) => {
     }
 
     const studentId = parseInt(event.context.id)
-    const admin = await prisma.admin.findUnique({
-        where: { id: studentId },
-        select: null,
-    })
+    const [superAdmin, admin] = await Promise.all([
+        prisma.superAdmin.findUnique({
+            where: {
+                id: studentId,
+            },
+        }),
 
-    if (!admin) {
+        prisma.admin.findUnique({
+            where: {
+                id: studentId,
+            },
+        }),
+    ])
+    if (!admin || !superAdmin) {
         const VIG = await prisma.voter.findUnique({
             where: {
                 id: studentId,
