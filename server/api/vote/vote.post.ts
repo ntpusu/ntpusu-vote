@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
         cname: string | undefined
     }
 
-    if (!votingId || isNaN(parseInt(votingId))) {
+    if (!votingId || !/^\d{1,2}$/.test(votingId)) {
         throw createError({
             statusCode: 400,
             statusMessage: 'Bad Request',
@@ -106,7 +106,7 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const token = HS1(id.toString() + votingId.toString(), process.env.AUTH_SECRET as string).toString()
+    const token = HS1(id.toString() + parseInt(votingId), process.env.AUTH_SECRET as string).toString()
 
     try {
         await prisma.$transaction([
