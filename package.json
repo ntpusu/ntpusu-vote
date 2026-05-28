@@ -39,7 +39,7 @@
     "@types/crypto-js": "^4.2.2",
     "mlly": "^1.8.2",
     "prettier": "^3.8.3",
-    "prettier-plugin-tailwindcss": "^0.6.14",
+    "prettier-plugin-tailwindcss": "^0.8.0",
     "prisma": "^7.8.0",
     "vite-plugin-eslint2": "^5.1.0",
     "vue-tsc": "3.2.5",
